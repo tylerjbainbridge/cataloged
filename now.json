@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "lissome-2",
+  "name": "cataloged",
   "builds": [
     {
       "src": "web/package.json",
