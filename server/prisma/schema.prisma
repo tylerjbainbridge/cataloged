@@ -1,0 +1,111 @@
+datasource db {
+  provider = "postgres"
+  url      = env("POSTGRESQL_URL")
+  default  = true
+}
+
+generator photon {
+  provider  = "photonjs"
+  platforms = ["native", "linux-glibc-libssl1.0.2"]
+}
+
+generator nexus_prisma {
+  provider = "nexus-prisma"
+}
+
+model User {
+  id        String  @default(cuid()) @id @unique
+  email     String  @unique
+  firstName String?
+  lastName  String?
+
+  googleAccounts GoogleAccount[]
+  items          Item[]
+  labels         Label[]
+  files          File[]
+  uploadGroups   UploadGroup[]
+}
+
+model Label {
+  id        String   @default(cuid()) @id @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  user  User
+  items Item[]
+}
+
+model Item {
+  id        String   @default(cuid()) @id @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type String
+
+  file File?
+  link Link?
+
+  labels Label[]
+}
+
+
+model Link {
+  id        String   @default(cuid()) @id @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  href String
+
+  notes String
+
+  item Item
+  user User
+}
+
+model File {
+  id        String   @default(cuid()) @id @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name      String
+  extension String
+  size      String?
+
+  width  Int?
+  height Int?
+
+  isUploaded Boolean
+
+  item        Item
+  user        User
+  uploadGroup UploadGroup
+}
+
+model UploadGroup {
+  id        String   @default(cuid()) @id @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  isComplete Boolean
+
+  user  User
+  files File[]
+}
+
+model GoogleAccount {
+  id String @default(cuid()) @id @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accountId    String? @unique
+  email        String?
+  firstName    String?
+  lastName     String?
+  picture      String?
+  refreshToken String?
+
+  user User
+}

@@ -1,0 +1,1 @@
+now -e POSTGRESQL_URL=@postgresql_url -e JWT_SECRET=@jwt_secret -e GOOGLE_CLIENT_ID=@google_client_id -e GOOGLE_CLIENT_SECRET=@google_client_secret -e GOOGLE_REDIRECT_URL=@google_redirect_url -e AWS_S3_BUCKET=@aws_s3_bucket -e AWS_S3_ACCESS_KEY=@aws_s3_access_key -e AWS_S3_SECRET_ACCESS_KEY=@aws_s3_secret_access_key
