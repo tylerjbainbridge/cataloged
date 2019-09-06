@@ -120,14 +120,14 @@ input ItemCreateManyWithoutItemsInput {
 
 input ItemCreateOneWithoutItemInput {
   connect: ItemWhereUniqueInput
-  create: ItemCreateWithoutFileInput
+  create: ItemCreateWithoutLinkInput
 }
 
-input ItemCreateWithoutFileInput {
+input ItemCreateWithoutLinkInput {
   createdAt: DateTime
+  file: FileCreateOneWithoutFileInput
   id: ID
   labels: LabelCreateManyWithoutLabelsInput
-  link: LinkCreateOneWithoutLinkInput
   type: String!
   updatedAt: DateTime
   user: UserCreateOneWithoutUserInput
@@ -185,6 +185,11 @@ type Link {
   updatedAt: DateTime!
 }
 
+input LinkCreateManyWithoutLinksInput {
+  connect: [LinkWhereUniqueInput!]
+  create: [LinkCreateWithoutUserInput!]
+}
+
 input LinkCreateOneWithoutLinkInput {
   connect: LinkWhereUniqueInput
   create: LinkCreateWithoutItemInput
@@ -192,11 +197,28 @@ input LinkCreateOneWithoutLinkInput {
 
 input LinkCreateWithoutItemInput {
   createdAt: DateTime
+  description: String
+  favicon: String
   href: String!
   id: ID
+  image: String
   notes: String!
+  title: String
   updatedAt: DateTime
   user: UserCreateOneWithoutUserInput!
+}
+
+input LinkCreateWithoutUserInput {
+  createdAt: DateTime
+  description: String
+  favicon: String
+  href: String!
+  id: ID
+  image: String
+  item: ItemCreateOneWithoutItemInput!
+  notes: String!
+  title: String
+  updatedAt: DateTime
 }
 
 input LinkWhereUniqueInput {
@@ -400,7 +422,7 @@ input UserCreateInput {
   items: ItemCreateManyWithoutItemsInput
   labels: LabelCreateManyWithoutLabelsInput
   lastName: String
-  link: LinkCreateOneWithoutLinkInput
+  links: LinkCreateManyWithoutLinksInput
   uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput
 }
 
@@ -417,7 +439,7 @@ input UserCreateWithoutFilesInput {
   items: ItemCreateManyWithoutItemsInput
   labels: LabelCreateManyWithoutLabelsInput
   lastName: String
-  link: LinkCreateOneWithoutLinkInput
+  links: LinkCreateManyWithoutLinksInput
   uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput
 }
 
