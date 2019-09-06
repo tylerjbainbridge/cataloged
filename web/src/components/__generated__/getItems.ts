@@ -11,6 +11,10 @@ export interface getItems_items_link {
   id: string;
   href: string;
   notes: string;
+  image: string | null;
+  favicon: string | null;
+  title: string | null;
+  description: string | null;
 }
 
 export interface getItems_items_file {
@@ -25,6 +29,7 @@ export interface getItems_items_file {
 
 export interface getItems_items {
   __typename: "Item";
+  id: string;
   type: string;
   link: getItems_items_link | null;
   file: getItems_items_file | null;

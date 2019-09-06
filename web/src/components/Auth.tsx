@@ -19,6 +19,7 @@ type ContextProps = {
   token: googleSignIn_googleSignIn['token'] | null;
   setToken: Dispatch<SetStateAction<string | null>>;
   setUser: Dispatch<SetStateAction<getAuthUser_me | null>>;
+  signOut: Function;
   refetchUser: () => Promise<void>;
 };
 
@@ -38,6 +39,12 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
   const [token, setToken] = useState<googleSignIn_googleSignIn['token'] | null>(
     localStorage.getItem('token'),
   );
+
+  const signOut = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    window.location.replace('/');
+  };
 
   const client = useApolloClient();
 
@@ -78,7 +85,7 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, token, setToken, refetchUser }}
+      value={{ user, setUser, token, setToken, refetchUser, signOut }}
     >
       {children}
     </AuthContext.Provider>

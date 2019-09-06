@@ -1,4 +1,5 @@
 require('dotenv').config();
+import morgan from 'morgan';
 
 const { ApolloServer } = require('apollo-server-express');
 const express = require('express');
@@ -52,10 +53,16 @@ process.on('uncaughtException', cleanup);
 
 const app = express();
 
+app.use(morgan('tiny'));
+
 const server = new ApolloServer({
   schema,
   introspection: true,
   playground: true,
+  formatError: (err: any) => {
+    console.log(err);
+    return err;
+  },
   context: async ({ req }: { req: any }) => ({
     photon,
     user: await getUserFromRequest(req),

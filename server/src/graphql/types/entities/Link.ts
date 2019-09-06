@@ -10,6 +10,11 @@ export const Link = objectType({
     t.model.href();
     t.model.notes();
 
+    t.model.image();
+    t.model.favicon();
+    t.model.title();
+    t.model.description();
+
     t.model.item();
   },
 });

@@ -3,13 +3,13 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { Dashboard } from './routes/Dashboard';
 import { GoogleCallback } from './routes/GoogleCallback';
-import { ForceLogin } from './routes/ForceLogin';
+import { ForceSignIn } from './routes/ForceSignIn';
 import { useAuth } from './hooks/useAuth';
 
 export const Router = () => {
   const auth = useAuth();
 
-  const RootComponent = auth.user ? Dashboard : ForceLogin;
+  const RootComponent = auth.user ? Dashboard : ForceSignIn;
 
   return (
     <BrowserRouter>

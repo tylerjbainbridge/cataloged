@@ -1,5 +1,5 @@
 import { GraphQLUpload } from 'graphql-upload';
-import { asNexusMethod } from 'nexus';
+import { asNexusMethod } from '@prisma/nexus';
 
 import { Query } from './types/Query';
 import { Mutation } from './types/Mutation';
@@ -12,6 +12,7 @@ import { UploadGroup } from './types/entities/UploadGroup';
 
 import { googleSignIn } from './mutations/googleSignIn';
 import { createFiles } from './mutations/createFiles';
+import { createLink } from './mutations/createLink';
 
 const GraphQLUploadScalar = asNexusMethod(GraphQLUpload, 'upload');
 
@@ -33,16 +34,21 @@ const GraphQLUploadScalar = asNexusMethod(GraphQLUpload, 'upload');
 // const mutations = dirLoader(mutationsPath);
 
 export default [
-  GraphQLUploadScalar,
+  // Root types
   Query,
   Mutation,
+  // Entity types
   User,
   File,
   Item,
   UploadGroup,
   Link,
   Label,
+  // Scalars
+  GraphQLUploadScalar,
   GraphQLUpload,
+  // Mutations
   googleSignIn,
   createFiles,
+  createLink,
 ];

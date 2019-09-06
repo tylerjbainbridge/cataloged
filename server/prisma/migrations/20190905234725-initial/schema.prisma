@@ -18,9 +18,12 @@ model User {
   firstName String?
   lastName  String?
 
-  items          Item[]
-  files          File[]
   googleAccounts GoogleAccount[]
+  items          Item[]
+  labels         Label[]
+  files          File[]
+  links          Link[]
+  uploadGroups   UploadGroup[]
 }
 
 model Label {
@@ -54,6 +57,12 @@ model Link {
   updatedAt DateTime @updatedAt
 
   href String
+
+  // Meta
+  title       String?
+  description String?
+  image       String?
+  favicon     String?
 
   notes String
 

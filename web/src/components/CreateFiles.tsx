@@ -85,9 +85,7 @@ export const CreateFiles = () => {
       }}
       size="small"
       centered={false}
-      trigger={
-        <Button onClick={() => setIsModalOpen(true)}>Upload files</Button>
-      }
+      trigger={<Button icon="file" onClick={() => setIsModalOpen(true)} />}
     >
       <Modal.Header>Drag files below to upload</Modal.Header>
       <Modal.Content image scrolling {...getRootProps()} onPaste={onPaste}>

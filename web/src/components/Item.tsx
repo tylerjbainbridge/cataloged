@@ -4,6 +4,7 @@ import { Segment } from 'semantic-ui-react';
 
 import { getItems_items } from './__generated__/getItems';
 import { File } from './File';
+import { Link } from './Link';
 
 export const Item = ({ item }: { item: getItems_items }) => {
   let node = null;
@@ -14,11 +15,12 @@ export const Item = ({ item }: { item: getItems_items }) => {
       break;
 
     default:
+      node = item.link ? <Link link={item.link} /> : null;
       break;
   }
 
   return (
-    <Segment style={{ width: 300, height: 350 }} basic>
+    <Segment style={{ width: 300, height: 400 }} basic>
       {node}
     </Segment>
   );
