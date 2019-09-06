@@ -63,13 +63,11 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
   });
 
   useQuery(GET_UPLOAD_GROUPS, {
-    // pollInterval: 1000,
+    pollInterval: 1000,
     notifyOnNetworkStatusChange: true,
   });
 
   const initialLoad = loading && !data;
-
-  console.log(data);
 
   return (
     <Segment

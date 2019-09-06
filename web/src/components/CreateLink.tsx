@@ -38,7 +38,6 @@ export const CreateLink = () => {
   });
 
   const { href } = getValues();
-  console.log(href);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -58,7 +57,7 @@ export const CreateLink = () => {
     }
   };
 
-  usePaste({ onPaste: onPaste });
+  usePaste({ onPaste });
 
   const cleanup = () => {
     setIsModalOpen(false);
