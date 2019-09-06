@@ -9,6 +9,7 @@ import {
   Item,
   Header,
   Modal,
+  Popup,
 } from 'semantic-ui-react';
 
 import { getFiles_files } from './__generated__/getFiles';
@@ -32,7 +33,7 @@ export const File = ({ file }: { file: getFiles_files }) => {
   }, [file.isUploaded]);
 
   return (
-    <>
+    <div style={{ cursor: 'pointer' }}>
       <Modal
         closeIcon
         size="large"
@@ -77,9 +78,15 @@ export const File = ({ file }: { file: getFiles_files }) => {
           )}
         </Modal.Content>
       </Modal>
-      <Header>
-        {file.name}.{file.extension}
-      </Header>
-    </>
+      <Popup
+        trigger={
+          <Header>
+            {file.name}.{file.extension}
+          </Header>
+        }
+        position="bottom center"
+        content="View full photo"
+      />
+    </div>
   );
 };

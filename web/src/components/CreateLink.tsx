@@ -1,146 +1,118 @@
-import React, { useCallback, useState } from 'react';
-import { useDropzone, FileWithPath } from 'react-dropzone';
-import { Button, List, Image, Segment, Modal } from 'semantic-ui-react';
+import React, { useCallback, useState, useRef } from 'react';
+import useForm from 'react-hook-form';
+import {
+  Button,
+  List,
+  Image,
+  Segment,
+  Modal,
+  Input,
+  Label,
+  Form,
+} from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
-import { omit } from 'lodash';
 import gql from 'graphql-tag';
+import * as yup from 'yup';
+import { usePaste } from '../hooks/usePaste';
 
-const UPLOAD_FILE_MUTATION = gql`
-  mutation createFiles($files: [Upload!]!) {
-    createFiles(files: $files) {
+const CreateLinkSchema = yup.object().shape({
+  href: yup
+    .string()
+    .url('Invalid URL')
+    .required('Required'),
+});
+
+const CREATE_LINK_MUTATION = gql`
+  mutation createLink($href: String!) {
+    createLink(href: $href) {
       id
-      squareUrl
-      fullUrl
+      href
     }
   }
 `;
 
-export const CreateFiles = () => {
-  const [files, setFiles] = useState<{
-    [key: string]: FileWithPath;
-  }>({});
+export const CreateLink = () => {
+  const { getValues, setValue, register, errors } = useForm({
+    validationSchema: CreateLinkSchema,
+    mode: 'onBlur',
+  });
+
+  const { href } = getValues();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fileCount = Object.keys(files).length;
-  const fileVals = Object.values(files);
-  const fileEntries = Object.entries(files);
-
-  const [createFiles, { loading }] = useMutation(UPLOAD_FILE_MUTATION, {
-    variables: { files: fileVals },
+  const [createLink, { loading }] = useMutation(CREATE_LINK_MUTATION, {
+    variables: { href },
     refetchQueries: ['getItems'],
-    onCompleted: () => {
-      setIsModalOpen(false);
-      setFiles({});
-    },
+    onCompleted: () => cleanup(),
   });
 
-  const onDrop = useCallback(
-    acceptedFiles => {
-      setFiles({
-        ...files,
-        ...acceptedFiles.reduce(
-          (p: { [key: string]: FileWithPath }, c: FileWithPath) => ({
-            ...p,
-            [c.name]: c,
-          }),
-          {},
-        ),
-      });
-    },
-    [files],
-  );
+  const onPaste = (e: any) => {
+    const pastedText = (e.originalEvent || e).clipboardData.getData(
+      'text/plain',
+    );
 
-  const onPaste = useCallback(
-    (e: any) => {
-      e.persist();
+    if (pastedText) {
+      setValue('href', pastedText);
+    }
+  };
 
-      const { items } = e.clipboardData;
+  usePaste({ onPaste });
 
-      for (let i = 0; i < items.length; i++) {
-        const item = e.clipboardData.items[i];
-        const blob = item.getAsFile();
-        if (blob) {
-          const { lastModified } = blob;
-
-          setFiles({
-            ...files,
-            [lastModified]: blob,
-          });
-        }
-      }
-    },
-    [files],
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const cleanup = () => {
+    setIsModalOpen(false);
+    setValue('href', '');
+  };
 
   return (
     <Modal
       open={isModalOpen}
       closeIcon
-      onClose={() => {
-        setIsModalOpen(false);
-        setFiles({});
-      }}
-      size="small"
+      onClose={cleanup}
+      size="tiny"
       centered={false}
-      trigger={
-        <Button onClick={() => setIsModalOpen(true)}>Upload files</Button>
-      }
+      trigger={<Button icon="linkify" onClick={() => setIsModalOpen(true)} />}
+      as={Form}
     >
-      <Modal.Header>Drag files below to upload</Modal.Header>
-      <Modal.Content image scrolling {...getRootProps()} onPaste={onPaste}>
-        <Segment basic loading={loading} style={{ width: '100%' }}>
-          <input {...getInputProps()} />
-          {!!fileCount ? (
-            <List
-              divided
-              relaxed
-              verticalAlign="middle"
-              style={{ width: '100%' }}
-            >
-              {fileEntries.map(([key, file]) => (
-                <List.Item key={key}>
-                  <Image
-                    rounded
-                    key={file.path}
-                    src={
-                      'https://react.semantic-ui.com/images/wireframe/image.png' ||
-                      URL.createObjectURL(file)
-                    }
-                    style={{
-                      objectFit: 'cover',
-                      width: 40,
-                      height: 40,
-                    }}
-                  />
-                  <List.Content>{file.name}</List.Content>
-                  <List.Content verticalAlign="middle" floated="right">
-                    <Button
-                      onClick={e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setFiles(omit(files, file.name));
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  </List.Content>
-                </List.Item>
-              ))}
-            </List>
-          ) : (
-            <p>No files</p>
+      <Modal.Header>Paste link</Modal.Header>
+      <Form.Field style={{ display: 'none' }}>
+        <input name="href" defaultValue="" ref={register} />
+        {errors.href && (
+          <Label basic color="red" pointing>
+            {errors.href.message}
+          </Label>
+        )}
+      </Form.Field>
+      <Modal.Content image scrolling>
+        <Form.Field style={{ display: 'none' }}>
+          <input name="href" defaultValue="" ref={register} />
+          {errors.href && (
+            <Label basic color="red" pointing>
+              {errors.href.message}
+            </Label>
           )}
-        </Segment>
+        </Form.Field>
+
+        {href && (
+          <Segment basic loading={loading} style={{ width: '100%' }}>
+            <a href={href} target="_blank">
+              {href}
+            </a>
+          </Segment>
+        )}
       </Modal.Content>
       <Modal.Actions>
         <Button
-          onClick={async () => await createFiles()}
+          disabled={!href}
+          onClick={async () => {
+            if (!loading) {
+              await createLink();
+            }
+          }}
           labelPosition="right"
-          icon="upload"
-          content="Upload"
+          icon="add"
+          color={!href ? 'yellow' : 'green'}
+          content={!href ? 'Waiting for link...' : 'Add'}
         />
       </Modal.Actions>
     </Modal>

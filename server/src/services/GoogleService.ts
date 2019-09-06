@@ -5,11 +5,6 @@ import * as _ from 'lodash';
 
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
 
-console.log({
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-});
-
 export class GoogleService {
   auth: OAuth2Client;
   plus: plus_v1.Plus;

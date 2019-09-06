@@ -6,9 +6,14 @@
 import * as ctx from "../../typescript/types"
 import * as photon from "@generated/photon"
 import { core } from "nexus"
-
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    upload<FieldName extends string>(fieldName: FieldName, opts?: core.ScalarInputFieldConfig<core.GetGen3<"inputTypes", TypeName, FieldName>>): void // "Upload";
+  }
+}
 declare global {
   interface NexusGenCustomOutputMethods<TypeName extends string> {
+    upload<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Upload";
     crud: NexusPrisma<TypeName, 'crud'>
     model: NexusPrisma<TypeName, 'model'>
   }
@@ -437,14 +442,19 @@ export interface NexusGenFieldTypes {
   }
   Link: { // field return type
     createdAt: any; // DateTime!
+    description: string | null; // String
+    favicon: string | null; // String
     href: string; // String!
     id: string; // ID!
+    image: string | null; // String
     item: NexusGenRootTypes['Item']; // Item!
     notes: string; // String!
+    title: string | null; // String
     updatedAt: any; // DateTime!
   }
   Mutation: { // field return type
     createFiles: NexusGenRootTypes['File'][]; // [File!]!
+    createLink: NexusGenRootTypes['Link']; // Link!
     createOneFile: NexusGenRootTypes['File']; // File!
     createOneUser: NexusGenRootTypes['User']; // User!
     deleteOneFile: NexusGenRootTypes['File'] | null; // File
@@ -492,6 +502,9 @@ export interface NexusGenArgTypes {
   Mutation: {
     createFiles: { // args
       files: any[]; // [Upload!]!
+    }
+    createLink: { // args
+      href: string; // String!
     }
     createOneFile: { // args
       data: NexusGenInputs['FileCreateInput']; // FileCreateInput!

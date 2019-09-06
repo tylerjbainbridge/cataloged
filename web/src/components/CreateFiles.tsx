@@ -4,6 +4,7 @@ import { Button, List, Image, Segment, Modal } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 import { omit } from 'lodash';
 import gql from 'graphql-tag';
+import { usePaste } from '../hooks/usePaste';
 
 const UPLOAD_FILE_MUTATION = gql`
   mutation createFiles($files: [Upload!]!) {
@@ -51,29 +52,26 @@ export const CreateFiles = () => {
     [files],
   );
 
-  const onPaste = useCallback(
-    (e: any) => {
-      e.persist();
+  const onPaste = (e: any) => {
+    const { items } = e.clipboardData;
 
-      const { items } = e.clipboardData;
+    for (let i = 0; i < items.length; i++) {
+      const item = e.clipboardData.items[i];
+      const blob = item.getAsFile();
+      if (blob) {
+        const { lastModified } = blob;
 
-      for (let i = 0; i < items.length; i++) {
-        const item = e.clipboardData.items[i];
-        const blob = item.getAsFile();
-        if (blob) {
-          const { lastModified } = blob;
-
-          setFiles({
-            ...files,
-            [lastModified]: blob,
-          });
-        }
+        setFiles({
+          ...files,
+          [lastModified]: blob,
+        });
       }
-    },
-    [files],
-  );
+    }
+  };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  usePaste({ onPaste });
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
     <Modal
@@ -85,15 +83,13 @@ export const CreateFiles = () => {
       }}
       size="small"
       centered={false}
-      trigger={
-        <Button onClick={() => setIsModalOpen(true)}>Upload files</Button>
-      }
+      trigger={<Button icon="file" onClick={() => setIsModalOpen(true)} />}
     >
-      <Modal.Header>Drag files below to upload</Modal.Header>
-      <Modal.Content image scrolling {...getRootProps()} onPaste={onPaste}>
+      <Modal.Header>Drag photos below or paste from clipboard</Modal.Header>
+      <Modal.Content image scrolling {...getRootProps()}>
         <Segment basic loading={loading} style={{ width: '100%' }}>
           <input {...getInputProps()} />
-          {!!fileCount ? (
+          {!!fileCount && (
             <List
               divided
               relaxed
@@ -121,7 +117,12 @@ export const CreateFiles = () => {
                       onClick={e => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setFiles(omit(files, file.name));
+
+                        const {
+                          [file.lastModified || file.name]: temp,
+                          ...rest
+                        } = files;
+                        setFiles(rest);
                       }}
                     >
                       Remove
@@ -130,17 +131,17 @@ export const CreateFiles = () => {
                 </List.Item>
               ))}
             </List>
-          ) : (
-            <p>No files</p>
           )}
         </Segment>
       </Modal.Content>
       <Modal.Actions>
         <Button
+          disabled={!fileCount}
           onClick={async () => await createFiles()}
           labelPosition="right"
-          icon="upload"
-          content="Upload"
+          icon="add"
+          color={!fileCount ? 'yellow' : 'green'}
+          content={!fileCount ? 'Waiting for images...' : 'Add'}
         />
       </Modal.Actions>
     </Modal>

@@ -5,8 +5,7 @@ datasource db {
 }
 
 generator photon {
-  provider  = "photonjs"
-  platforms = ["native", "linux-glibc-libssl1.0.2"]
+  provider = "photonjs"
 }
 
 generator nexus_prisma {
@@ -23,6 +22,7 @@ model User {
   items          Item[]
   labels         Label[]
   files          File[]
+  links          Link[]
   uploadGroups   UploadGroup[]
 }
 
@@ -57,6 +57,12 @@ model Link {
   updatedAt DateTime @updatedAt
 
   href String
+
+  // Meta
+  title       String?
+  description String?
+  image       String?
+  favicon     String?
 
   notes String
 

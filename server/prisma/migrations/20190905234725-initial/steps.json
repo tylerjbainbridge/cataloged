@@ -1,5 +1,5 @@
 {
-  "version": "0.2.2",
+  "version": "0.2.7",
   "steps": [
     {
       "stepType": "CreateModel",
@@ -90,12 +90,42 @@
     {
       "stepType": "CreateField",
       "model": "User",
+      "name": "googleAccounts",
+      "type": {
+        "Relation": {
+          "to": "GoogleAccount",
+          "to_fields": [],
+          "name": "GoogleAccountToUser",
+          "on_delete": "None"
+        }
+      },
+      "arity": "list",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "User",
       "name": "items",
       "type": {
         "Relation": {
           "to": "Item",
           "to_fields": [],
           "name": "ItemToUser",
+          "on_delete": "None"
+        }
+      },
+      "arity": "list",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "User",
+      "name": "labels",
+      "type": {
+        "Relation": {
+          "to": "Label",
+          "to_fields": [],
+          "name": "LabelToUser",
           "on_delete": "None"
         }
       },
@@ -120,12 +150,12 @@
     {
       "stepType": "CreateField",
       "model": "User",
-      "name": "googleAccounts",
+      "name": "links",
       "type": {
         "Relation": {
-          "to": "GoogleAccount",
+          "to": "Link",
           "to_fields": [],
-          "name": "GoogleAccountToUser",
+          "name": "LinkToUser",
           "on_delete": "None"
         }
       },
@@ -135,37 +165,7 @@
     {
       "stepType": "CreateField",
       "model": "User",
-      "name": "label",
-      "type": {
-        "Relation": {
-          "to": "Label",
-          "to_fields": [],
-          "name": "LabelToUser",
-          "on_delete": "None"
-        }
-      },
-      "arity": "optional",
-      "isUnique": false
-    },
-    {
-      "stepType": "CreateField",
-      "model": "User",
-      "name": "link",
-      "type": {
-        "Relation": {
-          "to": "Link",
-          "to_fields": [],
-          "name": "LinkToUser",
-          "on_delete": "None"
-        }
-      },
-      "arity": "optional",
-      "isUnique": false
-    },
-    {
-      "stepType": "CreateField",
-      "model": "User",
-      "name": "uploadGroup",
+      "name": "uploadGroups",
       "type": {
         "Relation": {
           "to": "UploadGroup",
@@ -174,7 +174,7 @@
           "on_delete": "None"
         }
       },
-      "arity": "optional",
+      "arity": "list",
       "isUnique": false
     },
     {
@@ -449,6 +449,46 @@
         "Base": "String"
       },
       "arity": "required",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Link",
+      "name": "title",
+      "type": {
+        "Base": "String"
+      },
+      "arity": "optional",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Link",
+      "name": "description",
+      "type": {
+        "Base": "String"
+      },
+      "arity": "optional",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Link",
+      "name": "image",
+      "type": {
+        "Base": "String"
+      },
+      "arity": "optional",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "Link",
+      "name": "favicon",
+      "type": {
+        "Base": "String"
+      },
+      "arity": "optional",
       "isUnique": false
     },
     {

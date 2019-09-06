@@ -178,10 +178,14 @@ input LabelWhereUniqueInput {
 
 type Link {
   createdAt: DateTime!
+  description: String
+  favicon: String
   href: String!
   id: ID!
+  image: String
   item: Item!
   notes: String!
+  title: String
   updatedAt: DateTime!
 }
 
@@ -227,6 +231,7 @@ input LinkWhereUniqueInput {
 
 type Mutation {
   createFiles(files: [Upload!]!): [File!]!
+  createLink(href: String!): Link!
   createOneFile(data: FileCreateInput!): File!
   createOneUser(data: UserCreateInput!): User!
   deleteOneFile(where: FileWhereUniqueInput!): File
