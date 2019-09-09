@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { omit } from 'lodash';
 import gql from 'graphql-tag';
 import { usePaste } from '../hooks/usePaste';
+import { randomString } from '../util/helpers';
 
 const UPLOAD_FILE_MUTATION = gql`
   mutation createFiles($files: [Upload!]!) {
@@ -16,9 +17,13 @@ const UPLOAD_FILE_MUTATION = gql`
   }
 `;
 
+interface SpecialFile extends FileWithPath {
+  id: string;
+}
+
 export const CreateFiles = () => {
   const [files, setFiles] = useState<{
-    [key: string]: FileWithPath;
+    [key: string]: SpecialFile;
   }>({});
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,10 +46,15 @@ export const CreateFiles = () => {
       setFiles({
         ...files,
         ...acceptedFiles.reduce(
-          (p: { [key: string]: FileWithPath }, c: FileWithPath) => ({
-            ...p,
-            [c.name]: c,
-          }),
+          (p: { [key: string]: SpecialFile }, c: SpecialFile) => {
+            const id = randomString();
+            c.id = id;
+
+            return {
+              ...p,
+              [id]: c,
+            };
+          },
           {},
         ),
       });
@@ -59,11 +69,13 @@ export const CreateFiles = () => {
       const item = e.clipboardData.items[i];
       const blob = item.getAsFile();
       if (blob) {
-        const { lastModified } = blob;
+        const id = randomString();
+
+        blob.id = id;
 
         setFiles({
           ...files,
-          [lastModified]: blob,
+          [id]: blob,
         });
       }
     }
@@ -118,10 +130,8 @@ export const CreateFiles = () => {
                         e.preventDefault();
                         e.stopPropagation();
 
-                        const {
-                          [file.lastModified || file.name]: temp,
-                          ...rest
-                        } = files;
+                        const { [file.id]: temp, ...rest } = files;
+
                         setFiles(rest);
                       }}
                     >
