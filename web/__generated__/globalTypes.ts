@@ -6,6 +6,11 @@
 // START Enums and Input Objects
 //==============================================================
 
+export interface KeyBlob {
+  tempKey: string;
+  originalFilename: string;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

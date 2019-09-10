@@ -127,6 +127,10 @@ export interface NexusGenInputs {
   ItemWhereUniqueInput: { // input type
     id?: string | null; // ID
   }
+  KeyBlob: { // input type
+    originalFilename: string; // String!
+    tempKey: string; // String!
+  }
   LabelCreateManyWithoutLabelsInput: { // input type
     connect?: NexusGenInputs['LabelWhereUniqueInput'][] | null; // [LabelWhereUniqueInput!]
     create?: NexusGenInputs['LabelCreateWithoutUserInput'][] | null; // [LabelCreateWithoutUserInput!]
@@ -378,6 +382,7 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
   ItemCreateWithoutLinkInput: NexusGenInputs['ItemCreateWithoutLinkInput'];
   ItemCreateWithoutUserInput: NexusGenInputs['ItemCreateWithoutUserInput'];
   ItemWhereUniqueInput: NexusGenInputs['ItemWhereUniqueInput'];
+  KeyBlob: NexusGenInputs['KeyBlob'];
   LabelCreateManyWithoutLabelsInput: NexusGenInputs['LabelCreateManyWithoutLabelsInput'];
   LabelCreateWithoutUserInput: NexusGenInputs['LabelCreateWithoutUserInput'];
   LabelWhereUniqueInput: NexusGenInputs['LabelWhereUniqueInput'];
@@ -467,6 +472,7 @@ export interface NexusGenFieldTypes {
     items: NexusGenRootTypes['Item'][]; // [Item!]!
     items2: NexusGenRootTypes['Item'][] | null; // [Item!]
     me: NexusGenRootTypes['User'] | null; // User
+    s3PutUrl: string; // String!
     test: string; // String!
     uploadGroups: NexusGenRootTypes['UploadGroup'][] | null; // [UploadGroup!]
     users: NexusGenRootTypes['User'][] | null; // [User!]
@@ -501,7 +507,8 @@ export interface NexusGenArgTypes {
   }
   Mutation: {
     createFiles: { // args
-      files: any[]; // [Upload!]!
+      files?: any[] | null; // [Upload!]
+      keyBlobs?: NexusGenInputs['KeyBlob'][] | null; // [KeyBlob!]
     }
     createLink: { // args
       href: string; // String!
@@ -549,6 +556,10 @@ export interface NexusGenArgTypes {
       orderBy?: NexusGenInputs['QueryFindManyItemOrderByInput'] | null; // QueryFindManyItemOrderByInput
       skip?: number | null; // Int
       where?: NexusGenInputs['QueryFindManyItemWhereInput'] | null; // QueryFindManyItemWhereInput
+    }
+    s3PutUrl: { // args
+      key: string; // String!
+      type: string; // String!
     }
     uploadGroups: { // args
       after?: string | null; // String
@@ -600,7 +611,7 @@ export interface NexusGenInheritedFields {}
 
 export type NexusGenObjectNames = "File" | "Item" | "JWT" | "Label" | "Link" | "Mutation" | "Query" | "UploadGroup" | "User";
 
-export type NexusGenInputNames = "BooleanFilter" | "FileCreateInput" | "FileCreateManyWithoutFilesInput" | "FileCreateOneWithoutFileInput" | "FileCreateWithoutItemInput" | "FileCreateWithoutUploadGroupInput" | "FileWhereUniqueInput" | "GoogleAccountCreateManyWithoutGoogleAccountsInput" | "GoogleAccountCreateWithoutUserInput" | "GoogleAccountWhereUniqueInput" | "ItemCreateManyWithoutItemsInput" | "ItemCreateOneWithoutItemInput" | "ItemCreateWithoutLinkInput" | "ItemCreateWithoutUserInput" | "ItemWhereUniqueInput" | "LabelCreateManyWithoutLabelsInput" | "LabelCreateWithoutUserInput" | "LabelWhereUniqueInput" | "LinkCreateManyWithoutLinksInput" | "LinkCreateOneWithoutLinkInput" | "LinkCreateWithoutItemInput" | "LinkCreateWithoutUserInput" | "LinkWhereUniqueInput" | "NullableStringFilter" | "QueryFindManyFileFilter" | "QueryFindManyFileWhereInput" | "QueryFindManyItemFilter" | "QueryFindManyItemOrderByInput" | "QueryFindManyItemWhereInput" | "QueryFindManyUploadGroupFilter" | "QueryFindManyUploadGroupWhereInput" | "StringFilter" | "UploadGroupCreateManyWithoutUploadGroupsInput" | "UploadGroupCreateOneWithoutUploadGroupInput" | "UploadGroupCreateWithoutFilesInput" | "UploadGroupCreateWithoutUserInput" | "UploadGroupWhereUniqueInput" | "UserCreateInput" | "UserCreateOneWithoutUserInput" | "UserCreateWithoutFilesInput" | "UserWhereUniqueInput";
+export type NexusGenInputNames = "BooleanFilter" | "FileCreateInput" | "FileCreateManyWithoutFilesInput" | "FileCreateOneWithoutFileInput" | "FileCreateWithoutItemInput" | "FileCreateWithoutUploadGroupInput" | "FileWhereUniqueInput" | "GoogleAccountCreateManyWithoutGoogleAccountsInput" | "GoogleAccountCreateWithoutUserInput" | "GoogleAccountWhereUniqueInput" | "ItemCreateManyWithoutItemsInput" | "ItemCreateOneWithoutItemInput" | "ItemCreateWithoutLinkInput" | "ItemCreateWithoutUserInput" | "ItemWhereUniqueInput" | "KeyBlob" | "LabelCreateManyWithoutLabelsInput" | "LabelCreateWithoutUserInput" | "LabelWhereUniqueInput" | "LinkCreateManyWithoutLinksInput" | "LinkCreateOneWithoutLinkInput" | "LinkCreateWithoutItemInput" | "LinkCreateWithoutUserInput" | "LinkWhereUniqueInput" | "NullableStringFilter" | "QueryFindManyFileFilter" | "QueryFindManyFileWhereInput" | "QueryFindManyItemFilter" | "QueryFindManyItemOrderByInput" | "QueryFindManyItemWhereInput" | "QueryFindManyUploadGroupFilter" | "QueryFindManyUploadGroupWhereInput" | "StringFilter" | "UploadGroupCreateManyWithoutUploadGroupsInput" | "UploadGroupCreateOneWithoutUploadGroupInput" | "UploadGroupCreateWithoutFilesInput" | "UploadGroupCreateWithoutUserInput" | "UploadGroupWhereUniqueInput" | "UserCreateInput" | "UserCreateOneWithoutUserInput" | "UserCreateWithoutFilesInput" | "UserWhereUniqueInput";
 
 export type NexusGenEnumNames = "OrderByArg";
 

@@ -11,7 +11,7 @@ import { Label } from './types/entities/Label';
 import { UploadGroup } from './types/entities/UploadGroup';
 
 import { googleSignIn } from './mutations/googleSignIn';
-import { createFiles } from './mutations/createFiles';
+import { createFiles, KeyBlob } from './mutations/createFiles';
 import { createLink } from './mutations/createLink';
 
 const GraphQLUploadScalar = asNexusMethod(GraphQLUpload, 'upload');
@@ -47,6 +47,8 @@ export default [
   // Scalars
   GraphQLUploadScalar,
   GraphQLUpload,
+  // Input
+  KeyBlob,
   // Mutations
   googleSignIn,
   createFiles,

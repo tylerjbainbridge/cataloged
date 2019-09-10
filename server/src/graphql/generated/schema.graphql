@@ -151,6 +151,11 @@ type JWT {
   token: String!
 }
 
+input KeyBlob {
+  originalFilename: String!
+  tempKey: String!
+}
+
 type Label {
   createdAt: DateTime!
   id: ID!
@@ -230,7 +235,7 @@ input LinkWhereUniqueInput {
 }
 
 type Mutation {
-  createFiles(files: [Upload!]!): [File!]!
+  createFiles(files: [Upload!], keyBlobs: [KeyBlob!]): [File!]!
   createLink(href: String!): Link!
   createOneFile(data: FileCreateInput!): File!
   createOneUser(data: UserCreateInput!): User!
@@ -264,6 +269,7 @@ type Query {
   items(after: String, before: String, fileWhere: QueryFindManyFileWhereInput, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]!
   items2(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]
   me: User
+  s3PutUrl(key: String!, type: String!): String!
   test: String!
   uploadGroups(after: String, before: String, first: Int, last: Int, skip: Int, where: QueryFindManyUploadGroupWhereInput): [UploadGroup!]
   users(after: String, before: String, first: Int, last: Int, skip: Int): [User!]

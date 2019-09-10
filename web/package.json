@@ -24,6 +24,7 @@
     "apollo-boost": "^0.4.3",
     "apollo-link-context": "^1.0.18",
     "apollo-upload-client": "^11.0.0",
+    "aws-sdk": "^2.525.0",
     "graphql": "^14.4.2",
     "lodash": "^4.17.15",
     "query-string": "^6.8.2",

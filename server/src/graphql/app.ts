@@ -60,7 +60,7 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   formatError: (err: any) => {
-    console.log(err);
+    console.log(JSON.stringify(err, null, 4));
     return err;
   },
   context: async ({ req }: { req: any }) => ({

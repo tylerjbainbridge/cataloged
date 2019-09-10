@@ -7,6 +7,7 @@ import {
   getFindManyOrderArgs,
   conditionallyAddKey,
 } from './helpers';
+import { s3 } from '../../services/AWSService';
 
 export const Query = objectType({
   name: 'Query',
@@ -17,10 +18,25 @@ export const Query = objectType({
       },
     });
 
+    t.string('s3PutUrl', {
+      args: {
+        key: stringArg({ required: true }),
+        type: stringArg({ required: true }),
+      },
+      resolve: (root, args) => {
+        return s3.getSignedUrl('putObject', {
+          Key: args.key,
+          ContentType: args.type,
+          Bucket: process.env.AWS_S3_BUCKET,
+          Expires: 60 * 5,
+        });
+      },
+    });
+
     t.field('me', {
       type: 'User',
       nullable: true,
-      resolve: (parent, args, ctx) => ctx.user,
+      resolve: (root, args, ctx) => ctx.user,
     });
 
     t.string('googleURL', {
