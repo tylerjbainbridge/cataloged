@@ -32,6 +32,8 @@ const parsedLocalStorageUser: getAuthUser_me | null = localStorageUser
   : null;
 
 export const Auth = ({ children }: { children: JSX.Element }) => {
+  const [loading, setLoading] = useState(false);
+
   const [user, setUser] = useState<getAuthUser_me | null>(
     parsedLocalStorageUser,
   );
@@ -50,11 +52,13 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
 
   const refetchUser = async () => {
     try {
+      setLoading(true);
       const { data } = await client.query({
         query: GET_AUTH_USER,
         fetchPolicy: 'network-only',
       });
 
+      setLoading(false);
       setUser(data.me);
     } catch (err) {
       setUser(null);
@@ -69,7 +73,7 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
     if (token) {
       localStorage.setItem('token', token);
       refetchUser();
-    } else {
+    } else if (!loading) {
       localStorage.removeItem('token');
     }
   }, [token]);
@@ -77,7 +81,7 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
   useEffect(() => {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
-    } else {
+    } else if (!loading) {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
     }

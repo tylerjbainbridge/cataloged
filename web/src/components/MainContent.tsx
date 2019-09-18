@@ -89,7 +89,7 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
   });
 
   useQuery(GET_UPLOAD_GROUPS, {
-    // pollInterval: 1000,
+    pollInterval: 1000 * 3,
     notifyOnNetworkStatusChange: true,
   });
 
@@ -152,15 +152,11 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
             <Segment basic loading={initialLoad} as={GridContainer}>
               {data &&
                 data.items &&
-                data.items.map(
-                  item =>
-                    // @ts-ignore
-                    console.log('hello') || (
-                      <GridItem key={item.id}>
-                        <Item item={item} />
-                      </GridItem>
-                    ),
-                )}
+                data.items.map(item => (
+                  <GridItem key={item.id}>
+                    <Item item={item} />
+                  </GridItem>
+                ))}
               {/* <Grid.Row>
               <Loader active={!!(loading && data)} />
             </Grid.Row> */}
