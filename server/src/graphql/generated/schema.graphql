@@ -269,7 +269,7 @@ type Query {
   items(after: String, before: String, fileWhere: QueryFindManyFileWhereInput, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]!
   items2(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]
   me: User
-  s3PutUrl(key: String!, type: String!): String!
+  s3PutUrls(signedURLArgs: [SignedURLArgs!]): [String!]!
   test: String!
   uploadGroups(after: String, before: String, first: Int, last: Int, skip: Int, where: QueryFindManyUploadGroupWhereInput): [UploadGroup!]
   users(after: String, before: String, first: Int, last: Int, skip: Int): [User!]
@@ -357,6 +357,11 @@ input QueryFindManyUploadGroupWhereInput {
   OR: [QueryFindManyUploadGroupWhereInput!]
   updatedAt: QueryFindManyUploadGroupFilter
   user: QueryFindManyUploadGroupWhereInput
+}
+
+input SignedURLArgs {
+  key: String!
+  type: String!
 }
 
 input StringFilter {

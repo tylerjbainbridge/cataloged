@@ -11,6 +11,11 @@ export interface KeyBlob {
   originalFilename: string;
 }
 
+export interface SignedURLArgs {
+  key: string;
+  type: string;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

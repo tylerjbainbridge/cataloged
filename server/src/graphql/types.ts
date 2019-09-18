@@ -14,6 +14,8 @@ import { googleSignIn } from './mutations/googleSignIn';
 import { createFiles, KeyBlob } from './mutations/createFiles';
 import { createLink } from './mutations/createLink';
 
+import * as misc from './types/misc';
+
 const GraphQLUploadScalar = asNexusMethod(GraphQLUpload, 'upload');
 
 // const entitiesPath = path.join(__dirname, 'types/entities');
@@ -53,4 +55,7 @@ export default [
   googleSignIn,
   createFiles,
   createLink,
+
+  // Misc
+  ...Object.values(misc),
 ];

@@ -1,4 +1,4 @@
-import { objectType, stringArg } from '@prisma/nexus';
+import { objectType, arg } from '@prisma/nexus';
 
 import { knex } from '../../data/knex';
 import {
@@ -18,18 +18,22 @@ export const Query = objectType({
       },
     });
 
-    t.string('s3PutUrl', {
+    t.list.string('s3PutUrls', {
       args: {
-        key: stringArg({ required: true }),
-        type: stringArg({ required: true }),
+        signedURLArgs: arg({ type: 'SignedURLArgs', list: true }),
       },
       resolve: (root, args) => {
-        return s3.getSignedUrl('putObject', {
-          Key: args.key,
-          ContentType: args.type,
-          Bucket: process.env.AWS_S3_BUCKET,
-          Expires: 60 * 5,
-        });
+        return Promise.all(
+          args.signedURLArgs.map(
+            ({ key, type }: { key: string; type: string }) =>
+              s3.getSignedUrl('putObject', {
+                Key: key,
+                ContentType: type,
+                Bucket: process.env.AWS_S3_BUCKET,
+                Expires: 60 * 5, // 5 minutes
+              }),
+          ),
+        );
       },
     });
 

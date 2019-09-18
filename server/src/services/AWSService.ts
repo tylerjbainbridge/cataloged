@@ -11,6 +11,8 @@ AWS.config.update({
   secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
 });
 
+AWS.config.region = 'us-east-1';
+
 export const s3 = new AWS.S3();
 
 export class AWSService {

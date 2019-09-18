@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Segment, Image as SemanticImage } from 'semantic-ui-react';
+import { Segment, Image as SemanticImage, ImageProps } from 'semantic-ui-react';
+
+export interface LazeImageProps {
+  [key: string]: any;
+  isReady?: boolean;
+}
 
 export const LazyImage = ({
   src,
-  style,
   isReady = true,
-}: {
-  src: string;
-  style: any;
-  isReady?: boolean;
-}) => {
+  ...props
+}: LazeImageProps) => {
   const [isImageLoaded, setIsImageLoaded] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,8 +22,8 @@ export const LazyImage = ({
   }, [isReady]);
 
   return !isReady || !isImageLoaded ? (
-    <Segment loading style={style} />
+    <Segment basic loading {...props} />
   ) : (
-    <SemanticImage size="huge" rounded style={style} src={src} />
+    <SemanticImage rounded size="huge" src={src} {...props} />
   );
 };

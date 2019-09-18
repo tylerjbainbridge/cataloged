@@ -1,6 +1,6 @@
-import { extendType, inputObjectType, stringArg, arg } from '@prisma/nexus';
+import { inputObjectType } from '@prisma/nexus';
 
-export const KeyType = inputObjectType({
+export const SignedURLArgs = inputObjectType({
   name: 'SignedURLArgs',
   definition(t) {
     t.string('key', { required: true });

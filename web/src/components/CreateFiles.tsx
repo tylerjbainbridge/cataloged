@@ -2,7 +2,6 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useDropzone, FileWithPath } from 'react-dropzone';
 import { Button, List, Image, Segment, Modal } from 'semantic-ui-react';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
-import { omit } from 'lodash';
 import gql from 'graphql-tag';
 import { usePaste } from '../hooks/usePaste';
 import { randomString } from '../util/helpers';
@@ -19,9 +18,9 @@ const UPLOAD_FILE_MUTATION = gql`
   }
 `;
 
-const GET_S3_URL = gql`
-  query s3PutUrl($key: String!, $type: String!) {
-    s3PutUrl(key: $key, type: $type)
+const GET_S3_URLS = gql`
+  query s3PutUrl($signedURLArgs: [SignedURLArgs!]) {
+    s3PutUrls(signedURLArgs: $signedURLArgs)
   }
 `;
 
@@ -53,35 +52,46 @@ export const CreateFiles = () => {
   useEffect(() => {
     (async () => {
       if (isUploading) {
-        const keyBlobs = await Promise.all(
-          fileVals.map(async file => {
-            const key = `temp/${file.id}-${file.name}`;
+        const s3Keys = fileVals.map(file => `temp/${file.id}-${file.name}`);
 
-            const { data } = await client.query({
-              query: GET_S3_URL,
-              fetchPolicy: 'network-only',
-              variables: {
-                key,
-                type: file.type,
-              },
-            });
+        try {
+          const {
+            data: { s3PutUrls },
+          } = await client.query({
+            query: GET_S3_URLS,
+            fetchPolicy: 'network-only',
+            variables: {
+              signedURLArgs: fileVals.map(({ type }, idx) => ({
+                key: s3Keys[idx],
+                type: type,
+              })),
+            },
+          });
 
-            await fetch(data.s3PutUrl, {
-              method: 'PUT',
-              body: file,
-            });
+          const keyBlobs = await Promise.all(
+            s3PutUrls.map(async (s3PutUrl: any, idx: number) => {
+              const file = fileVals[idx];
+              const key = s3Keys[idx];
 
-            return { tempKey: key, originalFilename: file.name };
-          }),
-        );
+              await fetch(s3PutUrl, {
+                method: 'PUT',
+                body: file,
+                headers: {
+                  'Access-Control-Allow-Headers': 'Content-Type',
+                  'Content-Type': file.type,
+                },
+              });
 
-        setIsUploading(false);
+              return { tempKey: key, originalFilename: file.name };
+            }),
+          );
 
-        await createFiles({
-          variables: {
-            keyBlobs,
-          },
-        });
+          setIsUploading(false);
+
+          await createFiles({ variables: { keyBlobs } });
+        } catch (e) {
+          setIsUploading(false);
+        }
       }
     })();
   }, [isUploading]);

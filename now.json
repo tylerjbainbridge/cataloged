@@ -1,6 +1,7 @@
 {
   "version": 2,
   "name": "cataloged",
+  "regions": ["iad1"],
   "builds": [
     {
       "src": "web/package.json",

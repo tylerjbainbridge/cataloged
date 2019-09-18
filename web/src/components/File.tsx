@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import {
   Grid,
-  Image as SemanticImage,
   Segment,
   Dimmer,
   Loader,
@@ -12,48 +11,49 @@ import {
   Popup,
 } from 'semantic-ui-react';
 
-import { getFiles_files } from './__generated__/getFiles';
+import { LazyImage } from './LazyImage';
+import { SelectOnClick } from './SelectOnClick';
+import { getItems_items, getItems_items_file } from './__generated__/getItems';
+import { Click } from './Click';
 
-export const File = ({ file }: { file: getFiles_files }) => {
-  const [isThumbnailImageReady, setIsThumbnailImageReady] = useState<
-    string | null
-  >(null);
-  const [isFullImageReady, setIsFullImageReady] = useState<string | null>(null);
+export interface ItemWithFile extends getItems_items {
+  file: getItems_items_file;
+}
 
-  useEffect(() => {
-    if (file.isUploaded) {
-      const squareImage = new Image();
-      squareImage.onload = e => setIsThumbnailImageReady(squareImage.src);
-      squareImage.src = file.squareUrl;
+export const File = ({ item }: { item: ItemWithFile }) => {
+  const { file } = item;
 
-      const fullImage = new Image();
-      fullImage.onload = () => setIsFullImageReady(fullImage.src);
-      fullImage.src = file.fullUrl;
-    }
-  }, [file.isUploaded]);
+  const [isModalOpen, updateIsModalOpen] = useState(false);
+
+  const openModal = () => updateIsModalOpen(true);
+  const closeModal = () => updateIsModalOpen(false);
 
   return (
-    <div style={{ cursor: 'pointer' }}>
+    <div>
+      <SelectOnClick onDoubleClick={openModal} item={item}>
+        {({ style, ...clickProps }) => (
+          <LazyImage
+            size="huge"
+            rounded
+            style={{ width: 280, height: 280, ...style }}
+            isReady={file.isUploaded}
+            src={
+              !file.isUploaded
+                ? 'https://react.semantic-ui.com/images/wireframe/image.png'
+                : file.squareUrl
+            }
+            {...clickProps}
+          />
+        )}
+      </SelectOnClick>
       <Modal
         closeIcon
+        closeOnEscape
+        closeOnDimmerClick
+        open={isModalOpen}
+        onClose={closeModal}
         size="large"
         style={{ height: '80%' }}
-        trigger={
-          !file.isUploaded || !isThumbnailImageReady ? (
-            <Segment loading style={{ width: 280, height: 280 }} />
-          ) : (
-            <SemanticImage
-              size="huge"
-              rounded
-              style={{ width: 280, height: 280 }}
-              src={
-                !file.isUploaded
-                  ? 'https://react.semantic-ui.com/images/wireframe/image.png'
-                  : file.squareUrl
-              }
-            />
-          )
-        }
       >
         <Modal.Header>
           {file.name}.{file.extension}
@@ -65,24 +65,31 @@ export const File = ({ file }: { file: getFiles_files }) => {
           as={Segment}
           basic
         >
-          {!file.isUploaded || !isFullImageReady ? (
+          {!file.isUploaded ? (
             <Dimmer inverted active>
               <Loader inline="centered" />
             </Dimmer>
           ) : (
-            <SemanticImage
+            <LazyImage
               rounded
               src={file.fullUrl}
-              style={{ height: '100%' }}
+              style={{
+                width: 'auto',
+                height: '100%',
+              }}
             />
           )}
         </Modal.Content>
       </Modal>
       <Popup
         trigger={
-          <Header>
-            {file.name}.{file.extension}
-          </Header>
+          <Click onSingleClick={openModal}>
+            {clickProps => (
+              <Header {...clickProps}>
+                {file.name}.{file.extension}
+              </Header>
+            )}
+          </Click>
         }
         position="bottom center"
         content="View full photo"
