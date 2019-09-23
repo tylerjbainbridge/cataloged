@@ -1,4 +1,4 @@
-import { extendType, stringArg } from '@prisma/nexus';
+import { extendType, stringArg } from 'nexus';
 // @ts-ignore
 import grabity from 'grabity';
 

@@ -1,4 +1,4 @@
-import { inputObjectType } from '@prisma/nexus';
+import { inputObjectType } from 'nexus';
 
 export const SignedURLArgs = inputObjectType({
   name: 'SignedURLArgs',

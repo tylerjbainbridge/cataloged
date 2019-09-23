@@ -1,9 +1,11 @@
 import Bluebird = require('bluebird');
-import { extendType, inputObjectType, arg } from '@prisma/nexus';
+import { extendType, inputObjectType, arg } from 'nexus';
 
 import { File } from '../types/entities/File';
 
 import { AWSService, s3 } from '../../services/AWSService';
+
+const MAX_CONCURRENCY = 5;
 
 export const KeyBlob = inputObjectType({
   name: 'KeyBlob',
@@ -94,7 +96,7 @@ export const createFiles = extendType({
 
             return processFile({ name, extension, stream });
           },
-          { concurrency: 1 },
+          { concurrency: MAX_CONCURRENCY },
         );
 
         const testFiles = await Bluebird.map(
@@ -120,7 +122,7 @@ export const createFiles = extendType({
 
             return file;
           },
-          { concurrency: 1 },
+          { concurrency: MAX_CONCURRENCY },
         );
 
         const allFiles = [...blobFiles, ...testFiles];

@@ -1,4 +1,4 @@
-import { objectType } from '@prisma/nexus';
+import { objectType } from 'nexus';
 import { getCloudFrontURL, KEY_TYPES } from '../../../helpers/files';
 
 export const File = objectType({

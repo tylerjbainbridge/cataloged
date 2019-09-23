@@ -37,6 +37,10 @@ export const SelectContainer = ({
 
   const resetAndSelect = (item: Item) => {
     const newSelectedMap = new Map();
+    console.log(isItemSelected(item));
+
+    if (isItemSelected(item)) return updateSelectedMap(newSelectedMap);
+
     const id = getId(item);
     newSelectedMap.set(id, item);
     immutableUpdateMap(newSelectedMap);
@@ -82,6 +86,8 @@ export const SelectContainer = ({
   const onToggleThunk = (item: Item) => () => toggleItem(item);
   const onSelectRangeThunk = (item: Item) => () => selectRange(item);
   const onResetAndSelectThunk = (item: Item) => () => resetAndSelect(item);
+
+  console.log({ selectedMap });
 
   return (
     <SelectContext.Provider

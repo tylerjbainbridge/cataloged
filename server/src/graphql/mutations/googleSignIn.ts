@@ -1,4 +1,4 @@
-import { extendType, stringArg } from '@prisma/nexus';
+import { extendType, stringArg } from 'nexus';
 
 import { JWT } from '../types/entities/JWT';
 import { TokenService } from '../../services/TokenService';

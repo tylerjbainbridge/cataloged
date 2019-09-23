@@ -1,4 +1,4 @@
-import { objectType, arg } from '@prisma/nexus';
+import { objectType, arg } from 'nexus';
 
 import { knex } from '../../data/knex';
 import {
@@ -47,15 +47,7 @@ export const Query = objectType({
       resolve: (root, args, ctx) => ctx.google.getUrl(),
     });
 
-    t.crud.findManyUser({
-      alias: 'users',
-    });
-
-    t.crud.findManyItem({
-      alias: 'items2',
-      filtering: true,
-      ordering: true,
-    });
+    t.crud.users();
 
     t.list.field('items', {
       type: 'Item',
@@ -76,25 +68,55 @@ export const Query = objectType({
             // @ts-ignore
             user: { id: ctx.user.id },
             ...conditionallyAddKey(fileWhere, 'file'),
+            ...(rest.where || {}),
           },
           ...rest,
         });
       },
     });
 
-    t.crud.findManyFile({
-      alias: 'files',
-      filtering: true,
+    t.list.field('uploadGroups', {
+      type: 'UploadGroup',
+      args: {
+        ...paginationArgs,
+        // @ts-ignore
+        where: getFindManyWhereArgs('UploadGroup'),
+        // @ts-ignore
+        orderBy: getFindManyOrderArgs('UploadGroup'),
+      },
+      resolve: (_, args, ctx) => {
+        const { fileWhere, ...rest } = args;
+
+        return ctx.photon.uploadGroups.findMany({
+          where: {
+            // @ts-ignore
+            user: { id: ctx.user.id },
+            ...(rest.where || {}),
+          },
+          ...rest,
+        });
+      },
     });
 
-    t.crud.findManyUploadGroup({
-      alias: 'uploadGroups',
+    t.crud.items({
+      alias: '_items',
       filtering: true,
+      ordering: true,
     });
 
-    t.crud.findOneFile({
-      alias: 'file',
+    t.crud.files({
+      alias: '_files',
+      filtering: true,
+      ordering: true,
     });
+
+    t.crud.uploadgroups({
+      alias: '_uploadgroups',
+      filtering: true,
+      ordering: true,
+    });
+
+    t.crud.file();
 
     // t.list.field('feed', {
     //   type: 'File',

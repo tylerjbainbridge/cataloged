@@ -1,10 +1,10 @@
 require('dotenv').config();
 import morgan from 'morgan';
 
-const { ApolloServer } = require('apollo-server-express');
+import { ApolloServer } from 'apollo-server-express';
 const express = require('express');
-import { nexusPrismaPlugin } from '@generated/nexus-prisma';
-import { makeSchema } from '@prisma/nexus';
+import * as Nexus from 'nexus';
+import * as NexusPrisma from '@generated/nexus-prisma';
 import { join } from 'path';
 
 import types from './types';
@@ -14,11 +14,11 @@ import { GoogleService } from '../services/GoogleService';
 import { getUserFromRequest } from '../helpers/auth';
 import { getHostUrl } from '../helpers/request';
 
-const nexusPrisma = nexusPrismaPlugin({
+const nexusPrisma = NexusPrisma.nexusPrismaPlugin({
   photon: (ctx: Context) => ctx.photon,
 });
 
-const schema = makeSchema({
+const schema = Nexus.makeSchema({
   types: [...types, nexusPrisma],
   outputs: {
     typegen: join(__dirname, './generated/nexus-typegen.ts'),
@@ -60,7 +60,7 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   formatError: (err: any) => {
-    console.log(JSON.stringify(err, null, 4));
+    console.error(err.originalError);
     return err;
   },
   context: async ({ req }: { req: any }) => ({

@@ -1,4 +1,4 @@
-import { mutationType } from '@prisma/nexus';
+import { mutationType } from 'nexus';
 
 export const Mutation = mutationType({
   definition(t) {

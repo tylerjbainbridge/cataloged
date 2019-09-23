@@ -263,15 +263,16 @@ enum OrderByArg {
 }
 
 type Query {
+  _files(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyFileOrderByInput, skip: Int, where: QueryFindManyFileWhereInput): [File!]
+  _items(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]
+  _uploadgroups(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyUploadGroupOrderByInput, skip: Int, where: QueryFindManyUploadGroupWhereInput): [UploadGroup!]
   file(where: FileWhereUniqueInput!): File
-  files(after: String, before: String, first: Int, last: Int, skip: Int, where: QueryFindManyFileWhereInput): [File!]
   googleURL: String!
   items(after: String, before: String, fileWhere: QueryFindManyFileWhereInput, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]!
-  items2(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]
   me: User
   s3PutUrls(signedURLArgs: [SignedURLArgs!]): [String!]!
   test: String!
-  uploadGroups(after: String, before: String, first: Int, last: Int, skip: Int, where: QueryFindManyUploadGroupWhereInput): [UploadGroup!]
+  uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyUploadGroupOrderByInput, skip: Int, where: QueryFindManyUploadGroupWhereInput): [UploadGroup!]!
   users(after: String, before: String, first: Int, last: Int, skip: Int): [User!]
 }
 
@@ -284,6 +285,18 @@ input QueryFindManyFileFilter {
   lte: DateTime
   not: DateTime
   notIn: [DateTime!]
+}
+
+input QueryFindManyFileOrderByInput {
+  createdAt: OrderByArg
+  extension: OrderByArg
+  height: OrderByArg
+  id: OrderByArg
+  isUploaded: OrderByArg
+  name: OrderByArg
+  size: OrderByArg
+  updatedAt: OrderByArg
+  width: OrderByArg
 }
 
 input QueryFindManyFileWhereInput {
@@ -345,6 +358,13 @@ input QueryFindManyUploadGroupFilter {
   lte: DateTime
   not: DateTime
   notIn: [DateTime!]
+}
+
+input QueryFindManyUploadGroupOrderByInput {
+  createdAt: OrderByArg
+  id: OrderByArg
+  isComplete: OrderByArg
+  updatedAt: OrderByArg
 }
 
 input QueryFindManyUploadGroupWhereInput {

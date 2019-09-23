@@ -1,4 +1,4 @@
-import { stringArg, intArg, arg } from '@prisma/nexus';
+import { stringArg, intArg, arg } from 'nexus';
 
 export const paginationArgs = {
   skip: intArg(),

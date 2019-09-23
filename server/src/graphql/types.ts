@@ -1,5 +1,5 @@
 import { GraphQLUpload } from 'graphql-upload';
-import { asNexusMethod } from '@prisma/nexus';
+import { asNexusMethod } from 'nexus';
 
 import { Query } from './types/Query';
 import { Mutation } from './types/Mutation';
