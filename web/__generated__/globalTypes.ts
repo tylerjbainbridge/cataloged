@@ -6,12 +6,8 @@
 // START Enums and Input Objects
 //==============================================================
 
-export interface KeyBlob {
-  tempKey: string;
-  originalFilename: string;
-}
-
 export interface SignedURLArgs {
+  name: string;
   key: string;
   type: string;
 }

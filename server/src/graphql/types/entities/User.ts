@@ -20,5 +20,7 @@ export const User = objectType({
     t.model.items({
       pagination: true,
     });
+
+    t.model.collections();
   },
 });

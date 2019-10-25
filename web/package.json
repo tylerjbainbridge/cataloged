@@ -44,7 +44,7 @@
     "@types/graphql": "^14.2.3",
     "@types/yup": "^0.26.23",
     "prettier": "^1.18.2",
-    "typescript": "^3.5.3"
+    "typescript": "^3.6.3"
   },
   "browserslist": {
     "production": [

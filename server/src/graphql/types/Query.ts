@@ -1,4 +1,5 @@
 import { objectType, arg } from 'nexus';
+import { merge } from 'lodash';
 
 import { knex } from '../../data/knex';
 import {
@@ -15,25 +16,6 @@ export const Query = objectType({
     t.string('test', {
       resolve: () => {
         return 'hello world!!!';
-      },
-    });
-
-    t.list.string('s3PutUrls', {
-      args: {
-        signedURLArgs: arg({ type: 'SignedURLArgs', list: true }),
-      },
-      resolve: (root, args) => {
-        return Promise.all(
-          args.signedURLArgs.map(
-            ({ key, type }: { key: string; type: string }) =>
-              s3.getSignedUrl('putObject', {
-                Key: key,
-                ContentType: type,
-                Bucket: process.env.AWS_S3_BUCKET,
-                Expires: 60 * 5, // 5 minutes
-              }),
-          ),
-        );
       },
     });
 
@@ -67,7 +49,10 @@ export const Query = objectType({
           where: {
             // @ts-ignore
             user: { id: ctx.user.id },
-            ...conditionallyAddKey(fileWhere, 'file'),
+            ...conditionallyAddKey(
+              merge(fileWhere, { isUploaded: true }),
+              'file',
+            ),
             ...(rest.where || {}),
           },
           ...rest,
@@ -85,13 +70,14 @@ export const Query = objectType({
         orderBy: getFindManyOrderArgs('UploadGroup'),
       },
       resolve: (_, args, ctx) => {
-        const { fileWhere, ...rest } = args;
+        const { where, ...rest } = args;
 
         return ctx.photon.uploadGroups.findMany({
           where: {
             // @ts-ignore
+            ...(where || {}),
+            isComplete: false,
             user: { id: ctx.user.id },
-            ...(rest.where || {}),
           },
           ...rest,
         });

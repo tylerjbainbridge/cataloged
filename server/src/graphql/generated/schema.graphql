@@ -2,9 +2,29 @@
 ### Do not make changes to this file directly
 
 
-input BooleanFilter {
-  equals: Boolean
-  not: Boolean
+type Collection {
+  createdAt: DateTime!
+  id: ID!
+  items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]
+  name: String!
+  updatedAt: DateTime!
+}
+
+input CollectionCreateManyWithoutCollectionsInput {
+  connect: [CollectionWhereUniqueInput!]
+  create: [CollectionCreateWithoutUserInput!]
+}
+
+input CollectionCreateWithoutUserInput {
+  createdAt: DateTime
+  id: ID
+  items: ItemCreateManyWithoutItemsInput
+  name: String!
+  updatedAt: DateTime
+}
+
+input CollectionWhereUniqueInput {
+  id: ID
 }
 
 """DateTime"""
@@ -16,7 +36,7 @@ type File {
   fullUrl: String!
   height: Int
   id: ID!
-  isUploaded: Boolean!
+  isUploaded: Boolean
   name: String!
   size: String
   squareUrl: String!
@@ -30,7 +50,8 @@ input FileCreateInput {
   extension: String!
   height: Int
   id: ID
-  isUploaded: Boolean!
+  isFailed: Boolean
+  isUploaded: Boolean
   item: ItemCreateOneWithoutItemInput!
   name: String!
   size: String
@@ -55,7 +76,8 @@ input FileCreateWithoutItemInput {
   extension: String!
   height: Int
   id: ID
-  isUploaded: Boolean!
+  isFailed: Boolean
+  isUploaded: Boolean
   name: String!
   size: String
   updatedAt: DateTime
@@ -69,7 +91,8 @@ input FileCreateWithoutUploadGroupInput {
   extension: String!
   height: Int
   id: ID
-  isUploaded: Boolean!
+  isFailed: Boolean
+  isUploaded: Boolean
   item: ItemCreateOneWithoutItemInput!
   name: String!
   size: String
@@ -104,7 +127,13 @@ input GoogleAccountWhereUniqueInput {
   id: ID
 }
 
+type InProgressUpload {
+  signedUrls: [String!]!
+  uploadGroup: UploadGroup
+}
+
 type Item {
+  collections(after: String, before: String, first: Int, last: Int, skip: Int): [Collection!]
   createdAt: DateTime!
   file: File
   id: ID!
@@ -124,20 +153,20 @@ input ItemCreateOneWithoutItemInput {
 }
 
 input ItemCreateWithoutLinkInput {
+  collections: CollectionCreateManyWithoutCollectionsInput
   createdAt: DateTime
   file: FileCreateOneWithoutFileInput
   id: ID
-  labels: LabelCreateManyWithoutLabelsInput
   type: String!
   updatedAt: DateTime
   user: UserCreateOneWithoutUserInput
 }
 
 input ItemCreateWithoutUserInput {
+  collections: CollectionCreateManyWithoutCollectionsInput
   createdAt: DateTime
   file: FileCreateOneWithoutFileInput
   id: ID
-  labels: LabelCreateManyWithoutLabelsInput
   link: LinkCreateOneWithoutLinkInput
   type: String!
   updatedAt: DateTime
@@ -152,33 +181,7 @@ type JWT {
 }
 
 input KeyBlob {
-  originalFilename: String!
-  tempKey: String!
-}
-
-type Label {
-  createdAt: DateTime!
-  id: ID!
-  items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]
-  name: String!
-  updatedAt: DateTime!
-}
-
-input LabelCreateManyWithoutLabelsInput {
-  connect: [LabelWhereUniqueInput!]
-  create: [LabelCreateWithoutUserInput!]
-}
-
-input LabelCreateWithoutUserInput {
-  createdAt: DateTime
-  id: ID
-  items: ItemCreateManyWithoutItemsInput
-  name: String!
-  updatedAt: DateTime
-}
-
-input LabelWhereUniqueInput {
-  id: ID
+  fileId: String!
 }
 
 type Link {
@@ -235,12 +238,13 @@ input LinkWhereUniqueInput {
 }
 
 type Mutation {
-  createFiles(files: [Upload!], keyBlobs: [KeyBlob!]): [File!]!
   createLink(href: String!): Link!
   createOneFile(data: FileCreateInput!): File!
   createOneUser(data: UserCreateInput!): User!
   deleteOneFile(where: FileWhereUniqueInput!): File
+  generateSignedUrls(signedURLArgs: [SignedURLArgs!]): InProgressUpload!
   googleSignIn(code: String!): JWT!
+  processFiles(uploadGroupId: String): [File!]!
 }
 
 input NullableStringFilter {
@@ -270,7 +274,6 @@ type Query {
   googleURL: String!
   items(after: String, before: String, fileWhere: QueryFindManyFileWhereInput, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]!
   me: User
-  s3PutUrls(signedURLArgs: [SignedURLArgs!]): [String!]!
   test: String!
   uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyUploadGroupOrderByInput, skip: Int, where: QueryFindManyUploadGroupWhereInput): [UploadGroup!]!
   users(after: String, before: String, first: Int, last: Int, skip: Int): [User!]
@@ -292,6 +295,7 @@ input QueryFindManyFileOrderByInput {
   extension: OrderByArg
   height: OrderByArg
   id: OrderByArg
+  isFailed: OrderByArg
   isUploaded: OrderByArg
   name: OrderByArg
   size: OrderByArg
@@ -305,7 +309,8 @@ input QueryFindManyFileWhereInput {
   extension: StringFilter
   height: QueryFindManyFileFilter
   id: StringFilter
-  isUploaded: BooleanFilter
+  isFailed: QueryFindManyFileFilter
+  isUploaded: QueryFindManyFileFilter
   item: QueryFindManyFileWhereInput
   name: StringFilter
   NOT: [QueryFindManyFileWhereInput!]
@@ -337,10 +342,10 @@ input QueryFindManyItemOrderByInput {
 
 input QueryFindManyItemWhereInput {
   AND: [QueryFindManyItemWhereInput!]
+  collections: QueryFindManyItemFilter
   createdAt: QueryFindManyItemFilter
   file: QueryFindManyItemWhereInput
   id: StringFilter
-  labels: QueryFindManyItemFilter
   link: QueryFindManyItemWhereInput
   NOT: [QueryFindManyItemWhereInput!]
   OR: [QueryFindManyItemWhereInput!]
@@ -364,6 +369,7 @@ input QueryFindManyUploadGroupOrderByInput {
   createdAt: OrderByArg
   id: OrderByArg
   isComplete: OrderByArg
+  isFailed: OrderByArg
   updatedAt: OrderByArg
 }
 
@@ -372,7 +378,8 @@ input QueryFindManyUploadGroupWhereInput {
   createdAt: QueryFindManyUploadGroupFilter
   files: QueryFindManyUploadGroupFilter
   id: StringFilter
-  isComplete: BooleanFilter
+  isComplete: QueryFindManyUploadGroupFilter
+  isFailed: QueryFindManyUploadGroupFilter
   NOT: [QueryFindManyUploadGroupWhereInput!]
   OR: [QueryFindManyUploadGroupWhereInput!]
   updatedAt: QueryFindManyUploadGroupFilter
@@ -381,6 +388,7 @@ input QueryFindManyUploadGroupWhereInput {
 
 input SignedURLArgs {
   key: String!
+  name: String!
   type: String!
 }
 
@@ -405,7 +413,7 @@ type UploadGroup {
   createdAt: DateTime!
   files(after: String, before: String, first: Int, last: Int, skip: Int): [File!]
   id: ID!
-  isComplete: Boolean!
+  isComplete: Boolean
   updatedAt: DateTime!
 }
 
@@ -422,7 +430,8 @@ input UploadGroupCreateOneWithoutUploadGroupInput {
 input UploadGroupCreateWithoutFilesInput {
   createdAt: DateTime
   id: ID
-  isComplete: Boolean!
+  isComplete: Boolean
+  isFailed: Boolean
   updatedAt: DateTime
   user: UserCreateOneWithoutUserInput!
 }
@@ -431,7 +440,8 @@ input UploadGroupCreateWithoutUserInput {
   createdAt: DateTime
   files: FileCreateManyWithoutFilesInput
   id: ID
-  isComplete: Boolean!
+  isComplete: Boolean
+  isFailed: Boolean
   updatedAt: DateTime
 }
 
@@ -440,6 +450,7 @@ input UploadGroupWhereUniqueInput {
 }
 
 type User {
+  collections(after: String, before: String, first: Int, last: Int, skip: Int): [Collection!]
   email: String!
   files(after: String, before: String, first: Int, last: Int, skip: Int): [File!]
   firstName: String
@@ -450,13 +461,13 @@ type User {
 }
 
 input UserCreateInput {
+  collections: CollectionCreateManyWithoutCollectionsInput
   email: String!
   files: FileCreateManyWithoutFilesInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutGoogleAccountsInput
   id: ID
   items: ItemCreateManyWithoutItemsInput
-  labels: LabelCreateManyWithoutLabelsInput
   lastName: String
   links: LinkCreateManyWithoutLinksInput
   uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput
@@ -468,12 +479,12 @@ input UserCreateOneWithoutUserInput {
 }
 
 input UserCreateWithoutFilesInput {
+  collections: CollectionCreateManyWithoutCollectionsInput
   email: String!
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutGoogleAccountsInput
   id: ID
   items: ItemCreateManyWithoutItemsInput
-  labels: LabelCreateManyWithoutLabelsInput
   lastName: String
   links: LinkCreateManyWithoutLinksInput
   uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput

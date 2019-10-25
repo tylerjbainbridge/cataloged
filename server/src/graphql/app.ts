@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import { ApolloServer } from 'apollo-server-express';
 const express = require('express');
 import * as Nexus from 'nexus';
+import { applyMiddleware } from 'graphql-middleware';
 import * as NexusPrisma from '@generated/nexus-prisma';
 import { join } from 'path';
 
@@ -13,6 +14,7 @@ import { photon } from '../data/photon';
 import { GoogleService } from '../services/GoogleService';
 import { getUserFromRequest } from '../helpers/auth';
 import { getHostUrl } from '../helpers/request';
+import { permissions } from './permissions';
 
 const nexusPrisma = NexusPrisma.nexusPrismaPlugin({
   photon: (ctx: Context) => ctx.photon,
@@ -56,7 +58,7 @@ const app = express();
 app.use(morgan('tiny'));
 
 const server = new ApolloServer({
-  schema,
+  schema: applyMiddleware(schema, permissions),
   introspection: true,
   playground: true,
   formatError: (err: any) => {
@@ -68,7 +70,6 @@ const server = new ApolloServer({
     user: await getUserFromRequest(req),
     google: new GoogleService(getHostUrl(req)),
   }),
-  // middlewares: [permissions],
 });
 
 server.applyMiddleware({ app, path: '/' });

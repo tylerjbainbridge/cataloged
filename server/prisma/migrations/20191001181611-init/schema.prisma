@@ -20,13 +20,13 @@ model User {
 
   googleAccounts GoogleAccount[]
   items          Item[]
-  labels         Label[]
+  collections    Collection[]
   files          File[]
   links          Link[]
   uploadGroups   UploadGroup[]
 }
 
-model Label {
+model Collection {
   id        String   @default(cuid()) @id @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,7 +47,7 @@ model Item {
   file File?
   link Link?
 
-  labels Label[]
+  collections Collection[]
 }
 
 
@@ -82,7 +82,9 @@ model File {
   width  Int?
   height Int?
 
+
   isUploaded Boolean
+  isFailed   Boolean
 
   item        Item
   user        User
@@ -95,6 +97,7 @@ model UploadGroup {
   updatedAt DateTime @updatedAt
 
   isComplete Boolean
+  isFailed   Boolean
 
   user  User
   files File[]

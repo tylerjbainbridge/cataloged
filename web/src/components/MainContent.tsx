@@ -12,20 +12,7 @@ import { usePagination } from '../hooks/useVariables';
 import { CreateFiles } from './CreateFiles';
 import { CreateLink } from './CreateLink';
 import { SignOut } from './SignOut';
-
-const GET_UPLOAD_GROUPS = gql`
-  query getUploadGroups {
-    uploadGroups {
-      id
-      isComplete
-
-      files {
-        id
-        isUploaded
-      }
-    }
-  }
-`;
+import { UploadProgress } from './UploadProgress';
 
 const GET_FILES = gql`
   query getItems($first: Int, $skip: Int) {
@@ -88,82 +75,80 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
     notifyOnNetworkStatusChange: true,
   });
 
-  useQuery(GET_UPLOAD_GROUPS, {
-    pollInterval: 1000 * 3,
-    notifyOnNetworkStatusChange: true,
-  });
-
   const initialLoad = loading && !data;
 
   return (
-    <SelectContainer items={data ? data.items : []}>
-      <Segment
-        basic
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          ...(initialLoad ? { height: '100vh' } : {}),
-        }}
-      >
-        <Segment style={{ width: '90vw', marginTop: 100 }}>
-          <Segment
-            basic
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              top: -80,
-              height: 50,
-            }}
-          >
-            <div>
-              <CreateFiles />
-              <CreateLink />
-            </div>
-            <Header size="large" subheader="test">
-              Cataloged
-            </Header>
-            <SignOut />
-          </Segment>
-          <br />
-          <Visibility
-            continuous
-            offset={-500}
-            onBottomVisible={() => {
-              if (data && data.items && !loading) {
-                fetchMore({
-                  variables: {
-                    skip: data.items.length,
-                  },
-                  updateQuery: (prev, { fetchMoreResult }) => {
-                    if (!fetchMoreResult) return prev;
-                    return {
-                      ...prev,
-                      items: [
-                        ...(prev.items || []),
-                        ...(fetchMoreResult.items || []),
-                      ],
-                    };
-                  },
-                });
-              }
-            }}
-          >
-            <Segment basic loading={initialLoad} as={GridContainer}>
-              {data &&
-                data.items &&
-                data.items.map(item => (
-                  <GridItem key={item.id}>
-                    <Item item={item} />
-                  </GridItem>
-                ))}
-              {/* <Grid.Row>
+    <>
+      <UploadProgress />
+      <SelectContainer items={data ? data.items : []}>
+        <Segment
+          basic
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            ...(initialLoad ? { height: '100vh' } : {}),
+          }}
+        >
+          <Segment style={{ width: '90vw', marginTop: 100 }}>
+            <Segment
+              basic
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                top: -80,
+                height: 50,
+              }}
+            >
+              <div>
+                <CreateFiles />
+                <CreateLink />
+              </div>
+              <Header size="large" subheader="test">
+                Cataloged
+              </Header>
+              <SignOut />
+            </Segment>
+            <br />
+            <Visibility
+              continuous
+              offset={-500}
+              onBottomVisible={() => {
+                if (data && data.items && !loading) {
+                  fetchMore({
+                    variables: {
+                      skip: data.items.length,
+                    },
+                    updateQuery: (prev, { fetchMoreResult }) => {
+                      if (!fetchMoreResult) return prev;
+                      return {
+                        ...prev,
+                        items: [
+                          ...(prev.items || []),
+                          ...(fetchMoreResult.items || []),
+                        ],
+                      };
+                    },
+                  });
+                }
+              }}
+            >
+              <Segment basic loading={initialLoad} as={GridContainer}>
+                {data &&
+                  data.items &&
+                  data.items.map(item => (
+                    <GridItem key={item.id}>
+                      <Item item={item} />
+                    </GridItem>
+                  ))}
+                {/* <Grid.Row>
               <Loader active={!!(loading && data)} />
             </Grid.Row> */}
-            </Segment>
-          </Visibility>
+              </Segment>
+            </Visibility>
+          </Segment>
         </Segment>
-      </Segment>
-    </SelectContainer>
+      </SelectContainer>
+    </>
   );
 };

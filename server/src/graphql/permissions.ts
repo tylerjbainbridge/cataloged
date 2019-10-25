@@ -1,21 +1,44 @@
-import { rule, shield, allow } from 'graphql-shield';
+import { rule, shield, and } from 'graphql-shield';
+import _ from 'lodash';
 
-const requireAuth = rule()((parent, args, ctx) => ctx.user !== null);
+const requireAuth = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
+  console.log('ctx.user', ctx.user);
+
+  if (ctx.user === null) {
+    // if (process.env.NODE_ENV === 'development') console.log(info);
+    throw new Error('Uh oh!');
+  }
+
+  return true;
+});
+
+const allow = rule({ cache: 'no_cache' })(() => true);
+
+const noPrivateFields = rule({ cache: 'no_cache' })(
+  (parent, args, ctx, info) => {
+    if (_.get(info, 'fieldName', '').startsWith('_')) {
+      throw new Error('Private!');
+    }
+
+    return true;
+  },
+);
 
 export const permissions = shield(
   {
     Query: {
-      '*': requireAuth,
+      '*': and(requireAuth, noPrivateFields),
       test: allow,
       googleURL: allow,
     },
-    // Mutation: {
-    //   '*': allow,
-    //   googleSignIn: allow,
-    // },
+    Mutation: {
+      '*': and(requireAuth, noPrivateFields),
+      googleSignIn: allow,
+    },
   },
-  // {
-  //   fallbackError: `You're not authorized to view this.`,
-  //   fallbackRule: requireAuth,
-  // },
+  {
+    debug: true,
+    allowExternalErrors: true,
+    fallbackRule: allow,
+  },
 );

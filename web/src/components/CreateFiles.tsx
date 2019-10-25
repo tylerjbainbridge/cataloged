@@ -6,11 +6,16 @@ import gql from 'graphql-tag';
 import { usePaste } from '../hooks/usePaste';
 import { randomString } from '../util/helpers';
 import { SpecialFile, uploadFile } from '../util/aws';
-import { createFiles_createFiles } from './__generated__/createFiles';
+import { processFiles_processFiles } from './__generated__/processFiles';
+import {
+  generateSignedUrls_generateSignedUrls_uploadGroup,
+  generateSignedUrls,
+  generateSignedUrls_generateSignedUrls,
+} from './__generated__/generateSignedUrls';
 
 const UPLOAD_FILE_MUTATION = gql`
-  mutation createFiles($files: [Upload!], $keyBlobs: [KeyBlob!]) {
-    createFiles(files: $files, keyBlobs: $keyBlobs) {
+  mutation processFiles($uploadGroupId: String) {
+    processFiles(uploadGroupId: $uploadGroupId) {
       id
       squareUrl
       fullUrl
@@ -18,9 +23,14 @@ const UPLOAD_FILE_MUTATION = gql`
   }
 `;
 
-const GET_S3_URLS = gql`
-  query s3PutUrl($signedURLArgs: [SignedURLArgs!]) {
-    s3PutUrls(signedURLArgs: $signedURLArgs)
+const GENERATE_SIGNED_URLS = gql`
+  mutation generateSignedUrls($signedURLArgs: [SignedURLArgs!]) {
+    generateSignedUrls(signedURLArgs: $signedURLArgs) {
+      signedUrls
+      uploadGroup {
+        id
+      }
+    }
   }
 `;
 
@@ -39,10 +49,13 @@ export const CreateFiles = () => {
   const fileVals = Object.values(files);
   const fileEntries = Object.entries(files);
 
-  const [createFiles, { loading: isSubmitting }] = useMutation<
-    createFiles_createFiles
+  const [processFiles, { loading: isSubmitting }] = useMutation<
+    processFiles_processFiles
   >(UPLOAD_FILE_MUTATION, {
-    refetchQueries: ['getItems'],
+    refetchQueries: ['getUploadGroups'],
+  });
+
+  const [generateSignedUrls] = useMutation(GENERATE_SIGNED_URLS, {
     onCompleted: () => {
       setIsModalOpen(false);
       setFiles({});
@@ -56,20 +69,21 @@ export const CreateFiles = () => {
 
         try {
           const {
-            data: { s3PutUrls },
-          } = await client.query({
-            query: GET_S3_URLS,
-            fetchPolicy: 'network-only',
+            data: {
+              generateSignedUrls: { signedUrls, uploadGroup },
+            },
+          } = await generateSignedUrls({
             variables: {
-              signedURLArgs: fileVals.map(({ type }, idx) => ({
+              signedURLArgs: fileVals.map(({ type, name }, idx) => ({
+                name,
                 key: s3Keys[idx],
                 type: type,
               })),
             },
           });
 
-          const keyBlobs = await Promise.all(
-            s3PutUrls.map(async (s3PutUrl: any, idx: number) => {
+          await Promise.all(
+            signedUrls.map(async (s3PutUrl: any, idx: number) => {
               const file = fileVals[idx];
               const key = s3Keys[idx];
 
@@ -88,7 +102,7 @@ export const CreateFiles = () => {
 
           setIsUploading(false);
 
-          await createFiles({ variables: { keyBlobs } });
+          await processFiles({ variables: { uploadGroupId: uploadGroup.id } });
         } catch (e) {
           setIsUploading(false);
         }
@@ -155,8 +169,8 @@ export const CreateFiles = () => {
       trigger={<Button icon="file" onClick={() => setIsModalOpen(true)} />}
     >
       <Modal.Header>Drag photos below or paste from clipboard</Modal.Header>
-      <Modal.Content image scrolling {...getRootProps()}>
-        <Segment basic loading={isWorking} style={{ width: '100%' }}>
+      <Modal.Content loading={isWorking} image scrolling {...getRootProps()}>
+        <Segment basic style={{ width: '100%' }}>
           <input {...getInputProps()} />
           {!!fileCount && (
             <List

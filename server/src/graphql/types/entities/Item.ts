@@ -9,6 +9,7 @@ export const Item = objectType({
 
     t.model.file();
     t.model.link();
+    t.model.collections();
 
     t.model.type();
   },

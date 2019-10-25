@@ -1,5 +1,5 @@
 {
-  "version": "0.2.7",
+  "version": "0.3.14-fixed",
   "steps": [
     {
       "stepType": "CreateModel",
@@ -8,7 +8,7 @@
     },
     {
       "stepType": "CreateModel",
-      "name": "Label",
+      "name": "Collection",
       "embedded": false
     },
     {
@@ -120,12 +120,12 @@
     {
       "stepType": "CreateField",
       "model": "User",
-      "name": "labels",
+      "name": "collections",
       "type": {
         "Relation": {
-          "to": "Label",
+          "to": "Collection",
           "to_fields": [],
-          "name": "LabelToUser",
+          "name": "CollectionToUser",
           "on_delete": "None"
         }
       },
@@ -179,7 +179,7 @@
     },
     {
       "stepType": "CreateField",
-      "model": "Label",
+      "model": "Collection",
       "name": "id",
       "type": {
         "Base": "String"
@@ -200,7 +200,7 @@
     },
     {
       "stepType": "CreateField",
-      "model": "Label",
+      "model": "Collection",
       "name": "createdAt",
       "type": {
         "Base": "DateTime"
@@ -217,7 +217,7 @@
     },
     {
       "stepType": "CreateField",
-      "model": "Label",
+      "model": "Collection",
       "name": "updatedAt",
       "type": {
         "Base": "DateTime"
@@ -227,7 +227,7 @@
     },
     {
       "stepType": "CreateField",
-      "model": "Label",
+      "model": "Collection",
       "name": "name",
       "type": {
         "Base": "String"
@@ -237,7 +237,7 @@
     },
     {
       "stepType": "CreateField",
-      "model": "Label",
+      "model": "Collection",
       "name": "user",
       "type": {
         "Relation": {
@@ -245,7 +245,7 @@
           "to_fields": [
             "id"
           ],
-          "name": "LabelToUser",
+          "name": "CollectionToUser",
           "on_delete": "None"
         }
       },
@@ -254,7 +254,7 @@
     },
     {
       "stepType": "CreateField",
-      "model": "Label",
+      "model": "Collection",
       "name": "items",
       "type": {
         "Relation": {
@@ -262,7 +262,7 @@
           "to_fields": [
             "id"
           ],
-          "name": "ItemToLabel",
+          "name": "CollectionToItem",
           "on_delete": "None"
         }
       },
@@ -362,14 +362,14 @@
     {
       "stepType": "CreateField",
       "model": "Item",
-      "name": "labels",
+      "name": "collections",
       "type": {
         "Relation": {
-          "to": "Label",
+          "to": "Collection",
           "to_fields": [
             "id"
           ],
-          "name": "ItemToLabel",
+          "name": "CollectionToItem",
           "on_delete": "None"
         }
       },
@@ -644,6 +644,16 @@
     {
       "stepType": "CreateField",
       "model": "File",
+      "name": "isFailed",
+      "type": {
+        "Base": "Boolean"
+      },
+      "arity": "required",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "File",
       "name": "item",
       "type": {
         "Relation": {
@@ -744,6 +754,16 @@
       "stepType": "CreateField",
       "model": "UploadGroup",
       "name": "isComplete",
+      "type": {
+        "Base": "Boolean"
+      },
+      "arity": "required",
+      "isUnique": false
+    },
+    {
+      "stepType": "CreateField",
+      "model": "UploadGroup",
+      "name": "isFailed",
       "type": {
         "Base": "Boolean"
       },

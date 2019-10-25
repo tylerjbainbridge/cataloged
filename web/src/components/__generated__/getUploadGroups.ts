@@ -9,6 +9,8 @@
 export interface getUploadGroups_uploadGroups_files {
   __typename: "File";
   id: string;
+  name: string;
+  extension: string;
   isUploaded: boolean;
 }
 
@@ -20,5 +22,5 @@ export interface getUploadGroups_uploadGroups {
 }
 
 export interface getUploadGroups {
-  uploadGroups: getUploadGroups_uploadGroups[] | null;
+  uploadGroups: getUploadGroups_uploadGroups[];
 }

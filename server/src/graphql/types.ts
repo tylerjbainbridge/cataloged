@@ -7,12 +7,13 @@ import { User } from './types/entities/User';
 import { File } from './types/entities/File';
 import { Item } from './types/entities/Item';
 import { Link } from './types/entities/Link';
-import { Label } from './types/entities/Label';
+import { Collection } from './types/entities/Collection';
 import { UploadGroup } from './types/entities/UploadGroup';
 
 import { googleSignIn } from './mutations/googleSignIn';
-import { createFiles, KeyBlob } from './mutations/createFiles';
+import { processFiles, KeyBlob } from './mutations/processFiles';
 import { createLink } from './mutations/createLink';
+import { generateSignedUrls } from './mutations/generateSignedUrls';
 
 import * as misc from './types/misc';
 
@@ -45,7 +46,7 @@ export default [
   Item,
   UploadGroup,
   Link,
-  Label,
+  Collection,
   // Scalars
   GraphQLUploadScalar,
   GraphQLUpload,
@@ -53,8 +54,9 @@ export default [
   KeyBlob,
   // Mutations
   googleSignIn,
-  createFiles,
+  processFiles,
   createLink,
+  generateSignedUrls,
 
   // Misc
   ...Object.values(misc),

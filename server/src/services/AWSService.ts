@@ -40,6 +40,28 @@ export class AWSService {
         .send((err: any, data: any) => (err ? reject(err) : resolve(data)));
     });
 
+  static moveTempUpload = async (
+    oldKey: string,
+    user: User,
+    file: File,
+    { uploadOriginal = true } = {},
+  ) => {
+    await s3
+      .copyObject({
+        Bucket: process.env.AWS_S3_BUCKET,
+        CopySource: `${process.env.AWS_S3_BUCKET}${oldKey}`,
+        Key: getS3Key(user, file, KEY_TYPES.original),
+      })
+      .promise();
+
+    await s3
+      .deleteObject({
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: oldKey,
+      })
+      .promise();
+  };
+
   static uploadImage = async (stream: ReadStream, user: User, file: File) => {
     const { full, square, original } = await ImageService.processImages(stream);
 
@@ -47,9 +69,5 @@ export class AWSService {
       AWSService.upload(full, user, file, KEY_TYPES.full),
       AWSService.upload(square, user, file, KEY_TYPES.square),
     ]);
-
-    // no need to wait
-    (async () =>
-      await AWSService.upload(original, user, file, KEY_TYPES.original))();
   };
 }
