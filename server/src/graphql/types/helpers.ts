@@ -8,11 +8,9 @@ export const paginationArgs = {
   last: intArg(),
 };
 
-export const getFindManyWhereArgs = (name: string) =>
-  `QueryFindMany${name}WhereInput`;
+export const getWhereArgs = (name: string) => `${name}WhereInput`;
 
-export const getFindManyOrderArgs = (name: string) =>
-  `QueryFindMany${name}OrderByInput`;
+export const getFindManyOrderArgs = (name: string) => `${name}OrderByInput`;
 
 export const conditionallyAddKey = (argVal: any, objKey: string) =>
   argVal ? { [objKey]: argVal } : {};

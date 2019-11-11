@@ -2,8 +2,6 @@ import { rule, shield, and } from 'graphql-shield';
 import _ from 'lodash';
 
 const requireAuth = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
-  console.log('ctx.user', ctx.user);
-
   if (ctx.user === null) {
     // if (process.env.NODE_ENV === 'development') console.log(info);
     throw new Error('Uh oh!');

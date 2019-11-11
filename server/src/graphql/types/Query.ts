@@ -4,7 +4,7 @@ import { merge } from 'lodash';
 import { knex } from '../../data/knex';
 import {
   paginationArgs,
-  getFindManyWhereArgs,
+  getWhereArgs,
   getFindManyOrderArgs,
   conditionallyAddKey,
 } from './helpers';
@@ -36,9 +36,9 @@ export const Query = objectType({
       args: {
         ...paginationArgs,
         // @ts-ignore
-        where: getFindManyWhereArgs('Item'),
+        where: getWhereArgs('Item'),
         // @ts-ignore
-        fileWhere: getFindManyWhereArgs('File'),
+        fileWhere: getWhereArgs('File'),
         // @ts-ignore
         orderBy: getFindManyOrderArgs('Item'),
       },
@@ -65,7 +65,7 @@ export const Query = objectType({
       args: {
         ...paginationArgs,
         // @ts-ignore
-        where: getFindManyWhereArgs('UploadGroup'),
+        where: getWhereArgs('UploadGroup'),
         // @ts-ignore
         orderBy: getFindManyOrderArgs('UploadGroup'),
       },
@@ -96,7 +96,7 @@ export const Query = objectType({
       ordering: true,
     });
 
-    t.crud.uploadgroups({
+    t.crud.uploadGroups({
       alias: '_uploadgroups',
       filtering: true,
       ordering: true,

@@ -5,7 +5,7 @@
 type Collection {
   createdAt: DateTime!
   id: ID!
-  items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]
+  items(after: ID, before: ID, first: Int, last: Int, skip: Int): [Item!]!
   name: String!
   updatedAt: DateTime!
 }
@@ -23,12 +23,40 @@ input CollectionCreateWithoutUserInput {
   updatedAt: DateTime
 }
 
+input CollectionFilter {
+  every: CollectionWhereInput
+  none: CollectionWhereInput
+  some: CollectionWhereInput
+}
+
+input CollectionWhereInput {
+  AND: [CollectionWhereInput!]
+  createdAt: DateTimeFilter
+  id: StringFilter
+  items: ItemFilter
+  name: StringFilter
+  NOT: [CollectionWhereInput!]
+  OR: [CollectionWhereInput!]
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+}
+
 input CollectionWhereUniqueInput {
   id: ID
 }
 
-"""DateTime"""
 scalar DateTime
+
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: DateTime
+  notIn: [DateTime!]
+}
 
 type File {
   createdAt: DateTime!
@@ -101,6 +129,44 @@ input FileCreateWithoutUploadGroupInput {
   width: Int
 }
 
+input FileFilter {
+  every: FileWhereInput
+  none: FileWhereInput
+  some: FileWhereInput
+}
+
+input FileOrderByInput {
+  createdAt: OrderByArg
+  extension: OrderByArg
+  height: OrderByArg
+  id: OrderByArg
+  isFailed: OrderByArg
+  isUploaded: OrderByArg
+  name: OrderByArg
+  size: OrderByArg
+  updatedAt: OrderByArg
+  width: OrderByArg
+}
+
+input FileWhereInput {
+  AND: [FileWhereInput!]
+  createdAt: DateTimeFilter
+  extension: StringFilter
+  height: NullableIntFilter
+  id: StringFilter
+  isFailed: NullableBooleanFilter
+  isUploaded: NullableBooleanFilter
+  item: ItemWhereInput
+  name: StringFilter
+  NOT: [FileWhereInput!]
+  OR: [FileWhereInput!]
+  size: NullableStringFilter
+  updatedAt: DateTimeFilter
+  uploadGroup: UploadGroupWhereInput
+  user: UserWhereInput
+  width: NullableIntFilter
+}
+
 input FileWhereUniqueInput {
   id: ID
 }
@@ -122,6 +188,28 @@ input GoogleAccountCreateWithoutUserInput {
   updatedAt: DateTime
 }
 
+input GoogleAccountFilter {
+  every: GoogleAccountWhereInput
+  none: GoogleAccountWhereInput
+  some: GoogleAccountWhereInput
+}
+
+input GoogleAccountWhereInput {
+  accountId: NullableStringFilter
+  AND: [GoogleAccountWhereInput!]
+  createdAt: DateTimeFilter
+  email: NullableStringFilter
+  firstName: NullableStringFilter
+  id: StringFilter
+  lastName: NullableStringFilter
+  NOT: [GoogleAccountWhereInput!]
+  OR: [GoogleAccountWhereInput!]
+  picture: NullableStringFilter
+  refreshToken: NullableStringFilter
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+}
+
 input GoogleAccountWhereUniqueInput {
   accountId: String
   id: ID
@@ -133,7 +221,7 @@ type InProgressUpload {
 }
 
 type Item {
-  collections(after: String, before: String, first: Int, last: Int, skip: Int): [Collection!]
+  collections(after: ID, before: ID, first: Int, last: Int, skip: Int): [Collection!]!
   createdAt: DateTime!
   file: File
   id: ID!
@@ -170,6 +258,33 @@ input ItemCreateWithoutUserInput {
   link: LinkCreateOneWithoutLinkInput
   type: String!
   updatedAt: DateTime
+}
+
+input ItemFilter {
+  every: ItemWhereInput
+  none: ItemWhereInput
+  some: ItemWhereInput
+}
+
+input ItemOrderByInput {
+  createdAt: OrderByArg
+  id: OrderByArg
+  type: OrderByArg
+  updatedAt: OrderByArg
+}
+
+input ItemWhereInput {
+  AND: [ItemWhereInput!]
+  collections: CollectionFilter
+  createdAt: DateTimeFilter
+  file: FileWhereInput
+  id: StringFilter
+  link: LinkWhereInput
+  NOT: [ItemWhereInput!]
+  OR: [ItemWhereInput!]
+  type: StringFilter
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
 }
 
 input ItemWhereUniqueInput {
@@ -233,6 +348,29 @@ input LinkCreateWithoutUserInput {
   updatedAt: DateTime
 }
 
+input LinkFilter {
+  every: LinkWhereInput
+  none: LinkWhereInput
+  some: LinkWhereInput
+}
+
+input LinkWhereInput {
+  AND: [LinkWhereInput!]
+  createdAt: DateTimeFilter
+  description: NullableStringFilter
+  favicon: NullableStringFilter
+  href: StringFilter
+  id: StringFilter
+  image: NullableStringFilter
+  item: ItemWhereInput
+  NOT: [LinkWhereInput!]
+  notes: StringFilter
+  OR: [LinkWhereInput!]
+  title: NullableStringFilter
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+}
+
 input LinkWhereUniqueInput {
   id: ID
 }
@@ -245,6 +383,22 @@ type Mutation {
   generateSignedUrls(signedURLArgs: [SignedURLArgs!]): InProgressUpload!
   googleSignIn(code: String!): JWT!
   processFiles(uploadGroupId: String): [File!]!
+}
+
+input NullableBooleanFilter {
+  equals: Boolean
+  not: Boolean
+}
+
+input NullableIntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: Int
+  notIn: [Int!]
 }
 
 input NullableStringFilter {
@@ -267,123 +421,16 @@ enum OrderByArg {
 }
 
 type Query {
-  _files(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyFileOrderByInput, skip: Int, where: QueryFindManyFileWhereInput): [File!]
-  _items(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]
-  _uploadgroups(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyUploadGroupOrderByInput, skip: Int, where: QueryFindManyUploadGroupWhereInput): [UploadGroup!]
+  _files(after: ID, before: ID, first: Int, last: Int, orderBy: FileOrderByInput, skip: Int, where: FileWhereInput): [File!]!
+  _items(after: ID, before: ID, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
+  _uploadgroups(after: ID, before: ID, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
   file(where: FileWhereUniqueInput!): File
   googleURL: String!
-  items(after: String, before: String, fileWhere: QueryFindManyFileWhereInput, first: Int, last: Int, orderBy: QueryFindManyItemOrderByInput, skip: Int, where: QueryFindManyItemWhereInput): [Item!]!
+  items(after: String, before: String, fileWhere: FileWhereInput, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
   me: User
   test: String!
-  uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: QueryFindManyUploadGroupOrderByInput, skip: Int, where: QueryFindManyUploadGroupWhereInput): [UploadGroup!]!
-  users(after: String, before: String, first: Int, last: Int, skip: Int): [User!]
-}
-
-input QueryFindManyFileFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: DateTime
-  notIn: [DateTime!]
-}
-
-input QueryFindManyFileOrderByInput {
-  createdAt: OrderByArg
-  extension: OrderByArg
-  height: OrderByArg
-  id: OrderByArg
-  isFailed: OrderByArg
-  isUploaded: OrderByArg
-  name: OrderByArg
-  size: OrderByArg
-  updatedAt: OrderByArg
-  width: OrderByArg
-}
-
-input QueryFindManyFileWhereInput {
-  AND: [QueryFindManyFileWhereInput!]
-  createdAt: QueryFindManyFileFilter
-  extension: StringFilter
-  height: QueryFindManyFileFilter
-  id: StringFilter
-  isFailed: QueryFindManyFileFilter
-  isUploaded: QueryFindManyFileFilter
-  item: QueryFindManyFileWhereInput
-  name: StringFilter
-  NOT: [QueryFindManyFileWhereInput!]
-  OR: [QueryFindManyFileWhereInput!]
-  size: NullableStringFilter
-  updatedAt: QueryFindManyFileFilter
-  uploadGroup: QueryFindManyFileWhereInput
-  user: QueryFindManyFileWhereInput
-  width: QueryFindManyFileFilter
-}
-
-input QueryFindManyItemFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: DateTime
-  notIn: [DateTime!]
-}
-
-input QueryFindManyItemOrderByInput {
-  createdAt: OrderByArg
-  id: OrderByArg
-  type: OrderByArg
-  updatedAt: OrderByArg
-}
-
-input QueryFindManyItemWhereInput {
-  AND: [QueryFindManyItemWhereInput!]
-  collections: QueryFindManyItemFilter
-  createdAt: QueryFindManyItemFilter
-  file: QueryFindManyItemWhereInput
-  id: StringFilter
-  link: QueryFindManyItemWhereInput
-  NOT: [QueryFindManyItemWhereInput!]
-  OR: [QueryFindManyItemWhereInput!]
-  type: StringFilter
-  updatedAt: QueryFindManyItemFilter
-  user: QueryFindManyItemWhereInput
-}
-
-input QueryFindManyUploadGroupFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  not: DateTime
-  notIn: [DateTime!]
-}
-
-input QueryFindManyUploadGroupOrderByInput {
-  createdAt: OrderByArg
-  id: OrderByArg
-  isComplete: OrderByArg
-  isFailed: OrderByArg
-  updatedAt: OrderByArg
-}
-
-input QueryFindManyUploadGroupWhereInput {
-  AND: [QueryFindManyUploadGroupWhereInput!]
-  createdAt: QueryFindManyUploadGroupFilter
-  files: QueryFindManyUploadGroupFilter
-  id: StringFilter
-  isComplete: QueryFindManyUploadGroupFilter
-  isFailed: QueryFindManyUploadGroupFilter
-  NOT: [QueryFindManyUploadGroupWhereInput!]
-  OR: [QueryFindManyUploadGroupWhereInput!]
-  updatedAt: QueryFindManyUploadGroupFilter
-  user: QueryFindManyUploadGroupWhereInput
+  uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
+  users(after: ID, before: ID, first: Int, last: Int, skip: Int): [User!]!
 }
 
 input SignedURLArgs {
@@ -411,7 +458,7 @@ scalar Upload
 
 type UploadGroup {
   createdAt: DateTime!
-  files(after: String, before: String, first: Int, last: Int, skip: Int): [File!]
+  files(after: ID, before: ID, first: Int, last: Int, skip: Int): [File!]!
   id: ID!
   isComplete: Boolean
   updatedAt: DateTime!
@@ -445,18 +492,45 @@ input UploadGroupCreateWithoutUserInput {
   updatedAt: DateTime
 }
 
+input UploadGroupFilter {
+  every: UploadGroupWhereInput
+  none: UploadGroupWhereInput
+  some: UploadGroupWhereInput
+}
+
+input UploadGroupOrderByInput {
+  createdAt: OrderByArg
+  id: OrderByArg
+  isComplete: OrderByArg
+  isFailed: OrderByArg
+  updatedAt: OrderByArg
+}
+
+input UploadGroupWhereInput {
+  AND: [UploadGroupWhereInput!]
+  createdAt: DateTimeFilter
+  files: FileFilter
+  id: StringFilter
+  isComplete: NullableBooleanFilter
+  isFailed: NullableBooleanFilter
+  NOT: [UploadGroupWhereInput!]
+  OR: [UploadGroupWhereInput!]
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+}
+
 input UploadGroupWhereUniqueInput {
   id: ID
 }
 
 type User {
-  collections(after: String, before: String, first: Int, last: Int, skip: Int): [Collection!]
+  collections(after: ID, before: ID, first: Int, last: Int, skip: Int): [Collection!]!
   email: String!
-  files(after: String, before: String, first: Int, last: Int, skip: Int): [File!]
+  files(after: ID, before: ID, first: Int, last: Int, skip: Int): [File!]!
   firstName: String
   fullName: String!
   id: ID!
-  items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]
+  items(after: ID, before: ID, first: Int, last: Int, skip: Int): [Item!]!
   lastName: String
 }
 
@@ -488,6 +562,22 @@ input UserCreateWithoutFilesInput {
   lastName: String
   links: LinkCreateManyWithoutLinksInput
   uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput
+}
+
+input UserWhereInput {
+  AND: [UserWhereInput!]
+  collections: CollectionFilter
+  email: StringFilter
+  files: FileFilter
+  firstName: NullableStringFilter
+  googleAccounts: GoogleAccountFilter
+  id: StringFilter
+  items: ItemFilter
+  lastName: NullableStringFilter
+  links: LinkFilter
+  NOT: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  uploadGroups: UploadGroupFilter
 }
 
 input UserWhereUniqueInput {

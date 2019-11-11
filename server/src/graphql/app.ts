@@ -5,7 +5,7 @@ import { ApolloServer } from 'apollo-server-express';
 const express = require('express');
 import * as Nexus from 'nexus';
 import { applyMiddleware } from 'graphql-middleware';
-import * as NexusPrisma from '@generated/nexus-prisma';
+import { nexusPrismaPlugin } from 'nexus-prisma';
 import { join } from 'path';
 
 import types from './types';
@@ -16,12 +16,13 @@ import { getUserFromRequest } from '../helpers/auth';
 import { getHostUrl } from '../helpers/request';
 import { permissions } from './permissions';
 
-const nexusPrisma = NexusPrisma.nexusPrismaPlugin({
+const nexusPrisma = nexusPrismaPlugin({
   photon: (ctx: Context) => ctx.photon,
 });
 
 const schema = Nexus.makeSchema({
   types: [...types, nexusPrisma],
+  plugins: [nexusPrisma],
   outputs: {
     typegen: join(__dirname, './generated/nexus-typegen.ts'),
     schema: join(__dirname, './generated/schema.graphql'),
