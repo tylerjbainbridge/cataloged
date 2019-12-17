@@ -139,7 +139,7 @@ migration ..20191111180058-init
 +}
 +
 +model User {
-+  id        String  @default(cuid()) @id @unique
++  id        String  @default(cuid()) @id
 +  email     String  @unique
 +  firstName String?
 +  lastName  String?
@@ -153,7 +153,7 @@ migration ..20191111180058-init
 +}
 +
 +model Collection {
-+  id        String   @default(cuid()) @id @unique
++  id        String   @default(cuid()) @id
 +  createdAt DateTime @default(now())
 +  updatedAt DateTime @updatedAt
 +
@@ -164,7 +164,7 @@ migration ..20191111180058-init
 +}
 +
 +model Item {
-+  id        String   @default(cuid()) @id @unique
++  id        String   @default(cuid()) @id
 +  createdAt DateTime @default(now())
 +  updatedAt DateTime @updatedAt
 +
@@ -178,7 +178,7 @@ migration ..20191111180058-init
 +
 +
 +model Link {
-+  id        String   @default(cuid()) @id @unique
++  id        String   @default(cuid()) @id
 +  createdAt DateTime @default(now())
 +  updatedAt DateTime @updatedAt
 +
@@ -197,7 +197,7 @@ migration ..20191111180058-init
 +}
 +
 +model File {
-+  id        String   @default(cuid()) @id @unique
++  id        String   @default(cuid()) @id
 +  createdAt DateTime @default(now())
 +  updatedAt DateTime @updatedAt
 +
@@ -218,7 +218,7 @@ migration ..20191111180058-init
 +}
 +
 +model UploadGroup {
-+  id        String   @default(cuid()) @id @unique
++  id        String   @default(cuid()) @id
 +  createdAt DateTime @default(now())
 +  updatedAt DateTime @updatedAt
 +
@@ -230,7 +230,7 @@ migration ..20191111180058-init
 +}
 +
 +model GoogleAccount {
-+  id String @default(cuid()) @id @unique
++  id String @default(cuid()) @id
 +
 +  createdAt DateTime @default(now())
 +  updatedAt DateTime @updatedAt
@@ -252,15 +252,14 @@ You can use a specific Photon built for this migration (20191111180058-init)
 in your `before` or `after` migration script like this:
 
 ```ts
-import Photon from '@prisma/photon/20191111180058-init'
+import Photon from '@prisma/photon/20191111180058-init';
 
-const photon = new Photon()
+const photon = new Photon();
 
 async function main() {
-  const result = await photon.users()
-  console.dir(result, { depth: null })
+  const result = await photon.users();
+  console.dir(result, { depth: null });
 }
 
-main()
-
+main();
 ```
