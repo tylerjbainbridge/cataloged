@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 
-import { User } from '@generated/photon';
+import { User } from '@prisma/photon';
 import { photon } from '../data/photon';
 
 export interface Payload {

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 // import { Value } from 'slate';
-
+import { Box } from '@chakra-ui/core';
 // Import the Slate editor.
 import styled from 'styled-components';
 import { MarkdownEditor } from '../components/MarkdownEditor';
 
 const EditorContainer = styled.div`
   margin: 20px;
+  padding: 20px;
   width: 800px;
   min-height: 500px;
   border-radius: 5px;
@@ -32,16 +33,10 @@ export const Note = () => {
   }, [value]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <EditorContainer>
+    <Box display="flex" justifyContent="center" alignItems="center">
+      <Box margin={20} padding={10} maxWidth={900} minHeight={500}>
         <MarkdownEditor />
-      </EditorContainer>
-    </div>
+      </Box>
+    </Box>
   );
 };

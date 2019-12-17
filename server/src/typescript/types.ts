@@ -1,4 +1,4 @@
-import Photon, { User } from '@generated/photon';
+import Photon, { User } from '@prisma/photon';
 import { GoogleService } from '../services/GoogleService';
 
 export interface Context {

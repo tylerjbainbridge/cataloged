@@ -1,7 +1,7 @@
 import AWS = require('aws-sdk');
 // import zlib = require('zlib');
 import { ReadStream } from 'fs';
-import { File, User } from '@generated/photon';
+import { File, User } from '@prisma/photon';
 
 import { getS3Key, KEY_TYPES } from '../helpers/files';
 import { ImageService } from './ImageService';

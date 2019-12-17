@@ -16,29 +16,18 @@ import { getUserFromRequest } from '../helpers/auth';
 import { getHostUrl } from '../helpers/request';
 import { permissions } from './permissions';
 
-const nexusPrisma = nexusPrismaPlugin({
-  photon: (ctx: Context) => ctx.photon,
-});
-
 const schema = Nexus.makeSchema({
-  types: [...types, nexusPrisma],
-  plugins: [nexusPrisma],
+  types: [...types],
+  plugins: [
+    nexusPrismaPlugin({
+      inputs: {
+        photon: '@prisma/photon',
+      },
+    }),
+  ],
   outputs: {
-    typegen: join(__dirname, './generated/nexus-typegen.ts'),
-    schema: join(__dirname, './generated/schema.graphql'),
-  },
-  typegenAutoConfig: {
-    sources: [
-      {
-        source: '@generated/photon',
-        alias: 'photon',
-      },
-      {
-        source: join(__dirname, '../typescript/types.ts'),
-        alias: 'ctx',
-      },
-    ],
-    contextType: 'ctx.Context',
+    schema: __dirname + '/generated/schema.graphql',
+    typegen: __dirname + '/generated/nexus.ts',
   },
 });
 

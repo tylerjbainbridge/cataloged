@@ -1,4 +1,4 @@
-import { File, User } from '@generated/photon';
+import { File, User } from '@prisma/photon';
 
 export enum KEY_TYPES {
   full = 'full',

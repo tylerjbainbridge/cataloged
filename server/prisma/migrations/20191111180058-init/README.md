@@ -252,7 +252,7 @@ You can use a specific Photon built for this migration (20191111180058-init)
 in your `before` or `after` migration script like this:
 
 ```ts
-import Photon from '@generated/photon/20191111180058-init'
+import Photon from '@prisma/photon/20191111180058-init'
 
 const photon = new Photon()
 

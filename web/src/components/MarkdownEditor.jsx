@@ -15,8 +15,6 @@ export const MarkdownEditor = () => {
   const decorate = useCallback(([node, path]) => {
     const ranges = [];
 
-    console.log(node);
-
     if (!Text.isText(node)) {
       return ranges;
     }
@@ -53,12 +51,7 @@ export const MarkdownEditor = () => {
   }, []);
 
   return (
-    <Slate
-      editor={editor}
-      value={value}
-      onFocus={(event, change) => change.focus()}
-      onChange={value => setValue(value)}
-    >
+    <Slate editor={editor} value={value} onChange={value => setValue(value)}>
       <Editable
         decorate={decorate}
         renderLeaf={renderLeaf}

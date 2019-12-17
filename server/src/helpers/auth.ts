@@ -1,4 +1,4 @@
-import { User } from '@generated/photon';
+import { User } from '@prisma/photon';
 
 import { TokenService } from '../services/TokenService';
 

@@ -3,8 +3,7 @@
  * Do not make changes to this file directly
  */
 
-import * as ctx from "../../typescript/types"
-import * as photon from "@generated/photon"
+
 import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
@@ -453,25 +452,65 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  OrderByArg: photon.OrderByArg
+  OrderByArg: "asc" | "desc"
 }
 
 export interface NexusGenRootTypes {
-  Collection: photon.Collection;
-  File: photon.File;
+  Collection: { // root type
+    createdAt: any; // DateTime!
+    id: string; // ID!
+    name: string; // String!
+    updatedAt: any; // DateTime!
+  }
+  File: { // root type
+    createdAt: any; // DateTime!
+    extension: string; // String!
+    height?: number | null; // Int
+    id: string; // ID!
+    isUploaded?: boolean | null; // Boolean
+    name: string; // String!
+    size?: string | null; // String
+    updatedAt: any; // DateTime!
+    width?: number | null; // Int
+  }
   InProgressUpload: { // root type
     signedUrls: string[]; // [String!]!
     uploadGroup?: NexusGenRootTypes['UploadGroup'] | null; // UploadGroup
   }
-  Item: photon.Item;
+  Item: { // root type
+    createdAt: any; // DateTime!
+    id: string; // ID!
+    type: string; // String!
+    updatedAt: any; // DateTime!
+  }
   JWT: { // root type
     token: string; // String!
   }
-  Link: photon.Link;
+  Link: { // root type
+    createdAt: any; // DateTime!
+    description?: string | null; // String
+    favicon?: string | null; // String
+    href: string; // String!
+    id: string; // ID!
+    image?: string | null; // String
+    notes: string; // String!
+    title?: string | null; // String
+    updatedAt: any; // DateTime!
+  }
   Mutation: {};
   Query: {};
-  UploadGroup: photon.UploadGroup;
-  User: photon.User;
+  UploadGroup: { // root type
+    createdAt: any; // DateTime!
+    id: string; // ID!
+    isComplete?: boolean | null; // Boolean
+    updatedAt: any; // DateTime!
+  }
+  User: { // root type
+    email: string; // String!
+    firstName?: string | null; // String
+    id: string; // ID!
+    lastName?: string | null; // String
+  }
   String: string;
   Int: number;
   Float: number;
@@ -781,7 +820,7 @@ export type NexusGenScalarNames = "Boolean" | "DateTime" | "Float" | "ID" | "Int
 export type NexusGenUnionNames = never;
 
 export interface NexusGenTypes {
-  context: ctx.Context;
+  context: any;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   argTypes: NexusGenArgTypes;
