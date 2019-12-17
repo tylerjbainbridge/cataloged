@@ -26,10 +26,18 @@ export const GoogleCallback = ({
   const { setToken, setUser, user } = useAuth();
   const values = queryString.parse(location.search);
 
-  const [googleSignIn, { data }] = useMutation<googleSignIn>(
+  const [googleSignIn, { data, error }] = useMutation<googleSignIn>(
     GOOGLE_SIGN_IN_MUTATION,
     {
       variables: { code: values.code },
+      onCompleted: data => {
+        if (data && !!data.googleSignIn.token && setToken) {
+          setToken(data.googleSignIn.token);
+        }
+      },
+      onError: error => {
+        console.log('error!', error);
+      },
     },
   );
 
@@ -38,14 +46,6 @@ export const GoogleCallback = ({
       googleSignIn();
     }
   }, []);
-
-  useEffect(() => {
-    if (data) {
-      if (!!data.googleSignIn.token && setToken) {
-        setToken(data.googleSignIn.token);
-      }
-    }
-  }, [data]);
 
   return !user ? null : <Redirect to="/" />;
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuery, useApolloClient } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import _ from 'lodash';
-import { Segment, Icon, Header, Loader } from 'semantic-ui-react';
+import { Box, Icon, Text } from '@chakra-ui/core';
 import { usePrevious } from '../hooks/usePrevious';
 
 const GET_UPLOAD_GROUPS = gql`
@@ -69,64 +69,55 @@ export const UploadProgress = () => {
   const completedFiles = files.filter((file: any) => file.isUploaded);
 
   return (
-    <Segment
-      raised
-      style={{
-        position: 'fixed',
-        zIndex: 1000,
-        backgroundColor: 'white',
-        margin: 20,
-        width: 400,
-        height: 200,
-        bottom: 0,
-        padding: 0,
-        left: 0,
-        overflowY: 'hidden',
-      }}
+    <Box
+      position="fixed"
+      zIndex={1000}
+      backgroundColor="white"
+      margin={20}
+      width={400}
+      height={200}
+      bottom={0}
+      padding={0}
+      left={0}
+      overflowY="hidden"
     >
-      <Segment
-        style={{
-          backgroundColor: '#E0E1EC',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: 50,
-          margin: 0,
-        }}
-        basic
+      <Box
+        backgroundColor="#E0E1EC"
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        height={50}
+        margin={0}
       >
-        <Header style={{ margin: 0 }}>
+        <Text style={{ margin: 0 }}>
           Completed {completedFiles.length} of {files.length}
-        </Header>
+        </Text>
         {completedFiles.length === files.length && (
-          <Icon link onClick={() => setIsMenuOpen(false)} name="times" />
+          <Icon onClick={() => setIsMenuOpen(false)} name="close" />
         )}
-      </Segment>
-      <Segment
-        basic
-        style={{
-          margin: 0,
-          paddingLeft: 10,
-          paddingRight: 10,
-          paddingBottom: 60,
-          overflow: 'auto',
-          height: '100%',
-        }}
+      </Box>
+      <Box
+        margin={0}
+        paddingLeft={10}
+        paddingRight={10}
+        paddingBottom={60}
+        overflow="auto"
+        height="100%"
       >
         {_.orderBy(files, ({ isUploaded }) => !isUploaded).map((file: any) => (
-          <Segment style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>
               {file.name}
               {file.extension}
             </span>
             {file.isUploaded ? (
-              <Icon color="green" name="checkmark" />
+              <Icon color="green" name="check" />
             ) : (
-              <Icon loading name="spinner" />
+              <Icon name="spinner" />
             )}
-          </Segment>
+          </Box>
         ))}
-      </Segment>
-    </Segment>
+      </Box>
+    </Box>
   );
 };

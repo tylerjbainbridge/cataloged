@@ -1,4 +1,5 @@
-import { stringArg, intArg, arg } from 'nexus';
+import { stringArg, intArg } from 'nexus';
+import { isEmpty } from 'lodash';
 
 export const paginationArgs = {
   skip: intArg(),
@@ -13,4 +14,4 @@ export const getWhereArgs = (name: string) => `${name}WhereInput`;
 export const getFindManyOrderArgs = (name: string) => `${name}OrderByInput`;
 
 export const conditionallyAddKey = (argVal: any, objKey: string) =>
-  argVal ? { [objKey]: argVal } : {};
+  isEmpty(argVal) ? { [objKey]: argVal } : {};

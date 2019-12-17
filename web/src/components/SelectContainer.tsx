@@ -30,6 +30,7 @@ export const SelectContainer = ({
   };
 
   const selectItem = (item: Item) => {
+    console.log('selectItem');
     const id = getId(item);
     selectedMap.set(id, item);
     immutableUpdateMap(selectedMap);
@@ -37,16 +38,13 @@ export const SelectContainer = ({
 
   const resetAndSelect = (item: Item) => {
     const newSelectedMap = new Map();
-    console.log(isItemSelected(item));
-
-    if (isItemSelected(item)) return updateSelectedMap(newSelectedMap);
-
     const id = getId(item);
     newSelectedMap.set(id, item);
     immutableUpdateMap(newSelectedMap);
   };
 
   const selectRange = (newItem: Item) => {
+    console.log('selectRange');
     if (!items) return;
 
     const lastItem = Array.from(selectedMap.values())[selectedMap.size - 1];
@@ -73,19 +71,26 @@ export const SelectContainer = ({
   };
 
   const deselectItem = (item: Item) => {
+    console.log('deselectItem');
+
     const id = getId(item);
     selectedMap.delete(id);
     immutableUpdateMap(selectedMap);
   };
 
   const toggleItem = (item: Item) => {
+    console.log('toggleItem');
+
     if (isItemSelected(item)) deselectItem(item);
     else selectItem(item);
   };
 
   const onToggleThunk = (item: Item) => () => toggleItem(item);
   const onSelectRangeThunk = (item: Item) => () => selectRange(item);
-  const onResetAndSelectThunk = (item: Item) => () => resetAndSelect(item);
+  const onResetAndSelectThunk = (item: Item) => () => {
+    if (isItemSelected(item)) return immutableUpdateMap(new Map());
+    return resetAndSelect(item);
+  };
 
   console.log({ selectedMap });
 

@@ -1,17 +1,25 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useDropzone, FileWithPath } from 'react-dropzone';
-import { Button, List, Image, Segment, Modal } from 'semantic-ui-react';
+import { useDropzone } from 'react-dropzone';
+import {
+  Modal,
+  ModalOverlay,
+  ModalCloseButton,
+  ModalBody,
+  ModalHeader,
+  ModalContent,
+  ModalFooter,
+  Box,
+  Button,
+  Text,
+  Icon,
+  Image,
+} from '@chakra-ui/core';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { usePaste } from '../hooks/usePaste';
 import { randomString } from '../util/helpers';
-import { SpecialFile, uploadFile } from '../util/aws';
+import { SpecialFile } from '../util/aws';
 import { processFiles_processFiles } from './__generated__/processFiles';
-import {
-  generateSignedUrls_generateSignedUrls_uploadGroup,
-  generateSignedUrls,
-  generateSignedUrls_generateSignedUrls,
-} from './__generated__/generateSignedUrls';
 
 const UPLOAD_FILE_MUTATION = gql`
   mutation processFiles($uploadGroupId: String) {
@@ -42,8 +50,6 @@ export const CreateFiles = () => {
   const [isUploading, setIsUploading] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const client = useApolloClient();
 
   const fileCount = Object.keys(files).length;
   const fileVals = Object.values(files);
@@ -157,77 +163,90 @@ export const CreateFiles = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <Modal
-      open={isModalOpen}
-      closeIcon
-      onClose={() => {
-        setIsModalOpen(false);
-        setFiles({});
-      }}
-      size="small"
-      centered={false}
-      trigger={<Button icon="file" onClick={() => setIsModalOpen(true)} />}
-    >
-      <Modal.Header>Drag photos below or paste from clipboard</Modal.Header>
-      <Modal.Content loading={isWorking} image scrolling {...getRootProps()}>
-        <Segment basic style={{ width: '100%' }}>
-          <input {...getInputProps()} />
-          {!!fileCount && (
-            <List
-              divided
-              relaxed
-              verticalAlign="middle"
-              style={{ width: '100%' }}
+    <>
+      <Button variant="solid" onClick={() => setIsModalOpen(true)}>
+        <Icon name="attachment" />
+      </Button>
+      <Modal
+        size="600px"
+        isOpen={isModalOpen}
+        scrollBehavior="inside"
+        onClose={() => {
+          setIsModalOpen(false);
+          setFiles({});
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent height="80%">
+          <ModalHeader>Upload files</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody {...getRootProps()}>
+            <input {...getInputProps()} />
+            {!!fileCount && (
+              <Box d="block">
+                {fileEntries.map(([key, file]) => (
+                  <Box
+                    key={key}
+                    width="100%"
+                    d="flex"
+                    mb={15}
+                    justifyContent="space-between"
+                  >
+                    <Box d="flex" alignItems="center" width="50%">
+                      <Image
+                        key={file.path}
+                        src={
+                          'https://react.semantic-ui.com/images/wireframe/image.png' ||
+                          URL.createObjectURL(file)
+                        }
+                        objectFit="cover"
+                        size="40px"
+                        mr="15px"
+                        rounded="lg"
+                      />
+                      <Text>{file.name}</Text>
+                    </Box>
+                    <Box d="flex" verticalAlign="middle">
+                      <Button
+                        onClick={e => {
+                          e.preventDefault();
+                          e.stopPropagation();
+
+                          const { [file.id]: temp, ...rest } = files;
+
+                          setFiles(rest);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            )}
+            {!fileCount && (
+              <Box>
+                <Text>Click, drag, or paste here</Text>
+              </Box>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              isLoading={isWorking}
+              isDisabled={!fileCount}
+              onClick={async () => {
+                setIsUploading(true);
+              }}
+              color={!fileCount ? 'yellow' : 'green'}
             >
-              {fileEntries.map(([key, file]) => (
-                <List.Item key={key}>
-                  <Image
-                    rounded
-                    key={file.path}
-                    src={
-                      'https://react.semantic-ui.com/images/wireframe/image.png' ||
-                      URL.createObjectURL(file)
-                    }
-                    style={{
-                      objectFit: 'cover',
-                      width: 40,
-                      height: 40,
-                    }}
-                  />
-                  <List.Content>{file.name}</List.Content>
-                  <List.Content verticalAlign="middle" floated="right">
-                    <Button
-                      onClick={e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        const { [file.id]: temp, ...rest } = files;
-
-                        setFiles(rest);
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  </List.Content>
-                </List.Item>
-              ))}
-            </List>
-          )}
-        </Segment>
-      </Modal.Content>
-      <Modal.Actions>
-        <Button
-          disabled={!fileCount}
-          onClick={async () => {
-            setIsUploading(true);
-          }}
-          labelPosition="right"
-          icon="add"
-          color={!fileCount ? 'yellow' : 'green'}
-          content={!fileCount ? 'Waiting for images...' : 'Add'}
-          loading={isWorking}
-        />
-      </Modal.Actions>
-    </Modal>
+              <Box alignItems="center">
+                <Icon name="add" />{' '}
+                {!fileCount ? 'Waiting for images...' : 'Add'}
+              </Box>
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };

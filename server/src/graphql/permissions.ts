@@ -1,9 +1,13 @@
 import { rule, shield, and } from 'graphql-shield';
 import _ from 'lodash';
 
+const getFieldName = (info: any) => _.get(info, 'fieldName', '');
+
 const requireAuth = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
+  console.log('ctx.user', ctx.user);
+
   if (ctx.user === null) {
-    // if (process.env.NODE_ENV === 'development') console.log(info);
+    if (process.env.NODE_ENV === 'development') console.log(getFieldName(info));
     throw new Error('Uh oh!');
   }
 
@@ -14,7 +18,7 @@ const allow = rule({ cache: 'no_cache' })(() => true);
 
 const noPrivateFields = rule({ cache: 'no_cache' })(
   (parent, args, ctx, info) => {
-    if (_.get(info, 'fieldName', '').startsWith('_')) {
+    if (getFieldName(info).startsWith('_')) {
       throw new Error('Private!');
     }
 

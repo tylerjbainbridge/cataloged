@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 import { getGoogleUrl } from './__generated__/getGoogleUrl';
-import { Segment, Button } from 'semantic-ui-react';
+import { Box, Button } from '@chakra-ui/core';
 
 const GET_GOOGLE_URL = gql`
   query getGoogleUrl {
@@ -15,19 +15,16 @@ export const ForceSignIn = () => {
   const { loading, data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL);
 
   return (
-    <Segment
-      basic
-      loading={loading}
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100vw',
-        height: '100vh',
-      }}
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      width="100vw"
+      height="100vh"
     >
       <Button
-        disabled={!!(loading && data && data.googleURL)}
+        isLoading={loading}
+        isDisabled={!!(loading && data && data.googleURL)}
         onClick={() => {
           if (data && data.googleURL) {
             window.location.replace(data.googleURL);
@@ -36,6 +33,6 @@ export const ForceSignIn = () => {
       >
         Sign in with Google
       </Button>
-    </Segment>
+    </Box>
   );
 };

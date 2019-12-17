@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Segment, Image as SemanticImage, ImageProps } from 'semantic-ui-react';
+import { Box, Spinner, Image as ChackraImage } from '@chakra-ui/core';
 
 export interface LazeImageProps {
   [key: string]: any;
   isReady?: boolean;
+  loadingContainerProps?: any;
+  showSpinner?: boolean;
 }
 
 export const LazyImage = ({
   src,
   isReady = true,
+  showSpinner = true,
+  loadingContainerProps,
   ...props
 }: LazeImageProps) => {
   const [isImageLoaded, setIsImageLoaded] = useState<string | null>(null);
@@ -21,9 +25,25 @@ export const LazyImage = ({
     }
   }, [isReady]);
 
+  const newProps = {
+    size: 300,
+    rounded: 'lg',
+    ...props,
+  };
+
   return !isReady || !isImageLoaded ? (
-    <Segment basic loading {...props} />
+    <Box
+      d="flex"
+      justifyContent="center"
+      alignItems="center"
+      backgroundColor="lightgrey"
+      rounded="lg"
+      {...newProps}
+      {...loadingContainerProps}
+    >
+      {showSpinner && <Spinner size="xl" />}
+    </Box>
   ) : (
-    <SemanticImage rounded size="huge" src={src} {...props} />
+    <ChackraImage src={src} {...newProps} />
   );
 };

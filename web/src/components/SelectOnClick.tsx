@@ -20,7 +20,7 @@ export const SelectOnClick = ({
 
   return (
     <Click
-      onSingleClick={onResetAndSelectThunk(item)}
+      // onSingleClick={on(item)}
       onMetaClick={onToggleThunk(item)}
       onShiftClick={onSelectRangeThunk(item)}
       {...props}

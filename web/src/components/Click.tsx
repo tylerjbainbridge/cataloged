@@ -1,16 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, MouseEvent } from 'react';
 import { debounce } from 'lodash';
 
 export interface ClickProps {
   children: (args: {
     style: any;
-    onClick: Function;
-    onDoubleClick: Function;
+    onClick: any;
+    onDoubleClick: () => void;
   }) => any;
-  onSingleClick?: Function;
-  onDoubleClick?: Function;
-  onMetaClick?: Function;
-  onShiftClick?: Function;
+  onSingleClick?: () => void;
+  onDoubleClick?: () => void;
+  onMetaClick?: () => void;
+  onShiftClick?: () => void;
 }
 
 export const Click = (props: ClickProps) => {
@@ -22,9 +22,9 @@ export const Click = (props: ClickProps) => {
     }, delay),
   );
 
-  const onSingleClick = (e: React.MouseEvent) => {
-    if (props.onMetaClick && e.metaKey) props.onMetaClick();
-    else if (props.onShiftClick && e.shiftKey) props.onShiftClick();
+  const onSingleClick = (event: MouseEvent<any, MouseEvent>) => {
+    if (props.onMetaClick && event.metaKey) props.onMetaClick();
+    else if (props.onShiftClick && event.shiftKey) props.onShiftClick();
     else debouncedSingleClick.current();
   };
 

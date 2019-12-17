@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "10"
+    "node": "12.0.0"
   },
   "scripts": {
     "start": "npm run start:app",
@@ -14,32 +14,38 @@
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.0.0",
+    "@chakra-ui/core": "^0.4.1",
+    "@emotion/core": "^10.0.22",
+    "@emotion/styled": "^10.0.23",
     "@types/apollo-upload-client": "^8.1.2",
+    "@types/draft-js": "^0.10.37",
     "@types/lodash": "^4.14.137",
     "@types/node": "^12.6.8",
     "@types/react": "^16.8.23",
     "@types/react-dom": "^16.8.5",
     "@types/react-router-dom": "^4.3.4",
-    "@types/slate": "^0.47.3",
-    "@types/slate-react": "^0.22.6",
     "@types/styled-components": "^4.1.18",
     "apollo-boost": "^0.4.3",
     "apollo-link-context": "^1.0.18",
     "apollo-upload-client": "^11.0.0",
     "aws-sdk": "^2.525.0",
+    "emotion-theming": "^10.0.19",
     "graphql": "^14.4.2",
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
+    "prismjs": "^1.17.1",
     "query-string": "^6.8.2",
-    "react": "^16.11.0",
+    "react": "^16.12.0",
     "react-apollo": "^2.5.8",
-    "react-dom": "^16.11.0",
+    "react-dom": "^16.12.0",
     "react-dropzone": "^10.1.7",
     "react-hook-form": "^3.23.3",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
-    "rich-markdown-editor": "^9.8.8",
-    "semantic-ui-react": "^0.87.3",
+    "react-scripts": "^3.3.0",
+    "react-waypoint": "^9.0.2",
+    "slate": "^0.55.2",
+    "slate-history": "^0.55.3",
+    "slate-react": "^0.55.3",
     "styled-components": "^4.3.2",
     "yup": "^0.27.0"
   },
@@ -48,7 +54,7 @@
     "@types/graphql": "^14.2.3",
     "@types/yup": "^0.26.23",
     "prettier": "^1.18.2",
-    "typescript": "^3.6.3"
+    "typescript": "^3.7.2"
   },
   "browserslist": {
     "production": [

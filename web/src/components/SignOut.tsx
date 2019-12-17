@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { Button } from 'semantic-ui-react';
+import { Button } from '@chakra-ui/core';
 
 export const SignOut = () => {
   const auth = useAuth();

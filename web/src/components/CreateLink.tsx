@@ -1,19 +1,23 @@
 import React, { useCallback, useState, useRef } from 'react';
 import useForm from 'react-hook-form';
-import {
-  Button,
-  List,
-  Image,
-  Segment,
-  Modal,
-  Input,
-  Label,
-  Form,
-} from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import * as yup from 'yup';
 import { usePaste } from '../hooks/usePaste';
+
+import {
+  Modal,
+  ModalOverlay,
+  ModalCloseButton,
+  ModalBody,
+  ModalHeader,
+  ModalContent,
+  ModalFooter,
+  Box,
+  Button,
+  Text,
+  Icon,
+} from '@chakra-ui/core';
 
 const CreateLinkSchema = yup.object().shape({
   href: yup
@@ -65,56 +69,49 @@ export const CreateLink = () => {
   };
 
   return (
-    <Modal
-      open={isModalOpen}
-      closeIcon
-      onClose={cleanup}
-      size="tiny"
-      centered={false}
-      trigger={<Button icon="linkify" onClick={() => setIsModalOpen(true)} />}
-      as={Form}
-    >
-      <Modal.Header>Paste link</Modal.Header>
-      <Form.Field style={{ display: 'none' }}>
-        <input name="href" defaultValue="" ref={register} />
-        {errors.href && (
-          <Label basic color="red" pointing>
-            {errors.href.message}
-          </Label>
-        )}
-      </Form.Field>
-      <Modal.Content image scrolling>
-        <Form.Field style={{ display: 'none' }}>
-          <input name="href" defaultValue="" ref={register} />
-          {errors.href && (
-            <Label basic color="red" pointing>
-              {errors.href.message}
-            </Label>
-          )}
-        </Form.Field>
+    <>
+      <Button variant="solid" onClick={() => setIsModalOpen(true)}>
+        <Icon name="link" />
+      </Button>
 
-        {href && (
-          <Segment basic loading={loading} style={{ width: '100%' }}>
-            <a href={href} target="_blank">
-              {href}
-            </a>
-          </Segment>
-        )}
-      </Modal.Content>
-      <Modal.Actions>
-        <Button
-          disabled={!href}
-          onClick={async () => {
-            if (!loading) {
-              await createLink();
-            }
-          }}
-          labelPosition="right"
-          icon="add"
-          color={!href ? 'yellow' : 'green'}
-          content={!href ? 'Waiting for link...' : 'Add'}
-        />
-      </Modal.Actions>
-    </Modal>
+      <Modal onClose={cleanup} scrollBehavior="inside" isOpen={isModalOpen}>
+        <ModalOverlay />
+        <ModalContent height="250px">
+          <ModalHeader>Paste link</ModalHeader>
+          <ModalCloseButton />
+
+          <ModalBody>
+            <Box display="none">
+              <input name="href" defaultValue="" ref={register} />
+              {errors.href && <Text color="red">{errors.href.message}</Text>}
+            </Box>
+
+            {href && (
+              <Box width="100%">
+                <a href={href} target="_blank">
+                  {href}
+                </a>
+              </Box>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              isLoading={loading}
+              isDisabled={!href}
+              onClick={async () => {
+                if (!loading) {
+                  await createLink();
+                }
+              }}
+              color={!href ? 'yellow' : 'green'}
+            >
+              <Box alignItems="center">
+                <Icon name="add" /> {!href ? 'Waiting for link...' : 'Add'}
+              </Box>
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };

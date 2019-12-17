@@ -3,9 +3,10 @@ import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
 
-import { Grid, Segment, Visibility, Loader, Header } from 'semantic-ui-react';
+import { Box, Text, ButtonGroup } from '@chakra-ui/core';
+import { Waypoint } from 'react-waypoint';
 
-import { Item } from './Item';
+import { Item, ITEM_WIDTH } from './Item';
 import { SelectContainer } from './SelectContainer';
 import { getItems } from './__generated__/getItems';
 import { usePagination } from '../hooks/useVariables';
@@ -43,20 +44,7 @@ const GET_FILES = gql`
   }
 `;
 
-const GridContainer = styled.div`
-  top: -80px;
-  display: grid;
-  justify-items: center;
-
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
-
-  grid-template-columns: auto auto auto auto;
-
-  @media (max-width: 400px) {
-    display: block;
-  }
-`;
+const GridContainer = styled.div``;
 
 const GridItem = styled.div`
   justify-self: center;
@@ -77,63 +65,50 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
 
   const initialLoad = loading && !data;
 
+  console.log(data);
+
   return (
     <>
       <UploadProgress />
       <SelectContainer items={data ? data.items : []}>
-        <Segment
-          basic
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            ...(initialLoad ? { height: '100vh' } : {}),
-          }}
-        >
-          <Segment style={{ width: '90vw', marginTop: 100 }}>
-            <Segment
-              basic
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                top: -80,
-                height: 50,
-              }}
+        <Box d="flex" justifyContent="center">
+          <Box width="100%" padding={50}>
+            <Box
+              height={100}
+              d="flex"
+              minWidth="100%"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <div>
+              <Box
+                d="flex"
+                width="100px"
+                justifyContent="space-between"
+                alignItems="center"
+              >
                 <CreateFiles />
                 <CreateLink />
-              </div>
-              <Header size="large" subheader="test">
+              </Box>
+              {/* <Text fontSize="4xl" margin={0}>
                 Cataloged
-              </Header>
+              </Text> */}
               <SignOut />
-            </Segment>
+            </Box>
             <br />
-            <Visibility
-              continuous
-              offset={-500}
-              onBottomVisible={() => {
-                if (data && data.items && !loading) {
-                  fetchMore({
-                    variables: {
-                      skip: data.items.length,
-                    },
-                    updateQuery: (prev, { fetchMoreResult }) => {
-                      if (!fetchMoreResult) return prev;
-                      return {
-                        ...prev,
-                        items: [
-                          ...(prev.items || []),
-                          ...(fetchMoreResult.items || []),
-                        ],
-                      };
-                    },
-                  });
-                }
-              }}
-            >
-              <Segment basic loading={initialLoad} as={GridContainer}>
+            {initialLoad ? (
+              <Box d="flex" justifyContent="space-between" width="100%">
+                {/* <Spinner size="xl" /> */}
+              </Box>
+            ) : (
+              <Box
+                d="grid"
+                top={-80}
+                justifyContent="space-between"
+                flexWrap="wrap"
+                gridColumnGap={20}
+                gridRowGap={10}
+                gridTemplateColumns={`${ITEM_WIDTH}px ${ITEM_WIDTH}px ${ITEM_WIDTH}px ${ITEM_WIDTH}px`}
+              >
                 {data &&
                   data.items &&
                   data.items.map(item => (
@@ -144,10 +119,32 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
                 {/* <Grid.Row>
               <Loader active={!!(loading && data)} />
             </Grid.Row> */}
-              </Segment>
-            </Visibility>
-          </Segment>
-        </Segment>
+                <Waypoint
+                  bottomOffset={-500}
+                  onEnter={() => {
+                    if (data && data.items && !loading) {
+                      fetchMore({
+                        variables: {
+                          skip: data.items.length,
+                        },
+                        updateQuery: (prev, { fetchMoreResult }) => {
+                          if (!fetchMoreResult) return prev;
+                          return {
+                            ...prev,
+                            items: [
+                              ...(prev.items || []),
+                              ...(fetchMoreResult.items || []),
+                            ],
+                          };
+                        },
+                      });
+                    }
+                  }}
+                />
+              </Box>
+            )}
+          </Box>
+        </Box>
       </SelectContainer>
     </>
   );

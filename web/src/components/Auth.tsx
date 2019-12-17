@@ -72,7 +72,7 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
   useEffect(() => {
     if (token) {
       localStorage.setItem('token', token);
-      refetchUser();
+      if (!user) refetchUser();
     } else if (!loading) {
       localStorage.removeItem('token');
     }

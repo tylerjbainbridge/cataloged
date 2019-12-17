@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 // import { Value } from 'slate';
 
 // Import the Slate editor.
-// @ts-ignore
-import Editor from 'rich-markdown-editor';
 import styled from 'styled-components';
+import { MarkdownEditor } from '../components/MarkdownEditor';
 
 const initialVal =
   localStorage.getItem('_editorVal') ||
@@ -31,17 +30,7 @@ export const Note = () => {
       }}
     >
       <EditorContainer>
-        <Editor
-          id="example"
-          style={{
-            padding: 20,
-            width: '100%',
-            height: '100%',
-            border: '1px solid black',
-          }}
-          defaultValue={''}
-          onChange={(val: any) => setValue(val)}
-        />
+        <MarkdownEditor />
       </EditorContainer>
     </div>
   );

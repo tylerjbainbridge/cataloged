@@ -45,6 +45,19 @@ export const Query = objectType({
       resolve: (_, args, ctx) => {
         const { fileWhere, ...rest } = args;
 
+        console.log({
+          where: {
+            // @ts-ignore
+            user: { id: ctx.user.id },
+            ...conditionallyAddKey(
+              merge(fileWhere, { isUploaded: true }),
+              'file',
+            ),
+            ...(rest.where || {}),
+          },
+          ...rest,
+        });
+
         return ctx.photon.items.findMany({
           where: {
             // @ts-ignore

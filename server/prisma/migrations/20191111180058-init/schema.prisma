@@ -1,15 +1,11 @@
 datasource db {
   provider = "postgres"
-  url      = env("POSTGRESQL_URL")
+  url = "***"
   default  = true
 }
 
 generator photon {
   provider = "photonjs"
-}
-
-generator nexus_prisma {
-  provider = "nexus-prisma"
 }
 
 model User {
@@ -83,8 +79,8 @@ model File {
   height Int?
 
 
-  isUploaded Boolean
-  isFailed   Boolean
+  isUploaded Boolean?
+  isFailed   Boolean?
 
   item        Item
   user        User
@@ -96,8 +92,8 @@ model UploadGroup {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  isComplete Boolean
-  isFailed   Boolean
+  isComplete Boolean?
+  isFailed   Boolean?
 
   user  User
   files File[]

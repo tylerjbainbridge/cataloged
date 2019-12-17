@@ -1,41 +1,38 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
-
-import {
-  Grid,
-  Segment,
-  Dimmer,
-  Loader,
-  Item,
-  Header,
-  Modal,
-  Popup,
-} from 'semantic-ui-react';
 
 import { LazyImage } from './LazyImage';
 import { SelectOnClick } from './SelectOnClick';
 import { getItems_items, getItems_items_file } from './__generated__/getItems';
-import { Click } from './Click';
+import { ItemHeader } from './ItemHeader';
+import {
+  useDisclosure,
+  SlideIn,
+  Modal,
+  ModalOverlay,
+  ModalCloseButton,
+  ModalBody,
+  ModalHeader,
+  ModalContent,
+  ModalFooter,
+  Box,
+  Button,
+} from '@chakra-ui/core';
 
 export interface ItemWithFile extends getItems_items {
   file: getItems_items_file;
 }
 
 export const File = ({ item }: { item: ItemWithFile }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure(false);
   const { file } = item;
-
-  const [isModalOpen, updateIsModalOpen] = useState(false);
-
-  const openModal = () => updateIsModalOpen(true);
-  const closeModal = () => updateIsModalOpen(false);
 
   return (
     <div>
-      <SelectOnClick onDoubleClick={openModal} item={item}>
+      <SelectOnClick onSingleClick={onOpen} item={item}>
         {({ style, ...clickProps }) => (
           <LazyImage
-            size="huge"
-            rounded
-            style={{ width: 280, height: 280, ...style }}
+            {...style}
             isReady={file.isUploaded}
             src={
               !file.isUploaded
@@ -46,54 +43,36 @@ export const File = ({ item }: { item: ItemWithFile }) => {
           />
         )}
       </SelectOnClick>
+      <ItemHeader onSingleClick={onOpen}>
+        {file.name}.{file.extension}
+      </ItemHeader>
       <Modal
-        closeIcon
-        closeOnEscape
-        closeOnDimmerClick
-        open={isModalOpen}
-        onClose={closeModal}
-        size="large"
-        style={{ height: '80%' }}
+        size="full"
+        onClose={onClose}
+        scrollBehavior="inside"
+        isOpen={isOpen}
       >
-        <Modal.Header>
-          {file.name}.{file.extension}
-        </Modal.Header>
-
-        <Modal.Content
-          style={{ height: '90%', display: 'flex', justifyContent: 'center' }}
-          image
-          as={Segment}
-          basic
-        >
-          {!file.isUploaded ? (
-            <Dimmer inverted active>
-              <Loader inline="centered" />
-            </Dimmer>
-          ) : (
+        <ModalOverlay />
+        <ModalContent height="100%">
+          <ModalHeader>
+            {file.name}.{file.extension}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody d="flex" justifyContent="center" alignItems="center">
             <LazyImage
               rounded
+              isReady={file.isUploaded}
               src={file.fullUrl}
-              style={{
-                width: 'auto',
-                height: '100%',
+              height="90%"
+              width="auto"
+              showSpinner={false}
+              loadingContainerProps={{
+                width: '100%',
               }}
             />
-          )}
-        </Modal.Content>
+          </ModalBody>
+        </ModalContent>
       </Modal>
-      <Popup
-        trigger={
-          <Click onSingleClick={openModal}>
-            {clickProps => (
-              <Header {...clickProps}>
-                {file.name}.{file.extension}
-              </Header>
-            )}
-          </Click>
-        }
-        position="bottom center"
-        content="View full photo"
-      />
     </div>
   );
 };
