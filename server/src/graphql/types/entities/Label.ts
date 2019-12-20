@@ -1,7 +1,7 @@
 import { objectType } from 'nexus';
 
-export const Collection = objectType({
-  name: 'Collection',
+export const Label = objectType({
+  name: 'Label',
   definition(t) {
     t.model.id();
     t.model.createdAt();

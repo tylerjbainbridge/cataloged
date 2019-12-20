@@ -23,23 +23,20 @@ export const GoogleCallback = ({
   history: History;
   devMode: boolean;
 }) => {
-  const { setToken, setUser, user } = useAuth();
+  const { setToken, user } = useAuth();
   const values = queryString.parse(location.search);
 
-  const [googleSignIn, { data, error }] = useMutation<googleSignIn>(
-    GOOGLE_SIGN_IN_MUTATION,
-    {
-      variables: { code: values.code },
-      onCompleted: data => {
-        if (data && !!data.googleSignIn.token && setToken) {
-          setToken(data.googleSignIn.token);
-        }
-      },
-      onError: error => {
-        console.log('error!', error);
-      },
+  const [googleSignIn] = useMutation<googleSignIn>(GOOGLE_SIGN_IN_MUTATION, {
+    variables: { code: values.code },
+    onCompleted: data => {
+      if (data && !!data.googleSignIn.token && setToken) {
+        setToken(data.googleSignIn.token);
+      }
     },
-  );
+    onError: error => {
+      console.log('error!', error);
+    },
+  });
 
   useEffect(() => {
     if (devMode) {

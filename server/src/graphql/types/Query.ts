@@ -1,4 +1,4 @@
-import { objectType, arg } from 'nexus';
+import { objectType, arg, stringArg } from 'nexus';
 import { merge } from 'lodash';
 
 import { knex } from '../../data/knex';
@@ -116,6 +116,24 @@ export const Query = objectType({
     });
 
     t.crud.file();
+
+    if (process.env.NODE_ENV === 'development') {
+      t.field('mostRecentItem', {
+        type: 'Item',
+        nullable: true,
+        args: {
+          type: stringArg(),
+        },
+        resolve: async (root, args, ctx) => {
+          const [first] = await ctx.photon.items.findMany({
+            first: 1,
+            where: { type: args.type || 'link', user: { id: ctx.user.id } },
+          });
+
+          return first;
+        },
+      });
+    }
 
     // t.list.field('feed', {
     //   type: 'File',

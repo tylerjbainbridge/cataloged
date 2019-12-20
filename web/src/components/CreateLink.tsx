@@ -36,10 +36,12 @@ const CREATE_LINK_MUTATION = gql`
 `;
 
 export const CreateLink = () => {
-  const { getValues, setValue, register, errors } = useForm({
+  const { getValues, setValue, watch, register, errors } = useForm({
     validationSchema: CreateLinkSchema,
     mode: 'onBlur',
   });
+
+  watch('href');
 
   const { href } = getValues();
 

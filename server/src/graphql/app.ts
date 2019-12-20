@@ -6,10 +6,8 @@ const express = require('express');
 import * as Nexus from 'nexus';
 import { applyMiddleware } from 'graphql-middleware';
 import { nexusPrismaPlugin } from 'nexus-prisma';
-import { join } from 'path';
 
 import types from './types';
-import { Context } from '../typescript/types';
 import { photon } from '../data/photon';
 import { GoogleService } from '../services/GoogleService';
 import { getUserFromRequest } from '../helpers/auth';

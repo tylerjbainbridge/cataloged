@@ -65,8 +65,6 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
 
   const initialLoad = loading && !data;
 
-  console.log(data);
-
   return (
     <>
       <UploadProgress />

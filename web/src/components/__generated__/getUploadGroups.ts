@@ -11,14 +11,14 @@ export interface getUploadGroups_uploadGroups_files {
   id: string;
   name: string;
   extension: string;
-  isUploaded: boolean;
+  isUploaded: boolean | null;
 }
 
 export interface getUploadGroups_uploadGroups {
   __typename: "UploadGroup";
   id: string;
-  isComplete: boolean;
-  files: getUploadGroups_uploadGroups_files[] | null;
+  isComplete: boolean | null;
+  files: getUploadGroups_uploadGroups_files[];
 }
 
 export interface getUploadGroups {

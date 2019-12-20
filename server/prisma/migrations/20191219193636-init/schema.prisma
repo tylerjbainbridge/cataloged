@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgres"
-  url      = "***"
+  url = "***"
   default  = true
 }
 
@@ -16,13 +16,13 @@ model User {
 
   googleAccounts GoogleAccount[]
   items          Item[]
-  collections    Collection[]
+  labels         Label[]
   files          File[]
   links          Link[]
   uploadGroups   UploadGroup[]
 }
 
-model Collection {
+model Label {
   id        String   @default(cuid()) @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -43,7 +43,7 @@ model Item {
   file File?
   link Link?
 
-  collections Collection[]
+  labels Label[]
 }
 
 

@@ -2,49 +2,6 @@
 ### Do not make changes to this file directly
 
 
-type Collection {
-  createdAt: DateTime!
-  id: ID!
-  items(after: ID, before: ID, first: Int, last: Int, skip: Int): [Item!]!
-  name: String!
-  updatedAt: DateTime!
-}
-
-input CollectionCreateManyWithoutCollectionsInput {
-  connect: [CollectionWhereUniqueInput!]
-  create: [CollectionCreateWithoutUserInput!]
-}
-
-input CollectionCreateWithoutUserInput {
-  createdAt: DateTime
-  id: ID
-  items: ItemCreateManyWithoutItemsInput
-  name: String!
-  updatedAt: DateTime
-}
-
-input CollectionFilter {
-  every: CollectionWhereInput
-  none: CollectionWhereInput
-  some: CollectionWhereInput
-}
-
-input CollectionWhereInput {
-  AND: [CollectionWhereInput!]
-  createdAt: DateTimeFilter
-  id: StringFilter
-  items: ItemFilter
-  name: StringFilter
-  NOT: [CollectionWhereInput!]
-  OR: [CollectionWhereInput!]
-  updatedAt: DateTimeFilter
-  user: UserWhereInput
-}
-
-input CollectionWhereUniqueInput {
-  id: ID
-}
-
 scalar DateTime
 
 input DateTimeFilter {
@@ -221,10 +178,10 @@ type InProgressUpload {
 }
 
 type Item {
-  collections(after: ID, before: ID, first: Int, last: Int, skip: Int): [Collection!]!
   createdAt: DateTime!
   file: File
   id: ID!
+  labels(after: ID, before: ID, first: Int, last: Int, skip: Int): [Label!]!
   link: Link
   type: String!
   updatedAt: DateTime!
@@ -241,20 +198,20 @@ input ItemCreateOneWithoutItemInput {
 }
 
 input ItemCreateWithoutLinkInput {
-  collections: CollectionCreateManyWithoutCollectionsInput
   createdAt: DateTime
   file: FileCreateOneWithoutFileInput
   id: ID
+  labels: LabelCreateManyWithoutLabelsInput
   type: String!
   updatedAt: DateTime
   user: UserCreateOneWithoutUserInput
 }
 
 input ItemCreateWithoutUserInput {
-  collections: CollectionCreateManyWithoutCollectionsInput
   createdAt: DateTime
   file: FileCreateOneWithoutFileInput
   id: ID
+  labels: LabelCreateManyWithoutLabelsInput
   link: LinkCreateOneWithoutLinkInput
   type: String!
   updatedAt: DateTime
@@ -275,10 +232,10 @@ input ItemOrderByInput {
 
 input ItemWhereInput {
   AND: [ItemWhereInput!]
-  collections: CollectionFilter
   createdAt: DateTimeFilter
   file: FileWhereInput
   id: StringFilter
+  labels: LabelFilter
   link: LinkWhereInput
   NOT: [ItemWhereInput!]
   OR: [ItemWhereInput!]
@@ -297,6 +254,49 @@ type JWT {
 
 input KeyBlob {
   fileId: String!
+}
+
+type Label {
+  createdAt: DateTime!
+  id: ID!
+  items(after: ID, before: ID, first: Int, last: Int, skip: Int): [Item!]!
+  name: String!
+  updatedAt: DateTime!
+}
+
+input LabelCreateManyWithoutLabelsInput {
+  connect: [LabelWhereUniqueInput!]
+  create: [LabelCreateWithoutUserInput!]
+}
+
+input LabelCreateWithoutUserInput {
+  createdAt: DateTime
+  id: ID
+  items: ItemCreateManyWithoutItemsInput
+  name: String!
+  updatedAt: DateTime
+}
+
+input LabelFilter {
+  every: LabelWhereInput
+  none: LabelWhereInput
+  some: LabelWhereInput
+}
+
+input LabelWhereInput {
+  AND: [LabelWhereInput!]
+  createdAt: DateTimeFilter
+  id: StringFilter
+  items: ItemFilter
+  name: StringFilter
+  NOT: [LabelWhereInput!]
+  OR: [LabelWhereInput!]
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+}
+
+input LabelWhereUniqueInput {
+  id: ID
 }
 
 type Link {
@@ -376,10 +376,14 @@ input LinkWhereUniqueInput {
 }
 
 type Mutation {
+  connectLabelToItem(itemId: String!, name: String!): Item!
+  createLabel(itemId: String, name: String!): Label!
   createLink(href: String!): Link!
   createOneFile(data: FileCreateInput!): File!
   createOneUser(data: UserCreateInput!): User!
+  deleteLabel(labelId: String!): User!
   deleteOneFile(where: FileWhereUniqueInput!): File
+  disconnectLabelFromItem(itemId: String!, labelId: String!): Item!
   generateSignedUrls(signedURLArgs: [SignedURLArgs!]): InProgressUpload!
   googleSignIn(code: String!): JWT!
   processFiles(uploadGroupId: String): [File!]!
@@ -428,6 +432,7 @@ type Query {
   googleURL: String!
   items(after: String, before: String, fileWhere: FileWhereInput, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
   me: User
+  mostRecentItem(type: String): Item
   test: String!
   uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
   users(after: ID, before: ID, first: Int, last: Int, skip: Int): [User!]!
@@ -524,24 +529,24 @@ input UploadGroupWhereUniqueInput {
 }
 
 type User {
-  collections(after: ID, before: ID, first: Int, last: Int, skip: Int): [Collection!]!
   email: String!
   files(after: ID, before: ID, first: Int, last: Int, skip: Int): [File!]!
   firstName: String
   fullName: String!
   id: ID!
   items(after: ID, before: ID, first: Int, last: Int, skip: Int): [Item!]!
+  labels(after: ID, before: ID, first: Int, last: Int, skip: Int): [Label!]!
   lastName: String
 }
 
 input UserCreateInput {
-  collections: CollectionCreateManyWithoutCollectionsInput
   email: String!
   files: FileCreateManyWithoutFilesInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutGoogleAccountsInput
   id: ID
   items: ItemCreateManyWithoutItemsInput
+  labels: LabelCreateManyWithoutLabelsInput
   lastName: String
   links: LinkCreateManyWithoutLinksInput
   uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput
@@ -553,12 +558,12 @@ input UserCreateOneWithoutUserInput {
 }
 
 input UserCreateWithoutFilesInput {
-  collections: CollectionCreateManyWithoutCollectionsInput
   email: String!
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutGoogleAccountsInput
   id: ID
   items: ItemCreateManyWithoutItemsInput
+  labels: LabelCreateManyWithoutLabelsInput
   lastName: String
   links: LinkCreateManyWithoutLinksInput
   uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput
@@ -566,13 +571,13 @@ input UserCreateWithoutFilesInput {
 
 input UserWhereInput {
   AND: [UserWhereInput!]
-  collections: CollectionFilter
   email: StringFilter
   files: FileFilter
   firstName: NullableStringFilter
   googleAccounts: GoogleAccountFilter
   id: StringFilter
   items: ItemFilter
+  labels: LabelFilter
   lastName: NullableStringFilter
   links: LinkFilter
   NOT: [UserWhereInput!]

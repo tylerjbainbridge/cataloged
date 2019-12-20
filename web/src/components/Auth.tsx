@@ -1,5 +1,5 @@
 import React, { useState, useEffect, SetStateAction, Dispatch } from 'react';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { getAuthUser_me } from './__generated__/getAuthUser';
 import { googleSignIn_googleSignIn } from '../routes/__generated__/googleSignIn';
@@ -10,33 +10,36 @@ const GET_AUTH_USER = gql`
       id
       fullName
       email
+
+      labels {
+        id
+        name
+      }
     }
   }
 `;
 
 type ContextProps = {
-  user: getAuthUser_me | null;
+  user: getAuthUser_me;
   token: googleSignIn_googleSignIn['token'] | null;
   setToken: Dispatch<SetStateAction<string | null>>;
-  setUser: Dispatch<SetStateAction<getAuthUser_me | null>>;
   signOut: Function;
-  refetchUser: () => Promise<void>;
+  refetchUser: () => Promise<any>;
 };
 
-export const AuthContext = React.createContext<Partial<ContextProps>>({});
+export const AuthContext = React.createContext<ContextProps>(
+  {} as ContextProps,
+);
 
 const localStorageUser = localStorage.getItem('user');
 
-const parsedLocalStorageUser: getAuthUser_me | null = localStorageUser
-  ? JSON.parse(localStorageUser)
-  : null;
+const getParsedUser = (): getAuthUser_me | null =>
+  localStorageUser ? JSON.parse(localStorageUser) : null;
 
 export const Auth = ({ children }: { children: JSX.Element }) => {
-  const [loading, setLoading] = useState(false);
-
-  const [user, setUser] = useState<getAuthUser_me | null>(
-    parsedLocalStorageUser,
-  );
+  const { data, loading, refetch } = useQuery(GET_AUTH_USER, {
+    fetchPolicy: 'network-only',
+  });
 
   const [token, setToken] = useState<googleSignIn_googleSignIn['token'] | null>(
     localStorage.getItem('token'),
@@ -48,48 +51,33 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
     window.location.replace('/');
   };
 
-  const client = useApolloClient();
-
-  const refetchUser = async () => {
-    try {
-      setLoading(true);
-      const { data } = await client.query({
-        query: GET_AUTH_USER,
-        fetchPolicy: 'network-only',
-      });
-
-      setLoading(false);
-      setUser(data.me);
-    } catch (err) {
-      setUser(null);
-    }
-  };
-
-  useEffect(() => {
-    refetchUser();
-  }, []);
-
   useEffect(() => {
     if (token) {
       localStorage.setItem('token', token);
-      if (!user) refetchUser();
+      if (!data || data.me) refetch();
     } else if (!loading) {
       localStorage.removeItem('token');
     }
   }, [token]);
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
+    if (data && data.me) {
+      localStorage.setItem('user', JSON.stringify(data.me));
     } else if (!loading) {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
     }
-  }, [user ? user.id : null]);
+  }, [loading]);
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, token, setToken, refetchUser, signOut }}
+      value={{
+        user: data ? data.me : getParsedUser(),
+        token,
+        setToken,
+        refetchUser: refetch,
+        signOut,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -7,13 +7,17 @@ import { User } from './types/entities/User';
 import { File } from './types/entities/File';
 import { Item } from './types/entities/Item';
 import { Link } from './types/entities/Link';
-import { Collection } from './types/entities/Collection';
+import { Label } from './types/entities/Label';
 import { UploadGroup } from './types/entities/UploadGroup';
 
 import { googleSignIn } from './mutations/googleSignIn';
 import { processFiles, KeyBlob } from './mutations/processFiles';
 import { createLink } from './mutations/createLink';
+import { connectLabelToItem } from './mutations/connectLabelToItem';
 import { generateSignedUrls } from './mutations/generateSignedUrls';
+import { disconnectLabelFromItem } from './mutations/disconnectLabelFromItem';
+import { createLabel } from './mutations/createLabel';
+import { deleteLabel } from './mutations/deleteLabel';
 
 import * as misc from './types/misc';
 
@@ -46,7 +50,7 @@ export default [
   Item,
   UploadGroup,
   Link,
-  Collection,
+  Label,
   // Scalars
   GraphQLUploadScalar,
   GraphQLUpload,
@@ -56,6 +60,10 @@ export default [
   googleSignIn,
   processFiles,
   createLink,
+  createLabel,
+  deleteLabel,
+  disconnectLabelFromItem,
+  connectLabelToItem,
   generateSignedUrls,
 
   // Misc

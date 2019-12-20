@@ -22,7 +22,7 @@ export interface getItems_items_file {
   id: string;
   name: string;
   extension: string;
-  isUploaded: boolean;
+  isUploaded: boolean | null;
   fullUrl: string;
   squareUrl: string;
 }
