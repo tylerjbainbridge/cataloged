@@ -26,7 +26,6 @@ export const LazyImage = ({
   }, [isReady]);
 
   const newProps = {
-    size: 300,
     rounded: 'lg',
     ...props,
   };
@@ -36,7 +35,6 @@ export const LazyImage = ({
       d="flex"
       justifyContent="center"
       alignItems="center"
-      backgroundColor="lightgrey"
       rounded="lg"
       {...newProps}
       {...loadingContainerProps}

@@ -1,29 +1,27 @@
 import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
 
-import { Label } from '../types/entities/Label';
+import { User } from '../entities/User';
 
 export const createLabel = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('createLabel', {
-      type: Label,
+      type: User,
       args: {
         name: stringArg({ required: true }),
         itemId: stringArg(),
       },
       resolve: async (root, args, ctx) => {
-        const data = { name };
+        const data = { name: args.name };
 
         if (args.itemId) _.set(data, 'item.connect.id', args.itemId);
 
-        const label = await ctx.photon.labels.create({
-          data,
-        });
+        _.set(data, 'user.connect.id', ctx.user.id);
 
-        console.log(label);
+        await ctx.photon.labels.create({ data });
 
-        return label;
+        return ctx.user;
       },
     });
   },

@@ -49,7 +49,7 @@ export const CreateLink = () => {
 
   const [createLink, { loading }] = useMutation(CREATE_LINK_MUTATION, {
     variables: { href },
-    refetchQueries: ['getItems'],
+    refetchQueries: ['feed'],
     onCompleted: () => cleanup(),
   });
 
@@ -72,12 +72,22 @@ export const CreateLink = () => {
 
   return (
     <>
-      <Button variant="solid" onClick={() => setIsModalOpen(true)}>
+      <Button
+        cursor="pointer"
+        variant="solid"
+        onClick={() => setIsModalOpen(true)}
+      >
         <Icon name="link" />
       </Button>
 
-      <Modal onClose={cleanup} scrollBehavior="inside" isOpen={isModalOpen}>
+      <Modal
+        onClose={cleanup}
+        scrollBehavior="inside"
+        closeOnEsc={false}
+        isOpen={isModalOpen}
+      >
         <ModalOverlay />
+
         <ModalContent height="250px">
           <ModalHeader>Paste link</ModalHeader>
           <ModalCloseButton />

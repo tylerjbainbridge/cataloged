@@ -1,6 +1,6 @@
 import { extendType, arg } from 'nexus';
-import { s3 } from '../../services/AWSService';
-import { KEY_TYPES, getS3Key } from '../../helpers/files';
+import { s3 } from '../../../services/AWSService';
+import { KEY_TYPES, getS3Key } from '../../../helpers/files';
 
 export const generateSignedUrls = extendType({
   type: 'Mutation',
@@ -35,6 +35,7 @@ export const generateSignedUrls = extendType({
                   extension: extension.join(),
                   user: { connect: { id: ctx.user.id } },
                   isUploaded: false,
+                  hasStartedUploading: false,
                   item: {
                     create: {
                       type: 'file',

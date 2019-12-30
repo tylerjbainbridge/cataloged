@@ -3,7 +3,7 @@ import { debounce } from 'lodash';
 
 export interface ClickProps {
   children: (args: {
-    style: any;
+    cursor?: 'pointer';
     onClick: any;
     onDoubleClick: () => void;
   }) => any;
@@ -33,8 +33,15 @@ export const Click = (props: ClickProps) => {
     if (props.onDoubleClick) props.onDoubleClick();
   };
 
+  const hasClickHandler = !!(
+    props.onSingleClick ||
+    props.onDoubleClick ||
+    props.onMetaClick ||
+    props.onShiftClick
+  );
+
   return props.children({
-    style: { cursor: 'pointer' },
+    ...(hasClickHandler ? { cursor: 'pointer' } : {}),
     onClick: onSingleClick,
     onDoubleClick: onDoubleClick,
   });

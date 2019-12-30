@@ -2,7 +2,7 @@ import { extendType, stringArg } from 'nexus';
 // @ts-ignore
 import grabity from 'grabity';
 
-import { Link } from '../types/entities/Link';
+import { Link } from '../entities/Link';
 
 export const createLink = extendType({
   type: 'Mutation',
@@ -20,10 +20,7 @@ export const createLink = extendType({
         );
 
         const item = await ctx.photon.items.create({
-          data: {
-            type: 'link',
-            user: { connect: { id: ctx.user.id } },
-          },
+          data: {},
         });
 
         const link = await ctx.photon.links.create({
@@ -34,8 +31,10 @@ export const createLink = extendType({
             description,
             image,
             favicon,
-            item: { connect: { id: item.id } },
             user: { connect: { id: ctx.user.id } },
+            item: {
+              create: { type: 'link', user: { connect: { id: ctx.user.id } } },
+            },
           },
         });
 

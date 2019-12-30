@@ -31,6 +31,24 @@ export const Query = objectType({
 
     t.crud.users();
 
+    t.field('item', {
+      type: 'Item',
+      args: {
+        id: stringArg({ required: true }),
+      },
+      resolve: async (_, args, ctx) => {
+        const [item] = await ctx.photon.items.findMany({
+          where: {
+            id: args.id,
+            user: { id: ctx.user.id },
+          },
+          first: 1,
+        });
+
+        return item;
+      },
+    });
+
     t.list.field('items', {
       type: 'Item',
       args: {
@@ -43,33 +61,35 @@ export const Query = objectType({
         orderBy: getFindManyOrderArgs('Item'),
       },
       resolve: (_, args, ctx) => {
-        const { fileWhere, ...rest } = args;
+        const { fileWhere, where, ...rest } = args;
 
-        console.log({
+        const params = {
           where: {
             // @ts-ignore
             user: { id: ctx.user.id },
-            ...conditionallyAddKey(
-              merge(fileWhere, { isUploaded: true }),
-              'file',
-            ),
-            ...(rest.where || {}),
+            ...(where || {}),
+            OR: [
+              {
+                type: 'note',
+              },
+              {
+                type: 'link',
+              },
+              {
+                type: 'file',
+                file: merge(fileWhere || {}, {
+                  isUploaded: true,
+                  hasStartedUploading: true,
+                }),
+              },
+            ],
           },
           ...rest,
-        });
+        };
 
-        return ctx.photon.items.findMany({
-          where: {
-            // @ts-ignore
-            user: { id: ctx.user.id },
-            ...conditionallyAddKey(
-              merge(fileWhere, { isUploaded: true }),
-              'file',
-            ),
-            ...(rest.where || {}),
-          },
-          ...rest,
-        });
+        console.log(params);
+
+        return ctx.photon.items.findMany(params);
       },
     });
 

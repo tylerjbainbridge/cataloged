@@ -9,6 +9,8 @@ export const Item = objectType({
 
     t.model.file();
     t.model.link();
+    t.model.note();
+
     t.model.labels();
 
     t.model.type();

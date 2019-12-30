@@ -60,13 +60,14 @@ export const Playground = () => {
         margin={20}
         padding={20}
         size={400}
+        width={600}
         // borderStyle="solid"
         // borderColor="lightgray"
         // borderWidth={2}
         rounded="lg"
         justifyContent="center"
       >
-        {item && <Labels item={item} />}
+        <Labels />
       </Box>
     </Box>
   );

@@ -1,8 +1,8 @@
 import Bluebird = require('bluebird');
 import { extendType, inputObjectType, stringArg } from 'nexus';
 
-import { AWSService, s3 } from '../../services/AWSService';
-import { getS3Key, KEY_TYPES } from '../../helpers/files';
+import { AWSService, s3 } from '../../../services/AWSService';
+import { getS3Key, KEY_TYPES } from '../../../helpers/files';
 import { File } from '@prisma/photon';
 
 const MAX_CONCURRENCY = 5;
@@ -26,8 +26,6 @@ export const processFiles = extendType({
       resolve: async (root, args, ctx) => {
         if (!ctx.user) throw new Error('Whoops, not authorized');
 
-        console.log(args.uploadGroupId);
-
         if (!args.uploadGroupId) {
           throw new Error('must supply keys.');
         }
@@ -41,8 +39,9 @@ export const processFiles = extendType({
           upload.files,
           async ({ id }: File) => {
             try {
-              const file = await ctx.photon.files.findOne({
+              const file = await ctx.photon.files.update({
                 where: { id },
+                data: { hasStartedUploading: true },
               });
 
               const stream = s3

@@ -30,7 +30,6 @@ export const SelectContainer = ({
   };
 
   const selectItem = (item: Item) => {
-    console.log('selectItem');
     const id = getId(item);
     selectedMap.set(id, item);
     immutableUpdateMap(selectedMap);
@@ -44,7 +43,6 @@ export const SelectContainer = ({
   };
 
   const selectRange = (newItem: Item) => {
-    console.log('selectRange');
     if (!items) return;
 
     const lastItem = Array.from(selectedMap.values())[selectedMap.size - 1];
@@ -71,16 +69,12 @@ export const SelectContainer = ({
   };
 
   const deselectItem = (item: Item) => {
-    console.log('deselectItem');
-
     const id = getId(item);
     selectedMap.delete(id);
     immutableUpdateMap(selectedMap);
   };
 
   const toggleItem = (item: Item) => {
-    console.log('toggleItem');
-
     if (isItemSelected(item)) deselectItem(item);
     else selectItem(item);
   };
@@ -91,8 +85,6 @@ export const SelectContainer = ({
     if (isItemSelected(item)) return immutableUpdateMap(new Map());
     return resetAndSelect(item);
   };
-
-  console.log({ selectedMap });
 
   return (
     <SelectContext.Provider

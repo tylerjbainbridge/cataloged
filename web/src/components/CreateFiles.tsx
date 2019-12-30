@@ -58,12 +58,11 @@ export const CreateFiles = () => {
   const [processFiles, { loading: isSubmitting }] = useMutation<
     processFiles_processFiles
   >(UPLOAD_FILE_MUTATION, {
-    refetchQueries: ['getUploadGroups'],
+    refetchQueries: ['feed'],
   });
 
   const [generateSignedUrls] = useMutation(GENERATE_SIGNED_URLS, {
     onCompleted: () => {
-      setIsModalOpen(false);
       setFiles({});
     },
   });
@@ -107,6 +106,8 @@ export const CreateFiles = () => {
           );
 
           setIsUploading(false);
+          setIsModalOpen(false);
+          setFiles({});
 
           await processFiles({ variables: { uploadGroupId: uploadGroup.id } });
         } catch (e) {
@@ -164,10 +165,15 @@ export const CreateFiles = () => {
 
   return (
     <>
-      <Button variant="solid" onClick={() => setIsModalOpen(true)}>
+      <Button
+        cursor="pointer"
+        variant="solid"
+        onClick={() => setIsModalOpen(true)}
+      >
         <Icon name="attachment" />
       </Button>
       <Modal
+        closeOnEsc={false}
         size="600px"
         isOpen={isModalOpen}
         scrollBehavior="inside"

@@ -1,7 +1,7 @@
 import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
 
-import { Item } from '../types/entities/Item';
+import { Item } from '../entities/Item';
 
 export const connectLabelToItem = extendType({
   type: 'Mutation',

@@ -14,6 +14,21 @@ import { getUserFromRequest } from '../helpers/auth';
 import { getHostUrl } from '../helpers/request';
 import { permissions } from './permissions';
 
+const cleanup = async (exitCode: any) => {
+  console.log({ exitCode });
+  await photon.disconnect().catch(e => {
+    console.log('error disconnecting');
+    console.log(e);
+  });
+  process.exit();
+};
+
+process.on('exit', cleanup);
+process.on('SIGINT', cleanup);
+process.on('SIGUSR1', cleanup);
+process.on('SIGUSR2', cleanup);
+process.on('uncaughtException', cleanup);
+
 const schema = Nexus.makeSchema({
   types: [...types],
   plugins: [
@@ -28,18 +43,6 @@ const schema = Nexus.makeSchema({
     typegen: __dirname + '/generated/nexus.ts',
   },
 });
-
-const cleanup = async (exitCode: any) => {
-  console.log({ exitCode });
-  await photon.disconnect();
-  process.exit();
-};
-
-process.on('exit', cleanup);
-process.on('SIGINT', cleanup);
-process.on('SIGUSR1', cleanup);
-process.on('SIGUSR2', cleanup);
-process.on('uncaughtException', cleanup);
 
 const app = express();
 

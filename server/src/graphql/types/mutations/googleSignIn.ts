@@ -1,7 +1,7 @@
 import { extendType, stringArg } from 'nexus';
 
-import { JWT } from '../types/entities/JWT';
-import { TokenService } from '../../services/TokenService';
+import { JWT } from '../entities/JWT';
+import { TokenService } from '../../../services/TokenService';
 import { User } from '@prisma/photon';
 
 export const googleSignIn = extendType({

@@ -8,6 +8,7 @@ photon
     console.log(`connected to photon (${process.env.POSTGRESQL_URL})`);
   })
   .catch(e => {
+    console.log(e);
     console.log(`error connecting to photon (${process.env.POSTGRESQL_URL})`);
   });
 

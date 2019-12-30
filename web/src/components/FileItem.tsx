@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 
 import { LazyImage } from './LazyImage';
 import { SelectOnClick } from './SelectOnClick';
-import { getItems_items, getItems_items_file } from './__generated__/getItems';
-import { ItemHeader } from './ItemHeader';
 import {
   useDisclosure,
   SlideIn,
@@ -17,22 +15,28 @@ import {
   ModalFooter,
   Box,
   Button,
+  Stack,
 } from '@chakra-ui/core';
+import { Labels } from './Labels';
+import { feed_items } from './__generated__/feed';
+import { ITEM_ACTUAL_WIDTH, ItemHeader } from './Item';
 
-export interface ItemWithFile extends getItems_items {
-  file: getItems_items_file;
+export interface ItemWithFile extends feed_items {
+  file: feed_items_file;
 }
 
-export const File = ({ item }: { item: ItemWithFile }) => {
+export const FileItem = ({ item }: { item: ItemWithFile }) => {
   const { isOpen, onOpen, onClose } = useDisclosure(false);
   const { file } = item;
 
   return (
-    <div>
+    <>
       <SelectOnClick onSingleClick={onOpen} item={item}>
-        {({ style, ...clickProps }) => (
+        {clickProps => (
           <LazyImage
-            {...style}
+            width={ITEM_ACTUAL_WIDTH}
+            height="200px"
+            objectFit="cover"
             isReady={file.isUploaded}
             src={
               !file.isUploaded
@@ -51,6 +55,7 @@ export const File = ({ item }: { item: ItemWithFile }) => {
         onClose={onClose}
         scrollBehavior="inside"
         isOpen={isOpen}
+        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent height="100%">
@@ -59,20 +64,22 @@ export const File = ({ item }: { item: ItemWithFile }) => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody d="flex" justifyContent="center" alignItems="center">
-            <LazyImage
-              rounded
-              isReady={file.isUploaded}
-              src={file.fullUrl}
-              height="90%"
-              width="auto"
-              showSpinner={false}
-              loadingContainerProps={{
-                width: '100%',
-              }}
-            />
+            <Stack spacing={5} d="flex" height="100%">
+              <LazyImage
+                rounded
+                isReady={file.isUploaded}
+                src={file.fullUrl}
+                height="90%"
+                width="auto"
+                loadingContainerProps={{
+                  width: '100%',
+                }}
+              />
+              <Labels item={item} />
+            </Stack>
           </ModalBody>
         </ModalContent>
       </Modal>
-    </div>
+    </>
   );
 };

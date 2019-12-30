@@ -2,8 +2,7 @@ import app from './graphql/app';
 import { photon } from './data/photon';
 
 process.on('unhandledRejection', async (...args) => {
-  console.log(...args);
-  await photon.disconnect();
+  console.log('ERROR', ...args);
 });
 
 app.listen({ port: 5000 }, () =>

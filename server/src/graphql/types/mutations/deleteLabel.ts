@@ -1,7 +1,7 @@
 import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
 
-import { User } from '../types/entities/User';
+import { User } from '../entities/User';
 
 export const deleteLabel = extendType({
   type: 'Mutation',
@@ -13,7 +13,7 @@ export const deleteLabel = extendType({
       },
       resolve: async (root, args, ctx) => {
         await ctx.photon.labels.delete({
-          where: { id: args.itemId },
+          where: { id: args.labelId },
         });
 
         return ctx.user;

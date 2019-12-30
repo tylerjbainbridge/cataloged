@@ -1,47 +1,37 @@
 import React from 'react';
+import _ from 'lodash';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
 
-import { Box, Text, ButtonGroup } from '@chakra-ui/core';
+import { Box } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
 
 import { Item, ITEM_WIDTH } from './Item';
 import { SelectContainer } from './SelectContainer';
-import { getItems } from './__generated__/getItems';
 import { usePagination } from '../hooks/useVariables';
 import { CreateFiles } from './CreateFiles';
 import { CreateLink } from './CreateLink';
 import { SignOut } from './SignOut';
 import { UploadProgress } from './UploadProgress';
+import { Filter } from './Filter';
+import { NoteModal } from './NoteModal';
+import { feed } from './__generated__/feed';
+import { ITEM_FULL_FRAGMENT } from '../graphql/item';
 
-const GET_FILES = gql`
-  query getItems($first: Int, $skip: Int) {
-    items(first: $first, skip: $skip, orderBy: { createdAt: desc }) {
-      id
-      type
-
-      link {
-        id
-        href
-        notes
-
-        image
-        favicon
-        title
-        description
-      }
-
-      file {
-        id
-        name
-        extension
-        isUploaded
-        fullUrl
-        squareUrl
-      }
+export const FEED_QUERY = gql`
+  query feed($first: Int, $skip: Int, $where: ItemWhereInput) {
+    items(
+      first: $first
+      skip: $skip
+      where: $where
+      orderBy: { createdAt: desc }
+    ) @connection(key: "feed_items") {
+      ...ItemFull
     }
   }
+
+  ${ITEM_FULL_FRAGMENT}
 `;
 
 const GridContainer = styled.div``;
@@ -55,24 +45,41 @@ const GridItem = styled.div`
   }
 `;
 
-export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
+export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
   const { paginationVariables } = usePagination();
 
-  const { loading, data, fetchMore } = useQuery<getItems>(GET_FILES, {
-    variables: paginationVariables,
-    notifyOnNetworkStatusChange: true,
-  });
+  const { loading, data, refetch, fetchMore, variables } = useQuery<feed>(
+    FEED_QUERY,
+    {
+      variables: paginationVariables,
+      notifyOnNetworkStatusChange: true,
+    },
+  );
 
   const initialLoad = loading && !data;
+
+  const filter = (variables: any) =>
+    fetchMore({
+      variables: {
+        ...variables,
+      },
+      updateQuery(prev, { fetchMoreResult }) {
+        if (!fetchMoreResult) return prev;
+        return {
+          ...prev,
+          items: fetchMoreResult.items || [],
+        };
+      },
+    });
 
   return (
     <>
       <UploadProgress />
       <SelectContainer items={data ? data.items : []}>
         <Box d="flex" justifyContent="center">
-          <Box width="100%" padding={50}>
+          <Box width="90%" padding={50}>
             <Box
-              height={100}
+              height={80}
               d="flex"
               minWidth="100%"
               justifyContent="space-between"
@@ -80,13 +87,15 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
             >
               <Box
                 d="flex"
-                width="100px"
+                width="150px"
                 justifyContent="space-between"
                 alignItems="center"
               >
                 <CreateFiles />
                 <CreateLink />
+                <NoteModal />
               </Box>
+              <Filter filter={filter} variables={variables} />
               {/* <Text fontSize="4xl" margin={0}>
                 Cataloged
               </Text> */}
@@ -109,11 +118,15 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
               >
                 {data &&
                   data.items &&
-                  data.items.map(item => (
-                    <GridItem key={item.id}>
-                      <Item item={item} />
-                    </GridItem>
-                  ))}
+                  // @ts-ignore
+                  data.items.reduce((p, c) => {
+                    const itemNode = <Item item={c} />;
+
+                    // @ts-ignore
+                    if (c.type === 'note' && !c.note.text) return p;
+
+                    return [...p, <GridItem key={c.id}>{itemNode}</GridItem>];
+                  }, [])}
                 {/* <Grid.Row>
               <Loader active={!!(loading && data)} />
             </Grid.Row> */}
@@ -123,6 +136,7 @@ export const MainContent = ({ rowLength = 4 }: { rowLength?: number }) => {
                     if (data && data.items && !loading) {
                       fetchMore({
                         variables: {
+                          ...variables,
                           skip: data.items.length,
                         },
                         updateQuery: (prev, { fetchMoreResult }) => {

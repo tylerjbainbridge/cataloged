@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import { Dashboard } from './routes/Dashboard';
-import { Note } from './routes/Note';
+import { Note } from './components/Note';
 import { Playground } from './routes/Playground';
 
 import { GoogleCallback } from './routes/GoogleCallback';

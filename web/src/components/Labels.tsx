@@ -15,7 +15,7 @@ import {
   PopoverArrow,
   InputRightElement,
   FormControl,
-  IconButton,
+  Icon,
   Stack,
   TagIcon,
   TagLabel,
@@ -56,8 +56,35 @@ const DISCONNECT_LABEL_FROM_ITEM_MUTATION = gql`
   ${ITEM_LABEL_RESPONSE_FRAGMENT}
 `;
 
-export const Labels = ({ item }: { item: any }) => {
+const CREATE_LABEL_MUTATION = gql`
+  mutation createLabel($name: String!) {
+    createLabel(name: $name) {
+      # user
+      id
+
+      labels {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const Labels = ({
+  item = null,
+  canAddLabels = true,
+  selectedLabels: initialSelectedLabels,
+  onSelectedLabelChange,
+}: {
+  item?: any;
+  selectedLabels?: any[];
+  canAddLabels?: boolean;
+  onSelectedLabelChange?: Function;
+}) => {
   const [cursor, setCursor] = useState(0);
+
+  // Only relevant when managing it's own state.<
+  const [selectedLabels, setSelectedLabels] = useState<any[]>([]);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -66,6 +93,17 @@ export const Labels = ({ item }: { item: any }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { user, refetchUser } = useAuth();
+
+  const isManagingOwnState = !item;
+
+  useEffect(() => {
+    if (initialSelectedLabels) setSelectedLabels(initialSelectedLabels);
+  }, []);
+
+  useEffect(() => {
+    if (onSelectedLabelChange && selectedLabels !== initialSelectedLabels)
+      onSelectedLabelChange(selectedLabels);
+  }, [selectedLabels && selectedLabels.length]);
 
   const { getValues, setValue, register, watch } = useForm({
     defaultValues: { search: '' },
@@ -85,12 +123,16 @@ export const Labels = ({ item }: { item: any }) => {
     DISCONNECT_LABEL_FROM_ITEM_MUTATION,
   );
 
+  const [createLabel] = useMutation(CREATE_LABEL_MUTATION);
+
   const { search } = getValues();
+
+  const labelSet = isManagingOwnState ? selectedLabels : item.labels;
 
   const filteredLabels = _.take(
     user.labels.filter(({ name }: { name: string }) => {
       return (
-        !item.labels.find(
+        !labelSet.find(
           (existingLabel: { name: string }) => existingLabel.name === name,
         ) && name.toLowerCase().includes(search.toLowerCase())
       );
@@ -116,19 +158,47 @@ export const Labels = ({ item }: { item: any }) => {
     else if (!isOpen && isEditing) setIsEditing(false);
   }, [isOpen]);
 
-  const connectToItem = (name: string) =>
-    connectLabelToItem({
-      variables: {
-        name,
-        itemId: item.id,
-      },
-    });
+  const addAction = async (name: string) => {
+    if (isManagingOwnState) {
+      let label = user.labels.find((l: any) => l.name === name);
+
+      if (!label) {
+        const { data } = await createLabel({ variables: { name } });
+        label = data.createLabel.labels.find((l: any) => l.name === name);
+      }
+
+      setSelectedLabels([...selectedLabels, label]);
+      setValue('search', '');
+    } else {
+      connectLabelToItem({
+        variables: {
+          name,
+          itemId: item.id,
+        },
+      });
+    }
+  };
+
+  const removeAction = ({ id, name }: { id: string; name: string }) => {
+    if (isManagingOwnState) {
+      const labelIdx = selectedLabels.findIndex(label => label.name === name);
+
+      setSelectedLabels([
+        ...selectedLabels.slice(0, labelIdx),
+        ...selectedLabels.slice(labelIdx + 1),
+      ]);
+    } else {
+      disconnectLabelFromItem({
+        variables: { labelId: id, itemId: item.id },
+      });
+    }
+  };
 
   const onKeyDown = (event: any) => {
     if (event.metaKey && event.key === 'Enter' && search) {
-      connectToItem(search);
+      addAction(search);
     } else if (event.key === 'Enter' && filteredLabels[cursor]) {
-      connectToItem(filteredLabels[cursor].name);
+      addAction(filteredLabels[cursor].name);
     }
   };
 
@@ -148,10 +218,16 @@ export const Labels = ({ item }: { item: any }) => {
     }
   };
 
-  const createFromSearch = () => !connecting && connectToItem(search);
+  const createFromSearch = () => !connecting && addAction(search);
 
   return (
-    <>
+    <Stack
+      d="flex"
+      flexDirection="row"
+      alignItems="flex-start"
+      alignContent="flex-start"
+      flexWrap="wrap"
+    >
       <Popover
         placement="bottom"
         isOpen={isOpen}
@@ -163,15 +239,21 @@ export const Labels = ({ item }: { item: any }) => {
           if (onClose) onClose();
         }}
       >
-        <PopoverTrigger>
-          <IconButton
-            onClick={onOpen}
-            aria-label="add labels"
-            mr="2"
-            size="sm"
-            icon="edit"
-          />
-        </PopoverTrigger>
+        {canAddLabels && (
+          <PopoverTrigger>
+            <Button
+              size="xs"
+              height="25px"
+              onClick={onOpen}
+              aria-label="add labels"
+              variant="outline"
+              mr={2}
+              cursor="pointer"
+            >
+              <Icon size="10px" name="add" />
+            </Button>
+          </PopoverTrigger>
+        )}
         <PopoverContent zIndex={4} p={5}>
           <FocusLock returnFocus persistentFocus={false}>
             <PopoverArrow bg="white" />
@@ -203,20 +285,20 @@ export const Labels = ({ item }: { item: any }) => {
               </FormControl>
               {!!filteredLabels.length && (
                 <Stack spacing={2}>
-                  {filteredLabels.map(({ id, name }, idx) => (
+                  {filteredLabels.map(({ name }, idx) => (
                     <Tag
-                      size="lg"
-                      key={id}
+                      size="md"
+                      key={name}
+                      cursor="pointer"
                       variantColor={idx === cursor ? 'cyan' : 'gray'}
                       onMouseOver={() => setCursor(idx)}
                       onClick={e => {
                         e.preventDefault();
                         e.stopPropagation();
-                        connectToItem(name);
+                        addAction(name);
                       }}
-                      cursor="pointer"
                     >
-                      <TagIcon icon="add" size="12px" />
+                      <TagIcon icon="add" size="6px" />
                       <TagLabel>{name}</TagLabel>
                     </Tag>
                   ))}
@@ -226,23 +308,19 @@ export const Labels = ({ item }: { item: any }) => {
           </FocusLock>
         </PopoverContent>
       </Popover>
-      <Stack spacing={2} height="sm" shouldWrapChildren isInline>
-        {item.labels.map(({ id, name }: { id: string; name: string }) => (
-          <Tag
-            size="lg"
-            key={id}
-            cursor="pointer"
-            onClick={() =>
-              disconnectLabelFromItem({
-                variables: { labelId: id, itemId: item.id },
-              })
-            }
-          >
-            <TagIcon size="12px" icon="delete" />
-            <TagLabel>{name}</TagLabel>
-          </Tag>
-        ))}
-      </Stack>
-    </>
+      {labelSet.map(({ id, name }: { id: string; name: string }) => (
+        <Tag
+          size="md"
+          key={name}
+          mr={2}
+          mb={5}
+          cursor="pointer"
+          onClick={() => removeAction({ id, name })}
+        >
+          <TagIcon size="12px" icon="delete" />
+          <TagLabel>{name}</TagLabel>
+        </Tag>
+      ))}
+    </Stack>
   );
 };
