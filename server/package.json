@@ -6,11 +6,13 @@
     "start": "npm run start:server",
     "prestart": "npm run prisma:lift:up",
     "dev": "npx nodemon --watch '*.ts' --exec 'npx ts-node -T' src/dev.ts",
+    "predev": "npm run generate:imports",
     "build": "tsc src/dev.ts",
     "prisma:generate": "npx prisma2 generate",
     "prisma:lift:up": "npx prisma2 lift up",
     "prisma:lift:save": "npx prisma2 lift save",
     "postinstall": "npx prisma2 generate",
+    "generate:imports": "node src/generateImports.js",
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
@@ -59,6 +61,6 @@
     "prettier": "^1.18.2",
     "ts-node": "^8.3.0",
     "ts-node-dev": "1.0.0-pre.40",
-    "typescript": "^3.6.3"
+    "typescript": "3.7.4"
   }
 }

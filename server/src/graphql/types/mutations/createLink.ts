@@ -19,10 +19,6 @@ export const createLink = extendType({
           args.href,
         );
 
-        const item = await ctx.photon.items.create({
-          data: {},
-        });
-
         const link = await ctx.photon.links.create({
           data: {
             href: args.href,
