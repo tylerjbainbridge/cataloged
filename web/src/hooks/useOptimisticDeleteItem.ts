@@ -11,7 +11,7 @@ export const useOptimisticDeleteItem = (item: any) =>
       __typename: 'Mutation',
       deleteItem: {
         id: '1234',
-        __typename: 'User',
+        __typename: 'Item',
       },
     },
     update: async (cache: any) => {

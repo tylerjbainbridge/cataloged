@@ -39,7 +39,14 @@ const CREATE_LINK_MUTATION = gql`
 `;
 
 export const CreateLink = () => {
-  const { getValues, setValue, watch, register, errors } = useForm({
+  const {
+    getValues,
+    setValue,
+    handleSubmit,
+    watch,
+    register,
+    errors,
+  } = useForm({
     validationSchema: CreateLinkSchema,
     mode: 'onBlur',
   });
@@ -79,7 +86,12 @@ export const CreateLink = () => {
 
   return (
     <>
-      <Tooltip hasArrow placement="bottom" label="c + l" aria-label="Add link">
+      <Tooltip
+        hasArrow
+        placement="bottom"
+        label="or press c + l"
+        aria-label="Add link"
+      >
         <Button cursor="pointer" variant="solid" onClick={openModal}>
           <Icon name="link" />
         </Button>
@@ -98,18 +110,24 @@ export const CreateLink = () => {
           <ModalCloseButton />
 
           <ModalBody>
-            <Box display="none">
-              <input name="href" defaultValue="" ref={register} />
-              {errors.href && <Text color="red">{errors.href.message}</Text>}
-            </Box>
-
-            {href && (
-              <Box width="100%">
-                <a href={href} target="_blank">
-                  {href}
-                </a>
+            <form
+              onSubmit={handleSubmit(async () => {
+                await createLink();
+              })}
+            >
+              <Box display="none">
+                <input name="href" defaultValue="" ref={register} />
+                {errors.href && <Text color="red">{errors.href.message}</Text>}
               </Box>
-            )}
+
+              {href && (
+                <Box width="100%">
+                  <a href={href} target="_blank">
+                    {href}
+                  </a>
+                </Box>
+              )}
+            </form>
           </ModalBody>
           <ModalFooter>
             <Button

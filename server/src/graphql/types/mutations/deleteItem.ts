@@ -1,13 +1,14 @@
 import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
+import Bluebird from 'bluebird';
 
-import { User } from '../entities/User';
+import { Item } from '../entities/Item';
 
 export const deleteItem = extendType({
   type: 'Mutation',
   definition(t) {
     t.field('deleteItem', {
-      type: User,
+      type: Item,
       args: {
         itemId: stringArg({ required: true }),
       },
@@ -28,32 +29,34 @@ export const deleteItem = extendType({
           link: item.link,
         };
 
-        await Promise.all(
-          Object.keys(relations)
-            .filter(key => relations[key])
-            .map(key =>
-              ctx.photon[`${key}s`].delete({
-                where: { id: relations[key].id },
-              }),
-            ),
+        await Bluebird.map(
+          Object.keys(relations).filter(key => relations[key]),
+          (key: string) =>
+            ctx.photon[`${key}s`].delete({
+              where: { id: relations[key].id },
+            }),
+          { concurrency: 1 },
         );
 
-        await Promise.all(
-          item.labels.map((label: any) =>
+        await Bluebird.map(
+          item.labels,
+          (label: any) =>
             ctx.photon.labels.update({
               where: { id: label.id },
               data: {
-                item: { disconnect: { id: item.id } },
+                items: { disconnect: { id: item.id } },
               },
             }),
-          ),
+          { concurrency: 1 },
         );
 
         await ctx.photon.items.delete({
           where: { id: item.id },
         });
 
-        return ctx.user;
+        console.log(item);
+
+        return item;
       },
     });
   },

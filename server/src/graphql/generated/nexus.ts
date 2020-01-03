@@ -701,7 +701,7 @@ export interface NexusGenFieldTypes {
     createNote: NexusGenRootTypes['Note']; // Note!
     createOneFile: NexusGenRootTypes['File']; // File!
     createOneUser: NexusGenRootTypes['User']; // User!
-    deleteItem: NexusGenRootTypes['User']; // User!
+    deleteItem: NexusGenRootTypes['Item']; // Item!
     deleteLabel: NexusGenRootTypes['User']; // User!
     deleteOneFile: NexusGenRootTypes['File'] | null; // File
     disconnectLabelFromItem: NexusGenRootTypes['Item']; // Item!

@@ -1,13 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { formatRelative } from 'date-fns';
 import _ from 'lodash';
+import { useHoverDirty } from 'react-use';
+
 import { FileItem } from './FileItem';
 import { LinkItem } from './LinkItem';
 import { SelectContext } from './SelectContainer';
-import { Box, Icon, Stack, BoxProps, Text, Tooltip } from '@chakra-ui/core';
+import {
+  Box,
+  Icon,
+  Stack,
+  BoxProps,
+  Text,
+  Tooltip,
+  useDisclosure,
+  IconButton,
+} from '@chakra-ui/core';
 import { NoteItem } from './NoteItem';
 import { feed_items } from './__generated__/feed';
 import { Click } from './Click';
+import { useHotKey } from '../hooks/useHotKey';
+import { useOptimisticDeleteItem } from '../hooks/useOptimisticDeleteItem';
 
 export const ITEM_INNER_PADDING = 5;
 export const ITEM_ACTUAL_WIDTH = 270;
@@ -106,22 +119,88 @@ export const ItemHeader = ({
 
 interface ItemContentContainer extends BoxProps {
   tooltip: string;
+  item: feed_items;
 }
 
 export const ItemContentContainer = ({
   children,
   tooltip,
+  item,
   ...props
-}: ItemContentContainer) => (
-  <Tooltip
-    hasArrow
-    label={tooltip}
-    aria-label={tooltip}
-    placement="top"
-    maxWidth={200}
-  >
-    <Box width={ITEM_ACTUAL_WIDTH} height={ITEM_CONTENT_HEIGHT} {...props}>
-      {children}
-    </Box>
-  </Tooltip>
-);
+}: ItemContentContainer) => {
+  const baseHoverState = useDisclosure();
+  const menuHoverState = useDisclosure();
+
+  const itemRef = React.useRef(null);
+
+  const [deleteItem] = useOptimisticDeleteItem(item);
+
+  const hotKeyHandler = () => {
+    if (baseHoverState.isOpen) deleteItem();
+  };
+
+  useHotKey('d', hotKeyHandler, {
+    ref: itemRef.current,
+    shouldBind: baseHoverState.isOpen,
+  });
+
+  return (
+    <Tooltip
+      hasArrow
+      label={tooltip}
+      aria-label={tooltip}
+      placement="top"
+      maxWidth={200}
+      isOpen={baseHoverState.isOpen && !menuHoverState.isOpen}
+      onOpen={baseHoverState.onOpen}
+    >
+      <Box
+        onMouseEnter={baseHoverState.onOpen}
+        onMouseLeave={baseHoverState.onClose}
+        position="relative"
+      >
+        {baseHoverState.isOpen && (
+          <Box
+            d="flex"
+            justifyContent="flex-end"
+            p={2}
+            alignItems="center"
+            rounded="xl"
+            position="absolute"
+            top={0}
+            height={10}
+            width={ITEM_ACTUAL_WIDTH}
+            zIndex={10}
+            backgroundColor="lightgrey"
+            opacity={9}
+            onMouseOver={menuHoverState.onOpen}
+            onMouseLeave={menuHoverState.onClose}
+          >
+            <Tooltip
+              hasArrow
+              label="or press `del` while hovering"
+              aria-label="delete item"
+              placement="top"
+            >
+              <IconButton
+                size="sm"
+                icon="delete"
+                cursor="pointer"
+                aria-label="delete item"
+                onClick={() => deleteItem()}
+              />
+            </Tooltip>
+          </Box>
+        )}
+        <Box
+          width={ITEM_ACTUAL_WIDTH}
+          height={ITEM_CONTENT_HEIGHT}
+          ref={itemRef}
+          {...props}
+        >
+          {children}
+        </Box>
+      </Box>
+    </Tooltip>
+  );
+};

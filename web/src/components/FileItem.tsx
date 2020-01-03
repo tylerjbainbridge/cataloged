@@ -31,7 +31,7 @@ export const FileItem = ({ item }: { item: ItemWithFile }) => {
 
   return (
     <>
-      <ItemContentContainer tooltip="Open file">
+      <ItemContentContainer item={item} tooltip="Open file">
         <SelectOnClick onSingleClick={onOpen} item={item}>
           {clickProps => (
             <LazyImage

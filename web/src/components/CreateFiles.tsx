@@ -171,7 +171,7 @@ export const CreateFiles = () => {
       <Tooltip
         hasArrow
         placement="bottom"
-        label="c + f"
+        label="or press c + f"
         aria-label="Add file(s)"
       >
         <Button cursor="pointer" variant="solid" onClick={openModal}>

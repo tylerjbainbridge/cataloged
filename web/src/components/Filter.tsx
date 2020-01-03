@@ -44,7 +44,7 @@ export const Filter = ({
     ModalName.FILTER_FEED_MODAL,
   );
 
-  useHotKey('command command', toggleModal, true);
+  useHotKey('command command', toggleModal, { isGlobal: true });
 
   const formValues = getFormValuesFromFilterVariables(variables, user);
 
@@ -61,7 +61,7 @@ export const Filter = ({
       <Tooltip
         hasArrow
         placement="bottom"
-        label="⌘ + ⌘"
+        label="or press ⌘ + ⌘"
         aria-label="Filter feed"
       >
         <Button

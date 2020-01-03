@@ -73,7 +73,7 @@ export const NoteModal = ({
         <Tooltip
           hasArrow
           placement="bottom"
-          label="c + n"
+          label="or press c + n"
           aria-label="Add note"
         >
           <Button variant="solid" cursor="pointer" onClick={open}>

@@ -1,10 +1,15 @@
 import React, { useEffect } from 'react';
 import Mousetrap from 'mousetrap';
+import { usePrevious } from './usePrevious';
 
 const isMousetrapExtended = false;
 const _globalCallbacks = {};
 
-export const useHotKey = (keybind, handler, isGlobal = false) => {
+export const useHotKey = (
+  keybind,
+  handler,
+  { isGlobal = false, shouldBind = true, ref = null } = {},
+) => {
   useEffect(() => {
     if (!isMousetrapExtended) {
       // Took this code from the janky mouse trap docs
@@ -56,15 +61,37 @@ export const useHotKey = (keybind, handler, isGlobal = false) => {
     }
   }, []);
 
-  const handlerAsCallback = React.useCallback(() => {
-    handler();
+  const handlerAsCallback = React.useCallback(
+    e => {
+      if (e.preventDefault) e.preventDefault();
+      handler();
+    },
+    [handler],
+  );
+
+  const { current: mousetrap } = React.useRef(
+    // ref ? new Mousetrap(ref) :
+    Mousetrap,
+  );
+
+  const prevShouldBind = usePrevious(shouldBind);
+
+  const bind = () => {
+    mousetrap[isGlobal ? 'bindGlobal' : 'bind'](keybind, handlerAsCallback);
+  };
+
+  const unbind = () => {
+    mousetrap.unbind(keybind);
+  };
+
+  useEffect(() => {
+    return () => {
+      unbind();
+    };
   }, []);
 
   useEffect(() => {
-    Mousetrap[isGlobal ? 'bindGlobal' : 'bind'](keybind, handlerAsCallback);
-
-    return () => {
-      Mousetrap.unbind(keybind);
-    };
-  }, []);
+    if (shouldBind) bind();
+    else if (!shouldBind && prevShouldBind) unbind();
+  }, [shouldBind]);
 };

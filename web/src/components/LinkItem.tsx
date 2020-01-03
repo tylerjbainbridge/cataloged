@@ -17,14 +17,15 @@ export const LinkItem = ({ item }: { item: ItemWithLink }) => {
 
   return (
     <>
-      <ItemContentContainer tooltip={`Visit ${url.hostname}`}>
+      <ItemContentContainer item={item} tooltip={`Visit ${url.hostname}`}>
         <SelectOnClick onSingleClick={() => window.open(link.href)} item={item}>
           {clickProps => (
             <LazyImage
-              src={link.image || link.favicon || ''}
+              src={link.image}
               width={ITEM_ACTUAL_WIDTH}
               height="200px"
               objectFit="cover"
+              placeholderIcon="external-link"
               {...clickProps}
             />
           )}

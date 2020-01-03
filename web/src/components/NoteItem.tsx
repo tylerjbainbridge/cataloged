@@ -25,6 +25,7 @@ export const NoteItem = ({ item }: { item: ItemWithNote }) => {
                 p={5}
                 overflow="hidden"
                 tooltip="Open note"
+                item={item}
                 {...clickProps}
               >
                 <Text fontSize="xs">{note.text}</Text>

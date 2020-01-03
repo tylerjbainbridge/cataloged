@@ -387,7 +387,7 @@ type Mutation {
   createNote(raw: String!, text: String!): Note!
   createOneFile(data: FileCreateInput!): File!
   createOneUser(data: UserCreateInput!): User!
-  deleteItem(itemId: String!): User!
+  deleteItem(itemId: String!): Item!
   deleteLabel(labelId: String!): User!
   deleteOneFile(where: FileWhereUniqueInput!): File
   disconnectLabelFromItem(itemId: String!, labelId: String!): Item!
