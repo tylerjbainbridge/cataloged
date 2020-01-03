@@ -6,7 +6,7 @@ const getFieldName = (info: any) => _.get(info, 'fieldName', '');
 const requireAuth = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
   if (ctx.user === null) {
     if (process.env.NODE_ENV === 'development') console.log(getFieldName(info));
-    throw new Error('Uh oh!');
+    throw new Error('Unauthenticated user!');
   }
 
   return true;
