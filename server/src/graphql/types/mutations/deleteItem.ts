@@ -54,8 +54,6 @@ export const deleteItem = extendType({
           where: { id: item.id },
         });
 
-        console.log(item);
-
         return item;
       },
     });

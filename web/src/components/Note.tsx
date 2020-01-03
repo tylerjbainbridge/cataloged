@@ -51,8 +51,6 @@ export const Note = ({ note }: { note: any }) => {
 
   watch('value');
 
-  useEffect(() => console.log('note mounted'), []);
-
   // Listen for form changes.
   useEffect(() => {
     register({ name: 'value' });

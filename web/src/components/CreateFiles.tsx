@@ -219,18 +219,20 @@ export const CreateFiles = () => {
                       <Text>{file.name}</Text>
                     </Box>
                     <Box d="flex" verticalAlign="middle">
-                      <Button
-                        onClick={e => {
-                          e.preventDefault();
-                          e.stopPropagation();
+                      {isWorking && (
+                        <Button
+                          onClick={e => {
+                            e.preventDefault();
+                            e.stopPropagation();
 
-                          const { [file.id]: temp, ...rest } = files;
+                            const { [file.id]: temp, ...rest } = files;
 
-                          setFiles(rest);
-                        }}
-                      >
-                        Remove
-                      </Button>
+                            setFiles(rest);
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      )}
                     </Box>
                   </Box>
                 ))}

@@ -34,8 +34,6 @@ export const createLink = extendType({
           },
         });
 
-        console.log(link);
-
         return link;
       },
     });

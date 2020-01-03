@@ -178,9 +178,9 @@ export const ItemContentContainer = ({
           >
             <Tooltip
               hasArrow
-              label="or press `del` while hovering"
+              label="press d while hovering over the item"
               aria-label="delete item"
-              placement="top"
+              placement="bottom"
             >
               <IconButton
                 size="sm"

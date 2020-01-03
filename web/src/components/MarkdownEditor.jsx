@@ -127,11 +127,11 @@ export const MarkdownEditor = React.memo(
 
     useEffect(() => {
       ReactEditor.focus(editor);
-    }, [editorRef]);
+    }, []);
 
     return (
       <Box>
-        <Slate editor={editor} value={value} onChange={onChange}>
+        <Slate autoFocus editor={editor} value={value} onChange={onChange}>
           <Editable
             decorate={decorate}
             renderLeaf={renderLeaf}
