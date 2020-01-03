@@ -5,6 +5,7 @@ export enum ModalName {
   CREATE_LINK_MODAL,
   CREATE_NOTE_MODAL,
   FILTER_FEED_MODAL,
+  VIEW_FILE_MODAL,
 }
 
 type ContextProps = {
@@ -26,6 +27,7 @@ const INITIAL_STATE = {
   [ModalName.CREATE_LINK_MODAL]: false,
   [ModalName.CREATE_NOTE_MODAL]: false,
   [ModalName.FILTER_FEED_MODAL]: false,
+  [ModalName.VIEW_FILE_MODAL]: false,
 };
 
 export const GlobalModalProvider: FunctionComponent = ({ children }) => {

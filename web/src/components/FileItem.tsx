@@ -16,6 +16,7 @@ import {
   Box,
   Button,
   Stack,
+  Text,
 } from '@chakra-ui/core';
 import { Labels } from './Labels';
 import { feed_items } from './__generated__/feed';
@@ -27,6 +28,7 @@ export interface ItemWithFile extends feed_items {
 
 export const FileItem = ({ item }: { item: ItemWithFile }) => {
   const { isOpen, onOpen, onClose } = useDisclosure(false);
+
   const { file } = item;
 
   return (
@@ -53,35 +55,61 @@ export const FileItem = ({ item }: { item: ItemWithFile }) => {
         </ItemHeader>
       </ItemContentContainer>
       <Modal
-        size="full"
+        size="100vw"
         onClose={onClose}
         scrollBehavior="inside"
         isOpen={isOpen}
         closeOnEsc={false}
+        m={0}
       >
         <ModalOverlay />
-        <ModalContent height="100vh" width="100vw">
+        <ModalContent m={0}>
           <ModalHeader>
             {file.name}.{file.extension}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody d="flex" justifyContent="center" alignItems="center">
-            <Stack spacing={5} d="flex" height="100%">
-              <LazyImage
-                rounded
-                isReady={file.isUploaded}
-                src={file.fullUrl}
-                height="90%"
-                width="auto"
-                loadingContainerProps={{
-                  width: '100%',
-                }}
-              />
-              <Labels item={item} />
-            </Stack>
+          <ModalBody
+            d="flex"
+            justifyContent="center"
+            flexWrap="wrap"
+            alignItems="center"
+          >
+            {/* <Box
+              p={5}
+              d="flex"
+              height="100%"
+              justifyContent="center"
+              width="70%"
+            > */}
+            <LazyImage
+              rounded
+              isReady={file.isUploaded}
+              src={file.fullUrl}
+              height="100%"
+              // width="auto"
+              maxWidth="100%"
+              p={3}
+            />
+            {/* </Box> */}
+            {/* <Box
+              p={5}
+              d="flex"
+              pt={100}
+              width="30%"
+              height="100%"
+              justifyContent="flex-start"
+              flexWrap="wrap"
+            >
+              <Stack spacing={5}>
+                <Text fontSize="xl" fontWeight="bold">
+                  {file.name}.{file.extension}
+                </Text>
+                <Labels item={item} />
+              </Stack>
+            </Box> */}
           </ModalBody>
-          <ModalFooter justifyContent="flex-start">
-            <Box mt={10}>
+          <ModalFooter d="flex" justifyContent="center">
+            <Box m={3}>
               <Labels item={item} />
             </Box>
           </ModalFooter>

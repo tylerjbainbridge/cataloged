@@ -68,6 +68,8 @@ export const CreateFiles = () => {
     refetchQueries: ['feed'],
   });
 
+  const isWorking = isUploading || isSubmitting;
+
   const [generateSignedUrls] = useMutation(GENERATE_SIGNED_URLS);
 
   useEffect(() => {
@@ -120,7 +122,20 @@ export const CreateFiles = () => {
     })();
   }, [isUploading]);
 
-  const isWorking = isUploading || isSubmitting;
+  useEffect(() => {
+    if (isWorking) {
+      const handler = (event: any) => {
+        event.preventDefault();
+        event.returnValue = '';
+      };
+
+      window.addEventListener('beforeunload', handler);
+
+      return () => {
+        window.removeEventListener('beforeunload', handler);
+      };
+    }
+  }, [isWorking]);
 
   const onDrop = useCallback(
     acceptedFiles => {
@@ -149,6 +164,7 @@ export const CreateFiles = () => {
     for (let i = 0; i < items.length; i++) {
       const item = e.clipboardData.items[i];
       const blob = item.getAsFile();
+
       if (blob) {
         const id = randomString();
 
@@ -219,7 +235,7 @@ export const CreateFiles = () => {
                       <Text>{file.name}</Text>
                     </Box>
                     <Box d="flex" verticalAlign="middle">
-                      {isWorking && (
+                      {!isWorking && (
                         <Button
                           onClick={e => {
                             e.preventDefault();

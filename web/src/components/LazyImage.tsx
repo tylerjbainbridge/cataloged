@@ -21,15 +21,22 @@ export const LazyImage = ({
   showSpinner = true,
   loadingContainerProps,
   placeholderIcon = 'view-off',
+  fit = false,
   ...props
 }: LazeImageProps) => {
   const [isImageLoaded, setIsImageLoaded] = useState<string | null>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     if (isReady) {
-      const squareImage = new Image();
-      squareImage.onload = e => setIsImageLoaded(squareImage.src);
-      squareImage.src = src;
+      const imageObj = new Image();
+      imageObj.onload = e => setIsImageLoaded(imageObj.src);
+      imageObj.src = src;
+
+      setDimensions({
+        width: imageObj.width,
+        height: imageObj.height,
+      });
     }
   }, [isReady]);
 
@@ -39,6 +46,8 @@ export const LazyImage = ({
   };
 
   const isReadyToDisplay = !isReady || !isImageLoaded;
+
+  const isLandscape = dimensions.width > dimensions.height;
 
   return isReadyToDisplay || !src ? (
     <Box
