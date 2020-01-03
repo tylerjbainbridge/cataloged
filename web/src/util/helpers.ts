@@ -9,21 +9,21 @@ export const randomString = (): string =>
     .substring(2, 15);
 
 export const getFilterVariablesFromFormValues = ({
-  // search,
+  search,
   labels,
 }: {
-  // search: any;
+  search: string;
   labels: any;
 }) => {
   const variables = {};
 
-  if (labels.length) {
-    _.set(
-      variables,
-      'where.labels.some.id.in',
-      labels.map(({ id }: { id: string }) => id),
-    );
-  }
+  _.set(variables, 'search', search);
+
+  _.set(
+    variables,
+    `where.labels.${labels.length ? 'some' : 'none'}.id.in`,
+    labels.map(({ id }: { id: string }) => id),
+  );
 
   return variables;
 };
@@ -32,6 +32,7 @@ export const getFormValuesFromFilterVariables = (variables: any, user: any) => {
   const labels = _.get(variables, 'where.labels.some.id.in', []);
 
   return {
+    search: variables.search,
     labels: labels.map((id: string) =>
       user.labels.find((label: any) => label.id === id),
     ),

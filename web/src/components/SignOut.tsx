@@ -7,6 +7,7 @@ export const SignOut = () => {
 
   return (
     <Button
+      cursor="pointer"
       onClick={() => {
         if (auth.signOut) auth.signOut();
       }}

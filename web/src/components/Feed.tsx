@@ -18,13 +18,16 @@ import { Filter } from './Filter';
 import { NoteModal } from './NoteModal';
 import { feed } from './__generated__/feed';
 import { ITEM_FULL_FRAGMENT } from '../graphql/item';
+import { useGlobalModal, ModalName } from './GlobalModal';
+import { useHotKey } from '../hooks/useHotKey';
 
 export const FEED_QUERY = gql`
-  query feed($first: Int, $skip: Int, $where: ItemWhereInput) {
+  query feed($first: Int, $skip: Int, $search: String, $where: ItemWhereInput) {
     items(
       first: $first
       skip: $skip
       where: $where
+      search: $search
       orderBy: { createdAt: desc }
     ) @connection(key: "feed_items") {
       ...ItemFull
@@ -48,28 +51,30 @@ const GridItem = styled.div`
 export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
   const { paginationVariables } = usePagination();
 
-  const { loading, data, refetch, fetchMore, variables } = useQuery<feed>(
-    FEED_QUERY,
-    {
-      variables: paginationVariables,
-      notifyOnNetworkStatusChange: true,
-    },
-  );
+  const {
+    loading,
+    data,
+    networkStatus,
+    refetch,
+    fetchMore,
+    variables,
+  } = useQuery<feed>(FEED_QUERY, {
+    variables: paginationVariables,
+    notifyOnNetworkStatusChange: true,
+  });
+
+  const filterFeedModal = useGlobalModal(ModalName.FILTER_FEED_MODAL);
+  // const filterFeedModal = useGlobalModal(ModalName.FILTER_FEED_MODAL);
+  // const filterFeedModal = useGlobalModal(ModalName.FILTER_FEED_MODAL);
+
+  useHotKey('command command', filterFeedModal.toggleModal, true);
 
   const initialLoad = loading && !data;
 
-  const filter = (variables: any) =>
-    fetchMore({
-      variables: {
-        ...variables,
-      },
-      updateQuery(prev, { fetchMoreResult }) {
-        if (!fetchMoreResult) return prev;
-        return {
-          ...prev,
-          items: fetchMoreResult.items || [],
-        };
-      },
+  const filter = (filterVariables: any) =>
+    refetch({
+      ...paginationVariables,
+      ...filterVariables,
     });
 
   return (
@@ -112,8 +117,8 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
                 top={-80}
                 justifyContent="space-between"
                 flexWrap="wrap"
-                gridColumnGap={20}
-                gridRowGap={10}
+                gridColumnGap={5}
+                gridRowGap={5}
                 gridTemplateColumns={`${ITEM_WIDTH}px ${ITEM_WIDTH}px ${ITEM_WIDTH}px ${ITEM_WIDTH}px`}
               >
                 {data &&
@@ -130,29 +135,37 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
                 {/* <Grid.Row>
               <Loader active={!!(loading && data)} />
             </Grid.Row> */}
-                <Waypoint
-                  bottomOffset={-500}
-                  onEnter={() => {
-                    if (data && data.items && !loading) {
-                      fetchMore({
-                        variables: {
-                          ...variables,
-                          skip: data.items.length,
-                        },
-                        updateQuery: (prev, { fetchMoreResult }) => {
-                          if (!fetchMoreResult) return prev;
-                          return {
-                            ...prev,
-                            items: [
-                              ...(prev.items || []),
-                              ...(fetchMoreResult.items || []),
-                            ],
-                          };
-                        },
-                      });
-                    }
-                  }}
-                />
+                {networkStatus === 7 && !loading && (
+                  <Waypoint
+                    bottomOffset={-500}
+                    onEnter={() => {
+                      if (
+                        data &&
+                        data.items &&
+                        data.items.length >= 20 &&
+                        !loading
+                      ) {
+                        fetchMore({
+                          variables: {
+                            ...variables,
+                            skip: data.items.length,
+                          },
+                          updateQuery: (prev, { fetchMoreResult }) => {
+                            if (!fetchMoreResult) return prev;
+
+                            return {
+                              ...prev,
+                              items: [
+                                ...(prev.items || []),
+                                ...(fetchMoreResult.items || []),
+                              ],
+                            };
+                          },
+                        });
+                      }
+                    }}
+                  />
+                )}
               </Box>
             )}
           </Box>

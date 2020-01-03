@@ -1,5 +1,5 @@
 import { objectType, arg, stringArg } from 'nexus';
-import { merge } from 'lodash';
+import { merge, set } from 'lodash';
 
 import { knex } from '../../data/knex';
 import {
@@ -53,41 +53,93 @@ export const Query = objectType({
       type: 'Item',
       args: {
         ...paginationArgs,
+        search: stringArg(),
         // @ts-ignore
         where: getWhereArgs('Item'),
-        // @ts-ignore
-        fileWhere: getWhereArgs('File'),
         // @ts-ignore
         orderBy: getFindManyOrderArgs('Item'),
       },
       resolve: (_, args, ctx) => {
-        const { fileWhere, where, ...rest } = args;
+        const { where, search, ...rest } = args;
+
+        const { note: noteWhere, file: fileWhere, link: linkWhere } =
+          where || {};
+
+        const noteFilter = {
+          type: 'note',
+          ...(noteWhere ? { note: noteWhere } : {}),
+        };
+
+        const linkFilter = {
+          type: 'link',
+          ...(linkWhere ? { link: linkWhere } : {}),
+        };
+
+        const fileFilter = {
+          type: 'file',
+          file: merge(fileWhere || {}, {
+            isUploaded: true,
+            hasStartedUploading: true,
+          }),
+        };
+
+        if (search) {
+          const tokens = search.split().map((token: string) => token.trim());
+
+          const { noteOr, fileOr, linkOr } = tokens.reduce(
+            (p: any, token: string) => {
+              p.linkOr = [
+                ...p.linkOr,
+                ...['href', 'title', 'description'].map(field => ({
+                  [field]: { contains: token },
+                })),
+              ];
+
+              p.noteOr = [
+                ...p.noteOr,
+                ...['text'].map(field => ({
+                  [field]: { contains: token },
+                })),
+              ];
+
+              p.fileOr = [
+                ...p.fileOr,
+                ...['name', 'extension'].map(field => ({
+                  [field]: { contains: token },
+                })),
+              ];
+
+              return p;
+            },
+            {
+              noteOr: [],
+              fileOr: [],
+              linkOr: [],
+            },
+          );
+
+          if (noteOr.length) {
+            set(noteFilter, 'note.OR', noteOr);
+          }
+
+          if (linkOr.length) {
+            set(linkFilter, 'link.OR', linkOr);
+          }
+
+          if (fileOr.length) {
+            set(fileFilter, 'file.OR', fileOr);
+          }
+        }
 
         const params = {
           where: {
             // @ts-ignore
             user: { id: ctx.user.id },
             ...(where || {}),
-            OR: [
-              {
-                type: 'note',
-              },
-              {
-                type: 'link',
-              },
-              {
-                type: 'file',
-                file: merge(fileWhere || {}, {
-                  isUploaded: true,
-                  hasStartedUploading: true,
-                }),
-              },
-            ],
+            OR: [noteFilter, linkFilter, fileFilter],
           },
           ...rest,
         };
-
-        console.log(params);
 
         return ctx.photon.items.findMany(params);
       },

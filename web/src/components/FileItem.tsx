@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/core';
 import { Labels } from './Labels';
 import { feed_items } from './__generated__/feed';
-import { ITEM_ACTUAL_WIDTH, ItemHeader } from './Item';
+import { ITEM_ACTUAL_WIDTH, ItemHeader, ItemContentContainer } from './Item';
 
 export interface ItemWithFile extends feed_items {
   file: feed_items_file;
@@ -31,25 +31,27 @@ export const FileItem = ({ item }: { item: ItemWithFile }) => {
 
   return (
     <>
-      <SelectOnClick onSingleClick={onOpen} item={item}>
-        {clickProps => (
-          <LazyImage
-            width={ITEM_ACTUAL_WIDTH}
-            height="200px"
-            objectFit="cover"
-            isReady={file.isUploaded}
-            src={
-              !file.isUploaded
-                ? 'https://react.semantic-ui.com/images/wireframe/image.png'
-                : file.squareUrl
-            }
-            {...clickProps}
-          />
-        )}
-      </SelectOnClick>
-      <ItemHeader onSingleClick={onOpen}>
-        {file.name}.{file.extension}
-      </ItemHeader>
+      <ItemContentContainer tooltip="Open file">
+        <SelectOnClick onSingleClick={onOpen} item={item}>
+          {clickProps => (
+            <LazyImage
+              width={ITEM_ACTUAL_WIDTH}
+              height="200px"
+              objectFit="cover"
+              isReady={file.isUploaded}
+              src={
+                !file.isUploaded
+                  ? 'https://react.semantic-ui.com/images/wireframe/image.png'
+                  : file.squareUrl
+              }
+              {...clickProps}
+            />
+          )}
+        </SelectOnClick>
+        <ItemHeader item={item} onSingleClick={onOpen}>
+          {file.name}.{file.extension}
+        </ItemHeader>
+      </ItemContentContainer>
       <Modal
         size="full"
         onClose={onClose}
@@ -58,7 +60,7 @@ export const FileItem = ({ item }: { item: ItemWithFile }) => {
         closeOnEsc={false}
       >
         <ModalOverlay />
-        <ModalContent height="100%">
+        <ModalContent height="100vh" width="100vw">
           <ModalHeader>
             {file.name}.{file.extension}
           </ModalHeader>
@@ -78,6 +80,11 @@ export const FileItem = ({ item }: { item: ItemWithFile }) => {
               <Labels item={item} />
             </Stack>
           </ModalBody>
+          <ModalFooter justifyContent="flex-start">
+            <Box mt={10}>
+              <Labels item={item} />
+            </Box>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

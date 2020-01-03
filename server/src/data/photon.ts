@@ -8,8 +8,8 @@ photon
     console.log(`connected to photon (${process.env.POSTGRESQL_URL})`);
   })
   .catch(e => {
-    console.log(e);
     console.log(`error connecting to photon (${process.env.POSTGRESQL_URL})`);
+    process.exit();
   });
 
 // export const photonSet = Array.from(new Array(5), _ => new Photon());

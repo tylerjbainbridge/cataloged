@@ -12,19 +12,21 @@ import {
   Icon,
   Spinner,
   ModalFooter,
+  Tooltip,
 } from '@chakra-ui/core';
 
 import { CREATE_NOTE_MUTATION, NOTE_FULL_FRAGMENT } from '../graphql/note';
-import { feed_items_note } from './__generated__/feed';
+import { feed_items_note, feed_items } from './__generated__/feed';
 
 import { EMPTY_NOTE_VALUE, serializeToPlainText, Note } from './Note';
 import { Labels } from './Labels';
+import { useHotKey } from '../hooks/useHotKey';
 
 export const NoteModal = ({
-  note: existingNote,
+  item,
   children,
 }: {
-  note?: feed_items_note;
+  item?: feed_items;
   children?: (childProps: {
     isOpen: boolean;
     open: () => void;
@@ -38,6 +40,10 @@ export const NoteModal = ({
 
   const client = useApolloClient();
 
+  useHotKey('c n', () => {
+    if (!note) setIsOpen(true);
+  });
+
   const [createNote, { data }] = useMutation(CREATE_NOTE_MUTATION, {
     variables: {
       raw: JSON.stringify(EMPTY_NOTE_VALUE),
@@ -47,27 +53,33 @@ export const NoteModal = ({
   });
 
   useEffect(() => {
-    if (isOpen && !existingNote) createNote();
+    if (isOpen && !item) createNote();
   }, [isOpen]);
 
-  const note = existingNote
-    ? existingNote
-    : data &&
-      client.readFragment({
-        id: data.createNote.id,
-        fragment: NOTE_FULL_FRAGMENT,
-      });
-
-  if (isOpen) console.log({ note });
+  const note =
+    item && item.note
+      ? item.note
+      : data &&
+        client.readFragment({
+          id: data.createNote.id,
+          fragment: NOTE_FULL_FRAGMENT,
+        });
 
   return (
     <>
       {children ? (
         children({ isOpen, open, close })
       ) : (
-        <Button variant="solid" cursor="pointer" onClick={open}>
-          <Icon name="plus-square" />
-        </Button>
+        <Tooltip
+          hasArrow
+          placement="bottom"
+          label="c + n"
+          aria-label="Add note"
+        >
+          <Button variant="solid" cursor="pointer" onClick={open}>
+            <Icon name="plus-square" />
+          </Button>
+        </Tooltip>
       )}
 
       <Modal
@@ -78,7 +90,7 @@ export const NoteModal = ({
         closeOnEsc={false}
       >
         <ModalOverlay />
-        <ModalContent width={700}>
+        <ModalContent height={700} width={700}>
           <ModalHeader></ModalHeader>
           <ModalCloseButton />
           <ModalBody>

@@ -17,7 +17,10 @@ import {
   Button,
   Text,
   Icon,
+  Tooltip,
 } from '@chakra-ui/core';
+import { useGlobalModal, ModalName } from './GlobalModal';
+import { useHotKey } from '../hooks/useHotKey';
 
 const CreateLinkSchema = yup.object().shape({
   href: yup
@@ -45,7 +48,11 @@ export const CreateLink = () => {
 
   const { href } = getValues();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isModalOpen, openModal, toggleModal, closeModal } = useGlobalModal(
+    ModalName.CREATE_LINK_MODAL,
+  );
+
+  useHotKey('c l', toggleModal);
 
   const [createLink, { loading }] = useMutation(CREATE_LINK_MUTATION, {
     variables: { href },
@@ -66,19 +73,17 @@ export const CreateLink = () => {
   usePaste({ onPaste });
 
   const cleanup = () => {
-    setIsModalOpen(false);
+    closeModal();
     setValue('href', '');
   };
 
   return (
     <>
-      <Button
-        cursor="pointer"
-        variant="solid"
-        onClick={() => setIsModalOpen(true)}
-      >
-        <Icon name="link" />
-      </Button>
+      <Tooltip hasArrow placement="bottom" label="c + l" aria-label="Add link">
+        <Button cursor="pointer" variant="solid" onClick={openModal}>
+          <Icon name="link" />
+        </Button>
+      </Tooltip>
 
       <Modal
         onClose={cleanup}

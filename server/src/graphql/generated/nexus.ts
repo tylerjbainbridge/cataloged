@@ -857,10 +857,10 @@ export interface NexusGenArgTypes {
     items: { // args
       after?: string | null; // String
       before?: string | null; // String
-      fileWhere?: NexusGenInputs['FileWhereInput'] | null; // FileWhereInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['ItemOrderByInput'] | null; // ItemOrderByInput
+      search?: string | null; // String
       skip?: number | null; // Int
       where?: NexusGenInputs['ItemWhereInput'] | null; // ItemWhereInput
     }

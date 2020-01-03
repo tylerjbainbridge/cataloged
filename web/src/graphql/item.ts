@@ -6,6 +6,9 @@ export const ITEM_FULL_FRAGMENT = gql`
     id
     type
 
+    createdAt
+    updatedAt
+
     labels {
       id
       name

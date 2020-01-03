@@ -2,19 +2,17 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { ItemWhereInput } from "./../../../__generated__/globalTypes";
-
 // ====================================================
-// GraphQL query operation: feed
+// GraphQL fragment: ItemFull
 // ====================================================
 
-export interface feed_items_labels {
+export interface ItemFull_labels {
   __typename: "Label";
   id: string;
   name: string;
 }
 
-export interface feed_items_link {
+export interface ItemFull_link {
   __typename: "Link";
   id: string;
   href: string;
@@ -25,7 +23,7 @@ export interface feed_items_link {
   description: string | null;
 }
 
-export interface feed_items_file {
+export interface ItemFull_file {
   __typename: "File";
   id: string;
   name: string;
@@ -35,47 +33,37 @@ export interface feed_items_file {
   squareUrl: string;
 }
 
-export interface feed_items_note_item_labels {
+export interface ItemFull_note_item_labels {
   __typename: "Label";
   id: string;
   name: string;
 }
 
-export interface feed_items_note_item {
+export interface ItemFull_note_item {
   __typename: "Item";
   id: string;
   type: string;
-  labels: feed_items_note_item_labels[];
+  labels: ItemFull_note_item_labels[];
 }
 
-export interface feed_items_note {
+export interface ItemFull_note {
   __typename: "Note";
   id: string;
   raw: string;
   text: string;
   createdAt: any;
   updatedAt: any;
-  item: feed_items_note_item;
+  item: ItemFull_note_item;
 }
 
-export interface feed_items {
+export interface ItemFull {
   __typename: "Item";
   id: string;
   type: string;
   createdAt: any;
   updatedAt: any;
-  labels: feed_items_labels[];
-  link: feed_items_link | null;
-  file: feed_items_file | null;
-  note: feed_items_note | null;
-}
-
-export interface feed {
-  items: feed_items[];
-}
-
-export interface feedVariables {
-  first?: number | null;
-  skip?: number | null;
-  where?: ItemWhereInput | null;
+  labels: ItemFull_labels[];
+  link: ItemFull_link | null;
+  file: ItemFull_file | null;
+  note: ItemFull_note | null;
 }

@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-
+import { formatRelative } from 'date-fns';
+import _ from 'lodash';
 import { FileItem } from './FileItem';
 import { LinkItem } from './LinkItem';
 import { SelectContext } from './SelectContainer';
-import { Box, Icon, Stack, BoxProps, Text } from '@chakra-ui/core';
+import { Box, Icon, Stack, BoxProps, Text, Tooltip } from '@chakra-ui/core';
 import { NoteItem } from './NoteItem';
 import { feed_items } from './__generated__/feed';
 import { Click } from './Click';
@@ -73,29 +74,54 @@ export const Item = ({ item }: { item: feed_items }) => {
 
 export const ItemHeader = ({
   children,
+  item,
   ...props
 }: {
   children: any;
+  item: feed_items;
   [k: string]: any;
 }) => (
   <Click {...props}>
     {clickProps => (
-      <Box {...clickProps} mt={5} ml={1} overflow="hidden" height={20}>
+      <Box {...clickProps} mt={4} ml={1}>
         <Text
           maxWidth={ITEM_ACTUAL_WIDTH}
           fontSize="lg"
           fontWeight="bold"
+          whiteSpace="nowrap"
           overflow="hidden"
+          style={{
+            textOverflow: 'ellipsis',
+          }}
+          mb={3}
         >
           {children}
         </Text>
+
+        <Text>{formatRelative(new Date(item.createdAt), new Date())}</Text>
       </Box>
     )}
   </Click>
 );
 
-export const ItemContentContainer = ({ children, ...props }: BoxProps) => (
-  <Box width={ITEM_ACTUAL_WIDTH} height={ITEM_CONTENT_HEIGHT} {...props}>
-    {children}
-  </Box>
+interface ItemContentContainer extends BoxProps {
+  tooltip: string;
+}
+
+export const ItemContentContainer = ({
+  children,
+  tooltip,
+  ...props
+}: ItemContentContainer) => (
+  <Tooltip
+    hasArrow
+    label={tooltip}
+    aria-label={tooltip}
+    placement="top"
+    maxWidth={200}
+  >
+    <Box width={ITEM_ACTUAL_WIDTH} height={ITEM_CONTENT_HEIGHT} {...props}>
+      {children}
+    </Box>
+  </Tooltip>
 );

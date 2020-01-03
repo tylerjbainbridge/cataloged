@@ -14,7 +14,7 @@ export const NoteItem = ({ item }: { item: ItemWithNote }) => {
   const { note } = item;
 
   return (
-    <NoteModal note={note}>
+    <NoteModal item={item}>
       {({ open }) => (
         <SelectOnClick onSingleClick={open} item={item}>
           {clickProps => (
@@ -24,11 +24,12 @@ export const NoteItem = ({ item }: { item: ItemWithNote }) => {
                 rounded="lg"
                 p={5}
                 overflow="hidden"
+                tooltip="Open note"
                 {...clickProps}
               >
                 <Text fontSize="xs">{note.text}</Text>
               </ItemContentContainer>
-              <ItemHeader>{note.text}</ItemHeader>
+              <ItemHeader item={item}>{note.text}</ItemHeader>
             </>
           )}
         </SelectOnClick>

@@ -499,7 +499,7 @@ type Query {
   file(where: FileWhereUniqueInput!): File
   googleURL: String!
   item(id: String!): Item!
-  items(after: String, before: String, fileWhere: FileWhereInput, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
+  items(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, search: String, skip: Int, where: ItemWhereInput): [Item!]!
   me: User
   mostRecentItem(type: String): Item
   test: String!

@@ -12,6 +12,7 @@ import { GRAPHQL_ENDPOINT } from './config';
 import { Router } from './Router';
 import { Auth } from './components/Auth';
 import { theme } from './ui/theme';
+import { GlobalModalProvider } from './components/GlobalModal';
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
@@ -38,9 +39,11 @@ const client = new ApolloClient({
 const appNode = (
   <ApolloProvider client={client}>
     <Auth>
-      <ThemeProvider theme={theme}>
-        <Router />
-      </ThemeProvider>
+      <GlobalModalProvider>
+        <ThemeProvider theme={theme}>
+          <Router />
+        </ThemeProvider>
+      </GlobalModalProvider>
     </Auth>
   </ApolloProvider>
 );

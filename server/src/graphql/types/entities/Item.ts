@@ -4,6 +4,7 @@ export const Item = objectType({
   name: 'Item',
   definition(t) {
     t.model.id();
+
     t.model.createdAt();
     t.model.updatedAt();
 

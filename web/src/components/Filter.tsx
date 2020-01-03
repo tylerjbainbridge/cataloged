@@ -12,6 +12,8 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  Tooltip,
+  Box,
 } from '@chakra-ui/core';
 import { Labels } from './Labels';
 import {
@@ -19,6 +21,12 @@ import {
   getFormValuesFromFilterVariables,
 } from '../util/helpers';
 import { useAuth } from '../hooks/useAuth';
+import { useGlobalModal, ModalName } from './GlobalModal';
+
+const INITIAL_VALUES = {
+  search: '',
+  labels: [],
+};
 
 export const Filter = ({
   filter,
@@ -27,77 +35,105 @@ export const Filter = ({
   filter: any;
   variables: any;
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isModalOpen, openModal, closeModal } = useGlobalModal(
+    ModalName.FILTER_FEED_MODAL,
+  );
+
+  const [state, setState] = useState(INITIAL_VALUES);
 
   const { user } = useAuth();
 
   const formValues = getFormValuesFromFilterVariables(variables, user);
 
-  const { getValues, watch, register, setValue, reset } = useForm({
-    defaultValues: {
-      search: '',
-      labels: [],
-    },
-  });
-
-  watch();
+  const { search, labels } = state;
 
   useEffect(() => {
-    register({ name: 'labels' });
-  }, [register]);
-
-  const { search, labels } = getValues();
+    if (isModalOpen) {
+      setState(formValues);
+    }
+  }, [isModalOpen]);
 
   return (
     <>
-      <Button
-        cursor="pointer"
-        leftIcon="search"
-        variant="outline"
-        onClick={() => setIsModalOpen(true)}
+      <Tooltip
+        hasArrow
+        placement="bottom"
+        label="⌘ + ⌘"
+        aria-label="Filter feed"
       >
-        Filter
-      </Button>
+        <Button
+          cursor="pointer"
+          leftIcon="search"
+          variant="outline"
+          onClick={openModal}
+        >
+          Filter
+        </Button>
+      </Tooltip>
 
       <Modal
         isCentered
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={closeModal}
         closeOnEsc
         closeOnOverlayClick
       >
         <ModalOverlay />
         <ModalContent rounded="lg">
           <ModalBody>
-            {isModalOpen && (
-              <>
-                <FormControl mb={5}>
-                  <FormLabel>Search</FormLabel>
-                  <Input name="search" defaultValue="" ref={register} />
-                  <FormHelperText id="email-helper-text">
-                    Note content, file name, URL domain, etc.
-                  </FormHelperText>
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Labels</FormLabel>
-                  <Labels
-                    selectedLabels={formValues.labels}
-                    onSelectedLabelChange={(selectedLabels: any) => {
-                      setValue('labels', selectedLabels);
-                    }}
-                  />
-                </FormControl>
-              </>
-            )}
+            <Box p={5}>
+              <FormControl mb={5}>
+                <FormLabel>Search</FormLabel>
+                <Input
+                  name="search"
+                  defaultValue=""
+                  value={state.search}
+                  onChange={(e: any) => {
+                    setState({
+                      ...state,
+                      search: e.target.value,
+                    });
+                  }}
+                />
+                <FormHelperText id="email-helper-text">
+                  Note content, file name, URL domain, etc.
+                </FormHelperText>
+              </FormControl>
+              <FormControl>
+                <FormLabel>Labels</FormLabel>
+                <Labels
+                  selectedLabels={formValues.labels}
+                  onSelectedLabelChange={(selectedLabels: any) => {
+                    setState({
+                      ...state,
+                      labels: selectedLabels,
+                    });
+                  }}
+                />
+              </FormControl>
+            </Box>
           </ModalBody>
           <ModalFooter>
+            <Button
+              variant="outline"
+              color="green"
+              cursor="pointer"
+              mr={3}
+              onClick={async () => {
+                await filter(getFilterVariablesFromFormValues(INITIAL_VALUES));
+                closeModal();
+              }}
+            >
+              Reset
+            </Button>
             <Button
               color="green"
               cursor="pointer"
               onClick={async () => {
-                await filter(getFilterVariablesFromFormValues({ labels }));
-                setIsModalOpen(false);
-                reset();
+                await filter(
+                  getFilterVariablesFromFormValues({ labels, search }),
+                );
+                closeModal();
               }}
             >
               Apply

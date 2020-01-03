@@ -13,6 +13,7 @@ import {
   Text,
   Icon,
   Image,
+  Tooltip,
 } from '@chakra-ui/core';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
@@ -20,6 +21,8 @@ import { usePaste } from '../hooks/usePaste';
 import { randomString } from '../util/helpers';
 import { SpecialFile } from '../util/aws';
 import { processFiles_processFiles } from './__generated__/processFiles';
+import { useGlobalModal, ModalName } from './GlobalModal';
+import { useHotKey } from '../hooks/useHotKey';
 
 const UPLOAD_FILE_MUTATION = gql`
   mutation processFiles($uploadGroupId: String) {
@@ -49,7 +52,11 @@ export const CreateFiles = () => {
 
   const [isUploading, setIsUploading] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isModalOpen, openModal, toggleModal, closeModal } = useGlobalModal(
+    ModalName.CREATE_FILES_MODAL,
+  );
+
+  useHotKey('c f', toggleModal);
 
   const fileCount = Object.keys(files).length;
   const fileVals = Object.values(files);
@@ -61,11 +68,7 @@ export const CreateFiles = () => {
     refetchQueries: ['feed'],
   });
 
-  const [generateSignedUrls] = useMutation(GENERATE_SIGNED_URLS, {
-    onCompleted: () => {
-      setFiles({});
-    },
-  });
+  const [generateSignedUrls] = useMutation(GENERATE_SIGNED_URLS);
 
   useEffect(() => {
     (async () => {
@@ -106,7 +109,7 @@ export const CreateFiles = () => {
           );
 
           setIsUploading(false);
-          setIsModalOpen(false);
+          closeModal();
           setFiles({});
 
           await processFiles({ variables: { uploadGroupId: uploadGroup.id } });
@@ -165,20 +168,23 @@ export const CreateFiles = () => {
 
   return (
     <>
-      <Button
-        cursor="pointer"
-        variant="solid"
-        onClick={() => setIsModalOpen(true)}
+      <Tooltip
+        hasArrow
+        placement="bottom"
+        label="c + f"
+        aria-label="Add file(s)"
       >
-        <Icon name="attachment" />
-      </Button>
+        <Button cursor="pointer" variant="solid" onClick={openModal}>
+          <Icon name="attachment" />
+        </Button>
+      </Tooltip>
       <Modal
         closeOnEsc={false}
         size="600px"
         isOpen={isModalOpen}
         scrollBehavior="inside"
         onClose={() => {
-          setIsModalOpen(false);
+          closeModal();
           setFiles({});
         }}
       >
