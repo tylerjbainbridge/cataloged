@@ -22,6 +22,7 @@ import {
 } from '../util/helpers';
 import { useAuth } from '../hooks/useAuth';
 import { useGlobalModal, ModalName } from './GlobalModal';
+import { useHotKey } from '../hooks/useHotKey';
 
 const INITIAL_VALUES = {
   search: '',
@@ -35,13 +36,15 @@ export const Filter = ({
   filter: any;
   variables: any;
 }) => {
-  const { isModalOpen, openModal, closeModal } = useGlobalModal(
-    ModalName.FILTER_FEED_MODAL,
-  );
-
   const [state, setState] = useState(INITIAL_VALUES);
 
   const { user } = useAuth();
+
+  const { isModalOpen, openModal, closeModal, toggleModal } = useGlobalModal(
+    ModalName.FILTER_FEED_MODAL,
+  );
+
+  useHotKey('command command', toggleModal, true);
 
   const formValues = getFormValuesFromFilterVariables(variables, user);
 

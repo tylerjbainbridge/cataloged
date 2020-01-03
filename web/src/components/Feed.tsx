@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
+import { QueryResult } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
 
-import { Box } from '@chakra-ui/core';
+import { Box, usePrevious } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
 
 import { Item, ITEM_WIDTH } from './Item';
@@ -18,8 +19,6 @@ import { Filter } from './Filter';
 import { NoteModal } from './NoteModal';
 import { feed } from './__generated__/feed';
 import { ITEM_FULL_FRAGMENT } from '../graphql/item';
-import { useGlobalModal, ModalName } from './GlobalModal';
-import { useHotKey } from '../hooks/useHotKey';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $skip: Int, $search: String, $where: ItemWhereInput) {
@@ -37,6 +36,8 @@ export const FEED_QUERY = gql`
   ${ITEM_FULL_FRAGMENT}
 `;
 
+export const FEED_PAGE_LENGTH = 30;
+
 const GridContainer = styled.div``;
 
 const GridItem = styled.div`
@@ -49,25 +50,41 @@ const GridItem = styled.div`
 `;
 
 export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
-  const { paginationVariables } = usePagination();
+  const [isLastPage, setIsLastPage] = useState(false);
+  const [pageNum, setPage] = useState(1);
 
-  const {
-    loading,
-    data,
-    networkStatus,
-    refetch,
-    fetchMore,
-    variables,
-  } = useQuery<feed>(FEED_QUERY, {
+  const { paginationVariables } = usePagination({
+    pageLength: FEED_PAGE_LENGTH,
+  });
+
+  const query = useQuery<feed>(FEED_QUERY, {
     variables: paginationVariables,
     notifyOnNetworkStatusChange: true,
   });
 
-  const filterFeedModal = useGlobalModal(ModalName.FILTER_FEED_MODAL);
-  // const filterFeedModal = useGlobalModal(ModalName.FILTER_FEED_MODAL);
-  // const filterFeedModal = useGlobalModal(ModalName.FILTER_FEED_MODAL);
+  const { loading, data, networkStatus, refetch, fetchMore, variables } = query;
 
-  useHotKey('command command', filterFeedModal.toggleModal, true);
+  const prevQuery: QueryResult<feed, Record<string, any>> = usePrevious(query);
+
+  // Spaghetti Pagination
+  useEffect(() => {
+    if (data && prevQuery.data) {
+      const isLast =
+        _.last(data.items)?.id === _.last(prevQuery.data.items)?.id;
+
+      if (isLast) setIsLastPage(true);
+      else if (pageNum === 0) setIsLastPage(false);
+
+      if (data.items.length > prevQuery.data.items.length) {
+        setPage(pageNum + 1);
+      } else if (
+        data.items.length < prevQuery.data.items.length &&
+        pageNum !== 0
+      ) {
+        setPage(0);
+      }
+    }
+  }, [data]);
 
   const initialLoad = loading && !data;
 
@@ -135,34 +152,26 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
                 {/* <Grid.Row>
               <Loader active={!!(loading && data)} />
             </Grid.Row> */}
-                {networkStatus === 7 && !loading && (
+                {networkStatus === 7 && !loading && !isLastPage && (
                   <Waypoint
-                    bottomOffset={-500}
+                    bottomOffset={-400}
                     onEnter={() => {
-                      if (
-                        data &&
-                        data.items &&
-                        data.items.length >= 20 &&
-                        !loading
-                      ) {
-                        fetchMore({
-                          variables: {
-                            ...variables,
-                            skip: data.items.length,
-                          },
-                          updateQuery: (prev, { fetchMoreResult }) => {
-                            if (!fetchMoreResult) return prev;
-
-                            return {
-                              ...prev,
-                              items: [
-                                ...(prev.items || []),
-                                ...(fetchMoreResult.items || []),
-                              ],
-                            };
-                          },
-                        });
-                      }
+                      fetchMore({
+                        variables: {
+                          ...variables,
+                          skip: FEED_PAGE_LENGTH * pageNum,
+                        },
+                        updateQuery: (prev, { fetchMoreResult }) => {
+                          if (!fetchMoreResult) return prev;
+                          return {
+                            ...prev,
+                            items: [
+                              ...(prev.items || []),
+                              ...(fetchMoreResult.items || []),
+                            ],
+                          };
+                        },
+                      });
                     }}
                   />
                 )}

@@ -21,17 +21,19 @@ export const GlobalModalContext = React.createContext<ContextProps>(
   {} as ContextProps,
 );
 
+const INITIAL_STATE = {
+  [ModalName.CREATE_FILES_MODAL]: false,
+  [ModalName.CREATE_LINK_MODAL]: false,
+  [ModalName.CREATE_NOTE_MODAL]: false,
+  [ModalName.FILTER_FEED_MODAL]: false,
+};
+
 export const GlobalModalProvider: FunctionComponent = ({ children }) => {
-  const [globalModalState, setGlobalModalState] = React.useState({
-    [ModalName.CREATE_FILES_MODAL]: false,
-    [ModalName.CREATE_LINK_MODAL]: false,
-    [ModalName.CREATE_NOTE_MODAL]: false,
-    [ModalName.FILTER_FEED_MODAL]: false,
-  });
+  const [globalModalState, setGlobalModalState] = React.useState(INITIAL_STATE);
 
   const updateModal = (modalName: ModalName, isOpen: boolean) =>
     setGlobalModalState({
-      ...globalModalState,
+      ...INITIAL_STATE,
       [modalName]: isOpen,
     });
 
@@ -39,7 +41,7 @@ export const GlobalModalProvider: FunctionComponent = ({ children }) => {
   const closeModal = (modalName: ModalName) => updateModal(modalName, false);
   const toggleModal = (modalName: ModalName) =>
     setGlobalModalState(state => ({
-      ...state,
+      ...INITIAL_STATE,
       [modalName]: !state[modalName],
     }));
 
@@ -78,9 +80,11 @@ export const useGlobalModal = (modalName: ModalName) => {
     closeModal,
     toggleModal,
     globalModalState,
+    closeAll,
   } = React.useContext(GlobalModalContext);
 
   return {
+    closeAll,
     openModal: () => openModal(modalName),
     closeModal: () => closeModal(modalName),
     toggleModal: () => toggleModal(modalName),

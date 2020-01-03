@@ -12,7 +12,7 @@ const GET_GOOGLE_URL = gql`
 `;
 
 export const ForceSignIn = () => {
-  const { loading, data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL);
+  const { loading, error, data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL);
 
   return (
     <Box
@@ -24,7 +24,7 @@ export const ForceSignIn = () => {
     >
       <Button
         isLoading={loading}
-        isDisabled={!!(loading && data && data.googleURL)}
+        isDisabled={!!(loading && data && data.googleURL) || !!error}
         onClick={() => {
           if (data && data.googleURL) {
             window.location.replace(data.googleURL);
