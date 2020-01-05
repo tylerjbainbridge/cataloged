@@ -1,7 +1,6 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext } from 'react';
 import { formatRelative } from 'date-fns';
 import _ from 'lodash';
-import { useHoverDirty } from 'react-use';
 
 import { FileItem } from './FileItem';
 import { LinkItem } from './LinkItem';
@@ -165,13 +164,15 @@ export const ItemContentContainer = ({
             justifyContent="flex-end"
             p={2}
             alignItems="center"
-            rounded="xl"
+            roundedBottomRight="lg"
+            roundedBottomLeft="lg"
             position="absolute"
-            top={0}
+            bottom={0}
             height={10}
             width={ITEM_ACTUAL_WIDTH}
             zIndex={10}
             backgroundColor="lightgrey"
+            background="rgb(211,211,211, 0.8);"
             opacity={9}
             onMouseOver={menuHoverState.onOpen}
             onMouseLeave={menuHoverState.onClose}

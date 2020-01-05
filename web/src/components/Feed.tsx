@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import gql from 'graphql-tag';
 
-import { Box, usePrevious } from '@chakra-ui/core';
+import { Box, usePrevious, Spinner } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
 
 import { Item, ITEM_WIDTH } from './Item';
@@ -21,12 +21,19 @@ import { feed } from './__generated__/feed';
 import { ITEM_FULL_FRAGMENT } from '../graphql/item';
 
 export const FEED_QUERY = gql`
-  query feed($first: Int, $skip: Int, $search: String, $where: ItemWhereInput) {
+  query feed(
+    $first: Int
+    $skip: Int
+    $search: String
+    $type: ItemType
+    $where: ItemWhereInput
+  ) {
     items(
       first: $first
       skip: $skip
       where: $where
       search: $search
+      type: $type
       orderBy: { createdAt: desc }
     ) @connection(key: "feed_items") {
       ...ItemFull
@@ -97,7 +104,7 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
   return (
     <>
       <UploadProgress />
-      <SelectContainer items={data ? data.items : []}>
+      <SelectContainer items={data?.items || []}>
         <Box d="flex" justifyContent="center">
           <Box width="90%" padding={50}>
             <Box
@@ -125,8 +132,14 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
             </Box>
             <br />
             {initialLoad ? (
-              <Box d="flex" justifyContent="space-between" width="100%">
-                {/* <Spinner size="xl" /> */}
+              <Box
+                d="flex"
+                justifyContent="center"
+                alignItems="center"
+                height="100%"
+                width="100%"
+              >
+                <Spinner size="xl" />
               </Box>
             ) : (
               <Box
@@ -138,16 +151,18 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
                 gridRowGap={5}
                 gridTemplateColumns={`${ITEM_WIDTH}px ${ITEM_WIDTH}px ${ITEM_WIDTH}px ${ITEM_WIDTH}px`}
               >
-                {data &&
-                  data.items &&
+                {(data?.items || [])
                   // @ts-ignore
-                  data.items.reduce((p, c) => {
-                    const itemNode = <Item item={c} />;
-
+                  .reduce((p, c) => {
                     // @ts-ignore
                     if (c.type === 'note' && !c.note.text) return p;
 
-                    return [...p, <GridItem key={c.id}>{itemNode}</GridItem>];
+                    return [
+                      ...p,
+                      <GridItem key={c.id}>
+                        <Item item={c} />
+                      </GridItem>,
+                    ];
                   }, [])}
                 {/* <Grid.Row>
               <Loader active={!!(loading && data)} />

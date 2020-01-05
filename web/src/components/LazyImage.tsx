@@ -25,17 +25,21 @@ export const LazyImage = ({
   ...props
 }: LazeImageProps) => {
   const [isImageLoaded, setIsImageLoaded] = useState<string | null>(null);
+  const [isBroken, setIsBroken] = useState(false);
+
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     if (isReady) {
-      const imageObj = new Image();
-      imageObj.onload = e => setIsImageLoaded(imageObj.src);
-      imageObj.src = src;
+      const img = new Image();
+      img.src = src;
+
+      img.onload = () => setIsImageLoaded(img.src);
+      img.onerror = () => setIsBroken(true);
 
       setDimensions({
-        width: imageObj.width,
-        height: imageObj.height,
+        width: img.width,
+        height: img.height,
       });
     }
   }, [isReady]);
@@ -47,9 +51,9 @@ export const LazyImage = ({
 
   const isReadyToDisplay = !isReady || !isImageLoaded;
 
-  const isLandscape = dimensions.width > dimensions.height;
+  // const isLandscape = dimensions.width > dimensions.height;
 
-  return isReadyToDisplay || !src ? (
+  return isReadyToDisplay || !src || isBroken ? (
     <Box
       d="flex"
       justifyContent="center"
@@ -62,7 +66,7 @@ export const LazyImage = ({
       {src && showSpinner ? (
         <Spinner size="xl" />
       ) : (
-        <Icon size="50px" name={placeholderIcon} />
+        <Icon size="50px" name={isBroken ? 'warning' : placeholderIcon} />
       )}
     </Box>
   ) : (

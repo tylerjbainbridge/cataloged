@@ -11,7 +11,9 @@ export const randomString = (): string =>
 export const getFilterVariablesFromFormValues = ({
   search,
   labels,
+  type,
 }: {
+  type: string;
   search: string;
   labels: any;
 }) => {
@@ -19,11 +21,15 @@ export const getFilterVariablesFromFormValues = ({
 
   _.set(variables, 'search', search);
 
+  _.set(variables, 'type', type !== 'all' ? type : null);
+
   _.set(
     variables,
     `where.labels.${labels.length ? 'some' : 'none'}.id.in`,
     labels.map(({ id }: { id: string }) => id),
   );
+
+  console.log(variables);
 
   return variables;
 };
@@ -33,6 +39,7 @@ export const getFormValuesFromFilterVariables = (variables: any, user: any) => {
 
   return {
     search: variables.search,
+    type: variables.type || 'all',
     labels: labels.map((id: string) =>
       user.labels.find((label: any) => label.id === id),
     ),

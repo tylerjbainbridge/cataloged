@@ -14,6 +14,7 @@ import {
   FormHelperText,
   Tooltip,
   Box,
+  Select,
 } from '@chakra-ui/core';
 import { Labels } from './Labels';
 import {
@@ -27,6 +28,7 @@ import { useHotKey } from '../hooks/useHotKey';
 const INITIAL_VALUES = {
   search: '',
   labels: [],
+  type: 'all',
 };
 
 export const Filter = ({
@@ -48,7 +50,7 @@ export const Filter = ({
 
   const formValues = getFormValuesFromFilterVariables(variables, user);
 
-  const { search, labels } = state;
+  const { search, labels, type } = state;
 
   useEffect(() => {
     if (isModalOpen) {
@@ -102,6 +104,31 @@ export const Filter = ({
                   Note content, file name, URL domain, etc.
                 </FormHelperText>
               </FormControl>
+              <FormControl mb={5}>
+                <FormLabel>Type</FormLabel>
+                <Select
+                  placeholder="Select type"
+                  value={state.type}
+                  onChange={(e: any) => {
+                    setState({
+                      ...state,
+                      type: e.target.value,
+                    });
+                  }}
+                >
+                  {[
+                    ['all', 'All'],
+                    ['link', 'Links'],
+                    ['file', 'Files'],
+                    ['note', 'Notes'],
+                  ].map(([value, text]) => (
+                    <option value={value}>{text}</option>
+                  ))}
+                </Select>
+                <FormHelperText id="email-helper-text">
+                  File, link, note
+                </FormHelperText>
+              </FormControl>
               <FormControl>
                 <FormLabel>Labels</FormLabel>
                 <Labels
@@ -134,7 +161,7 @@ export const Filter = ({
               cursor="pointer"
               onClick={async () => {
                 await filter(
-                  getFilterVariablesFromFormValues({ labels, search }),
+                  getFilterVariablesFromFormValues({ labels, search, type }),
                 );
                 closeModal();
               }}
