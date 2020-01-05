@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 import { getGoogleUrl } from './__generated__/getGoogleUrl';
-import { Box, Button } from '@chakra-ui/core';
+import { Box, Spinner } from '@chakra-ui/core';
 
 const GET_GOOGLE_URL = gql`
   query getGoogleUrl {
@@ -12,7 +12,13 @@ const GET_GOOGLE_URL = gql`
 `;
 
 export const ForceSignIn = () => {
-  const { loading, error, data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL);
+  const { data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL);
+
+  useEffect(() => {
+    if (data) {
+      window.location.replace(data.googleURL);
+    }
+  }, [data]);
 
   return (
     <Box
@@ -22,17 +28,7 @@ export const ForceSignIn = () => {
       width="100vw"
       height="100vh"
     >
-      <Button
-        isLoading={loading}
-        isDisabled={!!(loading && data && data.googleURL) || !!error}
-        onClick={() => {
-          if (data && data.googleURL) {
-            window.location.replace(data.googleURL);
-          }
-        }}
-      >
-        Sign in with Google
-      </Button>
+      <Spinner size="xl" />
     </Box>
   );
 };
