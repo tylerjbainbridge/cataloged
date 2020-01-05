@@ -7,7 +7,7 @@
     "start:app": "react-scripts start",
     "dev": "react-scripts start",
     "build": "npm run build:app",
-    "build:app": "react-scripts build && mv build dist",
+    "build:app": "react-scripts build",
     "now-build": "npm run build:app",
     "eject:app": "react-scripts eject",
     "generate:types": "npx apollo codegen:generate --target=typescript --endpoint=http://localhost:5000"

@@ -123,18 +123,20 @@ export const CreateFiles = () => {
   }, [isUploading]);
 
   useEffect(() => {
+    const handler = (event: any) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+
     if (isWorking) {
-      const handler = (event: any) => {
-        event.preventDefault();
-        event.returnValue = '';
-      };
-
       window.addEventListener('beforeunload', handler);
-
-      return () => {
-        window.removeEventListener('beforeunload', handler);
-      };
+    } else {
+      window.removeEventListener('beforeunload', handler);
     }
+
+    return () => {
+      window.removeEventListener('beforeunload', handler);
+    };
   }, [isWorking]);
 
   const onDrop = useCallback(

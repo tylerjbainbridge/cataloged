@@ -6,8 +6,8 @@
     "dev": "npm-run-all --parallel dev:*",
     "dev:server": "pushd server && npm run dev && popd",
     "dev:app": "pushd web && npm run start && popd",
-    "install:server": "pushd server && npm install && popd",
-    "install:web": "pushd web && npm install && popd",
+    "install:server": "pushd server && yarn install && popd",
+    "install:web": "pushd web && yarn install && popd",
     "format": "npx prettier '*/**/*.{ts,tsx}' --write",
     "postinstall": "npm-run-all --parallel install:*"
   },

@@ -38,8 +38,10 @@ export const processFiles = extendType({
         const keyFiles = await Bluebird.map(
           upload.files,
           async ({ id }: File) => {
+            let file;
+
             try {
-              const file = await ctx.photon.files.update({
+              file = await ctx.photon.files.update({
                 where: { id },
                 data: { hasStartedUploading: true },
               });
@@ -62,12 +64,14 @@ export const processFiles = extendType({
 
               return file;
             } catch (e) {
-              await ctx.photon.files.update({
-                where: { id: file.id },
-                data: {
-                  isFailed: true,
-                },
-              });
+              if (file) {
+                await ctx.photon.files.update({
+                  where: { id: file.id },
+                  data: {
+                    isFailed: true,
+                  },
+                });
+              }
 
               return null;
             }

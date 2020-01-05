@@ -20,6 +20,8 @@ import { NoteModal } from './NoteModal';
 import { feed } from './__generated__/feed';
 import { ITEM_FULL_FRAGMENT } from '../graphql/item';
 
+import { GridFeed } from './GridFeed';
+
 export const FEED_QUERY = gql`
   query feed(
     $first: Int
@@ -101,6 +103,21 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
       ...filterVariables,
     });
 
+  const nextPage = () =>
+    fetchMore({
+      variables: {
+        ...variables,
+        skip: FEED_PAGE_LENGTH * pageNum,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        return {
+          ...prev,
+          items: [...(prev.items || []), ...(fetchMoreResult.items || [])],
+        };
+      },
+    });
+
   return (
     <>
       <UploadProgress />
@@ -142,55 +159,10 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
                 <Spinner size="xl" />
               </Box>
             ) : (
-              <Box
-                d="grid"
-                top={-80}
-                justifyContent="space-between"
-                flexWrap="wrap"
-                gridColumnGap={5}
-                gridRowGap={5}
-                gridTemplateColumns={`${ITEM_WIDTH}px ${ITEM_WIDTH}px ${ITEM_WIDTH}px ${ITEM_WIDTH}px`}
-              >
-                {(data?.items || [])
-                  // @ts-ignore
-                  .reduce((p, c) => {
-                    // @ts-ignore
-                    if (c.type === 'note' && !c.note.text) return p;
-
-                    return [
-                      ...p,
-                      <GridItem key={c.id}>
-                        <Item item={c} />
-                      </GridItem>,
-                    ];
-                  }, [])}
-                {/* <Grid.Row>
-              <Loader active={!!(loading && data)} />
-            </Grid.Row> */}
-                {networkStatus === 7 && !loading && !isLastPage && (
-                  <Waypoint
-                    bottomOffset={-400}
-                    onEnter={() => {
-                      fetchMore({
-                        variables: {
-                          ...variables,
-                          skip: FEED_PAGE_LENGTH * pageNum,
-                        },
-                        updateQuery: (prev, { fetchMoreResult }) => {
-                          if (!fetchMoreResult) return prev;
-                          return {
-                            ...prev,
-                            items: [
-                              ...(prev.items || []),
-                              ...(fetchMoreResult.items || []),
-                            ],
-                          };
-                        },
-                      });
-                    }}
-                  />
-                )}
-              </Box>
+              <GridFeed query={query} nextPage={nextPage} />
+            )}
+            {networkStatus === 7 && !loading && !isLastPage && (
+              <Waypoint bottomOffset={-400} onEnter={nextPage} />
             )}
           </Box>
         </Box>
