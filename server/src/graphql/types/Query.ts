@@ -9,6 +9,7 @@ import {
   conditionallyAddKey,
 } from './helpers';
 import { s3 } from '../../services/AWSService';
+import { feedResolver, feedArgs } from '../resolvers/feed';
 
 export const Query = objectType({
   name: 'Query',
@@ -51,98 +52,8 @@ export const Query = objectType({
 
     t.list.field('items', {
       type: 'Item',
-      args: {
-        ...paginationArgs,
-        search: stringArg(),
-        // @ts-ignore
-        where: getWhereArgs('Item'),
-        // @ts-ignore
-        orderBy: getFindManyOrderArgs('Item'),
-      },
-      resolve: (_, args, ctx) => {
-        const { where, search, ...rest } = args;
-
-        const { note: noteWhere, file: fileWhere, link: linkWhere } =
-          where || {};
-
-        const noteFilter = {
-          type: 'note',
-          ...(noteWhere ? { note: noteWhere } : {}),
-        };
-
-        const linkFilter = {
-          type: 'link',
-          ...(linkWhere ? { link: linkWhere } : {}),
-        };
-
-        const fileFilter = {
-          type: 'file',
-          file: merge(fileWhere || {}, {
-            isUploaded: true,
-            hasStartedUploading: true,
-          }),
-        };
-
-        if (search) {
-          const tokens = search.split().map((token: string) => token.trim());
-
-          const { noteOr, fileOr, linkOr } = tokens.reduce(
-            (p: any, token: string) => {
-              p.linkOr = [
-                ...p.linkOr,
-                ...['href', 'title', 'description'].map(field => ({
-                  [field]: { contains: token },
-                })),
-              ];
-
-              p.noteOr = [
-                ...p.noteOr,
-                ...['text'].map(field => ({
-                  [field]: { contains: token },
-                })),
-              ];
-
-              p.fileOr = [
-                ...p.fileOr,
-                ...['name', 'extension'].map(field => ({
-                  [field]: { contains: token },
-                })),
-              ];
-
-              return p;
-            },
-            {
-              noteOr: [],
-              fileOr: [],
-              linkOr: [],
-            },
-          );
-
-          if (noteOr.length) {
-            set(noteFilter, 'note.OR', noteOr);
-          }
-
-          if (linkOr.length) {
-            set(linkFilter, 'link.OR', linkOr);
-          }
-
-          if (fileOr.length) {
-            set(fileFilter, 'file.OR', fileOr);
-          }
-        }
-
-        const params = {
-          where: {
-            // @ts-ignore
-            user: { id: ctx.user.id },
-            ...(where || {}),
-            OR: [noteFilter, linkFilter, fileFilter],
-          },
-          ...rest,
-        };
-
-        return ctx.photon.items.findMany(params);
-      },
+      args: feedArgs,
+      resolve: feedResolver,
     });
 
     t.list.field('uploadGroups', {

@@ -238,6 +238,12 @@ input ItemOrderByInput {
   updatedAt: OrderByArg
 }
 
+enum ItemType {
+  file
+  link
+  note
+}
+
 input ItemWhereInput {
   AND: [ItemWhereInput!]
   createdAt: DateTimeFilter
@@ -499,7 +505,7 @@ type Query {
   file(where: FileWhereUniqueInput!): File
   googleURL: String!
   item(id: String!): Item!
-  items(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, search: String, skip: Int, where: ItemWhereInput): [Item!]!
+  items(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, search: String, skip: Int, type: ItemType, where: ItemWhereInput): [Item!]!
   me: User
   mostRecentItem(type: String): Item
   test: String!
