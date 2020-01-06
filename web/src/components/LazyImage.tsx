@@ -59,7 +59,6 @@ export const LazyImage = ({
       justifyContent="center"
       alignItems="center"
       rounded="lg"
-      backgroundColor="lightGrey"
       {...newProps}
       {...loadingContainerProps}
     >

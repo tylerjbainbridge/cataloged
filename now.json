@@ -2,6 +2,7 @@
   "version": 2,
   "name": "cataloged",
   "regions": ["iad1"],
+  "alias": "app.cataloged.co",
   "builds": [
     {
       "src": "web/package.json",

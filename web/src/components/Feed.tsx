@@ -123,13 +123,21 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
       <UploadProgress />
       <SelectContainer items={data?.items || []}>
         <Box d="flex" justifyContent="center">
-          <Box width="90%" padding={50}>
+          <Box
+            padding={50}
+            width={[
+              '100%', // base
+              '100%', // 480px upwards
+              '90%', // 768px upwards
+            ]}
+          >
             <Box
               height={80}
               d="flex"
               minWidth="100%"
               justifyContent="space-between"
               alignItems="center"
+              flexWrap="wrap"
             >
               <Box
                 d="flex"
