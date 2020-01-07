@@ -29,8 +29,6 @@ export const getFilterVariablesFromFormValues = ({
     labels.map(({ id }: { id: string }) => id),
   );
 
-  console.log(variables);
-
   return variables;
 };
 

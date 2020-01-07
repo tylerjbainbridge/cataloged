@@ -16,11 +16,11 @@ import {
 } from '@chakra-ui/core';
 
 import { CREATE_NOTE_MUTATION, NOTE_FULL_FRAGMENT } from '../graphql/note';
-import { feed_items_note, feed_items } from './__generated__/feed';
 
 import { EMPTY_NOTE_VALUE, serializeToPlainText, Note } from './Note';
 import { Labels } from './Labels';
 import { useHotKey } from '../hooks/useHotKey';
+import { feed_items } from '../graphql/__generated__/feed';
 
 export const NoteModal = ({
   item,
@@ -106,7 +106,7 @@ export const NoteModal = ({
           </ModalBody>
           {note && (
             <ModalFooter justifyContent="flex-start">
-              <Box mt={10}>
+              <Box mt={5}>
                 <Labels item={note.item} />
               </Box>
             </ModalFooter>

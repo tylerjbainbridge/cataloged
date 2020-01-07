@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { SignedURLArgs } from "./../../../__generated__/globalTypes";
+import { SignedURLArgs } from "./apolloTypes";
 
 // ====================================================
 // GraphQL mutation operation: generateSignedUrls

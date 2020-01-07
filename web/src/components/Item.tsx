@@ -16,10 +16,10 @@ import {
   IconButton,
 } from '@chakra-ui/core';
 import { NoteItem } from './NoteItem';
-import { feed_items } from './__generated__/feed';
 import { Click } from './Click';
 import { useHotKey } from '../hooks/useHotKey';
 import { useOptimisticDeleteItem } from '../hooks/useOptimisticDeleteItem';
+import { feed_items } from '../graphql/__generated__/feed';
 
 export const ITEM_INNER_PADDING = 5;
 export const ITEM_ACTUAL_WIDTH = 270;

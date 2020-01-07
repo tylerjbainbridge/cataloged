@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react';
-import useForm from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import * as yup from 'yup';
@@ -117,7 +117,7 @@ export const CreateLink = () => {
             >
               <Box display="none">
                 <input name="href" defaultValue="" ref={register} />
-                {errors.href && <Text color="red">{errors.href.message}</Text>}
+                {errors.href && <Text color="red">{errors?.href}</Text>}
               </Box>
 
               {href && (

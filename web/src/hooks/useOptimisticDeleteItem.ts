@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/react-hooks';
 
 import { DELETE_ITEM_MUTATION } from '../graphql/item';
 import { FEED_QUERY } from '../components/Feed';
-import { feed_items } from '../components/__generated__/feed';
+import { feed_items } from '../graphql/__generated__/feed';
 
 export const useOptimisticDeleteItem = (item: any) =>
   useMutation(DELETE_ITEM_MUTATION, {

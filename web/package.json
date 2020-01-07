@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "12.0.0"
+    "node": "13.5.0"
   },
   "scripts": {
     "start": "npm run start:app",
@@ -10,11 +10,12 @@
     "build:app": "react-scripts build",
     "now-build": "npm run build:app",
     "eject:app": "react-scripts eject",
-    "generate:types": "npx apollo codegen:generate --target=typescript --endpoint=http://localhost:5000"
+    "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"src/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=src/graphql/__generated__/apolloTypes.ts --outputFlat=src/graphql/__generated__",
+    "remove:types": "find . | grep -E \"(__generated__)\" | xargs rm -rf"
   },
   "dependencies": {
-    "@apollo/react-hooks": "^3.0.0",
-    "@chakra-ui/core": "^0.5.1",
+    "@apollo/react-hooks": "^3.1.3",
+    "@chakra-ui/core": "^0.5.2",
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.23",
     "@types/apollo-upload-client": "^8.1.2",
@@ -27,24 +28,28 @@
     "@types/react-router-dom": "^4.3.4",
     "@types/remove-markdown": "^0.1.1",
     "@types/styled-components": "^4.1.18",
+    "apollo": "^2.21.2",
     "apollo-boost": "^0.4.3",
     "apollo-link-context": "^1.0.18",
     "apollo-upload-client": "^11.0.0",
     "aws-sdk": "^2.525.0",
     "date-fns": "^2.8.1",
     "emotion-theming": "^10.0.19",
-    "graphql": "^14.4.2",
+    "got": "^10.2.1",
+    "grabity": "^1.0.5",
+    "graphql": "^14.5.8",
     "immutable": "^4.0.0-rc.12",
     "lodash": "^4.17.15",
+    "metascraper": "^5.9.4",
     "mousetrap": "^1.6.3",
     "prismjs": "^1.17.1",
     "query-string": "^6.8.2",
     "react": "^16.12.0",
-    "react-apollo": "^2.5.8",
+    "react-apollo": "^3.1.3",
     "react-dom": "^16.12.0",
     "react-dropzone": "^10.1.7",
     "react-focus-lock": "^2.2.1",
-    "react-hook-form": "^3.23.3",
+    "react-hook-form": "^4.4.3",
     "react-hotkeys": "^2.0.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.3.0",

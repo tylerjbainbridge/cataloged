@@ -7,7 +7,7 @@
 // ====================================================
 
 export interface deleteItem_deleteItem {
-  __typename: "User";
+  __typename: "Item";
   id: string;
 }
 

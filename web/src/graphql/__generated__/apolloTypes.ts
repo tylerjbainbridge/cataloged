@@ -6,6 +6,12 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum ItemType {
+  file = "file",
+  link = "link",
+  note = "note",
+}
+
 export interface DateTimeFilter {
   equals?: any | null;
   not?: any | null;

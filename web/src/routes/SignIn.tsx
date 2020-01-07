@@ -2,10 +2,10 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
-import { getGoogleUrl } from './__generated__/getGoogleUrl';
 import { Box, Button } from '@chakra-ui/core';
+import { getGoogleUrl } from '../graphql/__generated__/getGoogleUrl';
 
-const GET_GOOGLE_URL = gql`
+export const GET_GOOGLE_URL = gql`
   query getGoogleUrl {
     googleURL
   }

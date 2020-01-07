@@ -6,10 +6,11 @@ import removeMarkdown from 'remove-markdown';
 
 import { MarkdownEditor } from './MarkdownEditor';
 
-import useForm from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useOptimisticDeleteItem } from '../hooks/useOptimisticDeleteItem';
 
 import { UPDATE_NOTE_MUTATION } from '../graphql/note';
+import { useDebounce } from '../hooks/useDebounce';
 
 export const serializeToPlainText = (nodes: any[]) => {
   return nodes.map(n => Node.string(n)).join('\n');
@@ -26,8 +27,14 @@ export const EMPTY_NOTE = {
   text: serializeToPlainText(EMPTY_NOTE_VALUE),
 };
 
+export interface UpdateNoteFormValues {
+  value: any[];
+}
+
 export const Note = ({ note }: { note: any }) => {
-  const { getValues, watch, setValue, register } = useForm({
+  const { getValues, watch, setValue, register } = useForm<
+    UpdateNoteFormValues
+  >({
     defaultValues: {
       value: JSON.parse(note.raw),
     },
@@ -45,7 +52,7 @@ export const Note = ({ note }: { note: any }) => {
     },
   });
 
-  const { current: debouncedUpdateNote } = useRef(_.debounce(updateNote, 500));
+  const debouncedUpdateNote = useDebounce(updateNote);
 
   const [deleteItem] = useOptimisticDeleteItem(note.item);
 
@@ -60,6 +67,7 @@ export const Note = ({ note }: { note: any }) => {
     const nextText = serializeToPlainText(value);
 
     if (nextText !== textRef.current) {
+      //@ts-ignore
       debouncedUpdateNote(value);
     }
 

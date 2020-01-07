@@ -1,8 +1,9 @@
 import React, { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { getAuthUser_me } from './__generated__/getAuthUser';
-import { googleSignIn_googleSignIn } from '../routes/__generated__/googleSignIn';
+
+import { getAuthUser_me } from '../graphql/__generated__/getAuthUser';
+import { googleSignIn_googleSignIn } from '../graphql/__generated__/googleSignIn';
 
 const GET_AUTH_USER = gql`
   query getAuthUser {

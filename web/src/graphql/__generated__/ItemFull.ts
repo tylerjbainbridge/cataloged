@@ -12,15 +12,31 @@ export interface ItemFull_labels {
   name: string;
 }
 
+export interface ItemFull_link_item_labels {
+  __typename: "Label";
+  id: string;
+  name: string;
+}
+
+export interface ItemFull_link_item {
+  __typename: "Item";
+  id: string;
+  type: string;
+  labels: ItemFull_link_item_labels[];
+}
+
 export interface ItemFull_link {
   __typename: "Link";
   id: string;
   href: string;
   notes: string;
+  createdAt: any;
+  updatedAt: any;
   image: string | null;
   favicon: string | null;
   title: string | null;
   description: string | null;
+  item: ItemFull_link_item;
 }
 
 export interface ItemFull_file {
@@ -31,6 +47,8 @@ export interface ItemFull_file {
   isUploaded: boolean | null;
   fullUrl: string;
   squareUrl: string;
+  createdAt: any;
+  updatedAt: any;
 }
 
 export interface ItemFull_note_item_labels {

@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { NOTE_FULL_FRAGMENT } from './note';
+import { LINK_FULL_FRAGMENT } from './link';
 
 export const ITEM_FULL_FRAGMENT = gql`
   fragment ItemFull on Item {
@@ -15,14 +16,7 @@ export const ITEM_FULL_FRAGMENT = gql`
     }
 
     link {
-      id
-      href
-      notes
-
-      image
-      favicon
-      title
-      description
+      ...LinkFull
     }
 
     file {
@@ -32,6 +26,9 @@ export const ITEM_FULL_FRAGMENT = gql`
       isUploaded
       fullUrl
       squareUrl
+
+      createdAt
+      updatedAt
     }
 
     note {
@@ -39,6 +36,7 @@ export const ITEM_FULL_FRAGMENT = gql`
     }
   }
 
+  ${LINK_FULL_FRAGMENT}
   ${NOTE_FULL_FRAGMENT}
 `;
 

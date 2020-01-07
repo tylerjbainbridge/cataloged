@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "12.0.0"
+    "node": "13.5.0"
   },
   "scripts": {
     "start": "npm run start:server",
@@ -15,23 +15,36 @@
     "generate:imports": "node src/generateImports.js",
     "seed": "ts-node prisma/seed.ts"
   },
+  "resolutions": {
+    "agent-base": "^5.0.0"
+  },
   "dependencies": {
     "@prisma/photon": "2.0.0-preview019",
-    "@sentry/node": "^5.6.2",
     "apollo-server-express": "^2.9.0",
     "aws-sdk": "^2.509.0",
+    "axios": "^0.19.0",
     "bluebird": "^3.5.5",
     "dotenv": "^8.0.0",
     "encoding": "^0.1.12",
     "googleapis": "^42.0.0",
     "googleapis-common": "^3.0.0",
-    "grabity": "^1.0.5",
     "graphql": "^14.4.2",
+    "graphql-middleware": "^4.0.2",
     "graphql-shield": "^7.0.0",
     "graphql-upload": "^8.0.7",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.19.1",
     "lodash": "^4.17.15",
+    "metascraper": "^5.9.4",
+    "metascraper-author": "^5.8.13",
+    "metascraper-clearbit": "^5.8.15",
+    "metascraper-date": "^5.8.13",
+    "metascraper-description": "^5.8.15",
+    "metascraper-image": "^5.9.4",
+    "metascraper-logo": "^5.8.13",
+    "metascraper-publisher": "^5.8.13",
+    "metascraper-title": "^5.8.13",
+    "metascraper-url": "^5.8.13",
     "morgan": "^1.9.1",
     "nexus": "^0.12.0-rc.5",
     "nexus-prisma": "^0.6.1",
@@ -45,7 +58,6 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.3.3",
     "@types/aws-lambda": "^8.10.31",
-    "@types/node": "^12.7.2",
     "@types/bluebird": "^3.5.27",
     "@types/graphql-upload": "^8.0.1",
     "@types/jest": "^24.0.16",
@@ -53,6 +65,7 @@
     "@types/lodash": "^4.14.149",
     "@types/memorystream": "^0.3.0",
     "@types/morgan": "^1.7.37",
+    "@types/node": "^12.7.2",
     "@types/sharp": "^0.22.2",
     "prettier": "^1.18.2",
     "ts-node": "^8.3.0",

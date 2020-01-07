@@ -710,6 +710,8 @@ export interface NexusGenFieldTypes {
     generateSignedUrls: NexusGenRootTypes['InProgressUpload']; // InProgressUpload!
     googleSignIn: NexusGenRootTypes['JWT']; // JWT!
     processFiles: NexusGenRootTypes['File'][]; // [File!]!
+    refreshLinkMeta: NexusGenRootTypes['Link']; // Link!
+    updateLink: NexusGenRootTypes['Link']; // Link!
     updateNote: NexusGenRootTypes['Note']; // Note!
   }
   Note: { // field return type
@@ -815,6 +817,16 @@ export interface NexusGenArgTypes {
     }
     processFiles: { // args
       uploadGroupId?: string | null; // String
+    }
+    refreshLinkMeta: { // args
+      href: string; // String!
+      linkId: string; // String!
+    }
+    updateLink: { // args
+      description?: string | null; // String
+      href: string; // String!
+      linkId: string; // String!
+      title: string; // String!
     }
     updateNote: { // args
       noteId: string; // String!

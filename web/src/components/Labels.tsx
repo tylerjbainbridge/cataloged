@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import FocusLock from 'react-focus-lock';
 import _ from 'lodash';
-import useForm from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 import {
-  Box,
   Input,
   Tag,
   Popover,
@@ -105,7 +104,7 @@ export const Labels = ({
       onSelectedLabelChange(selectedLabels);
   }, [selectedLabels && selectedLabels.length]);
 
-  const { getValues, setValue, register, watch } = useForm({
+  const { getValues, setValue, register, watch } = useForm<{ search: string }>({
     defaultValues: { search: '' },
   });
 
@@ -134,7 +133,9 @@ export const Labels = ({
       return (
         !labelSet.find(
           (existingLabel: { name: string }) => existingLabel.name === name,
-        ) && name.toLowerCase().includes(search.toLowerCase())
+        ) &&
+        // @ts-ignore
+        name.toLowerCase().includes(search.toLowerCase())
       );
     }),
     4,

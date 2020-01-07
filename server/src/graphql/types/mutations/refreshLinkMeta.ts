@@ -2,17 +2,14 @@ import { extendType, stringArg } from 'nexus';
 import { Link } from '../entities/Link';
 import { getMetadataFromUrl } from '../../../helpers/link';
 
-export const createLink = extendType({
+export const refreshLinkMeta = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('createLink', {
+    t.field('refreshLinkMeta', {
       type: Link,
       args: {
+        linkId: stringArg({ required: true }),
         href: stringArg({ required: true }),
-        // image: stringArg(),
-        // title: stringArg({ required: true }),
-        // description: stringArg(),
-        // favicon: stringArg(),
       },
       resolve: async (root, args, ctx) => {
         if (!ctx.user) throw new Error('Whoops, not authorized');
@@ -21,22 +18,23 @@ export const createLink = extendType({
           args.href,
         );
 
-        const link = await ctx.photon.links.create({
+        await ctx.photon.users.update({
+          where: { id: ctx.user.id },
           data: {
-            href: args.href,
-            notes: '',
-            title,
-            description,
-            image,
-            favicon,
-            user: { connect: { id: ctx.user.id } },
-            item: {
-              create: { type: 'link', user: { connect: { id: ctx.user.id } } },
+            links: {
+              update: {
+                where: {
+                  id: args.linkId,
+                },
+                data: { title, description, image, favicon },
+              },
             },
           },
         });
 
-        return link;
+        return await ctx.photon.links.findOne({
+          where: { id: args.linkId },
+        });
       },
     });
   },

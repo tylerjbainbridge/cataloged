@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { QueryResult } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
-import styled from 'styled-components';
 import gql from 'graphql-tag';
-
+import { useLocalStorage } from 'react-use';
 import { Box, usePrevious, Spinner } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
 
-import { Item, ITEM_WIDTH } from './Item';
 import { SelectContainer } from './SelectContainer';
 import { usePagination } from '../hooks/useVariables';
 import { CreateFiles } from './CreateFiles';
@@ -17,10 +15,10 @@ import { SignOut } from './SignOut';
 import { UploadProgress } from './UploadProgress';
 import { Filter } from './Filter';
 import { NoteModal } from './NoteModal';
-import { feed } from './__generated__/feed';
 import { ITEM_FULL_FRAGMENT } from '../graphql/item';
 
 import { GridFeed } from './GridFeed';
+import { feed_items, feed } from '../graphql/__generated__/feed';
 
 export const FEED_QUERY = gql`
   query feed(
@@ -47,19 +45,23 @@ export const FEED_QUERY = gql`
 
 export const FEED_PAGE_LENGTH = 30;
 
-const GridContainer = styled.div``;
+type FeedContext = {
+  mode: 'grid' | 'list';
+  nextPage: () => any;
+  activeItemId: feed_items['id'] | null;
+  setActiveItemId: (id: feed_items['id']) => any;
+  // viewNextItem: (item: feed_items) => any;
+  isLastItem: (item: feed_items) => any;
+};
 
-const GridItem = styled.div`
-  justify-self: center;
+export const FeedContext = React.createContext<FeedContext>({} as FeedContext);
 
-  @media (max-width: 400px) {
-    width: 100%;
-    /* max-width: inherit; */
-  }
-`;
-
-export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
+export const Feed = () => {
+  const [mode, setMode] = useLocalStorage<'grid' | 'list'>('feed-mode', 'grid');
   const [isLastPage, setIsLastPage] = useState(false);
+  const [activeItemId, setActiveItemId] = useState<feed_items['id'] | null>(
+    null,
+  );
   const [pageNum, setPage] = useState(1);
 
   const { paginationVariables } = usePagination({
@@ -118,8 +120,21 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
       },
     });
 
+  const isLastItem = ({ id }: feed_items) => {
+    const lastItem = _.last(data?.items || []);
+    return lastItem && lastItem.id === id;
+  };
+
   return (
-    <>
+    <FeedContext.Provider
+      value={{
+        mode,
+        nextPage,
+        isLastItem,
+        activeItemId,
+        setActiveItemId,
+      }}
+    >
       <UploadProgress />
       <SelectContainer items={data?.items || []}>
         <Box d="flex" justifyContent="center">
@@ -175,6 +190,6 @@ export const Feed = ({ rowLength = 4 }: { rowLength?: number }) => {
           </Box>
         </Box>
       </SelectContainer>
-    </>
+    </FeedContext.Provider>
   );
 };

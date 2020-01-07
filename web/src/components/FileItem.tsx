@@ -1,13 +1,11 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { LazyImage } from './LazyImage';
 import { SelectOnClick } from './SelectOnClick';
-import { useDisclosure } from '@chakra-ui/core';
-import { Labels } from './Labels';
-import { feed_items } from './__generated__/feed';
 import { ITEM_ACTUAL_WIDTH, ItemHeader, ItemContentContainer } from './Item';
 import { FileModal } from './FileModal';
+import { feed_items, feed_items_file } from '../graphql/__generated__/feed';
 
 export interface ItemWithFile extends feed_items {
   file: feed_items_file;

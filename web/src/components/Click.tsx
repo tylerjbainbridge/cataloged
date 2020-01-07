@@ -23,6 +23,7 @@ export const Click = (props: ClickProps) => {
   );
 
   const onSingleClick = (event: MouseEvent<any, MouseEvent>) => {
+    event.preventDefault();
     if (props.onMetaClick && event.metaKey) props.onMetaClick();
     else if (props.onShiftClick && event.shiftKey) props.onShiftClick();
     else debouncedSingleClick.current();

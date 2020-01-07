@@ -400,6 +400,8 @@ type Mutation {
   generateSignedUrls(signedURLArgs: [SignedURLArgs!]): InProgressUpload!
   googleSignIn(code: String!): JWT!
   processFiles(uploadGroupId: String): [File!]!
+  refreshLinkMeta(href: String!, linkId: String!): Link!
+  updateLink(description: String, href: String!, linkId: String!, title: String!): Link!
   updateNote(noteId: String!, raw: String!, text: String!): Note!
 }
 

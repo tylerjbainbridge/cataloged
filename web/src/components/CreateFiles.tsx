@@ -20,9 +20,9 @@ import gql from 'graphql-tag';
 import { usePaste } from '../hooks/usePaste';
 import { randomString } from '../util/helpers';
 import { SpecialFile } from '../util/aws';
-import { processFiles_processFiles } from './__generated__/processFiles';
 import { useGlobalModal, ModalName } from './GlobalModal';
 import { useHotKey } from '../hooks/useHotKey';
+import { processFiles_processFiles } from '../graphql/__generated__/processFiles';
 
 const UPLOAD_FILE_MUTATION = gql`
   mutation processFiles($uploadGroupId: String) {

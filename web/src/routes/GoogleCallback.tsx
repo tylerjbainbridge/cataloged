@@ -3,9 +3,9 @@ import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { Location, History } from 'history';
 import queryString from 'query-string';
-import { googleSignIn } from './__generated__/googleSignIn';
 import { useAuth } from '../hooks/useAuth';
 import { Redirect } from 'react-router';
+import { googleSignIn } from '../graphql/__generated__/googleSignIn';
 
 const GOOGLE_SIGN_IN_MUTATION = gql`
   mutation googleSignIn($code: String!) {

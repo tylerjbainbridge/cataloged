@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { ItemWhereInput } from "./../../../__generated__/globalTypes";
+import { ItemType, ItemWhereInput } from "./apolloTypes";
 
 // ====================================================
 // GraphQL query operation: feed
@@ -14,15 +14,31 @@ export interface feed_items_labels {
   name: string;
 }
 
+export interface feed_items_link_item_labels {
+  __typename: "Label";
+  id: string;
+  name: string;
+}
+
+export interface feed_items_link_item {
+  __typename: "Item";
+  id: string;
+  type: string;
+  labels: feed_items_link_item_labels[];
+}
+
 export interface feed_items_link {
   __typename: "Link";
   id: string;
   href: string;
   notes: string;
+  createdAt: any;
+  updatedAt: any;
   image: string | null;
   favicon: string | null;
   title: string | null;
   description: string | null;
+  item: feed_items_link_item;
 }
 
 export interface feed_items_file {
@@ -33,6 +49,8 @@ export interface feed_items_file {
   isUploaded: boolean | null;
   fullUrl: string;
   squareUrl: string;
+  createdAt: any;
+  updatedAt: any;
 }
 
 export interface feed_items_note_item_labels {
@@ -77,5 +95,7 @@ export interface feed {
 export interface feedVariables {
   first?: number | null;
   skip?: number | null;
+  search?: string | null;
+  type?: ItemType | null;
   where?: ItemWhereInput | null;
 }

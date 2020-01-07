@@ -16,6 +16,8 @@ export { disconnectLabelFromItem } from './mutations/disconnectLabelFromItem';
 export { generateSignedUrls } from './mutations/generateSignedUrls';
 export { googleSignIn } from './mutations/googleSignIn';
 export { processFiles } from './mutations/processFiles';
+export { refreshLinkMeta } from './mutations/refreshLinkMeta';
+export { updateLink } from './mutations/updateLink';
 export { updateNote } from './mutations/updateNote';
 export { Query } from './Query';
 export { Mutation } from './Mutation';

@@ -11,10 +11,9 @@ import {
   useDisclosure,
 } from '@chakra-ui/core';
 
-import { feed_items, feed_items_file } from './__generated__/feed';
-
 import { Labels } from './Labels';
 import { LazyImage } from './LazyImage';
+import { feed_items, feed_items_file } from '../graphql/__generated__/feed';
 
 export interface ItemWithFile extends feed_items {
   file: feed_items_file;
@@ -62,7 +61,7 @@ export const FileModal = ({
             />
           </ModalBody>
           <ModalFooter justifyContent="flex-start">
-            <Box mt={10}>
+            <Box mt={5}>
               <Labels item={item} />
             </Box>
           </ModalFooter>
