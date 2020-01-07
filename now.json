@@ -2,11 +2,20 @@
   "version": 2,
   "name": "cataloged",
   "regions": ["iad1"],
-  "alias": "app.cataloged.co",
   "builds": [
     {
       "src": "web/package.json",
-      "use": "@now/static-build"
+      "use": "@now/static-build",
+      "config": {
+        "alias": "app.cataloged.co"
+      }
+    },
+    {
+      "src": "landing/package.json",
+      "use": "@now/static-build",
+      "config": {
+        "alias": ["www.cataloged.co", "cataloged.co"]
+      }
     },
     {
       "src": "server/src/functions/*.ts",

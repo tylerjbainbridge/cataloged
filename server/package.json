@@ -1,5 +1,7 @@
 {
-  "engines": { "node": "12.x" },
+  "engines": {
+    "node": "12.0.0"
+  },
   "scripts": {
     "start": "npm run start:server",
     "prestart": "npm run prisma:lift:up",
