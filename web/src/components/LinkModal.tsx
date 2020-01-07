@@ -72,11 +72,6 @@ export const LinkModal = ({
   const { getValues, setValue, watch, errors, register } = useForm<
     UpdateLinkFormValues
   >({
-    defaultValues: {
-      href: link.href,
-      title: link.title,
-      description: link.description,
-    },
     validationSchema: CreateLinkSchema,
     mode: 'onBlur',
   });
@@ -99,7 +94,10 @@ export const LinkModal = ({
         linkId: link.id,
         href: values.href,
       },
+      onError: console.log,
       onCompleted: data => {
+        console.log(data);
+        setValue('href', data.refreshLinkMeta.href);
         setValue('title', data.refreshLinkMeta.title);
         setValue('description', data.refreshLinkMeta.title);
       },
@@ -109,6 +107,14 @@ export const LinkModal = ({
   const debouncedUpdateLink = useDebounce(updateLink);
 
   const prevValues = useRef(values);
+
+  useEffect(() => {
+    if (isOpen) {
+      setValue('href', link.href);
+      setValue('title', link.title);
+      setValue('description', link.title);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -178,7 +184,13 @@ export const LinkModal = ({
                   >
                     Autofill
                   </InputLeftAddon>
-                  <Input name="href" id="href" rounded="0" ref={register} />
+                  <Input
+                    name="href"
+                    id="href"
+                    rounded="0"
+                    defaultValue={link.href}
+                    ref={register}
+                  />
                   <InputRightAddon
                     as={Button}
                     cursor="pointer"
@@ -195,7 +207,12 @@ export const LinkModal = ({
               </FormControl>
               <FormControl>
                 <FormLabel htmlFor="href">Title</FormLabel>
-                <Input name="title" id="title" ref={register} />
+                <Input
+                  name="title"
+                  id="title"
+                  defaultValue={link.title || ''}
+                  ref={register}
+                />
                 <FormErrorMessage>{errors?.title?.message}</FormErrorMessage>
               </FormControl>
               <FormControl>
@@ -204,6 +221,7 @@ export const LinkModal = ({
                   name="description"
                   id="description"
                   size="md"
+                  defaultValue={link.description || ''}
                   ref={register}
                 />
                 <FormErrorMessage>

@@ -1,7 +1,5 @@
 {
-  "engines": {
-    "node": "13.5.0"
-  },
+  "engines": { "node": "12.x" },
   "scripts": {
     "start": "npm run start:app",
     "start:app": "react-scripts start",
