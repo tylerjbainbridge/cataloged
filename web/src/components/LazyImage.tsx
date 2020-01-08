@@ -42,7 +42,7 @@ export const LazyImage = ({
         height: img.height,
       });
     }
-  }, [isReady]);
+  }, [isReady, src]);
 
   const newProps = {
     rounded: 'lg',
