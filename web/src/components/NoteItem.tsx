@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text } from '@chakra-ui/core';
+import { Box, Text, Icon } from '@chakra-ui/core';
 
 import { SelectOnClick } from './SelectOnClick';
 import { NoteModal } from './NoteModal';
@@ -20,15 +20,16 @@ export const NoteItem = ({ item }: { item: ItemWithNote }) => {
           {clickProps => (
             <>
               <ItemContentContainer
+                d="flex"
                 border="1px solid black"
                 rounded="lg"
-                p={5}
-                overflow="hidden"
                 tooltip="Open note"
+                alignItems="center"
+                justifyContent="center"
                 item={item}
                 {...clickProps}
               >
-                <Text fontSize="xs">{note.text}</Text>
+                <Icon name="edit" size="50px" />
               </ItemContentContainer>
               <ItemHeader item={item}>{note.text}</ItemHeader>
             </>
