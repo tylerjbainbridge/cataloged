@@ -91,6 +91,8 @@ export const CreateFiles = () => {
               })),
             },
           });
+          
+          console.log('fetched urls');
 
           await Promise.all(
             signedUrls.map(async (s3PutUrl: any, idx: number) => {
@@ -105,6 +107,8 @@ export const CreateFiles = () => {
                   'Content-Type': file.type,
                 },
               });
+              
+              console.log(`finished uploading ${idx + 1}`);
 
               return { tempKey: key, originalFilename: file.name };
             }),
@@ -113,6 +117,8 @@ export const CreateFiles = () => {
           setIsUploading(false);
           closeModal();
           setFiles({});
+          
+          console.log('started processing');
 
           await processFiles({ variables: { uploadGroupId: uploadGroup.id } });
         } catch (e) {
