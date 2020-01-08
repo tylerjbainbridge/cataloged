@@ -9,9 +9,8 @@ import { ImageService } from './ImageService';
 AWS.config.update({
   accessKeyId: process.env.AWS_S3_ACCESS_KEY,
   secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+  region: 'us-east-1'
 });
-
-AWS.config.region = 'us-east-1';
 
 export const s3 = new AWS.S3();
 
