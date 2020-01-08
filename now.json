@@ -4,18 +4,8 @@
   "regions": ["iad1"],
   "builds": [
     {
-      "src": "web/package.json",
-      "use": "@now/static-build",
-      "config": {
-        "alias": "app.cataloged.co"
-      }
-    },
-    {
-      "src": "landing/package.json",
-      "use": "@now/static-build",
-      "config": {
-        "alias": ["www.cataloged.co", "cataloged.co"]
-      }
+      "src": "web/package",
+      "use": "@now/static-build"
     },
     {
       "src": "server/src/functions/*.ts",
