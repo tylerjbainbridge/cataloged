@@ -1,15 +1,21 @@
 import { useMutation } from '@apollo/react-hooks';
 
-import { DELETE_ITEM_MUTATION } from '../graphql/item';
+import { DELETE_MANY_ITEMS_MUTATION } from '../graphql/item';
 import { FEED_QUERY } from '../components/Feed';
 import { feed_items } from '../graphql/__generated__/feed';
 import { useToast } from '@chakra-ui/core';
 
-export const useOptimisticDeleteItem = (item: any, options = {}) => {
+export const useOptimisticDeleteManyItems = (
+  items: feed_items[],
+  options = {},
+) => {
   const toast = useToast();
 
-  return useMutation(DELETE_ITEM_MUTATION, {
-    variables: { itemId: item.id },
+  const itemIds = items.map(({ id }) => id);
+
+  return useMutation(DELETE_MANY_ITEMS_MUTATION, {
+    variables: { itemIds },
+    ...options,
     onCompleted: (...args) => {
       toast({
         title: 'Deleted',
@@ -23,10 +29,12 @@ export const useOptimisticDeleteItem = (item: any, options = {}) => {
     },
     optimisticResponse: {
       __typename: 'Mutation',
-      deleteItem: {
-        id: '1234',
-        __typename: 'Item',
-      },
+      deleteManyItems: [
+        {
+          id: '1234',
+          __typename: 'Item',
+        },
+      ],
     },
     update: async (cache: any) => {
       const data = cache.readQuery({
@@ -34,7 +42,7 @@ export const useOptimisticDeleteItem = (item: any, options = {}) => {
       });
 
       const newListItems = data.items.filter(
-        (i: feed_items) => i.id !== item.id,
+        (i: feed_items) => !itemIds.includes(i.id),
       );
 
       await cache.writeQuery({

@@ -2,6 +2,7 @@ import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
 
 import { Item } from '../entities/Item';
+import { ItemService } from '../../../services/ItemService';
 
 export const connectLabelToItem = extendType({
   type: 'Mutation',
@@ -13,30 +14,13 @@ export const connectLabelToItem = extendType({
         itemId: stringArg({ required: true }),
       },
       resolve: async (root, args, ctx) => {
-        const [label] = await ctx.photon.labels.findMany({
-          first: 1,
-          where: { name: args.name },
-        });
+        const item = await ItemService.connectOrCreateLabel(
+          args.itemId,
+          ctx.user.id,
+          args.name,
+        );
 
-        const connectArgs = {
-          items: { connect: { id: args.itemId } },
-          user: { connect: { id: ctx.user.id } },
-        };
-
-        if (!label) {
-          await ctx.photon.labels.create({
-            data: { name: args.name, ...connectArgs },
-          });
-        } else {
-          await ctx.photon.labels.update({
-            where: { id: label.id },
-            data: connectArgs,
-          });
-        }
-
-        return await ctx.photon.items.findOne({
-          where: { id: args.itemId },
-        });
+        return item;
       },
     });
   },

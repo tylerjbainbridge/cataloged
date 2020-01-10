@@ -44,6 +44,7 @@ export const Query = objectType({
             user: { id: ctx.user.id },
           },
           first: 1,
+          orderBy: { createdAt: 'desc' },
         });
 
         return item;

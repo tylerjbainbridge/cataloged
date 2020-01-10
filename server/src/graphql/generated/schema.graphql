@@ -186,7 +186,7 @@ type Item {
   createdAt: DateTime!
   file: File
   id: ID!
-  labels(after: ID, before: ID, first: Int, last: Int, skip: Int): [Label!]!
+  labels(after: ID, before: ID, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   link: Link
   note: Note
   type: String!
@@ -294,6 +294,13 @@ input LabelFilter {
   some: LabelWhereInput
 }
 
+input LabelOrderByInput {
+  createdAt: OrderByArg
+  id: OrderByArg
+  name: OrderByArg
+  updatedAt: OrderByArg
+}
+
 input LabelWhereInput {
   AND: [LabelWhereInput!]
   createdAt: DateTimeFilter
@@ -387,6 +394,7 @@ input LinkWhereUniqueInput {
 }
 
 type Mutation {
+  batchUpdateItemLabels(itemIds: [String!]!, labelIdsToAdd: [String!]!, labelIdsToRemove: [String!]!): [Item!]!
   connectLabelToItem(itemId: String!, name: String!): Item!
   createLabel(itemId: String, name: String!): User!
   createLink(href: String!): Link!
@@ -395,6 +403,7 @@ type Mutation {
   createOneUser(data: UserCreateInput!): User!
   deleteItem(itemId: String!): Item!
   deleteLabel(labelId: String!): User!
+  deleteManyItems(itemIds: [String!]!): [Item!]!
   deleteOneFile(where: FileWhereUniqueInput!): File
   disconnectLabelFromItem(itemId: String!, labelId: String!): Item!
   generateSignedUrls(signedURLArgs: [SignedURLArgs!]): InProgressUpload!
@@ -612,7 +621,7 @@ type User {
   fullName: String!
   id: ID!
   items(after: ID, before: ID, first: Int, last: Int, skip: Int): [Item!]!
-  labels(after: ID, before: ID, first: Int, last: Int, skip: Int): [Label!]!
+  labels(after: ID, before: ID, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   lastName: String
 }
 

@@ -32,8 +32,8 @@ export const LinkItem = ({ item }: { item: ItemWithLink }) => {
               {clickProps => (
                 <LazyImage
                   src={link.image}
-                  width={ITEM_ACTUAL_WIDTH}
-                  height="200px"
+                  width="100%"
+                  height="100%"
                   objectFit="cover"
                   placeholderIcon="external-link"
                   {...clickProps}

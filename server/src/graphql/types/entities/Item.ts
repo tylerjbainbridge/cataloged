@@ -12,7 +12,7 @@ export const Item = objectType({
     t.model.link();
     t.model.note();
 
-    t.model.labels();
+    t.model.labels({ ordering: true });
 
     t.model.type();
   },

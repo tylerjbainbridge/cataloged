@@ -55,8 +55,36 @@ export const ITEM_WITH_LABELS_FRAGMENT = gql`
 export const DELETE_ITEM_MUTATION = gql`
   mutation deleteItem($itemId: String!) {
     deleteItem(itemId: $itemId) {
-      # user
       id
+    }
+  }
+`;
+
+export const DELETE_MANY_ITEMS_MUTATION = gql`
+  mutation deleteManyItems($itemIds: [String!]!) {
+    deleteManyItems(itemIds: $itemIds) {
+      id
+    }
+  }
+`;
+
+export const BATCH_UPDATE_ITEMS_LABELS_MUTATION = gql`
+  mutation batchUpdateItemLabels(
+    $itemIds: [String!]!
+    $labelIdsToAdd: [String!]!
+    $labelIdsToRemove: [String!]!
+  ) {
+    batchUpdateItemLabels(
+      itemIds: $itemIds
+      labelIdsToAdd: $labelIdsToAdd
+      labelIdsToRemove: $labelIdsToRemove
+    ) {
+      id
+
+      labels {
+        id
+        name
+      }
     }
   }
 `;

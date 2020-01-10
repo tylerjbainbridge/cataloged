@@ -21,6 +21,9 @@ import {
   Button,
   InputGroup,
   useDisclosure,
+  PseudoBox,
+  Switch,
+  Box,
 } from '@chakra-ui/core';
 import { useAuth } from '../hooks/useAuth';
 
@@ -74,15 +77,21 @@ export const Labels = ({
   canAddLabels = true,
   selectedLabels: initialSelectedLabels,
   onSelectedLabelChange,
+  showSelectedLabels = true,
+  trigger = null,
+  onApply,
 }: {
   item?: any;
   selectedLabels?: any[];
   canAddLabels?: boolean;
   onSelectedLabelChange?: Function;
+  showSelectedLabels?: boolean;
+  trigger?: JSX.Element | null;
+  onApply?: (labels: any[]) => any;
 }) => {
   const [cursor, setCursor] = useState(0);
 
-  // Only relevant when managing it's own state.<
+  // Only relevant when managing it's own state.
   const [selectedLabels, setSelectedLabels] = useState<any[]>([]);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -97,7 +106,7 @@ export const Labels = ({
 
   useEffect(() => {
     if (initialSelectedLabels) setSelectedLabels(initialSelectedLabels);
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     if (onSelectedLabelChange && selectedLabels !== initialSelectedLabels)
@@ -126,20 +135,24 @@ export const Labels = ({
 
   const { search } = getValues();
 
-  const labelSet = isManagingOwnState ? selectedLabels : item.labels;
+  const labelSet = _.orderBy(
+    isManagingOwnState ? selectedLabels : item.labels,
+    'name',
+    'desc',
+  );
 
-  const filteredLabels = _.take(
+  const filteredLabels = _.orderBy(
     user.labels.filter(({ name }: { name: string }) => {
       return (
-        !labelSet.find(
-          (existingLabel: { name: string }) => existingLabel.name === name,
-        ) &&
         // @ts-ignore
         name.toLowerCase().includes(search.toLowerCase())
       );
     }),
-    4,
+    'name',
+    'desc',
   );
+
+  console.log('filteredLabels', filteredLabels.length);
 
   // Rerender each time
   watch('search');
@@ -147,6 +160,11 @@ export const Labels = ({
   useEffect(() => {
     setCursor(0);
   }, [search]);
+
+  // useEffect(() => {
+  //   const element = document.getElementById(filteredLabels[cursor].name);
+  //   if (element) element.scrollIntoView();
+  // }, [cursor]);
 
   useEffect(() => {
     if (cursor > filteredLabels.length - 1) {
@@ -195,11 +213,23 @@ export const Labels = ({
     }
   };
 
+  const toggle = ({ id, name }: { id?: string; name: string }) => {
+    const isChecked = !!labelSet.find(
+      (existingLabel: { name: string }) => existingLabel.name === name,
+    );
+
+    if (isChecked) {
+      if (id) removeAction({ id, name });
+    } else {
+      addAction(name);
+    }
+  };
+
   const onKeyDown = (event: any) => {
     if (event.metaKey && event.key === 'Enter' && search) {
-      addAction(search);
+      toggle({ name: search });
     } else if (event.key === 'Enter' && filteredLabels[cursor]) {
-      addAction(filteredLabels[cursor].name);
+      toggle(filteredLabels[cursor]);
     }
   };
 
@@ -240,22 +270,24 @@ export const Labels = ({
           if (onClose) onClose();
         }}
       >
-        {canAddLabels && (
+        {(canAddLabels || trigger) && (
           <PopoverTrigger>
-            <Button
-              size="xs"
-              height="25px"
-              onClick={onOpen}
-              aria-label="add labels"
-              variant="outline"
-              mr={2}
-              cursor="pointer"
-            >
-              <Icon size="10px" name="add" />
-            </Button>
+            {trigger || (
+              <Button
+                size="xs"
+                height="25px"
+                onClick={onOpen}
+                aria-label="add labels"
+                variant="outline"
+                mr={2}
+                cursor="pointer"
+              >
+                <Icon size="10px" name="edit" />
+              </Button>
+            )}
           </PopoverTrigger>
         )}
-        <PopoverContent zIndex={4} p={5}>
+        <PopoverContent zIndex={100} width="400px">
           <FocusLock returnFocus persistentFocus={false}>
             <PopoverArrow bg="white" />
             <Stack
@@ -264,64 +296,105 @@ export const Labels = ({
               onKeyDown={onKeyDown}
               onKeyUp={onKeyUp}
             >
-              <FormControl>
-                <InputGroup size="md">
+              <FormControl p={3}>
+                <InputGroup size="md" width="100%">
                   <Input
                     pr="4.5rem"
                     placeholder="Label"
                     name="search"
                     ref={register}
                   />
-                  <InputRightElement width="4.5rem">
-                    <Button
-                      size="sm"
-                      h="1.75rem"
-                      isLoading={connecting}
-                      onClick={createFromSearch}
-                    >
-                      Add
-                    </Button>
-                  </InputRightElement>
+                  {canAddLabels && (
+                    <InputRightElement width="4.5rem">
+                      <Button
+                        size="sm"
+                        h="1.75rem"
+                        isLoading={connecting}
+                        onClick={createFromSearch}
+                      >
+                        Add
+                      </Button>
+                    </InputRightElement>
+                  )}
                 </InputGroup>
               </FormControl>
               {!!filteredLabels.length && (
-                <Stack spacing={2}>
-                  {filteredLabels.map(({ name }, idx) => (
-                    <Tag
-                      size="md"
-                      key={name}
-                      cursor="pointer"
-                      variantColor={idx === cursor ? 'cyan' : 'gray'}
-                      onMouseOver={() => setCursor(idx)}
-                      onClick={e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addAction(name);
-                      }}
-                    >
-                      <TagIcon icon="add" size="6px" />
-                      <TagLabel>{name}</TagLabel>
-                    </Tag>
-                  ))}
+                <Stack
+                  spacing={2}
+                  maxHeight="200px"
+                  maxWidth="100%"
+                  overflowY="auto"
+                >
+                  {filteredLabels.map(({ id, name }, idx) => {
+                    const isChecked = !!labelSet.find(
+                      (existingLabel: { name: string }) =>
+                        existingLabel.name === name,
+                    );
+                    return (
+                      <PseudoBox
+                        id={name}
+                        d="flex"
+                        alignItems="center"
+                        height="40px"
+                        p={3}
+                        key={name}
+                        cursor="pointer"
+                        bg={idx === cursor ? 'gray.50' : ''}
+                        onMouseOver={() => setCursor(idx)}
+                        onClick={e => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggle({ id, name });
+                        }}
+                      >
+                        {/* This is the sibling input, it's visually hidden */}
+                        <Switch size="sm" isChecked={isChecked} />
+                        <Tag ml={3}>{name}</Tag>
+                      </PseudoBox>
+                    );
+                  })}
                 </Stack>
+              )}
+              {!!onApply && (
+                <Box
+                  d="flex"
+                  alignItems="center"
+                  justifyContent="flex-end"
+                  width="100%"
+                  p={2}
+                  pt={0}
+                >
+                  <Button
+                    cursor="pointer"
+                    variantColor="teal"
+                    size="md"
+                    onClick={() => {
+                      onApply(selectedLabels);
+                      onClose();
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </Box>
               )}
             </Stack>
           </FocusLock>
         </PopoverContent>
       </Popover>
-      {labelSet.map(({ id, name }: { id: string; name: string }) => (
-        <Tag
-          size="md"
-          key={name}
-          mr={2}
-          mb={5}
-          cursor="pointer"
-          onClick={() => removeAction({ id, name })}
-        >
-          <TagIcon size="12px" icon="delete" />
-          <TagLabel>{name}</TagLabel>
-        </Tag>
-      ))}
+      {showSelectedLabels &&
+        labelSet.map(({ id, name }: { id: string; name: string }) => (
+          <Tag size="md" key={name} mr={2} mb={5}>
+            {isOpen && (
+              <TagIcon
+                size="12px"
+                icon="delete"
+                cursor="pointer"
+                onClick={() => removeAction({ id, name })}
+              />
+            )}
+            <TagLabel>{name}</TagLabel>
+          </Tag>
+        ))}
     </Stack>
   );
 };

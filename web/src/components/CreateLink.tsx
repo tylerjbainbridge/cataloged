@@ -18,6 +18,7 @@ import {
   Text,
   Icon,
   Tooltip,
+  useToast,
 } from '@chakra-ui/core';
 import { useGlobalModal, ModalName } from './GlobalModal';
 import { useHotKey } from '../hooks/useHotKey';
@@ -51,6 +52,8 @@ export const CreateLink = () => {
     mode: 'onBlur',
   });
 
+  const toast = useToast();
+
   watch('href');
 
   const { href } = getValues();
@@ -64,7 +67,16 @@ export const CreateLink = () => {
   const [createLink, { loading }] = useMutation(CREATE_LINK_MUTATION, {
     variables: { href },
     refetchQueries: ['feed'],
-    onCompleted: () => cleanup(),
+    onCompleted: () => {
+      cleanup();
+
+      toast({
+        title: 'Success',
+        status: 'success',
+        duration: 2000,
+        position: 'top',
+      });
+    },
   });
 
   const onPaste = (e: any) => {

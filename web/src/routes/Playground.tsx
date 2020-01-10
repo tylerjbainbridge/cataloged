@@ -65,9 +65,8 @@ export const Playground = () => {
         // borderColor="lightgray"
         // borderWidth={2}
         rounded="lg"
-        justifyContent="center"
       >
-        <Labels />
+        <Labels item={item} />
       </Box>
     </Box>
   );

@@ -21,6 +21,6 @@ export const User = objectType({
       pagination: true,
     });
 
-    t.model.labels();
+    t.model.labels({ ordering: true });
   },
 });

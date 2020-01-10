@@ -15,7 +15,7 @@ export interface Item {
 
 export const SelectContainer = ({
   children,
-  items,
+  items = [],
   initialSelectedMap = new Map(),
   getId = ({ id }: { id: string }) => id,
 }: SelectContainerProps) => {
@@ -86,10 +86,13 @@ export const SelectContainer = ({
     return resetAndSelect(item);
   };
 
+  const deselectAllItems = () => immutableUpdateMap(new Map());
+
   return (
     <SelectContext.Provider
       value={{
         selectedMap,
+        selectedItems: items.filter(item => selectedMap.has(item.id)),
         isItemSelected,
         selectItem,
         deselectItem,
@@ -97,6 +100,7 @@ export const SelectContainer = ({
         onToggleThunk,
         onSelectRangeThunk,
         onResetAndSelectThunk,
+        deselectAllItems,
       }}
     >
       {children}

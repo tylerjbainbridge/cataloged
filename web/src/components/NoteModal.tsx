@@ -105,10 +105,8 @@ export const NoteModal = ({
             </Box>
           </ModalBody>
           {note && (
-            <ModalFooter justifyContent="flex-start">
-              <Box mt={5}>
-                <Labels item={note.item} />
-              </Box>
+            <ModalFooter justifyContent="space-between" pt={5}>
+              <Labels item={note.item} />
             </ModalFooter>
           )}
         </ModalContent>

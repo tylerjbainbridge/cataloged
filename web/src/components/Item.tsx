@@ -29,8 +29,6 @@ export const ITEM_WIDTH = ITEM_ACTUAL_WIDTH + ITEM_INNER_PADDING;
 export const Item = ({ item }: { item: feed_items }) => {
   let node = null;
 
-  const { isItemSelected } = useContext(SelectContext);
-
   switch (item.type) {
     case 'file':
       //@ts-ignore
@@ -66,18 +64,7 @@ export const Item = ({ item }: { item: feed_items }) => {
       padding={`${ITEM_INNER_PADDING}px`}
     >
       <Stack p="4">
-        <Box>
-          {isItemSelected(item) && false && (
-            <Icon
-              name="check-circle"
-              position="absolute"
-              color="#add8e6"
-              size="20"
-              padding="10px"
-            />
-          )}
-          {node}
-        </Box>
+        <Box>{node}</Box>
         {/* <Labels item={item} canAddLabels={false} /> */}
       </Stack>
     </Box>
@@ -130,15 +117,26 @@ export const ItemContentContainer = ({
   const baseHoverState = useDisclosure();
   const menuHoverState = useDisclosure();
 
+  const { isItemSelected, selectedMap, onToggleThunk } = useContext(
+    SelectContext,
+  );
+
+  const isSelected = isItemSelected(item);
+
   const itemRef = React.useRef(null);
 
   const [deleteItem] = useOptimisticDeleteItem(item);
 
-  const hotKeyHandler = () => {
+  const deleteHandler = () => {
     if (baseHoverState.isOpen) deleteItem();
   };
 
-  useHotKey('d', hotKeyHandler, {
+  useHotKey('d', deleteHandler, {
+    ref: itemRef.current,
+    shouldBind: baseHoverState.isOpen,
+  });
+
+  useHotKey('s', onToggleThunk(item), {
     ref: itemRef.current,
     shouldBind: baseHoverState.isOpen,
   });
@@ -154,14 +152,17 @@ export const ItemContentContainer = ({
       onOpen={baseHoverState.onOpen}
     >
       <Box
+        d="flex"
+        justifyContent="center"
+        alignContent="center"
         onMouseEnter={baseHoverState.onOpen}
         onMouseLeave={baseHoverState.onClose}
         position="relative"
       >
-        {baseHoverState.isOpen && (
+        {(baseHoverState.isOpen || !!selectedMap.size) && (
           <Box
             d="flex"
-            justifyContent="flex-end"
+            justifyContent="space-between"
             p={2}
             alignItems="center"
             roundedBottomRight="lg"
@@ -170,7 +171,7 @@ export const ItemContentContainer = ({
             bottom={0}
             height={10}
             width={ITEM_ACTUAL_WIDTH}
-            zIndex={10}
+            zIndex={1}
             backgroundColor="lightgrey"
             background="rgb(211,211,211, 0.8);"
             opacity={9}
@@ -179,13 +180,28 @@ export const ItemContentContainer = ({
           >
             <Tooltip
               hasArrow
-              label="press d while hovering over the item"
+              aria-label="select item"
+              label="press s while hovering to toggle"
+              placement="bottom"
+            >
+              <Icon
+                fontSize="15px"
+                name="check-circle"
+                cursor="pointer"
+                aria-label="select item"
+                color={isSelected ? 'black' : 'white'}
+                onClick={onToggleThunk(item)}
+              />
+            </Tooltip>
+            <Tooltip
+              hasArrow
+              label="press d while hovering"
               aria-label="delete item"
               placement="bottom"
             >
-              <IconButton
-                size="sm"
-                icon="delete"
+              <Icon
+                fontSize="15px"
+                name="delete"
                 cursor="pointer"
                 aria-label="delete item"
                 onClick={() => deleteItem()}
@@ -197,6 +213,13 @@ export const ItemContentContainer = ({
           width={ITEM_ACTUAL_WIDTH}
           height={ITEM_CONTENT_HEIGHT}
           ref={itemRef}
+          rounded="lg"
+          {...(isSelected
+            ? {
+                padding: 3,
+                border: '5px solid lightblue',
+              }
+            : {})}
           {...props}
         >
           {children}

@@ -4,6 +4,9 @@ export const theme = {
   ...t,
   colors: {
     ...t.colors,
-    lightgrey: '#f6f8fa',
+    gray: {
+      50: '#f7fafc',
+      ...t.colors.gray,
+    },
   },
 };

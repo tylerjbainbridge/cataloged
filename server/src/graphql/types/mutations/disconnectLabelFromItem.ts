@@ -2,6 +2,7 @@ import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
 
 import { Item } from '../entities/Item';
+import { ItemService } from '../../../services/ItemService';
 
 export const disconnectLabelFromItem = extendType({
   type: 'Mutation',
@@ -13,14 +14,7 @@ export const disconnectLabelFromItem = extendType({
         labelId: stringArg({ required: true }),
       },
       resolve: async (root, args, ctx) =>
-        await ctx.photon.items.update({
-          where: { id: args.itemId },
-          data: {
-            labels: {
-              disconnect: { id: args.labelId },
-            },
-          },
-        }),
+        ItemService.disconnectLabel(args.itemId, args.labelId),
     });
   },
 });

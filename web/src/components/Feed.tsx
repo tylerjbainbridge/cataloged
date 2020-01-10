@@ -19,6 +19,7 @@ import { ITEM_FULL_FRAGMENT } from '../graphql/item';
 
 import { GridFeed } from './GridFeed';
 import { feed_items, feed } from '../graphql/__generated__/feed';
+import { FeedBottomToolbar } from './FeedBottomToolbar';
 
 export const FEED_QUERY = gql`
   query feed(
@@ -137,57 +138,60 @@ export const Feed = () => {
     >
       <UploadProgress />
       <SelectContainer items={data?.items || []}>
-        <Box d="flex" justifyContent="center">
-          <Box
-            padding={50}
-            width={[
-              '100%', // base
-              '100%', // 480px upwards
-              '90%', // 768px upwards
-            ]}
-          >
+        <Box height="100%">
+          <Box d="flex" justifyContent="center" height="100%">
             <Box
-              height={80}
-              d="flex"
-              minWidth="100%"
-              justifyContent="space-between"
-              alignItems="center"
-              flexWrap="wrap"
+              padding={50}
+              width={[
+                '100%', // base
+                '100%', // 480px upwards
+                '90%', // 768px upwards
+              ]}
             >
               <Box
+                height={80}
                 d="flex"
-                width="150px"
+                minWidth="100%"
                 justifyContent="space-between"
                 alignItems="center"
+                flexWrap="wrap"
               >
-                <CreateFiles />
-                <CreateLink />
-                <NoteModal />
-              </Box>
-              <Filter filter={filter} variables={variables} />
-              {/* <Text fontSize="4xl" margin={0}>
+                <Box
+                  d="flex"
+                  width="150px"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <CreateFiles />
+                  <CreateLink />
+                  <NoteModal />
+                </Box>
+                <Filter filter={filter} variables={variables} />
+                {/* <Text fontSize="4xl" margin={0}>
                 Cataloged
               </Text> */}
-              <SignOut />
-            </Box>
-            <br />
-            {initialLoad ? (
-              <Box
-                d="flex"
-                justifyContent="center"
-                alignItems="center"
-                height="100%"
-                width="100%"
-              >
-                <Spinner size="xl" />
+                <SignOut />
               </Box>
-            ) : (
-              <GridFeed query={query} nextPage={nextPage} />
-            )}
-            {networkStatus === 7 && !loading && !isLastPage && (
-              <Waypoint bottomOffset={-400} onEnter={nextPage} />
-            )}
+              <br />
+              {initialLoad ? (
+                <Box
+                  d="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  height="100%"
+                  width="100%"
+                >
+                  <Spinner size="xl" />
+                </Box>
+              ) : (
+                <GridFeed query={query} nextPage={nextPage} />
+              )}
+              {networkStatus === 7 && !loading && !isLastPage && (
+                <Waypoint bottomOffset={-400} onEnter={nextPage} />
+              )}
+            </Box>
           </Box>
+          <FeedBottomToolbar />
         </Box>
       </SelectContainer>
     </FeedContext.Provider>

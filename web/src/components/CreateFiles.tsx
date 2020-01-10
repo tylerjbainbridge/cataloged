@@ -14,6 +14,7 @@ import {
   Icon,
   Image,
   Tooltip,
+  useToast,
 } from '@chakra-ui/core';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
@@ -58,6 +59,8 @@ export const CreateFiles = () => {
 
   useHotKey('c f', toggleModal);
 
+  const toast = useToast();
+
   const fileCount = Object.keys(files).length;
   const fileVals = Object.values(files);
   const fileEntries = Object.entries(files);
@@ -66,6 +69,14 @@ export const CreateFiles = () => {
     processFiles_processFiles
   >(UPLOAD_FILE_MUTATION, {
     refetchQueries: ['feed'],
+    onCompleted: () => {
+      toast({
+        title: 'Success',
+        status: 'success',
+        duration: 2000,
+        position: 'top',
+      });
+    },
   });
 
   const isWorking = isUploading || isSubmitting;

@@ -20,16 +20,21 @@ export const NoteItem = ({ item }: { item: ItemWithNote }) => {
           {clickProps => (
             <>
               <ItemContentContainer
-                d="flex"
-                border="1px solid black"
-                rounded="lg"
                 tooltip="Open note"
-                alignItems="center"
-                justifyContent="center"
                 item={item}
                 {...clickProps}
               >
-                <Icon name="edit" size="50px" />
+                <Box
+                  d="flex"
+                  width="100%"
+                  height="100%"
+                  rounded="lg"
+                  alignItems="center"
+                  justifyContent="center"
+                  backgroundColor="gray.50"
+                >
+                  <Icon name="edit" size="50px" />
+                </Box>
               </ItemContentContainer>
               <ItemHeader item={item}>{note.text}</ItemHeader>
             </>

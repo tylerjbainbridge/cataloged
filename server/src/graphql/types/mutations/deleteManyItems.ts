@@ -3,18 +3,18 @@ import _ from 'lodash';
 import { Item } from '../entities/Item';
 import { ItemService } from '../../../services/ItemService';
 
-export const deleteItem = extendType({
+export const deleteManyItems = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('deleteItem', {
+    t.list.field('deleteManyItems', {
       type: Item,
       args: {
-        itemId: stringArg({ required: true }),
+        itemIds: stringArg({ required: true, list: true }),
       },
       resolve: async (root, args, ctx) => {
-        const [item] = await ItemService.deleteMany([args.itemId]);
+        const items = await ItemService.deleteMany(args.itemIds);
 
-        return item;
+        return items;
       },
     });
   },
