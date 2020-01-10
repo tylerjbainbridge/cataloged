@@ -373,7 +373,7 @@ export const Labels = ({
                       onClose();
                     }}
                   >
-                    Apply
+                    Apply ({labelSet.length})
                   </Button>
                 </Box>
               )}
