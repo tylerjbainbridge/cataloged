@@ -101,9 +101,6 @@ export const CreateLink = () => {
     setValue('href', '');
   };
 
-  // @ts-ignore
-  console.log({ errors }, errors?.href?.message);
-
   return (
     <>
       <Tooltip
