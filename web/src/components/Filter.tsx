@@ -56,6 +56,19 @@ export const Filter = ({
     }
   }, [isModalOpen]);
 
+  const reset = async () => {
+    await filter(getFilterVariablesFromFormValues(INITIAL_VALUES));
+    closeModal();
+  };
+
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+
+    await filter(getFilterVariablesFromFormValues({ labels, search, type }));
+
+    closeModal();
+  };
+
   return (
     <>
       <Tooltip
@@ -82,7 +95,7 @@ export const Filter = ({
         closeOnOverlayClick
       >
         <ModalOverlay />
-        <ModalContent rounded="lg">
+        <ModalContent as="form" onSubmit={onSubmit} rounded="lg">
           <ModalBody>
             <Box p={5}>
               <FormControl mb={5}>
@@ -130,6 +143,7 @@ export const Filter = ({
               <FormControl>
                 <FormLabel>Labels</FormLabel>
                 <Labels
+                  canAddLabels={false}
                   selectedLabels={formValues.labels}
                   onSelectedLabelChange={(selectedLabels: any) => {
                     setState({
@@ -147,23 +161,11 @@ export const Filter = ({
               color="green"
               cursor="pointer"
               mr={3}
-              onClick={async () => {
-                await filter(getFilterVariablesFromFormValues(INITIAL_VALUES));
-                closeModal();
-              }}
+              onClick={reset}
             >
               Reset
             </Button>
-            <Button
-              color="green"
-              cursor="pointer"
-              onClick={async () => {
-                await filter(
-                  getFilterVariablesFromFormValues({ labels, search, type }),
-                );
-                closeModal();
-              }}
-            >
+            <Button color="green" cursor="pointer" type="submit">
               Apply
             </Button>
           </ModalFooter>
