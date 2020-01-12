@@ -19,6 +19,11 @@ import {
   Icon,
   Tooltip,
   useToast,
+  Input,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
 } from '@chakra-ui/core';
 import { useGlobalModal, ModalName } from './GlobalModal';
 import { useHotKey } from '../hooks/useHotKey';
@@ -49,7 +54,7 @@ export const CreateLink = () => {
     errors,
   } = useForm({
     validationSchema: CreateLinkSchema,
-    mode: 'onBlur',
+    mode: 'onSubmit',
   });
 
   const toast = useToast();
@@ -96,6 +101,9 @@ export const CreateLink = () => {
     setValue('href', '');
   };
 
+  // @ts-ignore
+  console.log({ errors }, errors?.href?.message);
+
   return (
     <>
       <Tooltip
@@ -117,43 +125,38 @@ export const CreateLink = () => {
       >
         <ModalOverlay />
 
-        <ModalContent height="250px">
-          <ModalHeader>Paste link</ModalHeader>
+        <ModalContent
+          as="form"
+          onSubmit={handleSubmit(async (data, e) => {
+            e.preventDefault();
+            await createLink();
+          })}
+          height="250px"
+        >
+          <ModalHeader>Save link</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
-            <form
-              onSubmit={handleSubmit(async () => {
-                await createLink();
-              })}
-            >
-              <Box display="none">
-                <input name="href" defaultValue="" ref={register} />
-                {errors.href && <Text color="red">{errors?.href}</Text>}
-              </Box>
-
-              {href && (
-                <Box width="100%">
-                  <a href={href} target="_blank">
-                    {href}
-                  </a>
-                </Box>
-              )}
-            </form>
+            <FormControl isInvalid={!!errors.href}>
+              <FormLabel htmlFor="href">URL</FormLabel>
+              <Input name="href" id="href" defaultValue={href} ref={register} />
+              <FormHelperText>
+                Type, paste, or drag a URL into this window.
+              </FormHelperText>
+              <FormErrorMessage>
+                {errors.href && 'Invalid URL'}
+              </FormErrorMessage>
+            </FormControl>
           </ModalBody>
           <ModalFooter>
             <Button
               isLoading={loading}
-              isDisabled={!href}
-              onClick={async () => {
-                if (!loading) {
-                  await createLink();
-                }
-              }}
-              color={!href ? 'yellow' : 'green'}
+              isDisabled={!!(!href || errors.href)}
+              type="submit"
+              color={!href || errors.href ? 'yellow' : 'green'}
             >
               <Box alignItems="center">
-                <Icon name="add" /> {!href ? 'Waiting for link...' : 'Add'}
+                <Icon name="add" /> {!href ? 'Waiting for url...' : 'Add'}
               </Box>
             </Button>
           </ModalFooter>

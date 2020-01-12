@@ -206,7 +206,7 @@ export const LinkModal = ({
                 <FormErrorMessage>{errors?.href?.message}</FormErrorMessage>
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="href">Title</FormLabel>
+                <FormLabel htmlFor="title">Title</FormLabel>
                 <Input
                   name="title"
                   id="title"
@@ -216,7 +216,7 @@ export const LinkModal = ({
                 <FormErrorMessage>{errors?.title?.message}</FormErrorMessage>
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="href">Description</FormLabel>
+                <FormLabel htmlFor="description">Description</FormLabel>
                 <Textarea
                   name="description"
                   id="description"

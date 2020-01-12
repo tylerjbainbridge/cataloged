@@ -107,7 +107,6 @@ export const FeedBottomToolbar = () => {
             Delete
           </Button>
           <Labels
-            canAddLabels={false}
             selectedLabels={commonLabels}
             onApply={(nextLabelSet: any[]) => {
               const labelIdsToRemove = commonLabels
