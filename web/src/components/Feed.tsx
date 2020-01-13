@@ -15,33 +15,37 @@ import { SignOut } from './SignOut';
 import { UploadProgress } from './UploadProgress';
 import { Filter } from './Filter';
 import { NoteModal } from './NoteModal';
-import { ITEM_FULL_FRAGMENT } from '../graphql/item';
+import { ITEM_CONNECTION_FULL_FRAGMENT } from '../graphql/item';
 
 import { GridFeed } from './GridFeed';
-import { feed_items, feed } from '../graphql/__generated__/feed';
 import { FeedBottomToolbar } from './FeedBottomToolbar';
+import { getNodesFromConnection } from '../util/helpers';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { feed } from '../graphql/__generated__/feed';
 
 export const FEED_QUERY = gql`
   query feed(
     $first: Int
-    $skip: Int
+    $after: String
     $search: String
     $type: ItemType
     $where: ItemWhereInput
   ) {
-    items(
+    itemsConnection(
       first: $first
-      skip: $skip
+      after: $after
+
       where: $where
       search: $search
       type: $type
+
       orderBy: { createdAt: desc }
-    ) @connection(key: "feed_items") {
-      ...ItemFull
+    ) @connection(key: "feed_connection") {
+      ...ItemConnectionFull
     }
   }
 
-  ${ITEM_FULL_FRAGMENT}
+  ${ITEM_CONNECTION_FULL_FRAGMENT}
 `;
 
 export const FEED_PAGE_LENGTH = 30;
@@ -49,81 +53,67 @@ export const FEED_PAGE_LENGTH = 30;
 type FeedContext = {
   mode: 'grid' | 'list';
   nextPage: () => any;
-  activeItemId: feed_items['id'] | null;
-  setActiveItemId: (id: feed_items['id']) => any;
-  // viewNextItem: (item: feed_items) => any;
-  isLastItem: (item: feed_items) => any;
+  activeItemId: ItemFull['id'] | null;
+  setActiveItemId: (id: ItemFull['id']) => any;
+  // viewNextItem: (item: ItemFull) => any;
+  isLastItem: (item: ItemFull) => any;
 };
 
 export const FeedContext = React.createContext<FeedContext>({} as FeedContext);
 
+const INITIAL_PAGINATION_VARIABLES = {
+  first: 20,
+  after: null,
+};
+
 export const Feed = () => {
   const [mode, setMode] = useLocalStorage<'grid' | 'list'>('feed-mode', 'grid');
-  const [isLastPage, setIsLastPage] = useState(false);
-  const [activeItemId, setActiveItemId] = useState<feed_items['id'] | null>(
-    null,
-  );
-  const [pageNum, setPage] = useState(1);
-
-  const { paginationVariables } = usePagination({
-    pageLength: FEED_PAGE_LENGTH,
-  });
+  const [activeItemId, setActiveItemId] = useState<ItemFull['id'] | null>(null);
 
   const query = useQuery<feed>(FEED_QUERY, {
-    variables: paginationVariables,
+    variables: INITIAL_PAGINATION_VARIABLES,
     notifyOnNetworkStatusChange: true,
   });
 
   const { loading, data, networkStatus, refetch, fetchMore, variables } = query;
 
-  const prevQuery: QueryResult<feed, Record<string, any>> = usePrevious(query);
-
-  // Spaghetti Pagination
-  useEffect(() => {
-    if (data && prevQuery.data) {
-      const isLast =
-        _.last(data.items)?.id === _.last(prevQuery.data.items)?.id;
-
-      if (isLast) setIsLastPage(true);
-      else if (pageNum === 0) setIsLastPage(false);
-
-      if (data.items.length > prevQuery.data.items.length) {
-        setPage(pageNum + 1);
-      } else if (
-        data.items.length < prevQuery.data.items.length &&
-        pageNum !== 0
-      ) {
-        setPage(0);
-      }
-    }
-  }, [data]);
+  const items = getNodesFromConnection<ItemFull>(data?.itemsConnection);
 
   const initialLoad = loading && !data;
 
   const filter = (filterVariables: any) =>
     refetch({
-      ...paginationVariables,
+      ...INITIAL_PAGINATION_VARIABLES,
       ...filterVariables,
     });
+
+  const lastEdge = _.last(data?.itemsConnection?.edges || []);
 
   const nextPage = () =>
     fetchMore({
       variables: {
         ...variables,
-        skip: FEED_PAGE_LENGTH * pageNum,
+        after: lastEdge?.cursor,
       },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev;
-        return {
-          ...prev,
-          items: [...(prev.items || []), ...(fetchMoreResult.items || [])],
-        };
+      // @ts-ignore
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        const newEdges = fetchMoreResult?.itemsConnection?.edges;
+        const pageInfo = fetchMoreResult?.itemsConnection?.pageInfo;
+
+        return newEdges?.length
+          ? {
+              itemsConnection: {
+                __typename: previousResult.itemsConnection.__typename,
+                edges: [...previousResult.itemsConnection.edges, ...newEdges],
+                pageInfo,
+              },
+            }
+          : previousResult;
       },
     });
 
-  const isLastItem = ({ id }: feed_items) => {
-    const lastItem = _.last(data?.items || []);
-    return lastItem && lastItem.id === id;
+  const isLastItem = ({ id }: ItemFull) => {
+    return lastEdge?.node?.id === id;
   };
 
   return (
@@ -137,7 +127,7 @@ export const Feed = () => {
       }}
     >
       <UploadProgress />
-      <SelectContainer items={data?.items || []}>
+      <SelectContainer items={items}>
         <Box height="100%">
           <Box d="flex" justifyContent="center" height="100%">
             <Box
@@ -184,11 +174,13 @@ export const Feed = () => {
                   <Spinner size="xl" />
                 </Box>
               ) : (
-                <GridFeed query={query} nextPage={nextPage} />
+                <GridFeed items={items} query={query} nextPage={nextPage} />
               )}
-              {networkStatus === 7 && !loading && !isLastPage && (
-                <Waypoint bottomOffset={-400} onEnter={nextPage} />
-              )}
+              {networkStatus === 7 &&
+                !loading &&
+                data?.itemsConnection?.pageInfo?.hasNextPage && (
+                  <Waypoint bottomOffset={-400} onEnter={nextPage} />
+                )}
             </Box>
           </Box>
           <FeedBottomToolbar />

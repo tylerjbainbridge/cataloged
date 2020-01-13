@@ -2,8 +2,9 @@ import { useMutation } from '@apollo/react-hooks';
 
 import { DELETE_ITEM_MUTATION } from '../graphql/item';
 import { FEED_QUERY } from '../components/Feed';
-import { feed_items } from '../graphql/__generated__/feed';
 import { useToast } from '@chakra-ui/core';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { ItemConnectionFull_edges } from '../graphql/__generated__/ItemConnectionFull';
 
 export const useOptimisticDeleteItem = (item: any, options = {}) => {
   const toast = useToast();
@@ -33,13 +34,18 @@ export const useOptimisticDeleteItem = (item: any, options = {}) => {
         query: FEED_QUERY,
       });
 
-      const newListItems = data.items.filter(
-        (i: feed_items) => i.id !== item.id,
+      const newEdges = data.itemsConnection.edges.filter(
+        (i: ItemConnectionFull_edges) => i.node.id !== item.id,
       );
 
       await cache.writeQuery({
         query: FEED_QUERY,
-        data: { items: newListItems },
+        data: {
+          itemsConnection: {
+            ...data.itemsConnection,
+            edges: newEdges,
+          },
+        },
       });
     },
   });

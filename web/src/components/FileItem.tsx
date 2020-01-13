@@ -3,12 +3,12 @@ import React from 'react';
 
 import { LazyImage } from './LazyImage';
 import { SelectOnClick } from './SelectOnClick';
-import { ITEM_ACTUAL_WIDTH, ItemHeader, ItemContentContainer } from './Item';
+import { ItemHeader, ItemContentContainer } from './Item';
 import { FileModal } from './FileModal';
-import { feed_items, feed_items_file } from '../graphql/__generated__/feed';
+import { ItemFull, ItemFull_file } from '../graphql/__generated__/ItemFull';
 
-export interface ItemWithFile extends feed_items {
-  file: feed_items_file;
+export interface ItemWithFile extends ItemFull {
+  file: ItemFull_file;
 }
 
 export const FileItem = ({ item }: { item: ItemWithFile }) => {

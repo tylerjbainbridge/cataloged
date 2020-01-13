@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/react-hooks';
 
 import { BATCH_UPDATE_ITEMS_LABELS_MUTATION } from '../graphql/item';
-import { feed_items } from '../graphql/__generated__/feed';
 import { useToast } from '@chakra-ui/core';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
 
 export const useOptimisticBatchUpdateItemLabels = (
-  items: feed_items[],
+  items: ItemFull[],
   options = {},
 ) => {
   const toast = useToast();

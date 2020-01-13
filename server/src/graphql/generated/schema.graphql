@@ -193,6 +193,11 @@ type Item {
   updatedAt: DateTime!
 }
 
+type ItemConnection {
+  edges: [ItemEdge!]!
+  pageInfo: PageInfo!
+}
+
 input ItemCreateManyWithoutItemsInput {
   connect: [ItemWhereUniqueInput!]
   create: [ItemCreateWithoutUserInput!]
@@ -223,6 +228,11 @@ input ItemCreateWithoutUserInput {
   note: NoteCreateOneWithoutNoteInput
   type: String!
   updatedAt: DateTime
+}
+
+type ItemEdge {
+  cursor: String!
+  node: Item!
 }
 
 input ItemFilter {
@@ -509,6 +519,13 @@ enum OrderByArg {
   desc
 }
 
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
 type Query {
   _files(after: ID, before: ID, first: Int, last: Int, orderBy: FileOrderByInput, skip: Int, where: FileWhereInput): [File!]!
   _items(after: ID, before: ID, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
@@ -516,11 +533,11 @@ type Query {
   file(where: FileWhereUniqueInput!): File
   googleURL: String!
   item(id: String!): Item!
-  items(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, search: String, skip: Int, type: ItemType, where: ItemWhereInput): [Item!]!
+  itemsConnection(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, search: String, type: ItemType, where: ItemWhereInput): ItemConnection!
   me: User
   mostRecentItem(type: String): Item
   test: String!
-  uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
+  uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, where: UploadGroupWhereInput): [UploadGroup!]!
   users(after: ID, before: ID, first: Int, last: Int, skip: Int): [User!]!
 }
 

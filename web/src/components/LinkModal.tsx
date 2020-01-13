@@ -33,12 +33,11 @@ import {
   UPDATE_LINK_MUTATION,
   REFRESH_LINK_META_MUTATION,
 } from '../graphql/link';
-import { feed_items_link, feed_items } from '../graphql/__generated__/feed';
 import { useDebounce } from '../hooks/useDebounce';
-// import { getMetadataFromUrl } from '../util/helpers';
+import { ItemFull, ItemFull_link } from '../graphql/__generated__/ItemFull';
 
-export interface ItemWithLink extends feed_items {
-  link: feed_items_link;
+export interface ItemWithLink extends ItemFull {
+  link: ItemFull_link;
 }
 
 const CreateLinkSchema = yup.object().shape({
