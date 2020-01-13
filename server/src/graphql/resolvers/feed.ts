@@ -6,6 +6,7 @@ import {
   getWhereArgs,
   getFindManyOrderArgs,
 } from '../types/helpers';
+import { findManyCursor } from '../../helpers/prisma';
 
 const ITEM_TYPES = ['link', 'file', 'note'];
 
@@ -94,7 +95,7 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
 
   console.log(args);
 
-  const params = {
+  const filter = {
     where: {
       // @ts-ignore
       user: { id: ctx.user.id },
@@ -102,10 +103,16 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
       ...(where || {}),
       OR: Object.values(itemFilters),
     },
-    ...rest,
   };
 
-  console.log({ params });
-
-  return ctx.photon.items.findMany(params);
+  return findManyCursor(
+    _args =>
+      ctx.photon.items.findMany(
+        merge({
+          ..._args,
+          ...filter,
+        }),
+      ),
+    args,
+  );
 };

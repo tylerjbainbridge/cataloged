@@ -1,14 +1,14 @@
 import React from 'react';
-import { Box, Icon } from '@chakra-ui/core';
+import { Icon } from '@chakra-ui/core';
 
 import { LazyImage } from './LazyImage';
 import { SelectOnClick } from './SelectOnClick';
-import { ITEM_ACTUAL_WIDTH, ItemHeader, ItemContentContainer } from './Item';
+import { ItemHeader, ItemContentContainer } from './Item';
 import { LinkModal } from './LinkModal';
-import { feed_items_link, feed_items } from '../graphql/__generated__/feed';
+import { ItemFull, ItemFull_link } from '../graphql/__generated__/ItemFull';
 
-export interface ItemWithLink extends feed_items {
-  link: feed_items_link;
+export interface ItemWithLink extends ItemFull {
+  link: ItemFull_link;
 }
 
 export const LinkItem = ({ item }: { item: ItemWithLink }) => {

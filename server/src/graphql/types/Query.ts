@@ -51,9 +51,10 @@ export const Query = objectType({
       },
     });
 
-    t.list.field('items', {
-      type: 'Item',
+    t.field('itemsConnection', {
+      type: 'ItemConnection',
       args: feedArgs,
+      nullable: false,
       resolve: feedResolver,
     });
 

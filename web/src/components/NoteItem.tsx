@@ -4,10 +4,10 @@ import { Box, Text, Icon } from '@chakra-ui/core';
 import { SelectOnClick } from './SelectOnClick';
 import { NoteModal } from './NoteModal';
 import { ItemContentContainer, ItemHeader } from './Item';
-import { feed_items_note, feed_items } from '../graphql/__generated__/feed';
+import { ItemFull, ItemFull_note } from '../graphql/__generated__/ItemFull';
 
-export interface ItemWithNote extends feed_items {
-  note: feed_items_note;
+export interface ItemWithNote extends ItemFull {
+  note: ItemFull_note;
 }
 
 export const NoteItem = ({ item }: { item: ItemWithNote }) => {

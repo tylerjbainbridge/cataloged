@@ -20,13 +20,13 @@ import { CREATE_NOTE_MUTATION, NOTE_FULL_FRAGMENT } from '../graphql/note';
 import { EMPTY_NOTE_VALUE, serializeToPlainText, Note } from './Note';
 import { Labels } from './Labels';
 import { useHotKey } from '../hooks/useHotKey';
-import { feed_items } from '../graphql/__generated__/feed';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
 
 export const NoteModal = ({
   item,
   children,
 }: {
-  item?: feed_items;
+  item?: ItemFull;
   children?: (childProps: {
     isOpen: boolean;
     open: () => void;

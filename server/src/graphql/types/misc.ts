@@ -1,5 +1,19 @@
 import { inputObjectType, objectType } from 'nexus';
 
+export const PageInfo = objectType({
+  name: 'PageInfo',
+  definition(t) {
+    t.string('startCursor', {
+      nullable: true,
+    });
+    t.string('endCursor', {
+      nullable: true,
+    });
+    t.boolean('hasPreviousPage');
+    t.boolean('hasNextPage');
+  },
+});
+
 export const SignedURLArgs = inputObjectType({
   name: 'SignedURLArgs',
   definition(t) {

@@ -40,6 +40,27 @@ export const ITEM_FULL_FRAGMENT = gql`
   ${NOTE_FULL_FRAGMENT}
 `;
 
+export const ITEM_CONNECTION_FULL_FRAGMENT = gql`
+  fragment ItemConnectionFull on ItemConnection {
+    pageInfo {
+      startCursor
+      endCursor
+      hasPreviousPage
+      hasNextPage
+    }
+
+    edges {
+      cursor
+
+      node {
+        ...ItemFull
+      }
+    }
+  }
+
+  ${ITEM_FULL_FRAGMENT}
+`;
+
 export const ITEM_WITH_LABELS_FRAGMENT = gql`
   fragment ItemWithLabels on Item {
     id

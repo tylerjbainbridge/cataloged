@@ -43,3 +43,9 @@ export const getFormValuesFromFilterVariables = (variables: any, user: any) => {
     ),
   };
 };
+
+export const getNodesFromConnection = <T>(connection: any) => {
+  const nodes: T[] = (connection?.edges || []).map(({ node }: any) => node);
+
+  return nodes;
+};

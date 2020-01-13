@@ -19,14 +19,14 @@ import { NoteItem } from './NoteItem';
 import { Click } from './Click';
 import { useHotKey } from '../hooks/useHotKey';
 import { useOptimisticDeleteItem } from '../hooks/useOptimisticDeleteItem';
-import { feed_items } from '../graphql/__generated__/feed';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
 
 export const ITEM_INNER_PADDING = 5;
 export const ITEM_ACTUAL_WIDTH = 270;
 export const ITEM_CONTENT_HEIGHT = 200;
 export const ITEM_WIDTH = ITEM_ACTUAL_WIDTH + ITEM_INNER_PADDING;
 
-export const Item = ({ item }: { item: feed_items }) => {
+export const Item = ({ item }: { item: ItemFull }) => {
   let node = null;
 
   switch (item.type) {
@@ -77,7 +77,7 @@ export const ItemHeader = ({
   ...props
 }: {
   children: any;
-  item: feed_items;
+  item: ItemFull;
   [k: string]: any;
 }) => (
   <Click {...props}>
@@ -105,7 +105,7 @@ export const ItemHeader = ({
 
 interface ItemContentContainer extends BoxProps {
   tooltip: string;
-  item: feed_items;
+  item: ItemFull;
 }
 
 export const ItemContentContainer = ({

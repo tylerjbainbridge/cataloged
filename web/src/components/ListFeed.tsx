@@ -4,17 +4,17 @@ import { QueryResult } from 'react-apollo';
 
 import { Item } from './Item';
 import { feed } from '../graphql/__generated__/feed';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
 
 export interface ListFeedProps {
+  items: ItemFull[];
   query: QueryResult<feed, Record<string, any>>;
 }
 
-export const ListFeed = ({ query }: ListFeedProps) => {
-  const { data } = query;
-
+export const ListFeed = ({ items }: ListFeedProps) => {
   return (
     <Stack>
-      {(data?.items || []).map(item => (
+      {items.map(item => (
         <Item item={item} key={item.id} />
       ))}
       {/* <Box w="100%" h="10" bg="blue.500" />

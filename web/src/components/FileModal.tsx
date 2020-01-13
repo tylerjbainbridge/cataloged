@@ -13,10 +13,10 @@ import {
 
 import { Labels } from './Labels';
 import { LazyImage } from './LazyImage';
-import { feed_items, feed_items_file } from '../graphql/__generated__/feed';
+import { ItemFull, ItemFull_file } from '../graphql/__generated__/ItemFull';
 
-export interface ItemWithFile extends feed_items {
-  file: feed_items_file;
+export interface ItemWithFile extends ItemFull {
+  file: ItemFull_file;
 }
 
 export const FileModal = ({
