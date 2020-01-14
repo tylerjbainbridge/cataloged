@@ -1,18 +1,19 @@
-import React from 'react';
-import { SimpleGrid, Box } from '@chakra-ui/core';
+import React, { useContext } from 'react';
+import { SimpleGrid } from '@chakra-ui/core';
 import { QueryResult } from 'react-apollo';
 
 import { ITEM_WIDTH, Item } from './Item';
 import { feed } from '../graphql/__generated__/feed';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { FeedContext } from './Feed';
 
 export interface GridFeedProps {
   query: QueryResult<feed, Record<string, any>>;
-  items: ItemFull[];
   nextPage: Function;
 }
 
-export const GridFeed = ({ items }: GridFeedProps) => {
+export const GridFeed = (_: GridFeedProps) => {
+  const { items } = useContext(FeedContext);
+
   return (
     <SimpleGrid minChildWidth={ITEM_WIDTH} spacing={10}>
       {items.map(item => (

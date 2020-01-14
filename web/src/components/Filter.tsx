@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -22,6 +22,7 @@ import {
 import { useAuth } from '../hooks/useAuth';
 import { useGlobalModal, ModalName } from './GlobalModal';
 import { useHotKey } from '../hooks/useHotKey';
+import { FeedContext } from './Feed';
 
 const INITIAL_VALUES = {
   search: '',
@@ -29,13 +30,9 @@ const INITIAL_VALUES = {
   type: 'all',
 };
 
-export const Filter = ({
-  filter,
-  variables,
-}: {
-  filter: any;
-  variables: any;
-}) => {
+export const Filter = ({ variables }: { variables: any }) => {
+  const { filter } = useContext(FeedContext);
+
   const [state, setState] = useState(INITIAL_VALUES);
 
   const { user } = useAuth();
@@ -58,6 +55,7 @@ export const Filter = ({
 
   const reset = async () => {
     await filter(getFilterVariablesFromFormValues(INITIAL_VALUES));
+
     closeModal();
   };
 

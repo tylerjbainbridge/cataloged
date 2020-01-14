@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { QueryResult } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { useLocalStorage } from 'react-use';
-import { Box, usePrevious, Spinner } from '@chakra-ui/core';
+import { Box, Spinner } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
+import queryString from 'query-string';
 
 import { SelectContainer } from './SelectContainer';
-import { usePagination } from '../hooks/useVariables';
 import { CreateFiles } from './CreateFiles';
 import { CreateLink } from './CreateLink';
 import { SignOut } from './SignOut';
@@ -19,10 +18,17 @@ import { ITEM_CONNECTION_FULL_FRAGMENT } from '../graphql/item';
 
 import { GridFeed } from './GridFeed';
 import { FeedBottomToolbar } from './FeedBottomToolbar';
-import { getNodesFromConnection } from '../util/helpers';
+import {
+  getNodesFromConnection,
+  getFilterVariablesFromFormValues,
+  getFormValuesFromFilterVariables,
+  getFilterVariablesFromQueryString,
+} from '../util/helpers';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { feed } from '../graphql/__generated__/feed';
+import { feed, feedVariables } from '../graphql/__generated__/feed';
 import { FeedModals } from './FeedModals';
+import { useLocation, useHistory } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 export const FEED_QUERY = gql`
   query feed(
@@ -60,6 +66,7 @@ type FeedContext = {
   isLastItem: (item: ItemFull) => any;
   items: ItemFull[];
   openItemModal: (item: ItemFull) => any;
+  filter: (feedVariables: feedVariables) => any;
 };
 
 export const FeedContext = React.createContext<FeedContext>({} as FeedContext);
@@ -70,11 +77,22 @@ const INITIAL_PAGINATION_VARIABLES = {
 };
 
 export const Feed = () => {
-  const [mode, setMode] = useLocalStorage<'grid' | 'list'>('feed-mode', 'grid');
+  const [mode, setMode] = useLocalStorage<'grid' | 'list'>('grid');
   const [activeItemId, setActiveItemId] = useState<ItemFull['id'] | null>(null);
+  const { user } = useAuth();
+
+  const location = useLocation();
+  const history = useHistory();
+
+  const [filters, setFilters] = useState<feedVariables>(
+    getFilterVariablesFromQueryString(location.search, user),
+  );
 
   const query = useQuery<feed>(FEED_QUERY, {
-    variables: INITIAL_PAGINATION_VARIABLES,
+    variables: {
+      ...INITIAL_PAGINATION_VARIABLES,
+      ...filters,
+    },
     notifyOnNetworkStatusChange: true,
   });
 
@@ -85,10 +103,26 @@ export const Feed = () => {
   const initialLoad = loading && !data;
 
   const filter = (filterVariables: any) =>
-    refetch({
-      ...INITIAL_PAGINATION_VARIABLES,
+    setFilters({
       ...filterVariables,
     });
+
+  useEffect(() => {
+    if (!loading) {
+      refetch({
+        ...INITIAL_PAGINATION_VARIABLES,
+        ...filters,
+      });
+
+      // @ts-ignore
+      history.replace({
+        search: queryString.stringify(
+          getFormValuesFromFilterVariables(filters, user, true),
+          { arrayFormat: 'bracket' },
+        ),
+      });
+    }
+  }, [filters]);
 
   const lastEdge = _.last(data?.itemsConnection?.edges || []);
 
@@ -119,6 +153,8 @@ export const Feed = () => {
     return lastEdge?.node?.id === id;
   };
 
+  const openItemModal = (item: ItemFull) => setActiveItemId(item.id);
+
   return (
     <FeedContext.Provider
       value={{
@@ -127,13 +163,14 @@ export const Feed = () => {
         isLastItem,
         activeItemId,
         setActiveItemId,
+        openItemModal,
         items,
-        openItemModal: (item: ItemFull) => setActiveItemId(item.id),
+        filter,
       }}
     >
       <UploadProgress />
       <FeedModals />
-      <SelectContainer items={items}>
+      <SelectContainer>
         <Box height="100%">
           <Box d="flex" justifyContent="center" height="100%">
             <Box
@@ -162,7 +199,7 @@ export const Feed = () => {
                   <CreateLink />
                   <NoteModal />
                 </Box>
-                <Filter filter={filter} variables={variables} />
+                <Filter variables={variables} />
                 {/* <Text fontSize="4xl" margin={0}>
                 Cataloged
               </Text> */}
@@ -180,7 +217,7 @@ export const Feed = () => {
                   <Spinner size="xl" />
                 </Box>
               ) : (
-                <GridFeed items={items} query={query} nextPage={nextPage} />
+                <GridFeed query={query} nextPage={nextPage} />
               )}
               {networkStatus === 7 &&
                 !loading &&

@@ -9,6 +9,7 @@ export const SignOut = () => {
     <Button
       cursor="pointer"
       onClick={() => {
+        window.localStorage.removeItem('cataloged-cache');
         if (auth.signOut) auth.signOut();
       }}
     >
