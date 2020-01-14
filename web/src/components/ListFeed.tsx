@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Stack } from '@chakra-ui/core';
 import { QueryResult } from 'react-apollo';
 
 import { Item } from './Item';
 import { feed } from '../graphql/__generated__/feed';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { FeedContext } from './Feed';
 
 export interface ListFeedProps {
-  items: ItemFull[];
   query: QueryResult<feed, Record<string, any>>;
 }
 
-export const ListFeed = ({ items }: ListFeedProps) => {
+export const ListFeed = (_: ListFeedProps) => {
+  const { items } = useContext(FeedContext);
+
   return (
     <Stack>
       {items.map(item => (
