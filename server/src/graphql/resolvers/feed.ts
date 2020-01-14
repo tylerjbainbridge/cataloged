@@ -32,6 +32,7 @@ export const STRING_FILTERS = {
 };
 
 export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
+  console.log(args);
   const { where, search = '', type, ...rest } = args;
 
   const { note: noteWhere, file: fileWhere, link: linkWhere } = where || {};
@@ -93,8 +94,6 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
     });
   }
 
-  console.log(args);
-
   const filter = {
     where: {
       // @ts-ignore
@@ -105,6 +104,8 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
     },
   };
 
+  console.log(args, JSON.stringify(filter, null, 4));
+
   return findManyCursor(
     _args =>
       ctx.photon.items.findMany(
@@ -113,6 +114,6 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
           ...filter,
         }),
       ),
-    args,
+    rest,
   );
 };

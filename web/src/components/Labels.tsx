@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import FocusLock from 'react-focus-lock';
 import _ from 'lodash';
 import { useForm } from 'react-hook-form';
@@ -26,6 +26,12 @@ import {
   Box,
 } from '@chakra-ui/core';
 import { useAuth } from '../hooks/useAuth';
+import { FeedContext } from './Feed';
+import { useLocation } from 'react-router-dom';
+import {
+  getFilterVariablesFromQueryString,
+  getFilterVariablesFromFormValues,
+} from '../util/helpers';
 
 const ITEM_LABEL_RESPONSE_FRAGMENT = gql`
   fragment ItemLabelResponseFragment on Item {
@@ -90,6 +96,11 @@ export const Labels = ({
   onApply?: (labels: any[]) => any;
 }) => {
   const [cursor, setCursor] = useState(0);
+  const { user, refetchUser } = useAuth();
+
+  const location = useLocation();
+
+  const { filter } = useContext(FeedContext);
 
   // Only relevant when managing it's own state.
   const [selectedLabels, setSelectedLabels] = useState<any[]>([]);
@@ -99,8 +110,6 @@ export const Labels = ({
   const firstFieldRef = useRef(null);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { user, refetchUser } = useAuth();
 
   const isManagingOwnState = !item;
 
@@ -224,9 +233,7 @@ export const Labels = ({
   };
 
   const onKeyDown = (event: any) => {
-    if (event.metaKey && event.key === 'Enter' && search) {
-      toggle({ name: search });
-    } else if (event.key === 'Enter' && filteredLabels[cursor]) {
+    if (event.key === 'Enter' && filteredLabels[cursor]) {
       toggle(filteredLabels[cursor]);
     }
   };
@@ -249,6 +256,20 @@ export const Labels = ({
 
   const createFromSearch = () => !connecting && addAction(search);
 
+  const addLabelToFilters = async ({ name }: any) => {
+    const variables = getFilterVariablesFromQueryString(location.search, user);
+
+    const isExisting = variables.labels.find(
+      (label: any) => label.name === name,
+    );
+
+    if (isExisting)
+      _.remove(variables.labels, (label: any) => label.name === name);
+    else variables.labels.push({ name });
+
+    await filter(getFilterVariablesFromFormValues(variables));
+  };
+
   return (
     <Stack
       d="flex"
@@ -268,23 +289,21 @@ export const Labels = ({
           if (onClose) onClose();
         }}
       >
-        {(canAddLabels || trigger) && (
-          <PopoverTrigger>
-            {trigger || (
-              <Button
-                size="xs"
-                height="25px"
-                onClick={onOpen}
-                aria-label="add labels"
-                variant="outline"
-                mr={2}
-                cursor="pointer"
-              >
-                <Icon size="10px" name="edit" />
-              </Button>
-            )}
-          </PopoverTrigger>
-        )}
+        <PopoverTrigger>
+          {trigger || (
+            <Button
+              size="xs"
+              height="25px"
+              onClick={onOpen}
+              aria-label="add labels"
+              variant="outline"
+              mr={2}
+              cursor="pointer"
+            >
+              <Icon size="10px" name="edit" />
+            </Button>
+          )}
+        </PopoverTrigger>
         <PopoverContent zIndex={100} width="400px">
           <FocusLock returnFocus persistentFocus={false}>
             <PopoverArrow bg="white" />
@@ -382,14 +401,12 @@ export const Labels = ({
       {showSelectedLabels &&
         labelSet.map(({ id, name }: { id: string; name: string }) => (
           <Tag size="md" key={name} mr={2} mb={5}>
-            {isOpen && (
-              <TagIcon
-                size="12px"
-                icon="delete"
-                cursor="pointer"
-                onClick={() => removeAction({ id, name })}
-              />
-            )}
+            <TagIcon
+              size="12px"
+              icon="delete"
+              cursor="pointer"
+              onClick={() => removeAction({ id, name })}
+            />
             <TagLabel>{name}</TagLabel>
           </Tag>
         ))}

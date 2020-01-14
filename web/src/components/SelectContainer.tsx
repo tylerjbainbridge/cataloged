@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { FeedContext } from './Feed';
 
 export const SelectContext = React.createContext<{ [key: string]: any }>({});
 
@@ -15,10 +16,11 @@ export interface Item {
 
 export const SelectContainer = ({
   children,
-  items = [],
   initialSelectedMap = new Map(),
   getId = ({ id }: { id: string }) => id,
 }: SelectContainerProps) => {
+  const { items } = useContext(FeedContext);
+
   const [selectedMap, updateSelectedMap] = useState(initialSelectedMap);
 
   const immutableUpdateMap = (map: Map<any, any>) =>
