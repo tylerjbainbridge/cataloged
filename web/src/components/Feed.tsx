@@ -224,6 +224,18 @@ export const Feed = () => {
                 data?.itemsConnection?.pageInfo?.hasNextPage && (
                   <Waypoint bottomOffset={-400} onEnter={nextPage} />
                 )}
+
+              {loading && (
+                <Box
+                  d="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  height="100%"
+                  width="100%"
+                >
+                  <Spinner size="md" />
+                </Box>
+              )}
             </Box>
           </Box>
           <FeedBottomToolbar />
