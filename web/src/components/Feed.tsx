@@ -89,8 +89,6 @@ export const Feed = () => {
     getFilterVariablesFromQueryString(location.search, user),
   );
 
-  console.log({ mode });
-
   const query = useQuery<feed>(FEED_QUERY, {
     variables: {
       ...INITIAL_PAGINATION_VARIABLES,
