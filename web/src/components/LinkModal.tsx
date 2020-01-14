@@ -35,6 +35,7 @@ import {
 } from '../graphql/link';
 import { useDebounce } from '../hooks/useDebounce';
 import { ItemFull, ItemFull_link } from '../graphql/__generated__/ItemFull';
+import { Disclosure } from './GlobalModal';
 
 export interface ItemWithLink extends ItemFull {
   link: ItemFull_link;
@@ -56,15 +57,18 @@ export interface UpdateLinkFormValues {
 export const LinkModal = ({
   item,
   children,
+  disclosure: parentDisclosure,
 }: {
   item: ItemWithLink;
+  disclosure?: Disclosure;
   children?: (childProps: {
     isOpen: boolean;
     onOpen: () => void;
     onClose: () => void;
   }) => any;
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const disclosure = useDisclosure();
+  const { isOpen, onOpen, onClose } = parentDisclosure || disclosure;
 
   const { link } = item;
 

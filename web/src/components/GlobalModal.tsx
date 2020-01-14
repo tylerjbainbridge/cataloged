@@ -1,5 +1,12 @@
 import React, { FunctionComponent } from 'react';
 
+export interface Disclosure {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onToggle: () => void;
+}
+
 export enum ModalName {
   CREATE_FILES_MODAL,
   CREATE_LINK_MODAL,

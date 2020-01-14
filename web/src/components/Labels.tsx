@@ -152,8 +152,6 @@ export const Labels = ({
     'desc',
   );
 
-  console.log('filteredLabels', filteredLabels.length);
-
   // Rerender each time
   watch('search');
 

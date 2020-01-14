@@ -13,6 +13,7 @@ import {
   Spinner,
   ModalFooter,
   Tooltip,
+  useDisclosure,
 } from '@chakra-ui/core';
 
 import { CREATE_NOTE_MUTATION, NOTE_FULL_FRAGMENT } from '../graphql/note';
@@ -21,27 +22,31 @@ import { EMPTY_NOTE_VALUE, serializeToPlainText, Note } from './Note';
 import { Labels } from './Labels';
 import { useHotKey } from '../hooks/useHotKey';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { Disclosure } from './GlobalModal';
 
 export const NoteModal = ({
   item,
   children,
+  disclosure: parentDisclosure,
+  shouldRenderButton = true,
 }: {
   item?: ItemFull;
+  disclosure?: Disclosure;
+  shouldRenderButton?: boolean;
   children?: (childProps: {
     isOpen: boolean;
-    open: () => void;
-    close: () => void;
+    onOpen: () => void;
+    onClose: () => void;
   }) => any;
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const disclosure = useDisclosure();
 
-  const open = () => setIsOpen(true);
-  const close = () => setIsOpen(false);
+  const { isOpen, onOpen, onClose } = parentDisclosure || disclosure;
 
   const client = useApolloClient();
 
   useHotKey('c n', () => {
-    if (!note) setIsOpen(true);
+    if (!note) onOpen();
   });
 
   const [createNote, { data }] = useMutation(CREATE_NOTE_MUTATION, {
@@ -67,26 +72,26 @@ export const NoteModal = ({
 
   return (
     <>
-      {children ? (
-        children({ isOpen, open, close })
-      ) : (
-        <Tooltip
-          hasArrow
-          placement="bottom"
-          label="or press c + n"
-          aria-label="Add note"
-        >
-          <Button variant="solid" cursor="pointer" onClick={open}>
-            <Icon name="plus-square" />
-          </Button>
-        </Tooltip>
-      )}
+      {children
+        ? children({ isOpen, onOpen, onClose })
+        : shouldRenderButton && (
+            <Tooltip
+              hasArrow
+              placement="bottom"
+              label="or press c + n"
+              aria-label="Add note"
+            >
+              <Button variant="solid" cursor="pointer" onClick={onOpen}>
+                <Icon name="plus-square" />
+              </Button>
+            </Tooltip>
+          )}
 
       <Modal
         size="full"
         scrollBehavior="inside"
         isOpen={isOpen}
-        onClose={close}
+        onClose={onClose}
         closeOnEsc={false}
       >
         <ModalOverlay />

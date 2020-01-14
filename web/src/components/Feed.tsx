@@ -22,6 +22,7 @@ import { FeedBottomToolbar } from './FeedBottomToolbar';
 import { getNodesFromConnection } from '../util/helpers';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { feed } from '../graphql/__generated__/feed';
+import { FeedModals } from './FeedModals';
 
 export const FEED_QUERY = gql`
   query feed(
@@ -54,9 +55,11 @@ type FeedContext = {
   mode: 'grid' | 'list';
   nextPage: () => any;
   activeItemId: ItemFull['id'] | null;
-  setActiveItemId: (id: ItemFull['id']) => any;
+  setActiveItemId: (id: ItemFull['id'] | null) => any;
   // viewNextItem: (item: ItemFull) => any;
   isLastItem: (item: ItemFull) => any;
+  items: ItemFull[];
+  openItemModal: (item: ItemFull) => any;
 };
 
 export const FeedContext = React.createContext<FeedContext>({} as FeedContext);
@@ -124,9 +127,12 @@ export const Feed = () => {
         isLastItem,
         activeItemId,
         setActiveItemId,
+        items,
+        openItemModal: (item: ItemFull) => setActiveItemId(item.id),
       }}
     >
       <UploadProgress />
+      <FeedModals />
       <SelectContainer items={items}>
         <Box height="100%">
           <Box d="flex" justifyContent="center" height="100%">

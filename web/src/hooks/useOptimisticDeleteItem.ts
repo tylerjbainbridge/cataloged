@@ -12,12 +12,14 @@ export const useOptimisticDeleteItem = (item: any, options = {}) => {
   return useMutation(DELETE_ITEM_MUTATION, {
     variables: { itemId: item.id },
     onCompleted: (...args) => {
-      toast({
-        title: 'Deleted',
-        status: 'success',
-        duration: 2000,
-        position: 'top',
-      });
+      if (item.type === 'note' && item?.note?.text) {
+        toast({
+          title: 'Deleted',
+          status: 'success',
+          duration: 2000,
+          position: 'top',
+        });
+      }
 
       // @ts-ignore
       if (options.onCompleted) return options.onCompleted(...args);
