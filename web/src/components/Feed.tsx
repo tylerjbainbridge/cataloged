@@ -29,6 +29,7 @@ import { feed, feedVariables } from '../graphql/__generated__/feed';
 import { FeedModals } from './FeedModals';
 import { useLocation, useHistory } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { ListFeed } from './ListFeed';
 
 export const FEED_QUERY = gql`
   query feed(
@@ -77,7 +78,7 @@ const INITIAL_PAGINATION_VARIABLES = {
 };
 
 export const Feed = () => {
-  const [mode, setMode] = useLocalStorage<'grid' | 'list'>('grid');
+  const [mode, setMode] = useState<'grid' | 'list'>('grid');
   const [activeItemId, setActiveItemId] = useState<ItemFull['id'] | null>(null);
   const { user } = useAuth();
 
@@ -87,6 +88,8 @@ export const Feed = () => {
   const [filters, setFilters] = useState<feedVariables>(
     getFilterVariablesFromQueryString(location.search, user),
   );
+
+  console.log({ mode });
 
   const query = useQuery<feed>(FEED_QUERY, {
     variables: {
@@ -216,8 +219,10 @@ export const Feed = () => {
                 >
                   <Spinner size="xl" />
                 </Box>
+              ) : mode === 'grid' ? (
+                <GridFeed query={query} />
               ) : (
-                <GridFeed query={query} nextPage={nextPage} />
+                <ListFeed query={query} />
               )}
               {networkStatus === 7 &&
                 !loading &&

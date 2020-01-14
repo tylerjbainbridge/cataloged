@@ -8,7 +8,6 @@ import { FeedContext } from './Feed';
 
 export interface GridFeedProps {
   query: QueryResult<feed, Record<string, any>>;
-  nextPage: Function;
 }
 
 export const GridFeed = (_: GridFeedProps) => {
