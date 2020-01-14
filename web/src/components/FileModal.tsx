@@ -13,6 +13,7 @@ import {
 
 import { Labels } from './Labels';
 import { LazyImage } from './LazyImage';
+import { Disclosure } from './GlobalModal';
 import { ItemFull, ItemFull_file } from '../graphql/__generated__/ItemFull';
 
 export interface ItemWithFile extends ItemFull {
@@ -22,15 +23,18 @@ export interface ItemWithFile extends ItemFull {
 export const FileModal = ({
   item,
   children,
+  disclosure: parentDisclosure,
 }: {
   item: ItemWithFile;
+  disclosure?: Disclosure;
   children?: (childProps: {
     isOpen: boolean;
     onOpen: () => void;
     onClose: () => void;
   }) => any;
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const disclosure = useDisclosure();
+  const { isOpen, onOpen, onClose } = parentDisclosure || disclosure;
 
   const { file } = item;
 
