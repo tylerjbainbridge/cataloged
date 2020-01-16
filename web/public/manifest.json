@@ -11,6 +11,11 @@
       "src": "android-chrome-256x256.png",
       "sizes": "256x256",
       "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "2400x2400",
+      "type": "image/png"
     }
   ],
   "start_url": ".",
