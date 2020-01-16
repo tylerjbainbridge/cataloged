@@ -233,8 +233,11 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 )}
                 <Box
                   ml={5}
-                  maxWidth="300px"
-                  minWidth="150px"
+                  width={[
+                    '150px', // base
+                    '250px', // 480px upwards
+                    '250px', // 768px upwards
+                  ]}
                   mr={3}
                   isTruncated
                 >

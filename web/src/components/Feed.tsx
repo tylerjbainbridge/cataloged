@@ -215,7 +215,7 @@ export const Feed = () => {
               </Text> */}
                 <Box
                   d="flex"
-                  width="150px"
+                  width="140px"
                   justifyContent="space-between"
                   alignItems="center"
                 >
