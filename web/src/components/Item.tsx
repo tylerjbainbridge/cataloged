@@ -298,7 +298,13 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 <PopoverContent width="200px" zIndex={4}>
                   <PopoverArrow />
                   <PopoverBody>
-                    <Stack spacing={4}>
+                    <Stack
+                      spacing={4}
+                      onClick={e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                    >
                       <Button
                         cursor="pointer"
                         onClick={e => {
@@ -312,10 +318,11 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                       {item.link && (
                         <Button
                           cursor="pointer"
-                          as="a"
-                          // @ts-ignore
-                          href={item.link?.href}
-                          target="__blank"
+                          onClick={e => {
+                            e.stopPropagation();
+                            // @ts-ignore
+                            window.open(item.link?.href, '_blank');
+                          }}
                           rightIcon="external-link"
                         >
                           Visit
