@@ -89,9 +89,9 @@ export const CreateLink = () => {
       'text/plain',
     );
 
-    if (pastedText) {
-      setValue('href', pastedText);
-    }
+    // if (pastedText) {
+    //   setValue('href', pastedText);
+    // }
   };
 
   usePaste({ onPaste });
