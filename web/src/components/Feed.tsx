@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { useLocalStorage } from 'react-use';
-import { Box, Spinner } from '@chakra-ui/core';
+import { Box, Spinner, Button, Tooltip } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
 import queryString from 'query-string';
 
@@ -30,6 +30,7 @@ import { FeedModals } from './FeedModals';
 import { useLocation, useHistory } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ListFeed } from './ListFeed';
+import { FaThLarge, FaList } from 'react-icons/fa';
 
 export const FEED_QUERY = gql`
   query feed(
@@ -72,22 +73,30 @@ type FeedContext = {
 
 export const FeedContext = React.createContext<FeedContext>({} as FeedContext);
 
-const INITIAL_PAGINATION_VARIABLES = {
-  first: 20,
-  after: null,
-};
-
 export const Feed = () => {
-  const [mode, setMode] = useState<'grid' | 'list'>('grid');
+  const [mode, setMode] = useState<'grid' | 'list'>(
+    // @ts-ignore
+    localStorage.getItem('grid-mode') || 'grid',
+  );
+
   const [activeItemId, setActiveItemId] = useState<ItemFull['id'] | null>(null);
   const { user } = useAuth();
 
   const location = useLocation();
   const history = useHistory();
 
+  const INITIAL_PAGINATION_VARIABLES = {
+    first: mode === 'grid' ? 20 : 40,
+    after: null,
+  };
+
   const [filters, setFilters] = useState<feedVariables>(
     getFilterVariablesFromQueryString(location.search, user),
   );
+
+  useEffect(() => {
+    localStorage.setItem('grid-mode', mode);
+  }, [mode]);
 
   const query = useQuery<feed>(FEED_QUERY, {
     variables: {
@@ -204,7 +213,32 @@ export const Feed = () => {
                 {/* <Text fontSize="4xl" margin={0}>
                 Cataloged
               </Text> */}
-                <SignOut />
+                <Box
+                  d="flex"
+                  width="150px"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Tooltip
+                    hasArrow
+                    label={mode === 'grid' ? 'list view' : 'grid view'}
+                    aria-label="set mode"
+                  >
+                    <Button
+                      cursor="pointer"
+                      onClick={() =>
+                        mode === 'grid' ? setMode('list') : setMode('grid')
+                      }
+                    >
+                      {mode === 'grid' ? (
+                        <FaList size={15} />
+                      ) : (
+                        <FaThLarge size={15} />
+                      )}
+                    </Button>
+                  </Tooltip>
+                  <SignOut />
+                </Box>
               </Box>
               <br />
               {initialLoad ? (

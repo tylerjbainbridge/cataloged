@@ -15,7 +15,7 @@ export const ListFeed = (_: ListFeedProps) => {
   const { items } = useContext(FeedContext);
 
   return (
-    <Stack>
+    <Stack d="flex" alignItems="center" width="100%">
       {items.map(item => (
         <Item item={item} key={item.id} />
       ))}

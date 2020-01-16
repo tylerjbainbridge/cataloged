@@ -42,8 +42,6 @@ export const FeedBottomToolbar = () => {
 
   if (!isActive) return null;
 
-  console.log(selectedItems);
-
   const commonLabels = _.intersectionBy(
     ...selectedItems.map(({ labels }: any) => labels),
     'id',
