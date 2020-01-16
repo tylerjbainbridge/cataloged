@@ -16,7 +16,7 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
       if (item.file) {
         return {
           type: item.type,
-          title: `${item.file.name}${item.file.extension}`,
+          title: `${item.file.name}.${item.file.extension}`,
           createdAt: item.file.createdAt,
           image: item.file.fullUrl,
           icon: 'attachment',
