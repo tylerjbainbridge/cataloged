@@ -7,18 +7,46 @@
       href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
     />
 
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    
-    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png">
-    <meta name="theme-color" content="#ffffff">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="%PUBLIC_URL%/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="%PUBLIC_URL%/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="%PUBLIC_URL%/favicon-16x16.png"
+    />
+    <meta name="theme-color" content="#ffffff" />
 
     <meta name="title" content="Cataloged" />
     <meta name="description" content="A personal knowledge base" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000">
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="%PUBLIC_URL%/logo.png" />
+    <meta name="twitter:title" content="Cataloged" />
+    <meta name="twitter:description" content="A personal knowledge base" />
+    <!-- Twitter summary card with large image must be at least 280x150px -->
+    <meta name="twitter:image:src" content="%PUBLIC_URL%/logo.png" />
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="Cataloged" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://www.cataloged.co/" />
+    <meta property="og:image" content="%PUBLIC_URL%/logo.png" />
+    <meta property="og:description" content="A personal knowledge base" />
+
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta name="theme-color" content="#000000" />
 
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -35,6 +63,15 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Cataloged</title>
+
+    <style>
+      /* Fix mobile scaling */
+      input[type='text'],
+      input[type='number'],
+      input {
+        font-size: 16px;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
