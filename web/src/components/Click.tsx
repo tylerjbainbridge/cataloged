@@ -1,5 +1,6 @@
-import React, { useRef, MouseEvent } from 'react';
+import React, { useRef, MouseEvent, useCallback } from 'react';
 import { debounce } from 'lodash';
+import { useHotKey } from '../hooks/useHotKey';
 
 export interface ClickProps {
   children: (args: {
@@ -8,30 +9,39 @@ export interface ClickProps {
     onDoubleClick: () => void;
   }) => any;
   onSingleClick?: () => void;
-  onDoubleClick?: () => void;
-  onMetaClick?: () => void;
-  onShiftClick?: () => void;
+  onDoubleClick?: (debouncedSingleClick: any) => void;
+  onMetaClick?: (debouncedSingleClick: any) => void;
+  onShiftClick?: (debouncedSingleClick: any) => void;
 }
 
 export const Click = (props: ClickProps) => {
   const delay = 200;
 
-  const debouncedSingleClick = useRef(
+  const handleSingleClick = useRef(props.onSingleClick);
+
+  handleSingleClick.current = props.onSingleClick;
+
+  const { current: debouncedSingleClick } = useRef(
     debounce(() => {
-      if (props.onSingleClick) props.onSingleClick();
+      if (handleSingleClick.current) handleSingleClick.current();
     }, delay),
   );
 
-  const onSingleClick = (event: MouseEvent<any, MouseEvent>) => {
-    event.preventDefault();
-    if (props.onMetaClick && event.metaKey) props.onMetaClick();
-    else if (props.onShiftClick && event.shiftKey) props.onShiftClick();
-    else debouncedSingleClick.current();
-  };
+  const onSingleClick = useCallback(
+    (event: MouseEvent<any, MouseEvent>) => {
+      event.preventDefault();
+      if (props.onMetaClick && event.metaKey)
+        props.onMetaClick(debouncedSingleClick);
+      else if (props.onShiftClick && event.shiftKey)
+        props.onShiftClick(debouncedSingleClick);
+      else debouncedSingleClick();
+    },
+    [props],
+  );
 
   const onDoubleClick = () => {
-    debouncedSingleClick.current.cancel();
-    if (props.onDoubleClick) props.onDoubleClick();
+    debouncedSingleClick.cancel();
+    if (props.onDoubleClick) props.onDoubleClick(debouncedSingleClick);
   };
 
   const hasClickHandler = !!(

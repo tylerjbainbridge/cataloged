@@ -5,6 +5,7 @@ import {
   Image as ChackraImage,
   Icon,
   IconProps,
+  SpinnerProps,
 } from '@chakra-ui/core';
 
 export interface LazeImageProps {
@@ -13,6 +14,7 @@ export interface LazeImageProps {
   loadingContainerProps?: any;
   showSpinner?: boolean;
   placeholderIcon?: IconProps['name'];
+  spinnerSize?: SpinnerProps['size'];
 }
 
 export const LazyImage = ({
@@ -21,20 +23,23 @@ export const LazyImage = ({
   showSpinner = true,
   loadingContainerProps,
   placeholderIcon = 'view-off',
+  spinnerSize = 'xl',
   fit = false,
   ...props
 }: LazeImageProps) => {
-  const [isImageLoaded, setIsImageLoaded] = useState<string | null>(null);
+  const img = new Image();
+  img.src = src;
+
+  const [isImageLoaded, setIsImageLoaded] = useState<boolean | null>(
+    !!img.naturalWidth || img.complete,
+  );
   const [isBroken, setIsBroken] = useState(false);
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     if (isReady) {
-      const img = new Image();
-      img.src = src;
-
-      img.onload = () => setIsImageLoaded(img.src);
+      img.onload = () => setIsImageLoaded(true);
       img.onerror = () => setIsBroken(true);
 
       setDimensions({
@@ -63,7 +68,7 @@ export const LazyImage = ({
       {...loadingContainerProps}
     >
       {src && showSpinner ? (
-        <Spinner size="xl" />
+        <Spinner size={spinnerSize} />
       ) : (
         <Icon size="50px" name={isBroken ? 'warning' : placeholderIcon} />
       )}

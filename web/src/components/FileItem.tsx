@@ -7,6 +7,7 @@ import { ItemHeader, ItemContentContainer } from './Item';
 import { FileModal } from './FileModal';
 import { ItemFull, ItemFull_file } from '../graphql/__generated__/ItemFull';
 import { FeedContext } from './Feed';
+import { SelectContext } from './SelectContainer';
 
 export interface ItemWithFile extends ItemFull {
   file: ItemFull_file;
