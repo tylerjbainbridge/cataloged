@@ -89,7 +89,7 @@ export const FeedBottomToolbar = () => {
             />
           </Tooltip>
 
-          <Text fontSize="xl" fontWeight="semibold">
+          <Text ml={2} fontSize="xl" fontWeight="semibold">
             {selectedItems.length} selected
           </Text>
         </Box>
