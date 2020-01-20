@@ -15,6 +15,8 @@ export const getFilterVariablesFromFormValues = ({
   search,
   labels,
   type,
+  status,
+  onlyFavorites,
 }:
   | {
       type: string;
@@ -26,7 +28,11 @@ export const getFilterVariablesFromFormValues = ({
 
   if (search) _.set(filters, 'search', search);
 
+  if (onlyFavorites) _.set(filters, 'where.isFavorited.equals', true);
+
   if (type) _.set(filters, 'type', type !== 'all' ? type : null);
+
+  if (status) _.set(filters, 'where.status.equals', status);
 
   if (labels) {
     _.set(
@@ -57,10 +63,16 @@ export const getFormValuesFromFilterVariables = (
   forQueryString = false,
 ) => {
   const labels = _.get(variables, 'where.labels.some.id.in', []);
+  const onlyFavorites =
+    _.get(variables, 'where.isFavorited.equals', false) || undefined;
+
+  const status = _.get(variables, 'where.status.equals', '');
 
   return cleanDeep({
     type: variables.type,
     search: variables.search,
+    onlyFavorites,
+    status,
     labels: labels.map((id: string) => {
       const label = user.labels.find((label: any) => label.id === id);
 

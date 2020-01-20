@@ -1,7 +1,7 @@
 import AWS = require('aws-sdk');
 // import zlib = require('zlib');
 import { ReadStream } from 'fs';
-import { File, User } from '@prisma/photon';
+import { File, User } from '@prisma/client';
 
 import { getS3Key, KEY_TYPES } from '../helpers/files';
 import { ImageService } from './ImageService';
@@ -9,7 +9,7 @@ import { ImageService } from './ImageService';
 AWS.config.update({
   accessKeyId: process.env.AWS_S3_ACCESS_KEY,
   secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-  region: 'us-east-1'
+  region: 'us-east-1',
 });
 
 export const s3 = new AWS.S3();

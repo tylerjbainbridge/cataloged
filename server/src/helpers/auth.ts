@@ -1,4 +1,4 @@
-import { User } from '@prisma/photon';
+import { User } from '@prisma/client';
 
 import { TokenService } from '../services/TokenService';
 
@@ -18,7 +18,9 @@ export const getUserFromRequest = async (req: any): Promise<User | null> => {
 
   try {
     user = await TokenService.getUserFromToken(token);
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
 
   return user;
 };

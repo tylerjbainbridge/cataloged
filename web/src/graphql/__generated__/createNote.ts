@@ -26,7 +26,7 @@ export interface createNote_createNote {
   text: string;
   createdAt: any;
   updatedAt: any;
-  item: createNote_createNote_item;
+  item: createNote_createNote_item | null;
 }
 
 export interface createNote {

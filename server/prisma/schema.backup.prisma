@@ -1,5 +1,5 @@
 generator photon {
-  provider = "prisma-client-js"
+  provider = "photonjs"
 }
 
 datasource db {
@@ -41,7 +41,6 @@ model Item {
   createdAt   DateTime
   id          String   @id
   isFavorited Boolean  @default(false)
-  status      String?  @default("NOT_STARTED")
   link        Link?
   note        Note?
   type        String   @default("")

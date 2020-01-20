@@ -1,4 +1,4 @@
-import { Photon } from '@prisma/photon';
+import { Photon } from '@prisma/client';
 
 export const photon = new Photon();
 

@@ -1,5 +1,7 @@
 import { objectType } from 'nexus';
 
+import { ITEM_STATUS } from '../misc';
+
 export const Item = objectType({
   name: 'Item',
   definition(t) {
@@ -7,6 +9,14 @@ export const Item = objectType({
 
     t.model.createdAt();
     t.model.updatedAt();
+
+    t.model.isFavorited();
+
+    t.field('status', {
+      type: 'ItemStatus',
+      // @ts-ignore
+      resolve: ({ status }) => status || ITEM_STATUS.NOT_STARTED.toString(),
+    });
 
     t.model.file();
     t.model.link();

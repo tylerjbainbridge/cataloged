@@ -1,4 +1,4 @@
-import { FieldResolver, enumType, stringArg } from 'nexus';
+import { FieldResolver, stringArg } from 'nexus';
 import { merge, set } from 'lodash';
 
 import {
@@ -7,13 +7,7 @@ import {
   getFindManyOrderArgs,
 } from '../types/helpers';
 import { findManyCursor } from '../../helpers/prisma';
-
-const ITEM_TYPES = ['link', 'file', 'note'];
-
-export const ItemType = enumType({
-  name: 'ItemType',
-  members: ITEM_TYPES,
-});
+import { ItemType } from '../types/misc';
 
 export const feedArgs = {
   ...paginationArgs,
@@ -104,7 +98,7 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
     },
   };
 
-  console.log(args, JSON.stringify(filter, null, 4));
+  // console.log(args, JSON.stringify(filter, null, 4));
 
   return findManyCursor(
     _args =>

@@ -10,7 +10,7 @@ import {
 
 export interface LazeImageProps {
   [key: string]: any;
-  isReady?: boolean;
+  isReady?: any | boolean;
   loadingContainerProps?: any;
   showSpinner?: boolean;
   placeholderIcon?: IconProps['name'];

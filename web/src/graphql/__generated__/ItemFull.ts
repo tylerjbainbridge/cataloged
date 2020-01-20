@@ -2,6 +2,8 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
+import { ItemStatus } from "./apolloTypes";
+
 // ====================================================
 // GraphQL fragment: ItemFull
 // ====================================================
@@ -36,7 +38,7 @@ export interface ItemFull_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: ItemFull_link_item;
+  item: ItemFull_link_item | null;
 }
 
 export interface ItemFull_file {
@@ -71,7 +73,7 @@ export interface ItemFull_note {
   text: string;
   createdAt: any;
   updatedAt: any;
-  item: ItemFull_note_item;
+  item: ItemFull_note_item | null;
 }
 
 export interface ItemFull {
@@ -80,6 +82,8 @@ export interface ItemFull {
   type: string;
   createdAt: any;
   updatedAt: any;
+  isFavorited: boolean;
+  status: ItemStatus;
   labels: ItemFull_labels[];
   link: ItemFull_link | null;
   file: ItemFull_file | null;

@@ -26,7 +26,7 @@ export interface updateNote_updateNote {
   text: string;
   createdAt: any;
   updatedAt: any;
-  item: updateNote_updateNote_item;
+  item: updateNote_updateNote_item | null;
 }
 
 export interface updateNote {
