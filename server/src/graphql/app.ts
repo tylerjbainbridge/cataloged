@@ -34,7 +34,7 @@ const schema = Nexus.makeSchema({
   plugins: [
     nexusPrismaPlugin({
       inputs: {
-        photon: '@prisma/photon',
+        photon: '@prisma/client',
       },
     }),
   ],

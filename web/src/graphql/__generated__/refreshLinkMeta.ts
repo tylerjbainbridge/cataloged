@@ -30,7 +30,7 @@ export interface refreshLinkMeta_refreshLinkMeta {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: refreshLinkMeta_refreshLinkMeta_item;
+  item: refreshLinkMeta_refreshLinkMeta_item | null;
 }
 
 export interface refreshLinkMeta {

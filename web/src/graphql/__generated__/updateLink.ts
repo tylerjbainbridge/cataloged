@@ -30,7 +30,7 @@ export interface updateLink_updateLink {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: updateLink_updateLink_item;
+  item: updateLink_updateLink_item | null;
 }
 
 export interface updateLink {

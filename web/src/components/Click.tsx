@@ -9,9 +9,9 @@ export interface ClickProps {
     onDoubleClick: () => void;
   }) => any;
   onSingleClick?: () => void;
-  onDoubleClick?: (debouncedSingleClick: any) => void;
-  onMetaClick?: (debouncedSingleClick: any) => void;
-  onShiftClick?: (debouncedSingleClick: any) => void;
+  onDoubleClick?: any | ((debouncedSingleClick: any) => void);
+  onMetaClick?: any | ((debouncedSingleClick: any) => void);
+  onShiftClick?: any | ((debouncedSingleClick: any) => void);
 }
 
 export const Click = (props: ClickProps) => {

@@ -6,10 +6,21 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum ItemStatus {
+  DONE = "DONE",
+  IN_PROGRESS = "IN_PROGRESS",
+  NOT_STARTED = "NOT_STARTED",
+}
+
 export enum ItemType {
   file = "file",
   link = "link",
   note = "note",
+}
+
+export interface BooleanFilter {
+  equals?: boolean | null;
+  not?: boolean | null;
 }
 
 export interface DateTimeFilter {
@@ -30,23 +41,23 @@ export interface FileFilter {
 }
 
 export interface FileWhereInput {
-  id?: StringFilter | null;
   createdAt?: DateTimeFilter | null;
-  updatedAt?: DateTimeFilter | null;
-  name?: StringFilter | null;
   extension?: StringFilter | null;
-  size?: NullableStringFilter | null;
-  width?: NullableIntFilter | null;
-  height?: NullableIntFilter | null;
-  isUploaded?: NullableBooleanFilter | null;
   hasStartedUploading?: NullableBooleanFilter | null;
+  height?: NullableIntFilter | null;
+  id?: StringFilter | null;
   isFailed?: NullableBooleanFilter | null;
+  isUploaded?: NullableBooleanFilter | null;
+  name?: StringFilter | null;
+  size?: NullableStringFilter | null;
+  updatedAt?: DateTimeFilter | null;
+  width?: NullableIntFilter | null;
   AND?: FileWhereInput[] | null;
   OR?: FileWhereInput[] | null;
   NOT?: FileWhereInput[] | null;
   item?: ItemWhereInput | null;
-  user?: UserWhereInput | null;
   uploadGroup?: UploadGroupWhereInput | null;
+  user?: UserWhereInput | null;
 }
 
 export interface GoogleAccountFilter {
@@ -56,15 +67,15 @@ export interface GoogleAccountFilter {
 }
 
 export interface GoogleAccountWhereInput {
-  id?: StringFilter | null;
-  createdAt?: DateTimeFilter | null;
-  updatedAt?: DateTimeFilter | null;
   accountId?: NullableStringFilter | null;
+  createdAt?: DateTimeFilter | null;
   email?: NullableStringFilter | null;
   firstName?: NullableStringFilter | null;
+  id?: StringFilter | null;
   lastName?: NullableStringFilter | null;
   picture?: NullableStringFilter | null;
   refreshToken?: NullableStringFilter | null;
+  updatedAt?: DateTimeFilter | null;
   AND?: GoogleAccountWhereInput[] | null;
   OR?: GoogleAccountWhereInput[] | null;
   NOT?: GoogleAccountWhereInput[] | null;
@@ -78,18 +89,20 @@ export interface ItemFilter {
 }
 
 export interface ItemWhereInput {
-  id?: StringFilter | null;
   createdAt?: DateTimeFilter | null;
-  updatedAt?: DateTimeFilter | null;
+  id?: StringFilter | null;
+  isFavorited?: BooleanFilter | null;
+  status?: NullableStringFilter | null;
   type?: StringFilter | null;
+  updatedAt?: DateTimeFilter | null;
   labels?: LabelFilter | null;
   AND?: ItemWhereInput[] | null;
   OR?: ItemWhereInput[] | null;
   NOT?: ItemWhereInput[] | null;
-  file?: FileWhereInput | null;
   link?: LinkWhereInput | null;
   note?: NoteWhereInput | null;
   user?: UserWhereInput | null;
+  file?: FileWhereInput | null;
 }
 
 export interface LabelFilter {
@@ -99,10 +112,10 @@ export interface LabelFilter {
 }
 
 export interface LabelWhereInput {
-  id?: StringFilter | null;
   createdAt?: DateTimeFilter | null;
-  updatedAt?: DateTimeFilter | null;
+  id?: StringFilter | null;
   name?: StringFilter | null;
+  updatedAt?: DateTimeFilter | null;
   items?: ItemFilter | null;
   AND?: LabelWhereInput[] | null;
   OR?: LabelWhereInput[] | null;
@@ -117,20 +130,20 @@ export interface LinkFilter {
 }
 
 export interface LinkWhereInput {
-  id?: StringFilter | null;
   createdAt?: DateTimeFilter | null;
-  updatedAt?: DateTimeFilter | null;
-  href?: StringFilter | null;
-  title?: NullableStringFilter | null;
   description?: NullableStringFilter | null;
-  image?: NullableStringFilter | null;
   favicon?: NullableStringFilter | null;
+  href?: StringFilter | null;
+  id?: StringFilter | null;
+  image?: NullableStringFilter | null;
   notes?: StringFilter | null;
+  title?: NullableStringFilter | null;
+  updatedAt?: DateTimeFilter | null;
   AND?: LinkWhereInput[] | null;
   OR?: LinkWhereInput[] | null;
   NOT?: LinkWhereInput[] | null;
-  item?: ItemWhereInput | null;
   user?: UserWhereInput | null;
+  item?: ItemWhereInput | null;
 }
 
 export interface NoteFilter {
@@ -140,16 +153,16 @@ export interface NoteFilter {
 }
 
 export interface NoteWhereInput {
-  id?: StringFilter | null;
   createdAt?: DateTimeFilter | null;
-  updatedAt?: DateTimeFilter | null;
+  id?: StringFilter | null;
   raw?: StringFilter | null;
   text?: StringFilter | null;
+  updatedAt?: DateTimeFilter | null;
   AND?: NoteWhereInput[] | null;
   OR?: NoteWhereInput[] | null;
   NOT?: NoteWhereInput[] | null;
-  item?: ItemWhereInput | null;
   user?: UserWhereInput | null;
+  item?: ItemWhereInput | null;
 }
 
 export interface NullableBooleanFilter {
@@ -209,11 +222,11 @@ export interface UploadGroupFilter {
 }
 
 export interface UploadGroupWhereInput {
-  id?: StringFilter | null;
   createdAt?: DateTimeFilter | null;
-  updatedAt?: DateTimeFilter | null;
+  id?: StringFilter | null;
   isComplete?: NullableBooleanFilter | null;
   isFailed?: NullableBooleanFilter | null;
+  updatedAt?: DateTimeFilter | null;
   files?: FileFilter | null;
   AND?: UploadGroupWhereInput[] | null;
   OR?: UploadGroupWhereInput[] | null;
@@ -222,14 +235,14 @@ export interface UploadGroupWhereInput {
 }
 
 export interface UserWhereInput {
-  id?: StringFilter | null;
   email?: StringFilter | null;
   firstName?: NullableStringFilter | null;
+  id?: StringFilter | null;
   lastName?: NullableStringFilter | null;
+  files?: FileFilter | null;
   googleAccounts?: GoogleAccountFilter | null;
   items?: ItemFilter | null;
   labels?: LabelFilter | null;
-  files?: FileFilter | null;
   links?: LinkFilter | null;
   notes?: NoteFilter | null;
   uploadGroups?: UploadGroupFilter | null;

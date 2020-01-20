@@ -1,10 +1,10 @@
 generator photon {
-  provider = "prisma-client-js"
+  provider = "photonjs"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRESQL_URL")
+  url = "***"
 }
 
 model File {
@@ -41,7 +41,6 @@ model Item {
   createdAt   DateTime
   id          String   @id
   isFavorited Boolean  @default(false)
-  status      String?  @default("NOT_STARTED")
   link        Link?
   note        Note?
   type        String   @default("")

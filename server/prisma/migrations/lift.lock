@@ -3,8 +3,8 @@
 # lift lockfile v1
 # Read more about conflict resolution here: TODO
 
-20191219193636-init
-20191220124041-add
-20191220124348-add-started-uploading-flag
-20191223154028-add-notes
-20191223154110-init
+20200116221848-init
+20200117092744-is-resolved
+20200120155914
+20200120155943-status
+20200120181155-default-status

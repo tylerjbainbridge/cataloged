@@ -1,4 +1,4 @@
-import Photon, { User } from '@prisma/photon';
+import Photon, { User } from '@prisma/client';
 import { GoogleService } from '../services/GoogleService';
 
 export interface Context {

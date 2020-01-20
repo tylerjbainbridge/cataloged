@@ -26,5 +26,5 @@ export interface NoteFull {
   text: string;
   createdAt: any;
   updatedAt: any;
-  item: NoteFull_item;
+  item: NoteFull_item | null;
 }

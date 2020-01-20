@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+input BooleanFilter {
+  equals: Boolean
+  not: Boolean
+}
+
 scalar DateTime
 
 input DateTimeFilter {
@@ -20,7 +25,7 @@ type File {
   extension: String!
   fullUrl: String!
   height: Int
-  id: ID!
+  id: String!
   isUploaded: Boolean
   name: String!
   size: String
@@ -31,17 +36,17 @@ type File {
 }
 
 input FileCreateInput {
-  createdAt: DateTime
-  extension: String!
+  createdAt: DateTime!
+  extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: ID
+  id: String!
   isFailed: Boolean
   isUploaded: Boolean
   item: ItemCreateOneWithoutItemInput!
-  name: String!
+  name: String
   size: String
-  updatedAt: DateTime
+  updatedAt: DateTime!
   uploadGroup: UploadGroupCreateOneWithoutUploadGroupInput!
   user: UserCreateOneWithoutUserInput!
   width: Int
@@ -49,7 +54,7 @@ input FileCreateInput {
 
 input FileCreateManyWithoutFilesInput {
   connect: [FileWhereUniqueInput!]
-  create: [FileCreateWithoutUploadGroupInput!]
+  create: [FileCreateWithoutUserInput!]
 }
 
 input FileCreateOneWithoutFileInput {
@@ -58,34 +63,34 @@ input FileCreateOneWithoutFileInput {
 }
 
 input FileCreateWithoutItemInput {
-  createdAt: DateTime
-  extension: String!
+  createdAt: DateTime!
+  extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: ID
+  id: String!
   isFailed: Boolean
   isUploaded: Boolean
-  name: String!
+  name: String
   size: String
-  updatedAt: DateTime
+  updatedAt: DateTime!
   uploadGroup: UploadGroupCreateOneWithoutUploadGroupInput!
   user: UserCreateOneWithoutUserInput!
   width: Int
 }
 
-input FileCreateWithoutUploadGroupInput {
-  createdAt: DateTime
-  extension: String!
+input FileCreateWithoutUserInput {
+  createdAt: DateTime!
+  extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: ID
+  id: String!
   isFailed: Boolean
   isUploaded: Boolean
   item: ItemCreateOneWithoutItemInput!
-  name: String!
+  name: String
   size: String
-  updatedAt: DateTime
-  user: UserCreateOneWithoutUserInput!
+  updatedAt: DateTime!
+  uploadGroup: UploadGroupCreateOneWithoutUploadGroupInput!
   width: Int
 }
 
@@ -130,7 +135,7 @@ input FileWhereInput {
 }
 
 input FileWhereUniqueInput {
-  id: ID
+  id: String
 }
 
 input GoogleAccountCreateManyWithoutGoogleAccountsInput {
@@ -140,14 +145,14 @@ input GoogleAccountCreateManyWithoutGoogleAccountsInput {
 
 input GoogleAccountCreateWithoutUserInput {
   accountId: String
-  createdAt: DateTime
+  createdAt: DateTime!
   email: String
   firstName: String
-  id: ID
+  id: String!
   lastName: String
   picture: String
   refreshToken: String
-  updatedAt: DateTime
+  updatedAt: DateTime!
 }
 
 input GoogleAccountFilter {
@@ -174,7 +179,7 @@ input GoogleAccountWhereInput {
 
 input GoogleAccountWhereUniqueInput {
   accountId: String
-  id: ID
+  id: String
 }
 
 type InProgressUpload {
@@ -185,10 +190,12 @@ type InProgressUpload {
 type Item {
   createdAt: DateTime!
   file: File
-  id: ID!
-  labels(after: ID, before: ID, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
+  id: String!
+  isFavorited: Boolean!
+  labels(after: String, before: String, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   link: Link
   note: Note
+  status: ItemStatus!
   type: String!
   updatedAt: DateTime!
 }
@@ -205,29 +212,33 @@ input ItemCreateManyWithoutItemsInput {
 
 input ItemCreateOneWithoutItemInput {
   connect: ItemWhereUniqueInput
-  create: ItemCreateWithoutLinkInput
+  create: ItemCreateWithoutFileInput
 }
 
-input ItemCreateWithoutLinkInput {
-  createdAt: DateTime
-  file: FileCreateOneWithoutFileInput
-  id: ID
+input ItemCreateWithoutFileInput {
+  createdAt: DateTime!
+  id: String!
+  isFavorited: Boolean
   labels: LabelCreateManyWithoutLabelsInput
+  link: LinkCreateOneWithoutLinkInput
   note: NoteCreateOneWithoutNoteInput
-  type: String!
-  updatedAt: DateTime
+  status: String
+  type: String
+  updatedAt: DateTime!
   user: UserCreateOneWithoutUserInput
 }
 
 input ItemCreateWithoutUserInput {
-  createdAt: DateTime
+  createdAt: DateTime!
   file: FileCreateOneWithoutFileInput
-  id: ID
+  id: String!
+  isFavorited: Boolean
   labels: LabelCreateManyWithoutLabelsInput
   link: LinkCreateOneWithoutLinkInput
   note: NoteCreateOneWithoutNoteInput
-  type: String!
-  updatedAt: DateTime
+  status: String
+  type: String
+  updatedAt: DateTime!
 }
 
 type ItemEdge {
@@ -244,8 +255,16 @@ input ItemFilter {
 input ItemOrderByInput {
   createdAt: OrderByArg
   id: OrderByArg
+  isFavorited: OrderByArg
+  status: OrderByArg
   type: OrderByArg
   updatedAt: OrderByArg
+}
+
+enum ItemStatus {
+  DONE
+  IN_PROGRESS
+  NOT_STARTED
 }
 
 enum ItemType {
@@ -259,18 +278,20 @@ input ItemWhereInput {
   createdAt: DateTimeFilter
   file: FileWhereInput
   id: StringFilter
+  isFavorited: BooleanFilter
   labels: LabelFilter
   link: LinkWhereInput
   NOT: [ItemWhereInput!]
   note: NoteWhereInput
   OR: [ItemWhereInput!]
+  status: NullableStringFilter
   type: StringFilter
   updatedAt: DateTimeFilter
   user: UserWhereInput
 }
 
 input ItemWhereUniqueInput {
-  id: ID
+  id: String
 }
 
 type JWT {
@@ -279,23 +300,23 @@ type JWT {
 
 type Label {
   createdAt: DateTime!
-  id: ID!
-  items(after: ID, before: ID, first: Int, last: Int, skip: Int): [Item!]!
+  id: String!
+  items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]!
   name: String!
   updatedAt: DateTime!
 }
 
 input LabelCreateManyWithoutLabelsInput {
   connect: [LabelWhereUniqueInput!]
-  create: [LabelCreateWithoutUserInput!]
+  create: [LabelCreateWithoutItemsInput!]
 }
 
-input LabelCreateWithoutUserInput {
-  createdAt: DateTime
-  id: ID
-  items: ItemCreateManyWithoutItemsInput
-  name: String!
-  updatedAt: DateTime
+input LabelCreateWithoutItemsInput {
+  createdAt: DateTime!
+  id: String!
+  name: String
+  updatedAt: DateTime!
+  user: UserCreateOneWithoutUserInput!
 }
 
 input LabelFilter {
@@ -324,7 +345,7 @@ input LabelWhereInput {
 }
 
 input LabelWhereUniqueInput {
-  id: ID
+  id: String
 }
 
 type Link {
@@ -332,9 +353,9 @@ type Link {
   description: String
   favicon: String
   href: String!
-  id: ID!
+  id: String!
   image: String
-  item: Item!
+  item: Item
   notes: String!
   title: String
   updatedAt: DateTime!
@@ -351,29 +372,29 @@ input LinkCreateOneWithoutLinkInput {
 }
 
 input LinkCreateWithoutItemInput {
-  createdAt: DateTime
+  createdAt: DateTime!
   description: String
   favicon: String
-  href: String!
-  id: ID
+  href: String
+  id: String!
   image: String
-  notes: String!
+  notes: String
   title: String
-  updatedAt: DateTime
+  updatedAt: DateTime!
   user: UserCreateOneWithoutUserInput!
 }
 
 input LinkCreateWithoutUserInput {
-  createdAt: DateTime
+  createdAt: DateTime!
   description: String
   favicon: String
-  href: String!
-  id: ID
+  href: String
+  id: String!
   image: String
-  item: ItemCreateOneWithoutItemInput!
-  notes: String!
+  item: ItemCreateOneWithoutItemInput
+  notes: String
   title: String
-  updatedAt: DateTime
+  updatedAt: DateTime!
 }
 
 input LinkFilter {
@@ -400,7 +421,7 @@ input LinkWhereInput {
 }
 
 input LinkWhereUniqueInput {
-  id: ID
+  id: String
 }
 
 type Mutation {
@@ -420,14 +441,16 @@ type Mutation {
   googleSignIn(code: String!): JWT!
   processFiles(uploadGroupId: String): [File!]!
   refreshLinkMeta(href: String!, linkId: String!): Link!
+  updateFavoriteManyItems(isFavorited: Boolean!, itemIds: [String!]!): [Item!]!
   updateLink(description: String, href: String!, linkId: String!, title: String!): Link!
   updateNote(noteId: String!, raw: String!, text: String!): Note!
+  updateStatusManyItems(itemIds: [String!]!, status: ItemStatus!): [Item!]!
 }
 
 type Note {
   createdAt: DateTime!
-  id: ID!
-  item: Item!
+  id: String!
+  item: Item
   raw: String!
   text: String!
   updatedAt: DateTime!
@@ -444,21 +467,21 @@ input NoteCreateOneWithoutNoteInput {
 }
 
 input NoteCreateWithoutItemInput {
-  createdAt: DateTime
-  id: ID
-  raw: String!
-  text: String!
-  updatedAt: DateTime
+  createdAt: DateTime!
+  id: String!
+  raw: String
+  text: String
+  updatedAt: DateTime!
   user: UserCreateOneWithoutUserInput!
 }
 
 input NoteCreateWithoutUserInput {
-  createdAt: DateTime
-  id: ID
-  item: ItemCreateOneWithoutItemInput!
-  raw: String!
-  text: String!
-  updatedAt: DateTime
+  createdAt: DateTime!
+  id: String!
+  item: ItemCreateOneWithoutItemInput
+  raw: String
+  text: String
+  updatedAt: DateTime!
 }
 
 input NoteFilter {
@@ -481,7 +504,7 @@ input NoteWhereInput {
 }
 
 input NoteWhereUniqueInput {
-  id: ID
+  id: String
 }
 
 input NullableBooleanFilter {
@@ -527,9 +550,9 @@ type PageInfo {
 }
 
 type Query {
-  _files(after: ID, before: ID, first: Int, last: Int, orderBy: FileOrderByInput, skip: Int, where: FileWhereInput): [File!]!
-  _items(after: ID, before: ID, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
-  _uploadgroups(after: ID, before: ID, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
+  _files(after: String, before: String, first: Int, last: Int, orderBy: FileOrderByInput, skip: Int, where: FileWhereInput): [File!]!
+  _items(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
+  _uploadgroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
   file(where: FileWhereUniqueInput!): File
   googleURL: String!
   item(id: String!): Item!
@@ -538,7 +561,7 @@ type Query {
   mostRecentItem(type: String): Item
   test: String!
   uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, where: UploadGroupWhereInput): [UploadGroup!]!
-  users(after: ID, before: ID, first: Int, last: Int, skip: Int): [User!]!
+  users(after: String, before: String, first: Int, last: Int, skip: Int): [User!]!
 }
 
 input SignedURLArgs {
@@ -566,8 +589,8 @@ scalar Upload
 
 type UploadGroup {
   createdAt: DateTime!
-  files(after: ID, before: ID, first: Int, last: Int, skip: Int): [File!]!
-  id: ID!
+  files(after: String, before: String, first: Int, last: Int, skip: Int): [File!]!
+  id: String!
   isComplete: Boolean
   updatedAt: DateTime!
 }
@@ -583,21 +606,21 @@ input UploadGroupCreateOneWithoutUploadGroupInput {
 }
 
 input UploadGroupCreateWithoutFilesInput {
-  createdAt: DateTime
-  id: ID
+  createdAt: DateTime!
+  id: String!
   isComplete: Boolean
   isFailed: Boolean
-  updatedAt: DateTime
+  updatedAt: DateTime!
   user: UserCreateOneWithoutUserInput!
 }
 
 input UploadGroupCreateWithoutUserInput {
-  createdAt: DateTime
+  createdAt: DateTime!
   files: FileCreateManyWithoutFilesInput
-  id: ID
+  id: String!
   isComplete: Boolean
   isFailed: Boolean
-  updatedAt: DateTime
+  updatedAt: DateTime!
 }
 
 input UploadGroupFilter {
@@ -628,26 +651,26 @@ input UploadGroupWhereInput {
 }
 
 input UploadGroupWhereUniqueInput {
-  id: ID
+  id: String
 }
 
 type User {
   email: String!
-  files(after: ID, before: ID, first: Int, last: Int, skip: Int): [File!]!
+  files(after: String, before: String, first: Int, last: Int, skip: Int): [File!]!
   firstName: String
   fullName: String!
-  id: ID!
-  items(after: ID, before: ID, first: Int, last: Int, skip: Int): [Item!]!
-  labels(after: ID, before: ID, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
+  id: String!
+  items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]!
+  labels(after: String, before: String, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   lastName: String
 }
 
 input UserCreateInput {
-  email: String!
+  email: String
   files: FileCreateManyWithoutFilesInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutGoogleAccountsInput
-  id: ID
+  id: String!
   items: ItemCreateManyWithoutItemsInput
   labels: LabelCreateManyWithoutLabelsInput
   lastName: String
@@ -658,18 +681,18 @@ input UserCreateInput {
 
 input UserCreateOneWithoutUserInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutFilesInput
+  create: UserCreateWithoutLinksInput
 }
 
-input UserCreateWithoutFilesInput {
-  email: String!
+input UserCreateWithoutLinksInput {
+  email: String
+  files: FileCreateManyWithoutFilesInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutGoogleAccountsInput
-  id: ID
+  id: String!
   items: ItemCreateManyWithoutItemsInput
   labels: LabelCreateManyWithoutLabelsInput
   lastName: String
-  links: LinkCreateManyWithoutLinksInput
   notes: NoteCreateManyWithoutNotesInput
   uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput
 }
@@ -693,5 +716,5 @@ input UserWhereInput {
 
 input UserWhereUniqueInput {
   email: String
-  id: ID
+  id: String
 }

@@ -6,6 +6,7 @@ export interface ItemGenericData {
   title: String;
   createdAt: String;
   image?: String | null;
+  action?: Function;
   icon: IconProps['name'];
 }
 
@@ -44,6 +45,7 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
           createdAt: item.link.createdAt,
           image: item.link.image,
           icon: 'link',
+          action: () => window.open(item?.link?.href, '_blank'),
         };
       }
 

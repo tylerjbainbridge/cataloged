@@ -1,4 +1,22 @@
-import { inputObjectType, objectType } from 'nexus';
+import { inputObjectType, objectType, enumType } from 'nexus';
+
+export const ITEM_TYPES = ['link', 'file', 'note'];
+
+export enum ITEM_STATUS {
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE',
+}
+
+export const ItemType = enumType({
+  name: 'ItemType',
+  members: ITEM_TYPES,
+});
+
+export const ItemStatus = enumType({
+  name: 'ItemStatus',
+  members: ['NOT_STARTED', 'IN_PROGRESS', 'DONE'],
+});
 
 export const PageInfo = objectType({
   name: 'PageInfo',

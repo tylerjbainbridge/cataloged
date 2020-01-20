@@ -3,7 +3,7 @@ import { extendType, inputObjectType, stringArg } from 'nexus';
 
 import { AWSService, s3 } from '../../../services/AWSService';
 import { getS3Key, KEY_TYPES } from '../../../helpers/files';
-import { File } from '@prisma/photon';
+import { File } from '@prisma/client';
 
 const MAX_CONCURRENCY = 5;
 

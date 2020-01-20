@@ -13,6 +13,7 @@ import {
   Tooltip,
   Box,
   Select,
+  Switch,
 } from '@chakra-ui/core';
 import { Labels } from './Labels';
 import {
@@ -28,6 +29,8 @@ const INITIAL_VALUES = {
   search: '',
   labels: [],
   type: 'all',
+  status: '',
+  onlyFavorites: false,
 };
 
 export const Filter = ({ variables }: { variables: any }) => {
@@ -45,8 +48,6 @@ export const Filter = ({ variables }: { variables: any }) => {
 
   const formValues = getFormValuesFromFilterVariables(variables, user);
 
-  const { search, labels, type } = state;
-
   useEffect(() => {
     if (isModalOpen) {
       setState(formValues);
@@ -62,7 +63,7 @@ export const Filter = ({ variables }: { variables: any }) => {
   const onSubmit = async (e: any) => {
     e.preventDefault();
 
-    await filter(getFilterVariablesFromFormValues({ labels, search, type }));
+    await filter(getFilterVariablesFromFormValues(state));
 
     closeModal();
   };
@@ -131,13 +132,58 @@ export const Filter = ({ variables }: { variables: any }) => {
                     ['file', 'Files'],
                     ['note', 'Notes'],
                   ].map(([value, text]) => (
-                    <option value={value}>{text}</option>
+                    <option value={value} key={value}>
+                      {text}
+                    </option>
                   ))}
                 </Select>
                 <FormHelperText id="email-helper-text">
                   File, link, note
                 </FormHelperText>
               </FormControl>
+
+              <FormControl mb={5}>
+                <FormLabel>Status</FormLabel>
+                <Select
+                  placeholder="Select status"
+                  value={state.status}
+                  onChange={(e: any) => {
+                    setState({
+                      ...state,
+                      status: e.target.value,
+                    });
+                  }}
+                >
+                  {[
+                    ['NOT_STARTED', 'Not started'],
+                    ['IN_PROGRESS', 'In progress'],
+                    ['DONE', 'Done'],
+                  ].map(([value, text]) => (
+                    <option value={value} key={value}>
+                      {text}
+                    </option>
+                  ))}
+                </Select>
+                <FormHelperText id="email-helper-text">
+                  File, link, note
+                </FormHelperText>
+              </FormControl>
+
+              <FormControl mb={5}>
+                <FormLabel>Only favorites</FormLabel>
+                <Box width="100%">
+                  <Switch
+                    isChecked={!!state.onlyFavorites}
+                    onChange={(e: any) => {
+                      setState({
+                        ...state,
+                        onlyFavorites: e.target.checked,
+                      });
+                    }}
+                  />
+                </Box>
+              </FormControl>
+
               <FormControl>
                 <FormLabel>Labels</FormLabel>
                 <Labels

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import _ from 'lodash';
 import {
   Box,
@@ -6,7 +6,7 @@ import {
   Button,
   IconButton,
   Tooltip,
-  ButtonGroup,
+  Select,
 } from '@chakra-ui/core';
 
 import { SelectContext } from './SelectContainer';
@@ -14,9 +14,13 @@ import { useHotKey } from '../hooks/useHotKey';
 import { useOptimisticDeleteManyItems } from '../hooks/useOptimisticDeleteManyItems';
 import { Labels } from './Labels';
 import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchUpdateItemLabels';
+import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
 
 export const FeedBottomToolbar = () => {
   const { selectedItems, deselectAllItems } = useContext(SelectContext);
+  const [selectedStatus, updatedSelectedStatus] = useState<string | null>(null);
 
   const toolbarRef = React.useRef(null);
 
@@ -39,6 +43,36 @@ export const FeedBottomToolbar = () => {
   ] = useOptimisticBatchUpdateItemLabels(selectedItems, {
     onCompleted: deselectAllItems,
   });
+
+  const isEveryItemSelected = selectedItems.every(
+    ({ isFavorited }: ItemFull) => isFavorited,
+  );
+
+  const isFavorited = !isEveryItemSelected;
+
+  const [favoriteItems] = useOptimisticUpdateFavoriteManyItems(
+    selectedItems,
+    isFavorited,
+    {
+      onCompleted: deselectAllItems,
+    },
+  );
+
+  const [updateStatus] = useOptimisticUpdateStatusManyItems(
+    selectedItems,
+    selectedStatus,
+    {
+      onCompleted: deselectAllItems,
+    },
+  );
+
+  useEffect(() => {
+    if (selectedStatus) {
+      // @ts-ignore
+      updateStatus(selectedStatus);
+      updatedSelectedStatus(null);
+    }
+  }, [selectedStatus]);
 
   if (!isActive) return null;
 
@@ -66,15 +100,10 @@ export const FeedBottomToolbar = () => {
         alignItems="center"
         justifyContent="space-between"
         width="70%"
-        maxWidth="500px"
+        maxWidth="800px"
         height="30px"
       >
-        <Box
-          d="flex"
-          width="130px"
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        <Box d="flex" width="200px" alignItems="center">
           <Tooltip
             hasArrow
             aria-label="deselect all items"
@@ -89,13 +118,13 @@ export const FeedBottomToolbar = () => {
             />
           </Tooltip>
 
-          <Text ml={2} fontSize="xl" fontWeight="semibold">
+          <Text ml={5} fontSize="xl" fontWeight="semibold">
             {selectedItems.length} selected
           </Text>
         </Box>
-        <ButtonGroup d="flex" width="200px" spacing={3}>
+        <Box d="flex" height="100%" width="400px" alignItems="center">
           <Button
-            ml={3}
+            mr={3}
             cursor="pointer"
             variantColor="red"
             onClick={() => deleteItems()}
@@ -104,6 +133,7 @@ export const FeedBottomToolbar = () => {
           >
             Delete
           </Button>
+
           <Labels
             selectedLabels={commonLabels}
             onApply={(nextLabelSet: any[]) => {
@@ -128,12 +158,38 @@ export const FeedBottomToolbar = () => {
             }}
             showSelectedLabels={false}
             trigger={
-              <Button ml={3} cursor="pointer" isLoading={isUpdatingLabels}>
+              <Button mr={3} cursor="pointer" isLoading={isUpdatingLabels}>
                 Label
               </Button>
             }
           />
-        </ButtonGroup>
+          <Select
+            mr={3}
+            width="100px"
+            placeholder="Status"
+            onChange={(e: any) => {
+              // @ts-ignore
+              updatedSelectedStatus(e.target.value);
+            }}
+          >
+            {[
+              ['NOT_STARTED', 'Not started'],
+              ['IN_PROGRESS', 'In progress'],
+              ['DONE', 'Done'],
+            ].map(([value, text]) => (
+              <option value={value} key={value}>
+                {text}
+              </option>
+            ))}
+          </Select>
+          <Button
+            cursor="pointer"
+            onClick={() => favoriteItems()}
+            leftIcon="star"
+          >
+            {isFavorited ? 'Add' : 'Remove'}
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

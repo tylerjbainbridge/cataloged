@@ -10,6 +10,9 @@ export const ITEM_FULL_FRAGMENT = gql`
     createdAt
     updatedAt
 
+    isFavorited
+    status
+
     labels {
       id
       name
@@ -106,6 +109,28 @@ export const BATCH_UPDATE_ITEMS_LABELS_MUTATION = gql`
         id
         name
       }
+    }
+  }
+`;
+
+export const UPDATE_FAVORITE_MANY_ITEMS_MUTATION = gql`
+  mutation updateFavoriteManyItems(
+    $itemIds: [String!]!
+    $isFavorited: Boolean!
+  ) {
+    updateFavoriteManyItems(itemIds: $itemIds, isFavorited: $isFavorited) {
+      id
+
+      isFavorited
+    }
+  }
+`;
+
+export const UPDATE_STATUS_MANY_ITEMS_MUTATION = gql`
+  mutation updateStatusManyItems($itemIds: [String!]!, $status: ItemStatus!) {
+    updateStatusManyItems(itemIds: $itemIds, status: $status) {
+      id
+      status
     }
   }
 `;

@@ -30,5 +30,5 @@ export interface LinkFull {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: LinkFull_item;
+  item: LinkFull_item | null;
 }
