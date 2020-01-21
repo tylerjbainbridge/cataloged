@@ -11,7 +11,7 @@ model File {
   extension           String   @default("")
   hasStartedUploading Boolean?
   height              Int?
-  id                  String   @id
+  id                  String   @id @default(cuid())
   isFailed            Boolean?
   isUploaded          Boolean?
   item                Item
@@ -30,7 +30,7 @@ model GoogleAccount {
   accountId    String? @unique
   email        String?
   firstName    String?
-  id           String  @id
+  id           String  @id @default(cuid())
   lastName     String?
   picture      String?
   refreshToken String?
@@ -41,7 +41,7 @@ model GoogleAccount {
 }
 
 model Item {
-  id          String   @id
+  id          String   @id @default(cuid())
   isFavorited Boolean  @default(false)
   status      String?  @default("NOT_STARTED")
   link        Link?
@@ -55,7 +55,7 @@ model Item {
 }
 
 model Label {
-  id        String   @id
+  id        String   @id @default(cuid())
   name      String   @default("")
   user      User
   items     Item[]
@@ -67,7 +67,7 @@ model Link {
   description String?
   favicon     String?
   href        String  @default("")
-  id          String  @id
+  id          String  @id @default(cuid())
   image       String?
   notes       String  @default("")
   title       String?
@@ -79,7 +79,7 @@ model Link {
 }
 
 model Note {
-  id        String   @id
+  id        String   @id @default(cuid())
   raw       String   @default("")
   text      String   @default("")
   user      User
@@ -89,7 +89,7 @@ model Note {
 }
 
 model UploadGroup {
-  id         String   @id
+  id         String   @id @default(cuid())
   isComplete Boolean?
   isFailed   Boolean?
   user       User
@@ -101,7 +101,7 @@ model UploadGroup {
 model User {
   email          String          @default("") @unique
   firstName      String?
-  id             String          @id
+  id             String          @id @default(cuid())
   lastName       String?
   files          File[]
   googleAccounts GoogleAccount[]
