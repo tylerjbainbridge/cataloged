@@ -110,6 +110,6 @@ model User {
   links          Link[]
   notes          Note[]
   uploadGroups   UploadGroup[]
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  // createdAt      DateTime        @default(now())
+  // updatedAt      DateTime        @updatedAt
 }
