@@ -1,6 +1,6 @@
-import { Photon } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
-export const photon = new Photon();
+export const photon = new PrismaClient();
 
 photon
   .connect()
