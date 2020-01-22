@@ -36,61 +36,82 @@ type File {
 }
 
 input FileCreateInput {
-  createdAt: DateTime!
+  createdAt: DateTime
   extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: String!
+  id: String
   isFailed: Boolean
   isUploaded: Boolean
-  item: ItemCreateOneWithoutItemInput!
+  item: ItemCreateOneWithoutFileInput!
   name: String
   size: String
-  updatedAt: DateTime!
-  uploadGroup: UploadGroupCreateOneWithoutUploadGroupInput!
-  user: UserCreateOneWithoutUserInput!
+  updatedAt: DateTime
+  uploadGroup: UploadGroupCreateOneWithoutFilesInput!
+  user: UserCreateOneWithoutFilesInput!
   width: Int
 }
 
-input FileCreateManyWithoutFilesInput {
+input FileCreateManyWithoutUploadGroupInput {
+  connect: [FileWhereUniqueInput!]
+  create: [FileCreateWithoutUploadGroupInput!]
+}
+
+input FileCreateManyWithoutUserInput {
   connect: [FileWhereUniqueInput!]
   create: [FileCreateWithoutUserInput!]
 }
 
-input FileCreateOneWithoutFileInput {
+input FileCreateOneWithoutItemInput {
   connect: FileWhereUniqueInput
   create: FileCreateWithoutItemInput
 }
 
 input FileCreateWithoutItemInput {
-  createdAt: DateTime!
+  createdAt: DateTime
   extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: String!
+  id: String
   isFailed: Boolean
   isUploaded: Boolean
   name: String
   size: String
-  updatedAt: DateTime!
-  uploadGroup: UploadGroupCreateOneWithoutUploadGroupInput!
-  user: UserCreateOneWithoutUserInput!
+  updatedAt: DateTime
+  uploadGroup: UploadGroupCreateOneWithoutFilesInput!
+  user: UserCreateOneWithoutFilesInput!
+  width: Int
+}
+
+input FileCreateWithoutUploadGroupInput {
+  createdAt: DateTime
+  extension: String
+  hasStartedUploading: Boolean
+  height: Int
+  id: String
+  isFailed: Boolean
+  isUploaded: Boolean
+  item: ItemCreateOneWithoutFileInput!
+  name: String
+  size: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutFilesInput!
   width: Int
 }
 
 input FileCreateWithoutUserInput {
-  createdAt: DateTime!
+  createdAt: DateTime
   extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: String!
+  id: String
   isFailed: Boolean
   isUploaded: Boolean
-  item: ItemCreateOneWithoutItemInput!
+  item: ItemCreateOneWithoutFileInput!
   name: String
   size: String
-  updatedAt: DateTime!
-  uploadGroup: UploadGroupCreateOneWithoutUploadGroupInput!
+  updatedAt: DateTime
+  uploadGroup: UploadGroupCreateOneWithoutFilesInput!
   width: Int
 }
 
@@ -138,21 +159,21 @@ input FileWhereUniqueInput {
   id: String
 }
 
-input GoogleAccountCreateManyWithoutGoogleAccountsInput {
+input GoogleAccountCreateManyWithoutUserInput {
   connect: [GoogleAccountWhereUniqueInput!]
   create: [GoogleAccountCreateWithoutUserInput!]
 }
 
 input GoogleAccountCreateWithoutUserInput {
   accountId: String
-  createdAt: DateTime!
+  createdAt: DateTime
   email: String
   firstName: String
-  id: String!
+  id: String
   lastName: String
   picture: String
   refreshToken: String
-  updatedAt: DateTime!
+  updatedAt: DateTime
 }
 
 input GoogleAccountFilter {
@@ -205,40 +226,94 @@ type ItemConnection {
   pageInfo: PageInfo!
 }
 
-input ItemCreateManyWithoutItemsInput {
+input ItemCreateManyWithoutLabelsInput {
+  connect: [ItemWhereUniqueInput!]
+  create: [ItemCreateWithoutLabelsInput!]
+}
+
+input ItemCreateManyWithoutUserInput {
   connect: [ItemWhereUniqueInput!]
   create: [ItemCreateWithoutUserInput!]
 }
 
-input ItemCreateOneWithoutItemInput {
+input ItemCreateOneWithoutFileInput {
   connect: ItemWhereUniqueInput
   create: ItemCreateWithoutFileInput
 }
 
+input ItemCreateOneWithoutLinkInput {
+  connect: ItemWhereUniqueInput
+  create: ItemCreateWithoutLinkInput
+}
+
+input ItemCreateOneWithoutNoteInput {
+  connect: ItemWhereUniqueInput
+  create: ItemCreateWithoutNoteInput
+}
+
 input ItemCreateWithoutFileInput {
-  createdAt: DateTime!
-  id: String!
+  createdAt: DateTime
+  id: String
   isFavorited: Boolean
-  labels: LabelCreateManyWithoutLabelsInput
-  link: LinkCreateOneWithoutLinkInput
-  note: NoteCreateOneWithoutNoteInput
+  labels: LabelCreateManyWithoutItemsInput
+  link: LinkCreateOneWithoutItemInput
+  note: NoteCreateOneWithoutItemInput
   status: String
   type: String
-  updatedAt: DateTime!
-  user: UserCreateOneWithoutUserInput
+  updatedAt: DateTime
+  user: UserCreateOneWithoutItemsInput
+}
+
+input ItemCreateWithoutLabelsInput {
+  createdAt: DateTime
+  file: FileCreateOneWithoutItemInput
+  id: String
+  isFavorited: Boolean
+  link: LinkCreateOneWithoutItemInput
+  note: NoteCreateOneWithoutItemInput
+  status: String
+  type: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutItemsInput
+}
+
+input ItemCreateWithoutLinkInput {
+  createdAt: DateTime
+  file: FileCreateOneWithoutItemInput
+  id: String
+  isFavorited: Boolean
+  labels: LabelCreateManyWithoutItemsInput
+  note: NoteCreateOneWithoutItemInput
+  status: String
+  type: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutItemsInput
+}
+
+input ItemCreateWithoutNoteInput {
+  createdAt: DateTime
+  file: FileCreateOneWithoutItemInput
+  id: String
+  isFavorited: Boolean
+  labels: LabelCreateManyWithoutItemsInput
+  link: LinkCreateOneWithoutItemInput
+  status: String
+  type: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutItemsInput
 }
 
 input ItemCreateWithoutUserInput {
-  createdAt: DateTime!
-  file: FileCreateOneWithoutFileInput
-  id: String!
+  createdAt: DateTime
+  file: FileCreateOneWithoutItemInput
+  id: String
   isFavorited: Boolean
-  labels: LabelCreateManyWithoutLabelsInput
-  link: LinkCreateOneWithoutLinkInput
-  note: NoteCreateOneWithoutNoteInput
+  labels: LabelCreateManyWithoutItemsInput
+  link: LinkCreateOneWithoutItemInput
+  note: NoteCreateOneWithoutItemInput
   status: String
   type: String
-  updatedAt: DateTime!
+  updatedAt: DateTime
 }
 
 type ItemEdge {
@@ -306,17 +381,30 @@ type Label {
   updatedAt: DateTime!
 }
 
-input LabelCreateManyWithoutLabelsInput {
+input LabelCreateManyWithoutItemsInput {
   connect: [LabelWhereUniqueInput!]
   create: [LabelCreateWithoutItemsInput!]
 }
 
+input LabelCreateManyWithoutUserInput {
+  connect: [LabelWhereUniqueInput!]
+  create: [LabelCreateWithoutUserInput!]
+}
+
 input LabelCreateWithoutItemsInput {
-  createdAt: DateTime!
-  id: String!
+  createdAt: DateTime
+  id: String
   name: String
-  updatedAt: DateTime!
-  user: UserCreateOneWithoutUserInput!
+  updatedAt: DateTime
+  user: UserCreateOneWithoutLabelsInput!
+}
+
+input LabelCreateWithoutUserInput {
+  createdAt: DateTime
+  id: String
+  items: ItemCreateManyWithoutLabelsInput
+  name: String
+  updatedAt: DateTime
 }
 
 input LabelFilter {
@@ -361,40 +449,40 @@ type Link {
   updatedAt: DateTime!
 }
 
-input LinkCreateManyWithoutLinksInput {
+input LinkCreateManyWithoutUserInput {
   connect: [LinkWhereUniqueInput!]
   create: [LinkCreateWithoutUserInput!]
 }
 
-input LinkCreateOneWithoutLinkInput {
+input LinkCreateOneWithoutItemInput {
   connect: LinkWhereUniqueInput
   create: LinkCreateWithoutItemInput
 }
 
 input LinkCreateWithoutItemInput {
-  createdAt: DateTime!
+  createdAt: DateTime
   description: String
   favicon: String
   href: String
-  id: String!
+  id: String
   image: String
   notes: String
   title: String
-  updatedAt: DateTime!
-  user: UserCreateOneWithoutUserInput!
+  updatedAt: DateTime
+  user: UserCreateOneWithoutLinksInput!
 }
 
 input LinkCreateWithoutUserInput {
-  createdAt: DateTime!
+  createdAt: DateTime
   description: String
   favicon: String
   href: String
-  id: String!
+  id: String
   image: String
-  item: ItemCreateOneWithoutItemInput
+  item: ItemCreateOneWithoutLinkInput
   notes: String
   title: String
-  updatedAt: DateTime!
+  updatedAt: DateTime
 }
 
 input LinkFilter {
@@ -456,32 +544,32 @@ type Note {
   updatedAt: DateTime!
 }
 
-input NoteCreateManyWithoutNotesInput {
+input NoteCreateManyWithoutUserInput {
   connect: [NoteWhereUniqueInput!]
   create: [NoteCreateWithoutUserInput!]
 }
 
-input NoteCreateOneWithoutNoteInput {
+input NoteCreateOneWithoutItemInput {
   connect: NoteWhereUniqueInput
   create: NoteCreateWithoutItemInput
 }
 
 input NoteCreateWithoutItemInput {
-  createdAt: DateTime!
-  id: String!
+  createdAt: DateTime
+  id: String
   raw: String
   text: String
-  updatedAt: DateTime!
-  user: UserCreateOneWithoutUserInput!
+  updatedAt: DateTime
+  user: UserCreateOneWithoutNotesInput!
 }
 
 input NoteCreateWithoutUserInput {
-  createdAt: DateTime!
-  id: String!
-  item: ItemCreateOneWithoutItemInput
+  createdAt: DateTime
+  id: String
+  item: ItemCreateOneWithoutNoteInput
   raw: String
   text: String
-  updatedAt: DateTime!
+  updatedAt: DateTime
 }
 
 input NoteFilter {
@@ -595,32 +683,32 @@ type UploadGroup {
   updatedAt: DateTime!
 }
 
-input UploadGroupCreateManyWithoutUploadGroupsInput {
+input UploadGroupCreateManyWithoutUserInput {
   connect: [UploadGroupWhereUniqueInput!]
   create: [UploadGroupCreateWithoutUserInput!]
 }
 
-input UploadGroupCreateOneWithoutUploadGroupInput {
+input UploadGroupCreateOneWithoutFilesInput {
   connect: UploadGroupWhereUniqueInput
   create: UploadGroupCreateWithoutFilesInput
 }
 
 input UploadGroupCreateWithoutFilesInput {
-  createdAt: DateTime!
-  id: String!
+  createdAt: DateTime
+  id: String
   isComplete: Boolean
   isFailed: Boolean
-  updatedAt: DateTime!
-  user: UserCreateOneWithoutUserInput!
+  updatedAt: DateTime
+  user: UserCreateOneWithoutUploadGroupsInput!
 }
 
 input UploadGroupCreateWithoutUserInput {
-  createdAt: DateTime!
-  files: FileCreateManyWithoutFilesInput
-  id: String!
+  createdAt: DateTime
+  files: FileCreateManyWithoutUploadGroupInput
+  id: String
   isComplete: Boolean
   isFailed: Boolean
-  updatedAt: DateTime!
+  updatedAt: DateTime
 }
 
 input UploadGroupFilter {
@@ -667,34 +755,124 @@ type User {
 
 input UserCreateInput {
   email: String
-  files: FileCreateManyWithoutFilesInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  googleAccounts: GoogleAccountCreateManyWithoutGoogleAccountsInput
-  id: String!
-  items: ItemCreateManyWithoutItemsInput
-  labels: LabelCreateManyWithoutLabelsInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  links: LinkCreateManyWithoutLinksInput
-  notes: NoteCreateManyWithoutNotesInput
-  uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateOneWithoutUserInput {
+input UserCreateOneWithoutFilesInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutFilesInput
+}
+
+input UserCreateOneWithoutItemsInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutItemsInput
+}
+
+input UserCreateOneWithoutLabelsInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutLabelsInput
+}
+
+input UserCreateOneWithoutLinksInput {
   connect: UserWhereUniqueInput
   create: UserCreateWithoutLinksInput
 }
 
+input UserCreateOneWithoutNotesInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutNotesInput
+}
+
+input UserCreateOneWithoutUploadGroupsInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutUploadGroupsInput
+}
+
+input UserCreateWithoutFilesInput {
+  email: String
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutItemsInput {
+  email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutLabelsInput {
+  email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  items: ItemCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
 input UserCreateWithoutLinksInput {
   email: String
-  files: FileCreateManyWithoutFilesInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  googleAccounts: GoogleAccountCreateManyWithoutGoogleAccountsInput
-  id: String!
-  items: ItemCreateManyWithoutItemsInput
-  labels: LabelCreateManyWithoutLabelsInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  notes: NoteCreateManyWithoutNotesInput
-  uploadGroups: UploadGroupCreateManyWithoutUploadGroupsInput
+  notes: NoteCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutNotesInput {
+  email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutUploadGroupsInput {
+  email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
 }
 
 input UserWhereInput {

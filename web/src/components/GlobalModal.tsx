@@ -23,6 +23,7 @@ type ContextProps = {
   closeModal: (modalName: ModalName) => any;
   toggleModal: (modalName: ModalName) => any;
   closeAll: () => any;
+  isAnyModalOpen: boolean;
 };
 
 export const GlobalModalContext = React.createContext<ContextProps>(
@@ -68,9 +69,12 @@ export const GlobalModalProvider: FunctionComponent = ({ children }) => {
       ),
     );
 
+  const isAnyModalOpen = Object.values(globalModalState).some(Boolean);
+
   return (
     <GlobalModalContext.Provider
       value={{
+        isAnyModalOpen,
         globalModalState,
         openModal,
         closeModal,
@@ -90,6 +94,7 @@ export const useGlobalModal = (modalName: ModalName) => {
     toggleModal,
     globalModalState,
     closeAll,
+    isAnyModalOpen,
   } = React.useContext(GlobalModalContext);
 
   return {
@@ -98,5 +103,6 @@ export const useGlobalModal = (modalName: ModalName) => {
     closeModal: () => closeModal(modalName),
     toggleModal: () => toggleModal(modalName),
     isModalOpen: globalModalState[modalName],
+    isAnyModalOpen,
   };
 };

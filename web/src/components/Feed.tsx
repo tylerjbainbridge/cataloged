@@ -209,7 +209,7 @@ export const Feed = () => {
                   <CreateLink />
                   <NoteModal />
                 </Box>
-                <Filter variables={variables} />
+                <Filter variables={variables} loading={loading} />
                 {/* <Text fontSize="4xl" margin={0}>
                 Cataloged
               </Text> */}
