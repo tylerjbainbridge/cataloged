@@ -265,6 +265,7 @@ export const GenericGridItem = ({
                                 alignItems="center"
                                 justifyContent="center"
                                 backgroundColor="gray.50"
+                                {...clickProps}
                               >
                                 <Icon name="edit" size="50px" />
                               </Box>
