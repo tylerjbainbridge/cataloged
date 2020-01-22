@@ -41,7 +41,6 @@ export interface FileFilter {
 }
 
 export interface FileWhereInput {
-  createdAt?: DateTimeFilter | null;
   extension?: StringFilter | null;
   hasStartedUploading?: NullableBooleanFilter | null;
   height?: NullableIntFilter | null;
@@ -50,8 +49,9 @@ export interface FileWhereInput {
   isUploaded?: NullableBooleanFilter | null;
   name?: StringFilter | null;
   size?: NullableStringFilter | null;
-  updatedAt?: DateTimeFilter | null;
   width?: NullableIntFilter | null;
+  createdAt?: DateTimeFilter | null;
+  updatedAt?: DateTimeFilter | null;
   AND?: FileWhereInput[] | null;
   OR?: FileWhereInput[] | null;
   NOT?: FileWhereInput[] | null;
@@ -68,13 +68,13 @@ export interface GoogleAccountFilter {
 
 export interface GoogleAccountWhereInput {
   accountId?: NullableStringFilter | null;
-  createdAt?: DateTimeFilter | null;
   email?: NullableStringFilter | null;
   firstName?: NullableStringFilter | null;
   id?: StringFilter | null;
   lastName?: NullableStringFilter | null;
   picture?: NullableStringFilter | null;
   refreshToken?: NullableStringFilter | null;
+  createdAt?: DateTimeFilter | null;
   updatedAt?: DateTimeFilter | null;
   AND?: GoogleAccountWhereInput[] | null;
   OR?: GoogleAccountWhereInput[] | null;
@@ -89,13 +89,13 @@ export interface ItemFilter {
 }
 
 export interface ItemWhereInput {
-  createdAt?: DateTimeFilter | null;
   id?: StringFilter | null;
   isFavorited?: BooleanFilter | null;
   status?: NullableStringFilter | null;
   type?: StringFilter | null;
-  updatedAt?: DateTimeFilter | null;
   labels?: LabelFilter | null;
+  createdAt?: DateTimeFilter | null;
+  updatedAt?: DateTimeFilter | null;
   AND?: ItemWhereInput[] | null;
   OR?: ItemWhereInput[] | null;
   NOT?: ItemWhereInput[] | null;
@@ -112,11 +112,11 @@ export interface LabelFilter {
 }
 
 export interface LabelWhereInput {
-  createdAt?: DateTimeFilter | null;
   id?: StringFilter | null;
   name?: StringFilter | null;
-  updatedAt?: DateTimeFilter | null;
   items?: ItemFilter | null;
+  createdAt?: DateTimeFilter | null;
+  updatedAt?: DateTimeFilter | null;
   AND?: LabelWhereInput[] | null;
   OR?: LabelWhereInput[] | null;
   NOT?: LabelWhereInput[] | null;
@@ -130,7 +130,6 @@ export interface LinkFilter {
 }
 
 export interface LinkWhereInput {
-  createdAt?: DateTimeFilter | null;
   description?: NullableStringFilter | null;
   favicon?: NullableStringFilter | null;
   href?: StringFilter | null;
@@ -138,6 +137,7 @@ export interface LinkWhereInput {
   image?: NullableStringFilter | null;
   notes?: StringFilter | null;
   title?: NullableStringFilter | null;
+  createdAt?: DateTimeFilter | null;
   updatedAt?: DateTimeFilter | null;
   AND?: LinkWhereInput[] | null;
   OR?: LinkWhereInput[] | null;
@@ -153,10 +153,10 @@ export interface NoteFilter {
 }
 
 export interface NoteWhereInput {
-  createdAt?: DateTimeFilter | null;
   id?: StringFilter | null;
   raw?: StringFilter | null;
   text?: StringFilter | null;
+  createdAt?: DateTimeFilter | null;
   updatedAt?: DateTimeFilter | null;
   AND?: NoteWhereInput[] | null;
   OR?: NoteWhereInput[] | null;
@@ -222,12 +222,12 @@ export interface UploadGroupFilter {
 }
 
 export interface UploadGroupWhereInput {
-  createdAt?: DateTimeFilter | null;
   id?: StringFilter | null;
   isComplete?: NullableBooleanFilter | null;
   isFailed?: NullableBooleanFilter | null;
-  updatedAt?: DateTimeFilter | null;
   files?: FileFilter | null;
+  createdAt?: DateTimeFilter | null;
+  updatedAt?: DateTimeFilter | null;
   AND?: UploadGroupWhereInput[] | null;
   OR?: UploadGroupWhereInput[] | null;
   NOT?: UploadGroupWhereInput[] | null;

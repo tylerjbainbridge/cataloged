@@ -14,6 +14,7 @@ import {
   Box,
   Select,
   Switch,
+  Spinner,
 } from '@chakra-ui/core';
 import { Labels } from './Labels';
 import {
@@ -33,18 +34,31 @@ const INITIAL_VALUES = {
   onlyFavorites: false,
 };
 
-export const Filter = ({ variables }: { variables: any }) => {
+export const Filter = ({
+  variables,
+  loading,
+}: {
+  variables: any;
+  loading: boolean;
+}) => {
   const { filter } = useContext(FeedContext);
 
   const [state, setState] = useState(INITIAL_VALUES);
 
   const { user } = useAuth();
 
-  const { isModalOpen, openModal, closeModal, toggleModal } = useGlobalModal(
-    ModalName.FILTER_FEED_MODAL,
-  );
+  const {
+    isModalOpen,
+    openModal,
+    closeModal,
+    toggleModal,
+    isAnyModalOpen,
+  } = useGlobalModal(ModalName.FILTER_FEED_MODAL);
 
-  useHotKey('command command', toggleModal, { isGlobal: true });
+  useHotKey('command command', toggleModal, {
+    isGlobal: true,
+    shouldBind: !isAnyModalOpen,
+  });
 
   const formValues = getFormValuesFromFilterVariables(variables, user);
 
@@ -70,21 +84,24 @@ export const Filter = ({ variables }: { variables: any }) => {
 
   return (
     <>
-      <Tooltip
-        hasArrow
-        placement="bottom"
-        label="or press ⌘ + ⌘"
-        aria-label="Filter feed"
-      >
-        <Button
-          cursor="pointer"
-          leftIcon="search"
-          variant="outline"
-          onClick={openModal}
+      <Box display="flex" alignItems="center" width="100px">
+        <Tooltip
+          hasArrow
+          placement="bottom"
+          label="or press ⌘ + ⌘"
+          aria-label="Filter feed"
         >
-          Filter
-        </Button>
-      </Tooltip>
+          <Button
+            cursor="pointer"
+            leftIcon={loading ? 'spinner' : 'search'}
+            variant="outline"
+            onClick={openModal}
+          >
+            Filter
+          </Button>
+        </Tooltip>
+        {}
+      </Box>
 
       <Modal
         isCentered
