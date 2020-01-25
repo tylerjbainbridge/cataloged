@@ -11,6 +11,20 @@ export const randomString = (): string =>
     .toString(36)
     .substring(2, 15);
 
+export const getQueryStringFromFilters = (filters: any[]) => {
+  return queryString.stringify(
+    filters.reduce((p, c) => {
+      const key = `${c.name}.${c.operator}`;
+
+      return {
+        [key]: c.value || c.values,
+        ...p,
+      };
+    }, {}),
+    { arrayFormat: 'bracket' },
+  );
+};
+
 export const getFilterVariablesFromFormValues = (filters: any[]) => {
   return filters.filter(
     ({ value, values }: any) =>
@@ -18,16 +32,15 @@ export const getFilterVariablesFromFormValues = (filters: any[]) => {
   );
 };
 
-export const getFilterVariablesFromQueryString = (search: any, user: any) => {
+export const getFeedVariablesFromQueryString = (search: any) => {
   const parsed = queryString.parse(search, { arrayFormat: 'bracket' });
 
-  return getFilterVariablesFromFormValues({
-    ...parsed,
-    // @ts-ignore
-    labels: (parsed?.labels || []).map((id: string) =>
-      user.labels.find((label: any) => label.id === id),
-    ),
+  const filters = Object.entries(parsed).map(([key, value]) => {
+    const [name, operator] = key.split('.');
+    return { name, operator, value };
   });
+
+  return { filters };
 };
 
 export const getFormValuesFromFilterVariables = (
