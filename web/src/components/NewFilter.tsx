@@ -288,30 +288,34 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
   });
 
   const filterForm = useForm({
-    defaultValues: {},
+    defaultValues: {
+      [FORM_NAME]: variables.filters || [],
+    },
   });
 
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control: filterForm.control, // control props comes from useForm (optional: if you are using FormContext)
-      name: FORM_NAME, // unique name for your Field Array
-    },
-  );
+  const { fields, append, remove } = useFieldArray({
+    control: filterForm.control, // control props comes from useForm (optional: if you are using FormContext)
+    name: FORM_NAME, // unique name for your Field Array
+  });
 
   const addButtonRef = useRef(null);
 
   const { current: debouncedFilter } = useRef(
-    _.debounce(async (filters: any) => {
-      if (!_.isEqual(variables.filters, filters)) {
-        await filter({ filters });
-      }
+    _.debounce(async (values: any) => {
+      const filters = getFilterVariablesFromFormValues(
+        // @ts-ignore
+        !values[FORM_NAME] ? Object.values(values) : values[FORM_NAME],
+      );
+
+      console.log('updating', filters);
+
+      await filter({ filters });
     }, 1000),
   );
 
   filterForm.watch();
 
   const values = filterForm.getValues();
-  const activeFilters = getFilterVariablesFromFormValues(Object.values(values));
 
   const getName = (index: number) => `${FORM_NAME}[${index}]`;
 
@@ -321,26 +325,34 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
 
   useDeepCompareEffect(() => {
     debouncedFilter.cancel();
-    debouncedFilter(activeFilters);
-  }, [activeFilters]);
+    debouncedFilter(values);
+  }, [values, fields.length]);
 
   useHotKey('/', onToggle, {
     isGlobal: true,
     shouldBind: !isAnyModalOpen,
   });
 
+  useEffect(() => {
+    if (isOpen) {
+      filterForm.reset({
+        [FORM_NAME]: variables?.filters || [],
+      });
+    }
+  }, [isOpen]);
+
   const trigger = (
     <Button
       cursor="pointer"
       variant="outline"
-      isLoading={loading}
+      isLoading={loading && !!variables?.filters?.length}
       isDisabled={false}
       onClick={e => {
         e.stopPropagation();
         onOpen();
       }}
     >
-      Filter{!!activeFilters.length && ` (${activeFilters.length})`}
+      Filter{!!fields.length && ` (${fields.length})`}
     </Button>
   );
 
@@ -368,6 +380,9 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
             {fields.map((field: any, index: number) => {
               const name = getName(index);
 
+              // @ts-ignore
+              const value = values[name] || values[FORM_NAME]?.[index];
+
               return (
                 <Box key={field.id}>
                   <Controller
@@ -376,11 +391,14 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
                     uniqueId={field.name}
                     as={<FilterInput />}
                     remove={() => remove(index)}
-                    defaultValue={{
-                      name: 'search',
-                      operator: 'contains',
-                      value: '',
-                    }}
+                    defaultValue={
+                      // @ts-ignore
+                      value || {
+                        name: 'search',
+                        operator: 'contains',
+                        value: '',
+                      }
+                    }
                     onChange={([value]) => ({
                       value,
                     })}
@@ -401,6 +419,7 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
                   color="gray"
                   onClick={() => {
                     remove();
+                    filterForm.reset({ [FORM_NAME]: [] });
                     // onClose();
                   }}
                 >

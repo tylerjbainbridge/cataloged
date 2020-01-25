@@ -22,7 +22,8 @@ import {
   getNodesFromConnection,
   getFilterVariablesFromFormValues,
   getFormValuesFromFilterVariables,
-  getFilterVariablesFromQueryString,
+  getFeedVariablesFromQueryString,
+  getQueryStringFromFilters,
 } from '../util/helpers';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { feed, feedVariables } from '../graphql/__generated__/feed';
@@ -83,11 +84,6 @@ export const Feed = () => {
     after: null,
   };
 
-  const [filters, setFilters] = useState<feedVariables>(
-    // getFilterVariablesFromQueryString(location.search, user),
-    {},
-  );
-
   useEffect(() => {
     localStorage.setItem('grid-mode', mode);
   }, [mode]);
@@ -95,7 +91,7 @@ export const Feed = () => {
   const query = useQuery<feed>(FEED_QUERY, {
     variables: {
       ...INITIAL_PAGINATION_VARIABLES,
-      ...filters,
+      ...getFeedVariablesFromQueryString(location.search),
     },
     notifyOnNetworkStatusChange: true,
   });
@@ -111,24 +107,19 @@ export const Feed = () => {
       ...filterVariables,
     });
 
-  // useEffect(() => {
-  //   if (!loading) {
-  //     refetch({
-  //       ...INITIAL_PAGINATION_VARIABLES,
-  //       ...filters,
-  //     });
-
-  //     // @ts-ignore
-  //     history.replace({
-  //       search: queryString.stringify(
-  //         getFormValuesFromFilterVariables(filters, user, true),
-  //         { arrayFormat: 'bracket' },
-  //       ),
-  //     });
-  //   }
-  // }, [filters]);
+  useEffect(() => {
+    if (!loading) {
+      // @ts-ignore
+      history.replace({
+        // @ts-ignore
+        search: getQueryStringFromFilters(variables.filters || []),
+      });
+    }
+  }, [variables]);
 
   const lastEdge = _.last(data?.itemsConnection?.edges || []);
+
+  console.log(variables);
 
   const nextPage = () =>
     fetchMore({

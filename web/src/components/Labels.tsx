@@ -32,7 +32,7 @@ import { useAuth } from '../hooks/useAuth';
 import { FeedContext } from './Feed';
 import { useLocation } from 'react-router-dom';
 import {
-  getFilterVariablesFromQueryString,
+  getFeedVariablesFromQueryString,
   getFilterVariablesFromFormValues,
 } from '../util/helpers';
 import { FaEllipsisH } from 'react-icons/fa';
@@ -262,19 +262,19 @@ export const Labels = ({
 
   const createFromSearch = () => !connecting && addAction(search);
 
-  const addLabelToFilters = async ({ name }: any) => {
-    const variables = getFilterVariablesFromQueryString(location.search, user);
+  // const addLabelToFilters = async ({ name }: any) => {
+  //   // const variables = getFilterVariablesFromQueryString(location.search, user);
 
-    const isExisting = variables.labels.find(
-      (label: any) => label.name === name,
-    );
+  //   const isExisting = variables.labels.find(
+  //     (label: any) => label.name === name,
+  //   );
 
-    if (isExisting)
-      _.remove(variables.labels, (label: any) => label.name === name);
-    else variables.labels.push({ name });
+  //   if (isExisting)
+  //     _.remove(variables.labels, (label: any) => label.name === name);
+  //   else variables.labels.push({ name });
 
-    // await filter(getFilterVariablesFromFormValues(variables));
-  };
+  //   // await filter(getFilterVariablesFromFormValues(variables));
+  // };
 
   const labelNodes = labelSet.map(
     ({ id, name }: { id: string; name: string }) => (

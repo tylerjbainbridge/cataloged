@@ -90,7 +90,7 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
         case 'labels':
           // @ts-ignore
           baseFilters.push(
-            set({}, `where.labels.${filter.operator}.name.in`, filter.values),
+            set({}, `labels.${filter.operator}.name.in`, filter.values),
           );
 
           break;
