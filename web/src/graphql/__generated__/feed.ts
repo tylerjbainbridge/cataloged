@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { ItemType, ItemWhereInput, ItemStatus } from "./apolloTypes";
+import { Filter, ItemStatus } from "./apolloTypes";
 
 // ====================================================
 // GraphQL query operation: feed
@@ -117,7 +117,5 @@ export interface feed {
 export interface feedVariables {
   first?: number | null;
   after?: string | null;
-  search?: string | null;
-  type?: ItemType | null;
-  where?: ItemWhereInput | null;
+  filters?: Filter[] | null;
 }

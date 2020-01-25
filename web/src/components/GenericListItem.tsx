@@ -248,8 +248,8 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 ))}
               </Select>
               <Popover
-                //@ts-ignore
-                usePortal
+              //@ts-ignore
+              // usePortal
               >
                 <PopoverTrigger>
                   <Button
@@ -262,7 +262,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                     <FaEllipsisH />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent width="200px" zIndex={4}>
+                <PopoverContent width="200px" zIndex={100}>
                   <PopoverArrow />
                   <PopoverBody>
                     <Stack

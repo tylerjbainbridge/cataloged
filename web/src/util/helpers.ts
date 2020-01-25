@@ -11,38 +11,11 @@ export const randomString = (): string =>
     .toString(36)
     .substring(2, 15);
 
-export const getFilterVariablesFromFormValues = ({
-  search,
-  labels,
-  type,
-  status,
-  onlyFavorites,
-}:
-  | {
-      type: string;
-      search: string;
-      labels: any;
-    }
-  | any) => {
-  const filters = {};
-
-  if (search) _.set(filters, 'search', search);
-
-  if (onlyFavorites) _.set(filters, 'where.isFavorited.equals', true);
-
-  if (type) _.set(filters, 'type', type !== 'all' ? type : null);
-
-  if (status) _.set(filters, 'where.status.equals', status);
-
-  if (labels) {
-    _.set(
-      filters,
-      `where.labels.${labels.length ? 'some' : 'none'}.id.in`,
-      labels.map(({ id }: { id: string }) => id),
-    );
-  }
-
-  return cleanDeep(filters);
+export const getFilterVariablesFromFormValues = (filters: any[]) => {
+  return filters.filter(
+    ({ value, values }: any) =>
+      !_.isEmpty((value || '').toString()) || !_.isEmpty(values),
+  );
 };
 
 export const getFilterVariablesFromQueryString = (search: any, user: any) => {

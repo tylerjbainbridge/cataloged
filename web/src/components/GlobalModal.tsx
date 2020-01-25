@@ -87,7 +87,7 @@ export const GlobalModalProvider: FunctionComponent = ({ children }) => {
   );
 };
 
-export const useGlobalModal = (modalName: ModalName) => {
+export const useGlobalModal = (modalName?: ModalName) => {
   const {
     openModal,
     closeModal,
@@ -99,9 +99,13 @@ export const useGlobalModal = (modalName: ModalName) => {
 
   return {
     closeAll,
+    // @ts-ignore
     openModal: () => openModal(modalName),
+    // @ts-ignore
     closeModal: () => closeModal(modalName),
+    // @ts-ignore
     toggleModal: () => toggleModal(modalName),
+    // @ts-ignore
     isModalOpen: globalModalState[modalName],
     isAnyModalOpen,
   };

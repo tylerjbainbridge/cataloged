@@ -31,22 +31,15 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ListFeed } from './ListFeed';
 import { FaThLarge, FaList } from 'react-icons/fa';
+import { NewFilter } from './NewFilter';
 
 export const FEED_QUERY = gql`
-  query feed(
-    $first: Int
-    $after: String
-    $search: String
-    $type: ItemType
-    $where: ItemWhereInput
-  ) {
+  query feed($first: Int, $after: String, $filters: [Filter!]) {
     itemsConnection(
       first: $first
       after: $after
 
-      where: $where
-      search: $search
-      type: $type
+      filters: $filters
 
       orderBy: { createdAt: desc }
     ) @connection(key: "feed_connection") {
@@ -86,12 +79,13 @@ export const Feed = () => {
   const history = useHistory();
 
   const INITIAL_PAGINATION_VARIABLES = {
-    first: mode === 'grid' ? 20 : 40,
+    first: mode === 'grid' ? 20 : 30,
     after: null,
   };
 
   const [filters, setFilters] = useState<feedVariables>(
-    getFilterVariablesFromQueryString(location.search, user),
+    // getFilterVariablesFromQueryString(location.search, user),
+    {},
   );
 
   useEffect(() => {
@@ -113,26 +107,26 @@ export const Feed = () => {
   const initialLoad = loading && !data;
 
   const filter = (filterVariables: any) =>
-    setFilters({
+    refetch({
       ...filterVariables,
     });
 
-  useEffect(() => {
-    if (!loading) {
-      refetch({
-        ...INITIAL_PAGINATION_VARIABLES,
-        ...filters,
-      });
+  // useEffect(() => {
+  //   if (!loading) {
+  //     refetch({
+  //       ...INITIAL_PAGINATION_VARIABLES,
+  //       ...filters,
+  //     });
 
-      // @ts-ignore
-      history.replace({
-        search: queryString.stringify(
-          getFormValuesFromFilterVariables(filters, user, true),
-          { arrayFormat: 'bracket' },
-        ),
-      });
-    }
-  }, [filters]);
+  //     // @ts-ignore
+  //     history.replace({
+  //       search: queryString.stringify(
+  //         getFormValuesFromFilterVariables(filters, user, true),
+  //         { arrayFormat: 'bracket' },
+  //       ),
+  //     });
+  //   }
+  // }, [filters]);
 
   const lastEdge = _.last(data?.itemsConnection?.edges || []);
 
@@ -209,7 +203,8 @@ export const Feed = () => {
                   <CreateLink />
                   <NoteModal />
                 </Box>
-                <Filter variables={variables} loading={loading} />
+                <NewFilter variables={variables} loading={loading} />
+                {/* <Filter variables={variables} loading={loading} /> */}
                 {/* <Text fontSize="4xl" margin={0}>
                 Cataloged
               </Text> */}

@@ -1,5 +1,5 @@
-import { FieldResolver, stringArg } from 'nexus';
-import { merge, set } from 'lodash';
+import { FieldResolver, stringArg, arg } from 'nexus';
+import { merge, set, get } from 'lodash';
 
 import {
   paginationArgs,
@@ -11,12 +11,12 @@ import { ItemType } from '../types/misc';
 
 export const feedArgs = {
   ...paginationArgs,
-  search: stringArg(),
   type: ItemType,
-  // @ts-ignore
-  where: getWhereArgs('Item'),
-  // @ts-ignore
   orderBy: getFindManyOrderArgs('Item'),
+  filters: arg({ type: 'Filter', list: true }),
+  // // @ts-ignore
+  // where: getWhereArgs('Item'),
+  // // @ts-ignore
 };
 
 export const STRING_FILTERS = {
@@ -25,80 +25,132 @@ export const STRING_FILTERS = {
   link: ['href', 'title', 'description'],
 };
 
-export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
-  console.log(args);
-  const { where, search = '', type, ...rest } = args;
-
-  const { note: noteWhere, file: fileWhere, link: linkWhere } = where || {};
-
-  const shouldInclude = (itemType: string) =>
-    (type && type === itemType) || true;
-
-  const itemFilters = {
-    ...(shouldInclude('note')
-      ? {
-          note: {
-            type: 'note',
-            ...(noteWhere ? { note: noteWhere } : {}),
-          },
-        }
-      : {}),
-
-    ...(shouldInclude('link')
-      ? {
-          link: {
-            type: 'link',
-            ...(linkWhere ? { link: linkWhere } : {}),
-          },
-        }
-      : {}),
-
-    ...(shouldInclude('file')
-      ? {
-          file: {
-            type: 'file',
-            file: merge(fileWhere || {}, {
-              isUploaded: true,
-              hasStartedUploading: true,
-            }),
-          },
-        }
-      : {}),
-  };
-
-  if (search) {
-    const words = search.split(' ').map((word: string) => word.trim());
-
-    Object.keys(itemFilters).forEach(type => {
-      set(
-        // @ts-ignore
-        itemFilters[type],
-        `${type}.OR`,
-        words.reduce(
-          (p, word) => [
-            ...p,
-            // @ts-ignore
-            ...STRING_FILTERS[type].map(field => ({
-              [field]: { contains: word },
-            })),
-          ],
-          [],
-        ),
-      );
-    });
+const getTrueValue = (value: string) => {
+  try {
+    return JSON.parse(value);
+  } catch (e) {
+    return value;
   }
+};
 
-  const filter = {
-    where: {
-      // @ts-ignore
-      user: { id: ctx.user.id },
-      ...(type ? { type } : {}),
-      ...(where || {}),
-      OR: Object.values(itemFilters),
+export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
+  const { where, filters, mode = 'AND', ...rest } = args;
+
+  /**
+    name
+    operator
+    value
+    values
+  */
+
+  const filterConfig = {};
+
+  const itemSpecificFilters = {
+    note: {
+      type: 'note',
+    },
+
+    link: {
+      type: 'link',
+    },
+
+    file: {
+      type: 'file',
+      file: {
+        isUploaded: true,
+        hasStartedUploading: true,
+      },
     },
   };
 
-  // console.log(args, JSON.stringify(filter, null, 4));
+  const baseFilters: any[] = [];
+
+  (filters || []).forEach(
+    (filter: {
+      name: string;
+      operator: string;
+      value?: string;
+      values?: string[];
+    }) => {
+      switch (filter.name) {
+        case 'status':
+        case 'isFavorited':
+        case 'type':
+          // @ts-ignore
+          const newFilter = set(
+            {},
+            `${filter.name}.${filter.operator}`,
+            getTrueValue(filter.value),
+          );
+
+          baseFilters.push(newFilter);
+
+          break;
+
+        case 'labels':
+          // @ts-ignore
+          const newFilter = set(
+            filterConfig,
+            `where.labels.${filter.operator}.name.in`,
+            filter.values,
+          );
+
+          // baseFilters.push(newFilter);
+
+          break;
+
+        case 'search':
+          const words = filter.value
+            .split(' ')
+            .map((word: string) => word.trim());
+
+          Object.keys(itemSpecificFilters).forEach(type => {
+            const existing = get(
+              // @ts-ignore
+              itemSpecificFilters[type],
+              `${type}.OR`,
+              [],
+            );
+
+            set(
+              // @ts-ignore
+              itemSpecificFilters[type],
+              `${type}.OR`,
+              [
+                ...existing,
+                ...words.reduce(
+                  // @ts-ignore
+                  (p, word) => [
+                    ...p,
+                    // @ts-ignore
+                    ...STRING_FILTERS[type].map(field => ({
+                      [field]: { [filter.operator]: word },
+                    })),
+                  ],
+                  [],
+                ),
+              ],
+            );
+          });
+
+          break;
+      }
+    },
+  );
+
+  const filter = merge(
+    {
+      where: {
+        // @ts-ignore
+        user: { id: ctx.user.id },
+        [mode]: [{ OR: Object.values(itemSpecificFilters) }, ...baseFilters],
+      },
+    },
+    filterConfig,
+  );
+
+  console.log('args', JSON.stringify(args, null, 4));
+  console.log('filter', JSON.stringify(filter, null, 4));
 
   return findManyCursor(
     _args =>
