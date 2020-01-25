@@ -1,4 +1,11 @@
-import { inputObjectType, objectType, enumType } from 'nexus';
+import {
+  inputObjectType,
+  objectType,
+  enumType,
+  unionType,
+  stringArg,
+  scalarType,
+} from 'nexus';
 
 export const ITEM_TYPES = ['link', 'file', 'note'];
 
@@ -50,5 +57,33 @@ export const InProgressUpload = objectType({
       type: 'UploadGroup',
       nullable: true,
     });
+  },
+});
+
+export const FilterValue = scalarType({
+  name: 'FilterValue',
+  description: 'String or Boolean',
+  parseValue: value => value,
+  serialize: value => value,
+  parseLiteral: ast => {
+    // @ts-ignore
+    return ast.value;
+  },
+});
+
+function oddValue(value) {
+  return value % 2 === 1 ? value : null;
+}
+
+export const Filter = inputObjectType({
+  name: 'Filter',
+  definition(t) {
+    t.string('name', { required: true });
+
+    t.string('operator', { required: true });
+
+    // One of these must be supplied
+    t.field('value', { type: 'FilterValue' });
+    t.list.field('values', { type: 'FilterValue' });
   },
 });

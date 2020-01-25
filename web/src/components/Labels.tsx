@@ -273,7 +273,7 @@ export const Labels = ({
       _.remove(variables.labels, (label: any) => label.name === name);
     else variables.labels.push({ name });
 
-    await filter(getFilterVariablesFromFormValues(variables));
+    // await filter(getFilterVariablesFromFormValues(variables));
   };
 
   const labelNodes = labelSet.map(
@@ -335,97 +335,98 @@ export const Labels = ({
               )}
             </PopoverTrigger>
             <PopoverContent zIndex={100} width="400px">
-              <FocusLock returnFocus persistentFocus={false}>
-                <PopoverArrow bg="white" />
-                <Stack
-                  spacing={4}
-                  shouldWrapChildren
-                  onKeyDown={onKeyDown}
-                  onKeyUp={onKeyUp}
-                >
-                  <FormControl p={3}>
-                    <InputGroup size="md" width="100%">
-                      <Input
-                        pr="4.5rem"
-                        placeholder="Label"
-                        name="search"
-                        ref={register}
-                      />
-                      {canAddLabels && (
-                        <InputRightElement width="4.5rem">
-                          <Button
-                            size="sm"
-                            h="1.75rem"
-                            isLoading={connecting}
-                            onClick={createFromSearch}
-                          >
-                            Add
-                          </Button>
-                        </InputRightElement>
-                      )}
-                    </InputGroup>
-                  </FormControl>
-                  {!!filteredLabels.length && (
-                    <Stack
-                      spacing={2}
-                      maxHeight="200px"
-                      maxWidth="100%"
-                      overflowY="auto"
+              <PopoverArrow bg="white" />
+              <Stack
+                spacing={4}
+                shouldWrapChildren
+                onKeyDown={onKeyDown}
+                onKeyUp={onKeyUp}
+              >
+                <FormControl p={3}>
+                  <InputGroup size="md" width="100%">
+                    <Input
+                      pr="4.5rem"
+                      placeholder="Label"
+                      name="search"
+                      ref={(ref: any) => {
+                        register(ref);
+                        firstFieldRef.current = ref;
+                      }}
+                    />
+                    {canAddLabels && (
+                      <InputRightElement width="4.5rem">
+                        <Button
+                          size="sm"
+                          h="1.75rem"
+                          isLoading={connecting}
+                          onClick={createFromSearch}
+                        >
+                          Add
+                        </Button>
+                      </InputRightElement>
+                    )}
+                  </InputGroup>
+                </FormControl>
+                {!!filteredLabels.length && (
+                  <Stack
+                    spacing={2}
+                    maxHeight="200px"
+                    maxWidth="100%"
+                    overflowY="auto"
+                  >
+                    {filteredLabels.map(({ id, name }, idx) => {
+                      const isChecked = !!labelSet.find(
+                        (existingLabel: { name: string }) =>
+                          existingLabel.name === name,
+                      );
+                      return (
+                        <PseudoBox
+                          id={name}
+                          d="flex"
+                          alignItems="center"
+                          height="40px"
+                          p={3}
+                          key={name}
+                          cursor="pointer"
+                          bg={idx === cursor ? 'gray.50' : ''}
+                          onMouseOver={() => setCursor(idx)}
+                          onClick={e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggle({ id, name });
+                          }}
+                        >
+                          {/* This is the sibling input, it's visually hidden */}
+                          <Switch size="sm" isChecked={isChecked} />
+                          <Tag ml={3}>{name}</Tag>
+                        </PseudoBox>
+                      );
+                    })}
+                  </Stack>
+                )}
+                {!!onApply && (
+                  <Box
+                    d="flex"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                    width="100%"
+                    p={2}
+                    pt={0}
+                  >
+                    <Button
+                      cursor="pointer"
+                      variantColor="teal"
+                      size="md"
+                      onClick={() => {
+                        onApply(selectedLabels);
+                        onClose();
+                      }}
                     >
-                      {filteredLabels.map(({ id, name }, idx) => {
-                        const isChecked = !!labelSet.find(
-                          (existingLabel: { name: string }) =>
-                            existingLabel.name === name,
-                        );
-                        return (
-                          <PseudoBox
-                            id={name}
-                            d="flex"
-                            alignItems="center"
-                            height="40px"
-                            p={3}
-                            key={name}
-                            cursor="pointer"
-                            bg={idx === cursor ? 'gray.50' : ''}
-                            onMouseOver={() => setCursor(idx)}
-                            onClick={e => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              toggle({ id, name });
-                            }}
-                          >
-                            {/* This is the sibling input, it's visually hidden */}
-                            <Switch size="sm" isChecked={isChecked} />
-                            <Tag ml={3}>{name}</Tag>
-                          </PseudoBox>
-                        );
-                      })}
-                    </Stack>
-                  )}
-                  {!!onApply && (
-                    <Box
-                      d="flex"
-                      alignItems="center"
-                      justifyContent="flex-end"
-                      width="100%"
-                      p={2}
-                      pt={0}
-                    >
-                      <Button
-                        cursor="pointer"
-                        variantColor="teal"
-                        size="md"
-                        onClick={() => {
-                          onApply(selectedLabels);
-                          onClose();
-                        }}
-                      >
-                        Apply ({labelSet.length})
-                      </Button>
-                    </Box>
-                  )}
-                </Stack>
-              </FocusLock>
+                      Apply ({labelSet.length})
+                    </Button>
+                  </Box>
+                )}
+              </Stack>
             </PopoverContent>
           </Popover>
         )}

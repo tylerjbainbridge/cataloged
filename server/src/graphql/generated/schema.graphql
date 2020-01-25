@@ -159,6 +159,16 @@ input FileWhereUniqueInput {
   id: String
 }
 
+input Filter {
+  name: String!
+  operator: String!
+  value: FilterValue
+  values: [FilterValue!]
+}
+
+"""String or Boolean"""
+scalar FilterValue
+
 input GoogleAccountCreateManyWithoutUserInput {
   connect: [GoogleAccountWhereUniqueInput!]
   create: [GoogleAccountCreateWithoutUserInput!]
@@ -644,7 +654,7 @@ type Query {
   file(where: FileWhereUniqueInput!): File
   googleURL: String!
   item(id: String!): Item!
-  itemsConnection(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, search: String, type: ItemType, where: ItemWhereInput): ItemConnection!
+  itemsConnection(after: String, before: String, filters: [Filter!], first: Int, last: Int, orderBy: ItemOrderByInput, type: ItemType): ItemConnection!
   me: User
   mostRecentItem(type: String): Item
   test: String!

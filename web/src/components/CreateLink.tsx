@@ -124,7 +124,7 @@ export const CreateLink = () => {
 
         <ModalContent
           as="form"
-          onSubmit={handleSubmit(async (data, e) => {
+          onSubmit={handleSubmit(async (data, e: any) => {
             e.preventDefault();
             await createLink();
           })}

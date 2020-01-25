@@ -57,7 +57,7 @@ export const Filter = ({
 
   useHotKey('command command', toggleModal, {
     isGlobal: true,
-    shouldBind: !isAnyModalOpen,
+    shouldBind: false && !isAnyModalOpen,
   });
 
   const formValues = getFormValuesFromFilterVariables(variables, user);
@@ -69,15 +69,16 @@ export const Filter = ({
   }, [isModalOpen]);
 
   const reset = async () => {
-    await filter(getFilterVariablesFromFormValues(INITIAL_VALUES));
+    // @ts-ignore
+    // await filter(getFilterVariablesFromFormValues(INITIAL_VALUES));
 
     closeModal();
   };
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-
-    await filter(getFilterVariablesFromFormValues(state));
+    // @ts-ignore
+    // await filter(getFilterVariablesFromFormValues(state));
 
     closeModal();
   };
@@ -100,7 +101,6 @@ export const Filter = ({
             Filter
           </Button>
         </Tooltip>
-        {}
       </Box>
 
       <Modal

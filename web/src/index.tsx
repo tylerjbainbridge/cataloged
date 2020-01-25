@@ -6,7 +6,7 @@ import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { ThemeProvider } from '@chakra-ui/core';
+import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 
 import * as serviceWorker from './serviceWorker';
 import { GRAPHQL_ENDPOINT } from './config';
@@ -51,6 +51,7 @@ const cache = new InMemoryCache({
       <Auth>
         <GlobalModalProvider>
           <ThemeProvider theme={theme}>
+            <CSSReset />
             <Router />
           </ThemeProvider>
         </GlobalModalProvider>
