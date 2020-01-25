@@ -77,25 +77,21 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
         case 'isFavorited':
         case 'type':
           // @ts-ignore
-          const newFilter = set(
-            {},
-            `${filter.name}.${filter.operator}`,
-            getTrueValue(filter.value),
+          baseFilters.push(
+            set(
+              {},
+              `${filter.name}.${filter.operator}`,
+              getTrueValue(filter.value),
+            ),
           );
-
-          baseFilters.push(newFilter);
 
           break;
 
         case 'labels':
           // @ts-ignore
-          const newFilter = set(
-            filterConfig,
-            `where.labels.${filter.operator}.name.in`,
-            filter.values,
+          baseFilters.push(
+            set({}, `where.labels.${filter.operator}.name.in`, filter.values),
           );
-
-          // baseFilters.push(newFilter);
 
           break;
 
