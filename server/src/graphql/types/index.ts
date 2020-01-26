@@ -1,4 +1,6 @@
 export { File } from './entities/File';
+export { InterestedUser } from './entities/InterestedUser';
+export { InviteCode } from './entities/InviteCode';
 export { Item } from './entities/Item';
 export { JWT } from './entities/JWT';
 export { Label } from './entities/Label';
@@ -6,6 +8,8 @@ export { Link } from './entities/Link';
 export { Note } from './entities/Note';
 export { UploadGroup } from './entities/UploadGroup';
 export { User } from './entities/User';
+export { addInviteCode } from './mutations/addInviteCode';
+export { addToWaitlist } from './mutations/addToWaitlist';
 export { batchUpdateItemLabels } from './mutations/batchUpdateItemLabels';
 export { connectLabelToItem } from './mutations/connectLabelToItem';
 export { createLabel } from './mutations/createLabel';

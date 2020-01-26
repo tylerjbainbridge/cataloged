@@ -431,7 +431,8 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
                   variant="ghost"
                   type="button"
                   color="gray"
-                  onClick={() => {
+                  onClick={async () => {
+                    await filter({ filters: [] });
                     remove();
                     filterForm.reset({ [FORM_NAME]: [] });
                     // onClose();

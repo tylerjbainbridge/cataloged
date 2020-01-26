@@ -8,6 +8,8 @@ export const User = objectType({
     t.model.lastName();
     t.model.email();
 
+    t.model.inviteCode();
+
     t.string(
       'fullName',
       ({ firstName, lastName }) => `${firstName} ${lastName}`,

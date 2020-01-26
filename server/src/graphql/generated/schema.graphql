@@ -218,6 +218,47 @@ type InProgressUpload {
   uploadGroup: UploadGroup
 }
 
+type InterestedUser {
+  createdAt: DateTime!
+  email: String!
+  id: String!
+  updatedAt: DateTime!
+}
+
+type InviteCode {
+  code: String!
+  createdAt: DateTime!
+  id: String!
+  updatedAt: DateTime!
+}
+
+input InviteCodeCreateOneWithoutUsersInput {
+  connect: InviteCodeWhereUniqueInput
+  create: InviteCodeCreateWithoutUsersInput
+}
+
+input InviteCodeCreateWithoutUsersInput {
+  code: String!
+  createdAt: DateTime
+  id: String
+  updatedAt: DateTime
+}
+
+input InviteCodeWhereInput {
+  AND: [InviteCodeWhereInput!]
+  code: StringFilter
+  createdAt: DateTimeFilter
+  id: StringFilter
+  NOT: [InviteCodeWhereInput!]
+  OR: [InviteCodeWhereInput!]
+  updatedAt: DateTimeFilter
+  users: UserFilter
+}
+
+input InviteCodeWhereUniqueInput {
+  id: String
+}
+
 type Item {
   createdAt: DateTime!
   file: File
@@ -523,6 +564,8 @@ input LinkWhereUniqueInput {
 }
 
 type Mutation {
+  addInviteCode(code: String!): InviteCode!
+  addToWaitlist(email: String!): InterestedUser!
   batchUpdateItemLabels(itemIds: [String!]!, labelIdsToAdd: [String!]!, labelIdsToRemove: [String!]!): [Item!]!
   connectLabelToItem(itemId: String!, name: String!): Item!
   createLabel(itemId: String, name: String!): User!
@@ -758,22 +801,28 @@ type User {
   firstName: String
   fullName: String!
   id: String!
+  inviteCode: InviteCode
   items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]!
   labels(after: String, before: String, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   lastName: String
 }
 
 input UserCreateInput {
+  createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
   id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
   items: ItemCreateManyWithoutUserInput
   labels: LabelCreateManyWithoutUserInput
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  role: String
+  updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
@@ -808,90 +857,129 @@ input UserCreateOneWithoutUploadGroupsInput {
 }
 
 input UserCreateWithoutFilesInput {
+  createdAt: DateTime
   email: String
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
   id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
   items: ItemCreateManyWithoutUserInput
   labels: LabelCreateManyWithoutUserInput
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  role: String
+  updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutItemsInput {
+  createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
   id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
   labels: LabelCreateManyWithoutUserInput
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  role: String
+  updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutLabelsInput {
+  createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
   id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
   items: ItemCreateManyWithoutUserInput
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  role: String
+  updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutLinksInput {
+  createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
   id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
   items: ItemCreateManyWithoutUserInput
   labels: LabelCreateManyWithoutUserInput
   lastName: String
   notes: NoteCreateManyWithoutUserInput
+  role: String
+  updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutNotesInput {
+  createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
   id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
   items: ItemCreateManyWithoutUserInput
   labels: LabelCreateManyWithoutUserInput
   lastName: String
   links: LinkCreateManyWithoutUserInput
+  role: String
+  updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutUploadGroupsInput {
+  createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
   id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
   items: ItemCreateManyWithoutUserInput
   labels: LabelCreateManyWithoutUserInput
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  role: String
+  updatedAt: DateTime
+}
+
+input UserFilter {
+  every: UserWhereInput
+  none: UserWhereInput
+  some: UserWhereInput
 }
 
 input UserWhereInput {
   AND: [UserWhereInput!]
+  createdAt: DateTimeFilter
   email: StringFilter
   files: FileFilter
   firstName: NullableStringFilter
   googleAccounts: GoogleAccountFilter
   id: StringFilter
+  inviteCode: InviteCodeWhereInput
+  isActive: BooleanFilter
   items: ItemFilter
   labels: LabelFilter
   lastName: NullableStringFilter
@@ -899,6 +987,8 @@ input UserWhereInput {
   NOT: [UserWhereInput!]
   notes: NoteFilter
   OR: [UserWhereInput!]
+  role: StringFilter
+  updatedAt: DateTimeFilter
   uploadGroups: UploadGroupFilter
 }
 
