@@ -31,6 +31,7 @@ import { useDeepCompareEffect } from 'react-use';
 import { useHotKey } from '../hooks/useHotKey';
 import { Labels } from './Labels';
 import { useGlobalModal } from './GlobalModal';
+import { useAuth } from '../hooks/useAuth';
 
 // Dynamic set of inputs
 
@@ -112,6 +113,8 @@ export const FilterInput = ({
   onChange: _onChange,
   value: filter,
 }: any) => {
+  const { user } = useAuth();
+
   // @ts-ignore
   const filterConfig = FILTER_CONFIGS[filter.name];
 
@@ -180,7 +183,9 @@ export const FilterInput = ({
       valueNode = (
         <Labels
           canAddLabels={false}
-          selectedLabels={filter.value}
+          selectedLabels={filter.value.map((name: string) =>
+            user.labels.find(label => label.name === name),
+          )}
           onSelectedLabelChange={(selectedLabels: any) => {
             updateFilter({
               values: selectedLabels.map(({ name }: any) => name),

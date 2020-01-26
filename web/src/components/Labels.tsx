@@ -104,9 +104,9 @@ export const Labels = ({
   const [cursor, setCursor] = useState(0);
   const { user, refetchUser } = useAuth();
 
-  const location = useLocation();
+  // const location = useLocation();
 
-  const { filter } = useContext(FeedContext);
+  // const { filter } = useContext(FeedContext);
 
   // Only relevant when managing it's own state.
   const [selectedLabels, setSelectedLabels] = useState<any[]>([]);
@@ -124,7 +124,10 @@ export const Labels = ({
   }, [isOpen]);
 
   useEffect(() => {
-    if (onSelectedLabelChange && selectedLabels !== initialSelectedLabels)
+    if (
+      onSelectedLabelChange &&
+      !_.isEqual(selectedLabels, initialSelectedLabels)
+    )
       onSelectedLabelChange(selectedLabels);
   }, [selectedLabels && selectedLabels.length]);
 
