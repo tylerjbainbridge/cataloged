@@ -213,7 +213,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 minWidth="100px"
                 alignItems="center"
               >
-                <Labels displayOnly item={item} />
+                <Labels item={item} />
               </Box>
             </Box>
             <Box

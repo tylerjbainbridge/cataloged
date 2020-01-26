@@ -24,18 +24,10 @@ import {
   PseudoBox,
   Switch,
   Box,
-  Tooltip,
-  PopoverBody,
   Text,
 } from '@chakra-ui/core';
+
 import { useAuth } from '../hooks/useAuth';
-import { FeedContext } from './Feed';
-import { useLocation } from 'react-router-dom';
-import {
-  getFeedVariablesFromQueryString,
-  getFilterVariablesFromFormValues,
-} from '../util/helpers';
-import { FaEllipsisH } from 'react-icons/fa';
 
 const ITEM_LABEL_RESPONSE_FRAGMENT = gql`
   fragment ItemLabelResponseFragment on Item {
@@ -287,7 +279,10 @@ export const Labels = ({
             size="12px"
             icon="delete"
             cursor="pointer"
-            onClick={() => removeAction({ id, name })}
+            onClick={e => {
+              e.stopPropagation();
+              removeAction({ id, name });
+            }}
           />
         )}
         <TagLabel>{name}</TagLabel>
@@ -327,7 +322,10 @@ export const Labels = ({
                 <Button
                   size="xs"
                   height="25px"
-                  onClick={onOpen}
+                  onClick={e => {
+                    e.stopPropagation();
+                    onOpen();
+                  }}
                   aria-label="add labels"
                   variant="outline"
                   mr={2}

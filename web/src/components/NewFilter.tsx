@@ -33,6 +33,7 @@ import { useHotKey } from '../hooks/useHotKey';
 import { Labels } from './Labels';
 import { useGlobalModal } from './GlobalModal';
 import { useAuth } from '../hooks/useAuth';
+import { FaFilter } from 'react-icons/fa';
 
 // Dynamic set of inputs
 
@@ -361,7 +362,11 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
         onOpen();
       }}
     >
-      Filter{!!fields.length && ` (${fields.length})`}
+      <Box mr={2}>
+        <FaFilter size={12} />
+      </Box>
+      Filter
+      {!!fields.length && ` (${fields.length})`}
     </Button>
   );
 
