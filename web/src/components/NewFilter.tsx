@@ -26,6 +26,7 @@ import { FeedContext } from './Feed';
 import {
   getFilterVariablesFromFormValues,
   randomString,
+  getQueryStringFromFilters,
 } from '../util/helpers';
 import { useDeepCompareEffect } from 'react-use';
 import { useHotKey } from '../hooks/useHotKey';
@@ -183,7 +184,7 @@ export const FilterInput = ({
       valueNode = (
         <Labels
           canAddLabels={false}
-          selectedLabels={filter.value.map((name: string) =>
+          selectedLabels={filter.values.map((name: string) =>
             user.labels.find(label => label.name === name),
           )}
           onSelectedLabelChange={(selectedLabels: any) => {
@@ -312,9 +313,10 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
         !values[FORM_NAME] ? Object.values(values) : values[FORM_NAME],
       );
 
-      console.log('updating', filters);
-
-      await filter({ filters });
+      if (!_.isEqual(filters, variables.filters)) {
+        console.log('updating', filters, variables.filters);
+        await filter({ filters });
+      }
     }, 1000),
   );
 
@@ -340,6 +342,8 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
 
   useEffect(() => {
     if (isOpen) {
+      console.log('initializing', variables?.filters);
+
       filterForm.reset({
         [FORM_NAME]: variables?.filters || [],
       });

@@ -37,7 +37,14 @@ export const getFeedVariablesFromQueryString = (search: any) => {
 
   const filters = Object.entries(parsed).map(([key, value]) => {
     const [name, operator] = key.split('.');
-    return { name, operator, value };
+    const filter = { name, operator };
+
+    // @ts-ignore
+    if (Array.isArray(value)) filter.values = value;
+    // @ts-ignore
+    else filter.value = value;
+
+    return filter;
   });
 
   console.log(filters);

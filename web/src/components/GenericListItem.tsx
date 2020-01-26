@@ -174,6 +174,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                     '250px', // 480px upwards
                     '250px', // 768px upwards
                   ]}
+                  maxWidth="250px"
                   mr={3}
                   isTruncated
                 >
@@ -184,7 +185,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
               </Box>
               <Box
                 maxWidth="300px"
-                minWidth="150px"
+                minWidth="125px"
                 d="flex"
                 height="100%"
                 mr={3}
@@ -195,8 +196,8 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 </Text>
               </Box>
               <Box
-                maxWidth="200px"
-                minWidth="100px"
+                maxWidth="150px"
+                minWidth="70px"
                 d="flex"
                 height="100%"
                 mr={3}

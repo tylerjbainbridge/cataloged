@@ -458,9 +458,11 @@ export const Labels = ({
             {labelNodes.length > 1 && (
               <Popover trigger="hover" placement="bottom-start" closeOnBlur>
                 <PopoverTrigger>
-                  <Tag cursor="pointer" minWidth="auto" size="md" mr={2}>
-                    <TagLabel>...</TagLabel>
-                  </Tag>
+                  <Box>
+                    <Tag cursor="pointer" minWidth="auto" size="md" mr={2}>
+                      <TagLabel>...</TagLabel>
+                    </Tag>
+                  </Box>
                 </PopoverTrigger>
                 <PopoverContent zIndex={100} width="200px" p={3}>
                   <Box>{labelNodes}</Box>
