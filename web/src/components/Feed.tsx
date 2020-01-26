@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { useLocalStorage } from 'react-use';
-import { Box, Spinner, Button, Tooltip } from '@chakra-ui/core';
+import { Box, Spinner, Button, Tooltip, Text } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
 import queryString from 'query-string';
 
@@ -117,6 +117,8 @@ export const Feed = () => {
     }
   }, [variables]);
 
+  const { filters } = variables;
+
   const lastEdge = _.last(data?.itemsConnection?.edges || []);
 
   const nextPage = () =>
@@ -225,21 +227,37 @@ export const Feed = () => {
                 </Box>
               </Box>
               <br />
-              {initialLoad ? (
+              {items.length ? (
+                <>
+                  {initialLoad ? (
+                    <Box
+                      d="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      height="100%"
+                      width="100%"
+                    >
+                      <Spinner size="xl" />
+                    </Box>
+                  ) : mode === 'grid' ? (
+                    <GridFeed query={query} />
+                  ) : (
+                    <ListFeed query={query} />
+                  )}
+                </>
+              ) : (
                 <Box
                   d="flex"
                   justifyContent="center"
-                  alignItems="center"
                   height="100%"
                   width="100%"
                 >
-                  <Spinner size="xl" />
+                  <Text>
+                    {filters.length ? 'No results' : 'No items found'}
+                  </Text>
                 </Box>
-              ) : mode === 'grid' ? (
-                <GridFeed query={query} />
-              ) : (
-                <ListFeed query={query} />
               )}
+
               {networkStatus === 7 &&
                 !loading &&
                 data?.itemsConnection?.pageInfo?.hasNextPage && (
