@@ -119,8 +119,6 @@ export const Feed = () => {
 
   const lastEdge = _.last(data?.itemsConnection?.edges || []);
 
-  console.log(variables);
-
   const nextPage = () =>
     fetchMore({
       variables: {

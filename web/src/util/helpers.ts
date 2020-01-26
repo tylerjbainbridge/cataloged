@@ -40,6 +40,8 @@ export const getFeedVariablesFromQueryString = (search: any) => {
     return { name, operator, value };
   });
 
+  console.log(filters);
+
   return { filters };
 };
 
@@ -59,8 +61,8 @@ export const getFormValuesFromFilterVariables = (
     search: variables.search,
     onlyFavorites,
     status,
-    labels: labels.map((id: string) => {
-      const label = user.labels.find((label: any) => label.id === id);
+    labels: labels.map((name: string) => {
+      const label = user.labels.find((label: any) => label.name === name);
 
       return forQueryString ? label.id : label;
     }),
