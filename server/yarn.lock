@@ -3988,10 +3988,10 @@ pretty-format@^24.9.0:
     ansi-styles "^3.2.0"
     react-is "^16.8.4"
 
-prisma2@^2.0.0-preview020:
-  version "2.0.0-preview020.1"
-  resolved "https://registry.yarnpkg.com/prisma2/-/prisma2-2.0.0-preview020.1.tgz#7bc091b1f572f803127a973bccab2bbced8efbb1"
-  integrity sha512-CBcKtRkZ6BI4Ll47EQr5LlpYltXYn3AGgxC5fQ+Wgj5eoKJvtG16qxq+dbWvnQFJqTu99IzzEL0VyBqqDrtQvg==
+prisma2@^2.0.0-alpha.648:
+  version "2.0.0-alpha.648"
+  resolved "https://registry.yarnpkg.com/prisma2/-/prisma2-2.0.0-alpha.648.tgz#c5094f2f6d9d11a23f5835619883e7293d164c56"
+  integrity sha512-YvuApb978NV27hEXz7PLItRx8sPCyKYAnkGvD/yBhTqP1d17TpES7iCRZVRsUUjOj8sTaixn4RetWgYVoF4QoA==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"

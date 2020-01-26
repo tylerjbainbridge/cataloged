@@ -4,7 +4,7 @@ generator photon {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRESQL_URL")
+  url = "***"
 }
 
 model InviteCode {
@@ -18,7 +18,7 @@ model InviteCode {
   updatedAt DateTime @updatedAt
 }
 
-model InterestedUser {
+model Email {
   id String @id @default(cuid())
 
   email String
