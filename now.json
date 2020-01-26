@@ -6,7 +6,16 @@
     {
       "src": "web/package.json",
       "use": "@now/static-build",
+      "alias": "app.cataloged.com",
       "config": { "distDir": "build" }
+    },
+    {
+      "src": "landing-page/package.json",
+      "use": "@now/static-build",
+      "alias": "www.cataloged.com",
+      "config": {
+        "distDir": "public"
+      }
     },
     {
       "src": "server/src/functions/*.ts",
