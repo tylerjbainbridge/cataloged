@@ -38,11 +38,6 @@ export const AuthContext = React.createContext<ContextProps>(
   {} as ContextProps,
 );
 
-const localStorageUser = localStorage.getItem('user');
-
-const getParsedUser = (): getAuthUser_me | null =>
-  localStorageUser ? JSON.parse(localStorageUser) : null;
-
 export const Auth = ({ children }: { children: JSX.Element }) => {
   const { data, loading, refetch } = useQuery(GET_AUTH_USER, {
     fetchPolicy: 'network-only',
@@ -53,7 +48,6 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
   );
 
   const signOut = () => {
-    localStorage.removeItem('user');
     localStorage.removeItem('token');
     window.location.replace('/');
   };
@@ -67,19 +61,10 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
     }
   }, [token]);
 
-  useEffect(() => {
-    if (data && data.me) {
-      localStorage.setItem('user', JSON.stringify(data.me));
-    } else if (!loading) {
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-    }
-  }, [loading]);
-
   return (
     <AuthContext.Provider
       value={{
-        user: data ? data.me : getParsedUser(),
+        user: data ? data.me : null,
         token,
         setToken,
         refetchUser: refetch,
