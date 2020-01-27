@@ -13,6 +13,7 @@ const requireAuth = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
 });
 
 const admin = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
+  console.log(ctx.user);
   if (ctx.user === null || ctx.user.role !== 'admin') {
     throw new Error('Insufficient permissions!');
   }

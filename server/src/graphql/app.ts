@@ -50,7 +50,7 @@ app.use(morgan('tiny'));
 
 const server = new ApolloServer({
   schema: applyMiddleware(schema, permissions),
-  introspection: true,
+  introspection: process.env.NODE_ENV !== 'production',
   playground: true,
   formatError: (err: any) => {
     console.error(err.originalError);

@@ -17,6 +17,8 @@ export class TokenService {
   static async getUserFromToken(token: string): Promise<User> {
     const result = jwt.verify(token, process.env.JWT_SECRET);
 
+    console.log(result);
+
     const { id: userId }: Payload =
       typeof result === 'string' ? JSON.parse(result) : result;
 
