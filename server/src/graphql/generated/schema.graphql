@@ -244,6 +244,13 @@ input InviteCodeCreateWithoutUsersInput {
   updatedAt: DateTime
 }
 
+input InviteCodeOrderByInput {
+  code: OrderByArg
+  createdAt: OrderByArg
+  id: OrderByArg
+  updatedAt: OrderByArg
+}
+
 input InviteCodeWhereInput {
   AND: [InviteCodeWhereInput!]
   code: StringFilter
@@ -578,6 +585,7 @@ type Mutation {
   deleteManyItems(itemIds: [String!]!): [Item!]!
   deleteOneFile(where: FileWhereUniqueInput!): File
   disconnectLabelFromItem(itemId: String!, labelId: String!): Item!
+  enterInviteCode(code: String!): User!
   generateSignedUrls(signedURLArgs: [SignedURLArgs!]): InProgressUpload!
   googleSignIn(code: String!): JWT!
   processFiles(uploadGroupId: String): [File!]!
@@ -692,8 +700,10 @@ type PageInfo {
 
 type Query {
   _files(after: String, before: String, first: Int, last: Int, orderBy: FileOrderByInput, skip: Int, where: FileWhereInput): [File!]!
+  _inviteCodes(after: String, before: String, first: Int, last: Int, orderBy: InviteCodeOrderByInput, skip: Int, where: InviteCodeWhereInput): [InviteCode!]!
   _items(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
   _uploadgroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
+  _users(after: String, before: String, first: Int, last: Int, orderBy: UserOrderByInput, skip: Int, where: UserWhereInput): [User!]!
   file(where: FileWhereUniqueInput!): File
   googleURL: String!
   item(id: String!): Item!
@@ -802,6 +812,7 @@ type User {
   fullName: String!
   id: String!
   inviteCode: InviteCode
+  isActive: Boolean!
   items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]!
   labels(after: String, before: String, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   lastName: String
@@ -968,6 +979,17 @@ input UserFilter {
   every: UserWhereInput
   none: UserWhereInput
   some: UserWhereInput
+}
+
+input UserOrderByInput {
+  createdAt: OrderByArg
+  email: OrderByArg
+  firstName: OrderByArg
+  id: OrderByArg
+  isActive: OrderByArg
+  lastName: OrderByArg
+  role: OrderByArg
+  updatedAt: OrderByArg
 }
 
 input UserWhereInput {

@@ -6,6 +6,11 @@
 // GraphQL query operation: getAuthUser
 // ====================================================
 
+export interface getAuthUser_me_inviteCode {
+  __typename: "InviteCode";
+  code: string;
+}
+
 export interface getAuthUser_me_labels {
   __typename: "Label";
   id: string;
@@ -17,6 +22,8 @@ export interface getAuthUser_me {
   id: string;
   fullName: string;
   email: string;
+  isActive: boolean;
+  inviteCode: getAuthUser_me_inviteCode | null;
   labels: getAuthUser_me_labels[];
 }
 

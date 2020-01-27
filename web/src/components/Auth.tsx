@@ -12,6 +12,12 @@ const GET_AUTH_USER = gql`
       fullName
       email
 
+      isActive
+
+      inviteCode {
+        code
+      }
+
       labels {
         id
         name

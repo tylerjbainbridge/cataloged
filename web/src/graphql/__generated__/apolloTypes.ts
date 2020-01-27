@@ -15,8 +15,8 @@ export enum ItemStatus {
 export interface Filter {
   name: string;
   operator: string;
-  value?: string | null;
-  values?: string[] | null;
+  value?: any | null;
+  values?: any[] | null;
 }
 
 export interface SignedURLArgs {
