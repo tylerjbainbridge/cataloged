@@ -82,6 +82,18 @@ export const Query = objectType({
       },
     });
 
+    t.crud.users({
+      alias: '_users',
+      filtering: true,
+      ordering: true,
+    });
+
+    t.crud.inviteCodes({
+      alias: '_inviteCodes',
+      filtering: true,
+      ordering: true,
+    });
+
     t.crud.items({
       alias: '_items',
       filtering: true,

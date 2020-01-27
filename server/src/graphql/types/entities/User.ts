@@ -9,6 +9,7 @@ export const User = objectType({
     t.model.email();
 
     t.model.inviteCode();
+    t.model.isActive();
 
     t.string(
       'fullName',

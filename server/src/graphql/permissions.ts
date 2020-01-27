@@ -24,7 +24,7 @@ const allow = rule({ cache: 'no_cache' })(() => true);
 
 const noPrivateFields = rule({ cache: 'no_cache' })(
   (parent, args, ctx, info) => {
-    if (getFieldName(info).startsWith('_')) {
+    if (getFieldName(info).startsWith('_') && ctx.user.role !== 'admin') {
       throw new Error('Private!');
     }
 

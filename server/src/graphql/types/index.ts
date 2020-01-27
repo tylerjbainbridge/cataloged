@@ -19,6 +19,7 @@ export { deleteItem } from './mutations/deleteItem';
 export { deleteLabel } from './mutations/deleteLabel';
 export { deleteManyItems } from './mutations/deleteManyItems';
 export { disconnectLabelFromItem } from './mutations/disconnectLabelFromItem';
+export { enterInviteCode } from './mutations/enterInviteCode';
 export { generateSignedUrls } from './mutations/generateSignedUrls';
 export { googleSignIn } from './mutations/googleSignIn';
 export { processFiles } from './mutations/processFiles';
