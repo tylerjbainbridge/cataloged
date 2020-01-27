@@ -107,7 +107,6 @@ export const Filter = ({
         isCentered
         isOpen={isModalOpen}
         onClose={closeModal}
-        closeOnEsc
         closeOnOverlayClick
       >
         <ModalOverlay />

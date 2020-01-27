@@ -163,8 +163,17 @@ export const FeedBottomToolbar = () => {
               </Button>
             }
           />
+
+          <Button
+            cursor="pointer"
+            onClick={() => favoriteItems()}
+            leftIcon="star"
+          >
+            {isFavorited ? 'Add' : 'Remove'}
+          </Button>
           <Select
-            mr={3}
+            ml={3}
+            cursor="pointer"
             width="100px"
             placeholder="Status"
             onChange={(e: any) => {
@@ -182,13 +191,6 @@ export const FeedBottomToolbar = () => {
               </option>
             ))}
           </Select>
-          <Button
-            cursor="pointer"
-            onClick={() => favoriteItems()}
-            leftIcon="star"
-          >
-            {isFavorited ? 'Add' : 'Remove'}
-          </Button>
         </Box>
       </Box>
     </Box>

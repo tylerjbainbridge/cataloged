@@ -27,7 +27,10 @@ import {
   Text,
 } from '@chakra-ui/core';
 
+import color from 'color';
+
 import { useAuth } from '../hooks/useAuth';
+import { theme } from '../ui/theme';
 
 const ITEM_LABEL_RESPONSE_FRAGMENT = gql`
   fragment ItemLabelResponseFragment on Item {
@@ -236,6 +239,10 @@ export const Labels = ({
   const onKeyDown = (event: any) => {
     if (event.key === 'Enter' && filteredLabels[cursor]) {
       toggle(filteredLabels[cursor]);
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
     }
   };
 
@@ -271,9 +278,20 @@ export const Labels = ({
   //   // await filter(getFilterVariablesFromFormValues(variables));
   // };
 
+  const labelProps = {
+    // backgroundColor: color(theme.colors.gray['50'])
+    //   .lighten(0.8)
+    //   .opaquer(0.2)
+    //   .rgb()
+    //   .string(),
+    // color: color(theme.colors.gray['50'])
+    //   .rgb()
+    //   .string(),
+  };
+
   const labelNodes = labelSet.map(
     ({ id, name }: { id: string; name: string }) => (
-      <Tag minWidth="auto" size="md" key={name} m={1}>
+      <Tag minWidth="auto" size="md" key={name} m={1} {...labelProps}>
         {!displayOnly && (
           <TagIcon
             size="12px"
@@ -311,6 +329,7 @@ export const Labels = ({
             isOpen={isOpen}
             initialFocusRef={firstFieldRef}
             onOpen={onOpen}
+            closeOnEsc={false}
             onClose={() => {
               setValue('search', '');
               setCursor(0);
@@ -330,6 +349,7 @@ export const Labels = ({
                   variant="outline"
                   mr={2}
                   cursor="pointer"
+                  {...labelProps}
                 >
                   <Icon size="10px" name="edit" />
                 </Button>
@@ -338,7 +358,7 @@ export const Labels = ({
             <PopoverContent zIndex={100} width="400px">
               <PopoverArrow bg="white" />
               <Stack
-                spacing={4}
+                spacing="5px"
                 shouldWrapChildren
                 onKeyDown={onKeyDown}
                 onKeyUp={onKeyUp}
@@ -399,7 +419,9 @@ export const Labels = ({
                         >
                           {/* This is the sibling input, it's visually hidden */}
                           <Switch size="sm" isChecked={isChecked} />
-                          <Tag ml={3}>{name}</Tag>
+                          <Tag ml={3} {...labelProps}>
+                            {name}
+                          </Tag>
                         </PseudoBox>
                       );
                     })}
@@ -448,7 +470,11 @@ export const Labels = ({
               {labelNodes.length ? (
                 _.take(labelNodes, 1)
               ) : (
-                <Text ml={2} fontSize="sm">
+                <Text
+                  ml={2}
+                  fontSize="sm"
+                  // color={labelProps.color}
+                >
                   No labels
                 </Text>
               )}
@@ -457,7 +483,13 @@ export const Labels = ({
               <Popover trigger="hover" placement="bottom-start" closeOnBlur>
                 <PopoverTrigger>
                   <Box>
-                    <Tag cursor="pointer" minWidth="auto" size="md" mr={2}>
+                    <Tag
+                      cursor="pointer"
+                      minWidth="auto"
+                      size="md"
+                      mr={2}
+                      {...labelProps}
+                    >
                       <TagLabel>...</TagLabel>
                     </Tag>
                   </Box>

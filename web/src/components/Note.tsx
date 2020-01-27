@@ -31,7 +31,7 @@ export interface UpdateNoteFormValues {
   value: any[];
 }
 
-export const Note = ({ note }: { note: any }) => {
+export const Note = ({ note, updateNote }: any) => {
   const { getValues, watch, setValue, register } = useForm<
     UpdateNoteFormValues
   >({
@@ -44,15 +44,9 @@ export const Note = ({ note }: { note: any }) => {
 
   const textRef = useRef(serializeToPlainText(value));
 
-  const [updateNote] = useMutation(UPDATE_NOTE_MUTATION, {
-    variables: {
-      noteId: note.id,
-      raw: JSON.stringify(value),
-      text: removeMarkdown(textRef.current),
-    },
-  });
-
-  const debouncedUpdateNote = useDebounce(updateNote);
+  const debouncedUpdateNote = useDebounce((variables: any) =>
+    updateNote({ variables }),
+  );
 
   const [deleteItem] = useOptimisticDeleteItem(note.item);
 
@@ -68,7 +62,11 @@ export const Note = ({ note }: { note: any }) => {
 
     if (nextText !== textRef.current) {
       //@ts-ignore
-      debouncedUpdateNote(value);
+      debouncedUpdateNote({
+        noteId: note.id,
+        raw: JSON.stringify(value),
+        text: removeMarkdown(textRef.current),
+      });
     }
 
     textRef.current = nextText;

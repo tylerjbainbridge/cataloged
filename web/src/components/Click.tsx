@@ -6,9 +6,11 @@ export interface ClickProps {
   children: (args: {
     cursor?: 'pointer';
     onClick: any;
+    onTouchStart: any;
     onDoubleClick: () => void;
   }) => any;
   onSingleClick?: () => void;
+  onTouchStart?: () => void;
   onDoubleClick?: any | ((debouncedSingleClick: any) => void);
   onMetaClick?: any | ((debouncedSingleClick: any) => void);
   onShiftClick?: any | ((debouncedSingleClick: any) => void);
@@ -54,6 +56,7 @@ export const Click = (props: ClickProps) => {
   return props.children({
     ...(hasClickHandler ? { cursor: 'pointer' } : {}),
     onClick: onSingleClick,
+    onTouchStart: onSingleClick,
     onDoubleClick: onDoubleClick,
   });
 };
