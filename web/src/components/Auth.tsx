@@ -40,7 +40,7 @@ export const AuthContext = React.createContext<ContextProps>(
 
 export const Auth = ({ children }: { children: JSX.Element }) => {
   const { data, loading, refetch } = useQuery(GET_AUTH_USER, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   });
 
   const [token, setToken] = useState<googleSignIn_googleSignIn['token'] | null>(
