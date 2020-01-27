@@ -153,7 +153,6 @@ export const LinkModal = ({
         scrollBehavior="inside"
         isOpen={isOpen}
         onClose={onClose}
-        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent maxWidth={500} maxHeight={700}>
@@ -235,7 +234,9 @@ export const LinkModal = ({
           </ModalBody>
           <ModalFooter justifyContent="space-between" pt={5}>
             <Labels item={item} />
-            <Box>{isSaving ? <Spinner size="sm" /> : 'Up to date'} </Box>
+            <Box d="flex" alignItems="center">
+              {isSaving ? <Spinner size="sm" /> : 'Up to date'}{' '}
+            </Box>
           </ModalFooter>
         </ModalContent>
       </Modal>

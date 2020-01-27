@@ -5,7 +5,9 @@ import { ApolloProvider } from "react-apollo"
 import ApolloClient from "apollo-boost"
 
 export const GRAPHQL_ENDPOINT =
-  process.env.NODE_ENV === "development" ? "http://localhost:5000" : "/graphql"
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:5000"
+    : "https://app.cataloged.co/graphql"
 
 export const client = new ApolloClient({
   uri: GRAPHQL_ENDPOINT,

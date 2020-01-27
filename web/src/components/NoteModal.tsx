@@ -16,7 +16,11 @@ import {
   useDisclosure,
 } from '@chakra-ui/core';
 
-import { CREATE_NOTE_MUTATION, NOTE_FULL_FRAGMENT } from '../graphql/note';
+import {
+  CREATE_NOTE_MUTATION,
+  NOTE_FULL_FRAGMENT,
+  UPDATE_NOTE_MUTATION,
+} from '../graphql/note';
 
 import { EMPTY_NOTE_VALUE, serializeToPlainText, Note } from './Note';
 import { Labels } from './Labels';
@@ -57,6 +61,8 @@ export const NoteModal = ({
     refetchQueries: ['feed'],
   });
 
+  const [updateNote, { loading: isSaving }] = useMutation(UPDATE_NOTE_MUTATION);
+
   useEffect(() => {
     if (isOpen && !item) createNote();
   }, [isOpen]);
@@ -92,7 +98,6 @@ export const NoteModal = ({
         scrollBehavior="inside"
         isOpen={isOpen}
         onClose={onClose}
-        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent height={700} width={700}>
@@ -101,7 +106,7 @@ export const NoteModal = ({
           <ModalBody>
             <Box p={5} height="100%">
               {note ? (
-                <Note note={note} />
+                <Note note={note} updateNote={updateNote} />
               ) : (
                 <Box d="flex" justifyContent="center">
                   <Spinner />
@@ -112,6 +117,9 @@ export const NoteModal = ({
           {note && (
             <ModalFooter justifyContent="space-between" pt={5}>
               <Labels item={note.item} />
+              <Box d="flex" alignItems="center">
+                {isSaving ? <Spinner size="sm" /> : 'Up to date'}{' '}
+              </Box>
             </ModalFooter>
           )}
         </ModalContent>

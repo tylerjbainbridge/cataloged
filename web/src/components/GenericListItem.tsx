@@ -31,9 +31,12 @@ import { LazyImage } from './LazyImage';
 import { Labels } from './Labels';
 import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
 import { ItemStatus } from '../graphql/__generated__/apolloTypes';
+import { useMedia } from 'react-use';
 
 export const GenericListItem = ({ item }: { item: ItemFull }) => {
   const { openItemModal } = useContext(FeedContext);
+
+  const isMobile = useMedia('(max-width: 768px)');
 
   const [selectedStatus, updatedSelectedStatus] = useState<ItemStatus | null>(
     item.status,
@@ -109,9 +112,11 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
         {clickProps => (
           <PseudoBox
             d="flex"
+            // flexWrap="wrap"
             width="90%"
-            rounded="lg"
+            // width={['100%', '90%']}
             height="50px"
+            rounded="lg"
             ref={itemRef}
             onMouseEnter={baseHoverState.onOpen}
             onMouseLeave={baseHoverState.onClose}
@@ -147,7 +152,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 {image ? (
                   <LazyImage
                     src={image}
-                    width="90px"
+                    width={isMobile ? '50px' : '90px'}
                     height="100%"
                     objectFit="cover"
                     rounded="lg"
@@ -157,7 +162,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 ) : (
                   <Box
                     d="flex"
-                    width="90px"
+                    width={isMobile ? '50px' : '90px'}
                     height="100%"
                     rounded="lg"
                     alignItems="center"
@@ -174,7 +179,6 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                     '250px', // 480px upwards
                     '250px', // 768px upwards
                   ]}
-                  maxWidth="250px"
                   mr={3}
                   isTruncated
                 >
@@ -206,48 +210,53 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 <Text>{_.upperFirst(item.type)}</Text>
               </Box>
 
-              <Box
-                d="flex"
-                height="100%"
-                maxWidth="200px"
-                minWidth="100px"
-                alignItems="center"
-              >
-                <Labels item={item} />
-              </Box>
+              {!isMobile && (
+                <Box
+                  d="flex"
+                  height="100%"
+                  maxWidth="200px"
+                  minWidth="100px"
+                  alignItems="center"
+                >
+                  <Labels item={item} />
+                </Box>
+              )}
             </Box>
             <Box
               d="flex"
+              flexWrap="nowrap"
               width="200px"
               justifyContent="space-between"
               alignItems="center"
             >
-              <Select
-                cursor="pointer"
-                rounded="lg"
-                width="110px"
-                size="sm"
-                value={item.status}
-                onClick={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-                onChange={(e: any) => {
-                  e.preventDefault();
-                  // @ts-ignore
-                  updatedSelectedStatus(e.target.value);
-                }}
-              >
-                {[
-                  ['NOT_STARTED', 'Not started'],
-                  ['IN_PROGRESS', 'In progress'],
-                  ['DONE', 'Done'],
-                ].map(([value, text]) => (
-                  <option value={value} key={value}>
-                    {text}
-                  </option>
-                ))}
-              </Select>
+              {!isMobile && (
+                <Select
+                  cursor="pointer"
+                  rounded="lg"
+                  width="110px"
+                  size="sm"
+                  value={item.status}
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onChange={(e: any) => {
+                    e.preventDefault();
+                    // @ts-ignore
+                    updatedSelectedStatus(e.target.value);
+                  }}
+                >
+                  {[
+                    ['NOT_STARTED', 'Not started'],
+                    ['IN_PROGRESS', 'In progress'],
+                    ['DONE', 'Done'],
+                  ].map(([value, text]) => (
+                    <option value={value} key={value}>
+                      {text}
+                    </option>
+                  ))}
+                </Select>
+              )}
               <Popover
               //@ts-ignore
               // usePortal

@@ -47,7 +47,6 @@ export const FileModal = ({
         scrollBehavior="inside"
         isOpen={isOpen}
         onClose={onClose}
-        closeOnEsc={false}
       >
         <ModalOverlay />
         <ModalContent maxWidth={1200}>

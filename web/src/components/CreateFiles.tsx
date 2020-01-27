@@ -102,7 +102,7 @@ export const CreateFiles = () => {
               })),
             },
           });
-          
+
           console.log('fetched urls');
 
           await Promise.all(
@@ -118,7 +118,7 @@ export const CreateFiles = () => {
                   'Content-Type': file.type,
                 },
               });
-              
+
               console.log(`finished uploading ${idx + 1}`);
 
               return { tempKey: key, originalFilename: file.name };
@@ -128,7 +128,7 @@ export const CreateFiles = () => {
           setIsUploading(false);
           closeModal();
           setFiles({});
-          
+
           console.log('started processing');
 
           await processFiles({ variables: { uploadGroupId: uploadGroup.id } });
@@ -214,7 +214,6 @@ export const CreateFiles = () => {
         </Button>
       </Tooltip>
       <Modal
-        closeOnEsc={false}
         size="600px"
         isOpen={isModalOpen}
         scrollBehavior="inside"

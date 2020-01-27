@@ -57,6 +57,8 @@ export const CreateLink = () => {
     mode: 'onSubmit',
   });
 
+  const inputRef = useRef(null);
+
   const toast = useToast();
 
   watch('href');
@@ -117,8 +119,8 @@ export const CreateLink = () => {
       <Modal
         onClose={cleanup}
         scrollBehavior="inside"
-        closeOnEsc={false}
         isOpen={isModalOpen}
+        initialFocusRef={inputRef}
       >
         <ModalOverlay />
 
@@ -136,7 +138,15 @@ export const CreateLink = () => {
           <ModalBody>
             <FormControl isInvalid={!!errors.href}>
               <FormLabel htmlFor="href">URL</FormLabel>
-              <Input name="href" id="href" defaultValue={href} ref={register} />
+              <Input
+                name="href"
+                id="href"
+                defaultValue={href}
+                ref={(ref: any) => {
+                  register(ref);
+                  inputRef.current = ref;
+                }}
+              />
               <FormHelperText>
                 Type, paste, or drag a URL into this window.
               </FormHelperText>
