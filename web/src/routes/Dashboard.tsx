@@ -12,7 +12,7 @@ export const DashboardContainer = styled.div`
 export const Dashboard = () => {
   const { user } = useAuth();
 
-  if (!user.isActive || true) {
+  if (!user.isActive) {
     return <EnterInviteCode />;
   }
 
