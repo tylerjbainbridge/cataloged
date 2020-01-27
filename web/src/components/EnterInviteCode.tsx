@@ -12,6 +12,7 @@ import {
 import { useMutation } from 'react-apollo';
 import { useForm } from 'react-hook-form';
 import { gql } from 'apollo-boost';
+import { SignOut } from './SignOut';
 
 const ENTER_INVITE_CODE = gql`
   mutation enterInviteCode($code: String!) {
@@ -50,6 +51,9 @@ export const EnterInviteCode = () => {
       alignItems="center"
       justifyContent="center"
     >
+      <Box position="fixed" right="0" top="0" p="20px">
+        <SignOut />
+      </Box>
       <form
         onSubmit={handleSubmit(data => {
           if (data.code) enterInviteCode({ variables: data });
