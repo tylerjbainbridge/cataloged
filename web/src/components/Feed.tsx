@@ -183,6 +183,10 @@ export const Feed = () => {
                 justifyContent="space-between"
                 alignItems="center"
                 flexWrap="wrap"
+                // position="sticky"
+                // top={0}
+                // zIndex={1}
+                // bg="rgb(255, 255, 255, 0.7)"
               >
                 <Box
                   d="flex"
