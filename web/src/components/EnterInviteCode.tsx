@@ -13,6 +13,7 @@ import { useMutation } from 'react-apollo';
 import { useForm } from 'react-hook-form';
 import { gql } from 'apollo-boost';
 import { SignOut } from './SignOut';
+import { useAuth } from '../hooks/useAuth';
 
 const ENTER_INVITE_CODE = gql`
   mutation enterInviteCode($code: String!) {
@@ -28,11 +29,14 @@ const ENTER_INVITE_CODE = gql`
 `;
 
 export const EnterInviteCode = () => {
+  const { refetchUser } = useAuth();
+
   const { register, handleSubmit, errors } = useForm();
 
   const toast = useToast();
 
   const [enterInviteCode, { loading }] = useMutation(ENTER_INVITE_CODE, {
+    onCompleted: () => refetchUser(),
     onError: () => {
       toast({
         title: 'Invalid code',

@@ -44,7 +44,7 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
           title: item.link.title || item.link.href,
           createdAt: item.link.createdAt,
           image: item.link.image,
-          icon: 'link',
+          icon: 'external-link',
           action: () => window.open(item?.link?.href, '_blank'),
         };
       }
