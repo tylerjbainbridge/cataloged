@@ -121,11 +121,7 @@ export const LinkModal = ({
 
   useEffect(() => {
     if (isOpen) {
-      if (
-        !_.isEqual(prevValues.current, values) &&
-        values.href &&
-        values.title
-      ) {
+      if (!_.isEqual(prevValues.current, values) && values.href) {
         //@ts-ignore
         debouncedUpdateLink();
       }

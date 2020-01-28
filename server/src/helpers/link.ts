@@ -13,9 +13,8 @@ const metascraper = require('metascraper')([
 ]);
 
 export const getMetadataFromUrl = async (url: string) => {
-  const { data: html } = await axios.get(url);
-
   try {
+    const { data: html } = await axios.get(url);
     return await metascraper({ html, url });
   } catch (e) {
     return {};
