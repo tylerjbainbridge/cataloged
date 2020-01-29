@@ -1,19 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import _ from 'lodash';
 import {
-  DrawerCloseButton,
-  DrawerHeader,
-  DrawerBody,
   Stack,
-  DrawerFooter,
-  Button,
   Box,
   DrawerContent,
   Text,
   IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
   MenuItem,
   Flex,
   FormControl,
@@ -29,10 +21,8 @@ import { LazyImage } from './LazyImage';
 import { ItemFull_file, ItemFull } from '../graphql/__generated__/ItemFull';
 import { ItemDrawerProps } from '../routes/FeedDrawerItemView';
 import { Labels } from './Labels';
-import { FaEllipsisH } from 'react-icons/fa';
 import { ItemActionMenu } from './ItemActionMenu';
 import { useForm } from 'react-hook-form';
-import { useDebounce } from '../hooks/useDebounce';
 import { useMutation } from 'react-apollo';
 import { UPDATE_FILE_MUTATION } from '../graphql/file';
 import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
@@ -52,12 +42,7 @@ export interface UpdateFileFormValues {
   description: string | null;
 }
 
-export const FileDrawer = ({
-  item,
-  onClose,
-  isFullScreen,
-  toggleFullScreen,
-}: FileDrawerProps) => {
+export const FileDrawer = ({ item, onClose }: FileDrawerProps) => {
   const { file } = item;
 
   const { getValues, setValue, watch, errors, register } = useForm<
@@ -74,10 +59,7 @@ export const FileDrawer = ({
     UPDATE_FILE_MUTATION,
   );
 
-  console.log('mutation data', data);
-
   useEffect(() => {
-    console.log('initializing values', file);
     setValue('title', file.title);
     setValue('description', file.description);
   }, []);
