@@ -25,6 +25,7 @@ export { googleSignIn } from './mutations/googleSignIn';
 export { processFiles } from './mutations/processFiles';
 export { refreshLinkMeta } from './mutations/refreshLinkMeta';
 export { updateFavoriteManyItems } from './mutations/updateFavoriteManyItems';
+export { updateFile } from './mutations/updateFile';
 export { updateLink } from './mutations/updateLink';
 export { updateNote } from './mutations/updateNote';
 export { updateStatusManyItems } from './mutations/updateStatusManyItems';

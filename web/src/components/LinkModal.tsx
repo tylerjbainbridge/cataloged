@@ -115,7 +115,7 @@ export const LinkModal = ({
     if (isOpen) {
       setValue('href', link.href);
       setValue('title', link.title);
-      setValue('description', link.title);
+      setValue('description', link.description);
     }
   }, [isOpen]);
 
@@ -225,6 +225,10 @@ export const LinkModal = ({
                 <FormErrorMessage>
                   {errors?.description?.message}
                 </FormErrorMessage>
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="title">Labels</FormLabel>
+                <Labels item={item} numDisplayLabels={10} />
               </FormControl>
             </Stack>
           </ModalBody>

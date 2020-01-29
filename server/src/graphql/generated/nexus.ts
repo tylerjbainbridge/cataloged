@@ -43,6 +43,7 @@ export interface NexusGenInputs {
   }
   FileCreateInput: { // input type
     createdAt?: any | null; // DateTime
+    description?: string | null; // String
     extension?: string | null; // String
     hasStartedUploading?: boolean | null; // Boolean
     height?: number | null; // Int
@@ -52,6 +53,7 @@ export interface NexusGenInputs {
     item: NexusGenInputs['ItemCreateOneWithoutFileInput']; // ItemCreateOneWithoutFileInput!
     name?: string | null; // String
     size?: string | null; // String
+    title?: string | null; // String
     updatedAt?: any | null; // DateTime
     uploadGroup: NexusGenInputs['UploadGroupCreateOneWithoutFilesInput']; // UploadGroupCreateOneWithoutFilesInput!
     user: NexusGenInputs['UserCreateOneWithoutFilesInput']; // UserCreateOneWithoutFilesInput!
@@ -71,6 +73,7 @@ export interface NexusGenInputs {
   }
   FileCreateWithoutItemInput: { // input type
     createdAt?: any | null; // DateTime
+    description?: string | null; // String
     extension?: string | null; // String
     hasStartedUploading?: boolean | null; // Boolean
     height?: number | null; // Int
@@ -79,6 +82,7 @@ export interface NexusGenInputs {
     isUploaded?: boolean | null; // Boolean
     name?: string | null; // String
     size?: string | null; // String
+    title?: string | null; // String
     updatedAt?: any | null; // DateTime
     uploadGroup: NexusGenInputs['UploadGroupCreateOneWithoutFilesInput']; // UploadGroupCreateOneWithoutFilesInput!
     user: NexusGenInputs['UserCreateOneWithoutFilesInput']; // UserCreateOneWithoutFilesInput!
@@ -86,6 +90,7 @@ export interface NexusGenInputs {
   }
   FileCreateWithoutUploadGroupInput: { // input type
     createdAt?: any | null; // DateTime
+    description?: string | null; // String
     extension?: string | null; // String
     hasStartedUploading?: boolean | null; // Boolean
     height?: number | null; // Int
@@ -95,12 +100,14 @@ export interface NexusGenInputs {
     item: NexusGenInputs['ItemCreateOneWithoutFileInput']; // ItemCreateOneWithoutFileInput!
     name?: string | null; // String
     size?: string | null; // String
+    title?: string | null; // String
     updatedAt?: any | null; // DateTime
     user: NexusGenInputs['UserCreateOneWithoutFilesInput']; // UserCreateOneWithoutFilesInput!
     width?: number | null; // Int
   }
   FileCreateWithoutUserInput: { // input type
     createdAt?: any | null; // DateTime
+    description?: string | null; // String
     extension?: string | null; // String
     hasStartedUploading?: boolean | null; // Boolean
     height?: number | null; // Int
@@ -110,6 +117,7 @@ export interface NexusGenInputs {
     item: NexusGenInputs['ItemCreateOneWithoutFileInput']; // ItemCreateOneWithoutFileInput!
     name?: string | null; // String
     size?: string | null; // String
+    title?: string | null; // String
     updatedAt?: any | null; // DateTime
     uploadGroup: NexusGenInputs['UploadGroupCreateOneWithoutFilesInput']; // UploadGroupCreateOneWithoutFilesInput!
     width?: number | null; // Int
@@ -121,6 +129,7 @@ export interface NexusGenInputs {
   }
   FileOrderByInput: { // input type
     createdAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    description?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     extension?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     hasStartedUploading?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     height?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
@@ -129,12 +138,14 @@ export interface NexusGenInputs {
     isUploaded?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     name?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     size?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    title?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     width?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   FileWhereInput: { // input type
     AND?: NexusGenInputs['FileWhereInput'][] | null; // [FileWhereInput!]
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    description?: NexusGenInputs['StringFilter'] | null; // StringFilter
     extension?: NexusGenInputs['StringFilter'] | null; // StringFilter
     hasStartedUploading?: NexusGenInputs['NullableBooleanFilter'] | null; // NullableBooleanFilter
     height?: NexusGenInputs['NullableIntFilter'] | null; // NullableIntFilter
@@ -146,6 +157,7 @@ export interface NexusGenInputs {
     NOT?: NexusGenInputs['FileWhereInput'][] | null; // [FileWhereInput!]
     OR?: NexusGenInputs['FileWhereInput'][] | null; // [FileWhereInput!]
     size?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    title?: NexusGenInputs['StringFilter'] | null; // StringFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     uploadGroup?: NexusGenInputs['UploadGroupWhereInput'] | null; // UploadGroupWhereInput
     user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
@@ -778,12 +790,14 @@ export interface NexusGenEnums {
 export interface NexusGenRootTypes {
   File: { // root type
     createdAt: any; // DateTime!
+    description: string; // String!
     extension: string; // String!
     height?: number | null; // Int
     id: string; // String!
     isUploaded?: boolean | null; // Boolean
     name: string; // String!
     size?: string | null; // String
+    title: string; // String!
     updatedAt: any; // DateTime!
     width?: number | null; // Int
   }
@@ -975,14 +989,18 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
 export interface NexusGenFieldTypes {
   File: { // field return type
     createdAt: any; // DateTime!
+    description: string; // String!
     extension: string; // String!
     fullUrl: string; // String!
     height: number | null; // Int
     id: string; // String!
     isUploaded: boolean | null; // Boolean
+    item: NexusGenRootTypes['Item']; // Item!
     name: string; // String!
+    originalName: string; // String!
     size: string | null; // String
     squareUrl: string; // String!
+    title: string; // String!
     updatedAt: any; // DateTime!
     uploadGroup: NexusGenRootTypes['UploadGroup']; // UploadGroup!
     width: number | null; // Int
@@ -1066,6 +1084,7 @@ export interface NexusGenFieldTypes {
     processFiles: NexusGenRootTypes['File'][]; // [File!]!
     refreshLinkMeta: NexusGenRootTypes['Link']; // Link!
     updateFavoriteManyItems: NexusGenRootTypes['Item'][]; // [Item!]!
+    updateFile: NexusGenRootTypes['File']; // File!
     updateLink: NexusGenRootTypes['Link']; // Link!
     updateNote: NexusGenRootTypes['Note']; // Note!
     updateStatusManyItems: NexusGenRootTypes['Item'][]; // [Item!]!
@@ -1209,6 +1228,11 @@ export interface NexusGenArgTypes {
     updateFavoriteManyItems: { // args
       isFavorited: boolean; // Boolean!
       itemIds: string[]; // [String!]!
+    }
+    updateFile: { // args
+      description?: string | null; // String
+      fileId: string; // String!
+      title?: string | null; // String
     }
     updateLink: { // args
       description?: string | null; // String

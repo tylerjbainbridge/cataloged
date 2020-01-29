@@ -27,6 +27,7 @@ import {
 } from '@chakra-ui/core';
 import { useGlobalModal, ModalName } from './GlobalModal';
 import { useHotKey } from '../hooks/useHotKey';
+import { useGoToPath } from '../hooks/useGoToPath';
 
 const CreateLinkSchema = yup.object().shape({
   href: yup
@@ -40,6 +41,14 @@ const CREATE_LINK_MUTATION = gql`
     createLink(href: $href) {
       id
       href
+
+      item {
+        id
+        type
+
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -63,6 +72,8 @@ export const CreateLink = () => {
 
   watch('href');
 
+  const [goTo] = useGoToPath();
+
   const { href } = getValues();
 
   const { isModalOpen, openModal, toggleModal, closeModal } = useGlobalModal(
@@ -74,7 +85,7 @@ export const CreateLink = () => {
   const [createLink, { loading }] = useMutation(CREATE_LINK_MUTATION, {
     variables: { href },
     refetchQueries: ['feed'],
-    onCompleted: () => {
+    onCompleted: data => {
       cleanup();
 
       toast({
@@ -83,6 +94,8 @@ export const CreateLink = () => {
         duration: 2000,
         position: 'top',
       });
+
+      goTo(`/item/${data?.createLink?.item?.id}`);
     },
   });
 

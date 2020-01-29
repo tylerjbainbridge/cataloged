@@ -32,6 +32,8 @@ import { Labels } from './Labels';
 import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
 import { ItemStatus } from '../graphql/__generated__/apolloTypes';
 import { useMedia } from 'react-use';
+import { useHistory } from 'react-router-dom';
+import { useGoToPath } from '../hooks/useGoToPath';
 
 export const GenericListItem = ({ item }: { item: ItemFull }) => {
   const { openItemModal } = useContext(FeedContext);
@@ -41,6 +43,8 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
   const [selectedStatus, updatedSelectedStatus] = useState<ItemStatus | null>(
     item.status,
   );
+
+  const [goTo] = useGoToPath();
 
   const { title, icon, image } = getGenericItemData(item);
 
@@ -103,7 +107,9 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
       <Click
         onDoubleClick={(debouncedSingleClick: any) => {
           debouncedSingleClick.cancel();
-          openItemModal(item);
+          // openItemModal(item);
+
+          goTo(`/item/${item.id}`);
         }}
         onSingleClick={onResetAndSelectThunk(item)}
         onMetaClick={onToggleThunk(item)}

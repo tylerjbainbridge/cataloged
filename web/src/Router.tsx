@@ -1,5 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
+
+import { createBrowserHistory } from 'history';
 
 import { Dashboard } from './routes/Dashboard';
 import { Note } from './components/Note';
@@ -15,13 +17,19 @@ export const Router = () => {
   const Root = auth.user ? Dashboard : ForceSignIn;
 
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/" exact component={Root} />
-        <Route path="/note/:id" exact component={Note} />
-        <Route path="/google/redirect" exact component={GoogleCallback} />
-        <Route path="/playground" exact component={Playground} />
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Route path="/note/:id" exact>
+        <Note />
+      </Route>
+      <Route path="/google/redirect" exact>
+        <GoogleCallback />
+      </Route>
+      <Route path="/playground" exact>
+        <Playground />
+      </Route>
+      <Route path="*">
+        <Root />
+      </Route>
+    </Switch>
   );
 };

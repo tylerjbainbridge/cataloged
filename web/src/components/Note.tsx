@@ -85,6 +85,7 @@ export const Note = ({ note, updateNote }: any) => {
     <MarkdownEditor
       // @ts-ignore
       value={value}
+      placeholder="Start typing..."
       onChange={(slateVal: any[]) => {
         setValue('value', slateVal);
       }}

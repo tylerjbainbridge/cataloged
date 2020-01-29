@@ -5,29 +5,29 @@
 import { ItemStatus } from "./apolloTypes";
 
 // ====================================================
-// GraphQL fragment: ItemFull
+// GraphQL query operation: getItem
 // ====================================================
 
-export interface ItemFull_labels {
+export interface getItem_item_labels {
   __typename: "Label";
   id: string;
   name: string;
 }
 
-export interface ItemFull_link_item_labels {
+export interface getItem_item_link_item_labels {
   __typename: "Label";
   id: string;
   name: string;
 }
 
-export interface ItemFull_link_item {
+export interface getItem_item_link_item {
   __typename: "Item";
   id: string;
   type: string;
-  labels: ItemFull_link_item_labels[];
+  labels: getItem_item_link_item_labels[];
 }
 
-export interface ItemFull_link {
+export interface getItem_item_link {
   __typename: "Link";
   id: string;
   href: string;
@@ -38,23 +38,23 @@ export interface ItemFull_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: ItemFull_link_item | null;
+  item: getItem_item_link_item | null;
 }
 
-export interface ItemFull_file_item_labels {
+export interface getItem_item_file_item_labels {
   __typename: "Label";
   id: string;
   name: string;
 }
 
-export interface ItemFull_file_item {
+export interface getItem_item_file_item {
   __typename: "Item";
   id: string;
   type: string;
-  labels: ItemFull_file_item_labels[];
+  labels: getItem_item_file_item_labels[];
 }
 
-export interface ItemFull_file {
+export interface getItem_item_file {
   __typename: "File";
   id: string;
   name: string;
@@ -67,33 +67,33 @@ export interface ItemFull_file {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: ItemFull_file_item;
+  item: getItem_item_file_item;
 }
 
-export interface ItemFull_note_item_labels {
+export interface getItem_item_note_item_labels {
   __typename: "Label";
   id: string;
   name: string;
 }
 
-export interface ItemFull_note_item {
+export interface getItem_item_note_item {
   __typename: "Item";
   id: string;
   type: string;
-  labels: ItemFull_note_item_labels[];
+  labels: getItem_item_note_item_labels[];
 }
 
-export interface ItemFull_note {
+export interface getItem_item_note {
   __typename: "Note";
   id: string;
   raw: string;
   text: string;
   createdAt: any;
   updatedAt: any;
-  item: ItemFull_note_item | null;
+  item: getItem_item_note_item | null;
 }
 
-export interface ItemFull {
+export interface getItem_item {
   __typename: "Item";
   id: string;
   type: string;
@@ -101,8 +101,16 @@ export interface ItemFull {
   updatedAt: any;
   isFavorited: boolean;
   status: ItemStatus;
-  labels: ItemFull_labels[];
-  link: ItemFull_link | null;
-  file: ItemFull_file | null;
-  note: ItemFull_note | null;
+  labels: getItem_item_labels[];
+  link: getItem_item_link | null;
+  file: getItem_item_file | null;
+  note: getItem_item_note | null;
+}
+
+export interface getItem {
+  item: getItem_item;
+}
+
+export interface getItemVariables {
+  id: string;
 }

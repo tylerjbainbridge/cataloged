@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
 import { NOTE_FULL_FRAGMENT } from './note';
 import { LINK_FULL_FRAGMENT } from './link';
+import { FILE_FULL_FRAGMENT } from './file';
 
 export const ITEM_FULL_FRAGMENT = gql`
   fragment ItemFull on Item {
@@ -23,15 +24,7 @@ export const ITEM_FULL_FRAGMENT = gql`
     }
 
     file {
-      id
-      name
-      extension
-      isUploaded
-      fullUrl
-      squareUrl
-
-      createdAt
-      updatedAt
+      ...FileFull
     }
 
     note {
@@ -41,6 +34,7 @@ export const ITEM_FULL_FRAGMENT = gql`
 
   ${LINK_FULL_FRAGMENT}
   ${NOTE_FULL_FRAGMENT}
+  ${FILE_FULL_FRAGMENT}
 `;
 
 export const ITEM_CONNECTION_FULL_FRAGMENT = gql`
@@ -133,4 +127,14 @@ export const UPDATE_STATUS_MANY_ITEMS_MUTATION = gql`
       status
     }
   }
+`;
+
+export const GET_ITEM = gql`
+  query getItem($id: String!) {
+    item(id: $id) {
+      ...ItemFull
+    }
+  }
+
+  ${ITEM_FULL_FRAGMENT}
 `;

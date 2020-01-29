@@ -86,6 +86,7 @@ export const Labels = ({
   trigger = null,
   displayOnly = false,
   onApply,
+  numDisplayLabels = 1,
 }: {
   item?: any;
   selectedLabels?: any[];
@@ -95,6 +96,7 @@ export const Labels = ({
   trigger?: JSX.Element | null;
   displayOnly?: boolean;
   onApply?: (labels: any[]) => any;
+  numDisplayLabels?: number;
 }) => {
   const [cursor, setCursor] = useState(0);
   const { user, refetchUser } = useAuth();
@@ -314,12 +316,12 @@ export const Labels = ({
       flexDirection="row"
       alignItems="center"
       justifyContent="flex-start"
-      height="40px"
+      // height="40px"
     >
       <Box
         d="flex"
         flexDirection="row"
-        alignItems="center"
+        alignItems="flex-start"
         justifyContent="flex-start"
         maxWidth="100%"
       >
@@ -339,6 +341,7 @@ export const Labels = ({
             <PopoverTrigger>
               {trigger || (
                 <Button
+                  mt={1}
                   size="xs"
                   height="25px"
                   onClick={e => {
@@ -346,12 +349,12 @@ export const Labels = ({
                     onOpen();
                   }}
                   aria-label="add labels"
-                  variant="outline"
+                  variant="ghost"
                   mr={2}
                   cursor="pointer"
                   {...labelProps}
                 >
-                  <Icon size="10px" name="edit" />
+                  <Icon size="14px" name="add" />
                 </Button>
               )}
             </PopoverTrigger>
@@ -391,7 +394,7 @@ export const Labels = ({
                 {!!filteredLabels.length && (
                   <Stack
                     spacing={2}
-                    maxHeight="200px"
+                    height="200px"
                     maxWidth="100%"
                     overflowY="auto"
                   >
@@ -461,29 +464,30 @@ export const Labels = ({
               alignItems="center"
               justifyContent="flex-start"
               height="100%"
-              maxHeight="60px"
               overflowY="hidden"
               overflowX="hidden"
-              flexWrap="nowrap"
+              flexWrap="wrap"
               maxWidth="100%"
             >
-              {labelNodes.length ? (
-                _.take(labelNodes, 1)
-              ) : (
-                <Text
-                  ml={2}
-                  fontSize="sm"
-                  // color={labelProps.color}
-                >
-                  No labels
-                </Text>
-              )}
+              {labelNodes.length
+                ? _.take(labelNodes, numDisplayLabels)
+                : null && (
+                    <Text
+                      ml={2}
+                      fontSize="sm"
+                      verticalAlign="center"
+                      // color={labelProps.color}
+                    >
+                      No labels
+                    </Text>
+                  )}
             </Box>
-            {labelNodes.length > 1 && (
+            {labelNodes.length > numDisplayLabels && (
               <Popover trigger="hover" placement="bottom-start" closeOnBlur>
                 <PopoverTrigger>
                   <Box>
                     <Tag
+                      mt={1}
                       cursor="pointer"
                       minWidth="auto"
                       size="md"

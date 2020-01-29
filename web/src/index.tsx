@@ -7,6 +7,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { ThemeProvider, CSSReset } from '@chakra-ui/core';
+import { BrowserRouter } from 'react-router-dom';
 
 import * as serviceWorker from './serviceWorker';
 import { GRAPHQL_ENDPOINT } from './config';
@@ -47,16 +48,18 @@ const cache = new InMemoryCache({
   });
 
   const appNode = (
-    <ApolloProvider client={client}>
-      <Auth>
-        <GlobalModalProvider>
-          <ThemeProvider theme={theme}>
-            <CSSReset />
-            <Router />
-          </ThemeProvider>
-        </GlobalModalProvider>
-      </Auth>
-    </ApolloProvider>
+    <BrowserRouter>
+      <ApolloProvider client={client}>
+        <Auth>
+          <GlobalModalProvider>
+            <ThemeProvider theme={theme}>
+              <CSSReset />
+              <Router />
+            </ThemeProvider>
+          </GlobalModalProvider>
+        </Auth>
+      </ApolloProvider>
+    </BrowserRouter>
   );
 
   ReactDOM.render(appNode, document.getElementById('root'));
