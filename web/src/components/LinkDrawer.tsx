@@ -32,6 +32,7 @@ import { ItemActionMenu } from './ItemActionMenu';
 import { ItemFull_link, ItemFull } from '../graphql/__generated__/ItemFull';
 import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
+import { ItemStatusInput } from './ItemStatusInput';
 
 export interface ItemWithLink extends ItemFull {
   link: ItemFull_link;
@@ -209,6 +210,14 @@ export const LinkDrawer = ({ item, onClose }: LinkDrawerProps) => {
                   <FormErrorMessage>
                     {errors?.description?.message}
                   </FormErrorMessage>
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="status">Status</FormLabel>
+                  <ItemStatusInput item={item} size="md" />
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="labels">Labels</FormLabel>
+                  <Labels item={item} numDisplayLabels={10} />
                 </FormControl>
                 <Divider />
                 <Button
