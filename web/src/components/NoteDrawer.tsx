@@ -1,39 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import {
-  Modal,
-  ModalOverlay,
-  ModalCloseButton,
-  ModalBody,
-  ModalHeader,
-  ModalContent,
   Box,
-  Button,
   Icon,
   Spinner,
-  ModalFooter,
-  Tooltip,
-  useDisclosure,
   DrawerContent,
   Flex,
   Stack,
   FormControl,
   FormLabel,
-  FormErrorMessage,
   MenuItem,
 } from '@chakra-ui/core';
 
-import {
-  CREATE_NOTE_MUTATION,
-  NOTE_FULL_FRAGMENT,
-  UPDATE_NOTE_MUTATION,
-} from '../graphql/note';
+import { UPDATE_NOTE_MUTATION } from '../graphql/note';
 
-import { EMPTY_NOTE_VALUE, serializeToPlainText, Note } from './Note';
+import { Note } from './Note';
 import { Labels } from './Labels';
-import { useHotKey } from '../hooks/useHotKey';
 import { ItemFull, ItemFull_note } from '../graphql/__generated__/ItemFull';
-import { Disclosure } from './GlobalModal';
 import { ItemDrawerProps } from '../routes/FeedDrawerItemView';
 import { ItemActionMenu } from './ItemActionMenu';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
@@ -56,7 +39,12 @@ export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
     <>
       <DrawerContent width="80%">
         <Flex>
-          <Box p={30} height="100%">
+          <Box
+            p={30}
+            width="calc(100% - 350px)"
+            justifyContent="center"
+            height="100%"
+          >
             {note ? (
               <Note note={note} updateNote={updateNote} />
             ) : (

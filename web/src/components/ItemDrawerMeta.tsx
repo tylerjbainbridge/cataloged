@@ -26,12 +26,12 @@ export const ItemDrawerMeta = ({ item, children = null }: ItemDrawerMeta) => {
           {format(new Date(item.createdAt), 'MMM dd, yyyy')}
         </StatNumber>
       </Stat>
-      <Stat>
+      {/* <Stat>
         <StatLabel>Updated</StatLabel>
         <StatNumber>
           {format(new Date(item.updatedAt), "MMM dd, yyyy 'at' h:mm:ss aaaa")}
         </StatNumber>
-      </Stat>
+      </Stat> */}
     </Stack>
   );
 };
