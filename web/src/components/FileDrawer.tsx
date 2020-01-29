@@ -37,6 +37,7 @@ import { useMutation } from 'react-apollo';
 import { UPDATE_FILE_MUTATION } from '../graphql/file';
 import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
+import { ItemStatusInput } from './ItemStatusInput';
 
 export interface ItemWithFile extends ItemFull {
   file: ItemFull_file;
@@ -185,7 +186,11 @@ export const FileDrawer = ({
                 </FormErrorMessage>
               </FormControl>
               <FormControl>
-                <FormLabel htmlFor="title">Labels</FormLabel>
+                <FormLabel htmlFor="title">Status</FormLabel>
+                <ItemStatusInput item={item} size="md" />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="labels">Labels</FormLabel>
                 <Labels item={item} numDisplayLabels={10} />
                 <FormErrorMessage>
                   {

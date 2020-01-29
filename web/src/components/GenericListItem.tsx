@@ -13,15 +13,15 @@ import {
   PopoverBody,
   Stack,
   Select,
+  MenuItem,
 } from '@chakra-ui/core';
 import _ from 'lodash';
 import LazyLoad from 'react-lazyload';
 import { format } from 'date-fns';
-import { FaEllipsisH } from 'react-icons/fa';
+import { FaExpandArrowsAlt } from 'react-icons/fa';
 
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { getGenericItemData } from '../util/itemHelpers';
-import { FeedContext } from './Feed';
 import { SelectContext } from './SelectContainer';
 import { useOptimisticDeleteItem } from '../hooks/useOptimisticDeleteItem';
 import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
@@ -32,36 +32,16 @@ import { Labels } from './Labels';
 import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
 import { ItemStatus } from '../graphql/__generated__/apolloTypes';
 import { useMedia } from 'react-use';
-import { useHistory } from 'react-router-dom';
 import { useGoToPath } from '../hooks/useGoToPath';
+import { ItemActionMenu } from './ItemActionMenu';
+import { ItemStatusInput } from './ItemStatusInput';
 
 export const GenericListItem = ({ item }: { item: ItemFull }) => {
-  const { openItemModal } = useContext(FeedContext);
-
   const isMobile = useMedia('(max-width: 768px)');
-
-  const [selectedStatus, updatedSelectedStatus] = useState<ItemStatus | null>(
-    item.status,
-  );
 
   const [goTo] = useGoToPath();
 
   const { title, icon, image } = getGenericItemData(item);
-
-  const [updateStatus] = useOptimisticUpdateStatusManyItems(
-    [item],
-    selectedStatus,
-    {
-      // onCompleted: () => updatedSelectedStatus(null),
-    },
-  );
-
-  useEffect(() => {
-    if (selectedStatus && selectedStatus !== item.status) {
-      // @ts-ignore
-      updateStatus(selectedStatus);
-    }
-  }, [selectedStatus]);
 
   const {
     isItemSelected,
@@ -228,88 +208,8 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 </Box>
               )}
             </Box>
-            <Box
-              d="flex"
-              flexWrap="nowrap"
-              width="200px"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              {!isMobile && (
-                <Select
-                  cursor="pointer"
-                  rounded="lg"
-                  width="110px"
-                  size="sm"
-                  value={item.status}
-                  onClick={e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                  onChange={(e: any) => {
-                    e.preventDefault();
-                    // @ts-ignore
-                    updatedSelectedStatus(e.target.value);
-                  }}
-                >
-                  {[
-                    ['NOT_STARTED', 'Not started'],
-                    ['IN_PROGRESS', 'In progress'],
-                    ['DONE', 'Done'],
-                  ].map(([value, text]) => (
-                    <option value={value} key={value}>
-                      {text}
-                    </option>
-                  ))}
-                </Select>
-              )}
-              <Popover
-              //@ts-ignore
-              // usePortal
-              >
-                <PopoverTrigger>
-                  <Button
-                    cursor="pointer"
-                    variant="outline"
-                    onClick={e => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <FaEllipsisH />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent width="200px" zIndex={100}>
-                  <PopoverArrow />
-                  <PopoverBody>
-                    <Stack
-                      spacing={4}
-                      onClick={e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                    >
-                      <Button
-                        cursor="pointer"
-                        onClick={e => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          openItemModal(item);
-                        }}
-                      >
-                        Open
-                      </Button>
-                      <Button
-                        cursor="pointer"
-                        onClick={e => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          favoriteItem();
-                        }}
-                        leftIcon="star"
-                      >
-                        {item.isFavorited ? 'Remove' : 'Add'}
-                      </Button>
-                      {item.link && (
+            <Box>
+              {/* {item.link && (
                         <Button
                           cursor="pointer"
                           onClick={e => {
@@ -321,14 +221,40 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                         >
                           Visit
                         </Button>
-                      )}
-                      <Button cursor="pointer" variantColor="red">
-                        Delete
-                      </Button>
-                    </Stack>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
+                      )} */}
+
+              <ItemActionMenu item={item}>
+                {menuNodes => (
+                  <>
+                    <MenuItem
+                      onClick={(e: any) => {
+                        goTo(`/item/${item.id}`);
+                      }}
+                    >
+                      <FaExpandArrowsAlt
+                        size="13px"
+                        style={{ marginRight: '5px' }}
+                      />{' '}
+                      Open
+                    </MenuItem>
+                    {item.link && (
+                      <MenuItem
+                        d="flex"
+                        alignItems="center"
+                        onClick={(e: any) => {
+                          e.stopPropagation();
+                          // @ts-ignore
+                          window.open(item.link?.href, '_blank');
+                        }}
+                      >
+                        <Icon name="external-link" fontSize="11px" mr="5px" />{' '}
+                        Visit
+                      </MenuItem>
+                    )}
+                    {Object.values(menuNodes)}
+                  </>
+                )}
+              </ItemActionMenu>
             </Box>
           </PseudoBox>
         )}

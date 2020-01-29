@@ -37,6 +37,7 @@ import { Disclosure } from './GlobalModal';
 import { ItemDrawerProps } from '../routes/FeedDrawerItemView';
 import { ItemActionMenu } from './ItemActionMenu';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
+import { ItemStatusInput } from './ItemStatusInput';
 
 export interface ItemWithNote extends ItemFull {
   note: ItemFull_note;
@@ -92,6 +93,10 @@ export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
               </ItemActionMenu>
             </Flex>
             <Stack spacing="20px">
+              <FormControl>
+                <FormLabel htmlFor="title">Status</FormLabel>
+                <ItemStatusInput item={item} size="md" />
+              </FormControl>
               <FormControl>
                 <FormLabel htmlFor="title">Labels</FormLabel>
                 <Labels item={item} numDisplayLabels={10} />
