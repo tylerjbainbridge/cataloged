@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import { Location, History } from 'history';
 import queryString from 'query-string';
 import { useAuth } from '../hooks/useAuth';
-import { Redirect } from 'react-router';
+import { Redirect, useLocation } from 'react-router';
 import { googleSignIn } from '../graphql/__generated__/googleSignIn';
 
 const GOOGLE_SIGN_IN_MUTATION = gql`
@@ -16,13 +16,11 @@ const GOOGLE_SIGN_IN_MUTATION = gql`
 `;
 
 export const GoogleCallback = ({
-  location,
   devMode = true || process.env.NODE_ENV === 'production',
 }: {
-  location: Location;
-  history: History;
-  devMode: boolean;
+  devMode?: boolean;
 }) => {
+  const location = useLocation();
   const { setToken, user } = useAuth();
   const values = queryString.parse(location.search);
 

@@ -14,6 +14,9 @@ export const NOTE_FULL_FRAGMENT = gql`
       id
       type
 
+      createdAt
+      updatedAt
+
       labels {
         id
         name

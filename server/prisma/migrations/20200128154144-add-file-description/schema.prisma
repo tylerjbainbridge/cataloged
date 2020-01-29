@@ -4,7 +4,7 @@ generator photon {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRESQL_URL")
+  url = "***"
 }
 
 model InviteCode {
@@ -38,7 +38,6 @@ model File {
   name                String   @default("")
   size                String?
 
-  title       String @default("")
   description String @default("")
 
   uploadGroup UploadGroup

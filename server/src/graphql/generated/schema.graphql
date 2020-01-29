@@ -22,14 +22,18 @@ input DateTimeFilter {
 
 type File {
   createdAt: DateTime!
+  description: String!
   extension: String!
   fullUrl: String!
   height: Int
   id: String!
   isUploaded: Boolean
+  item: Item!
   name: String!
+  originalName: String!
   size: String
   squareUrl: String!
+  title: String!
   updatedAt: DateTime!
   uploadGroup: UploadGroup!
   width: Int
@@ -37,6 +41,7 @@ type File {
 
 input FileCreateInput {
   createdAt: DateTime
+  description: String
   extension: String
   hasStartedUploading: Boolean
   height: Int
@@ -46,6 +51,7 @@ input FileCreateInput {
   item: ItemCreateOneWithoutFileInput!
   name: String
   size: String
+  title: String
   updatedAt: DateTime
   uploadGroup: UploadGroupCreateOneWithoutFilesInput!
   user: UserCreateOneWithoutFilesInput!
@@ -69,6 +75,7 @@ input FileCreateOneWithoutItemInput {
 
 input FileCreateWithoutItemInput {
   createdAt: DateTime
+  description: String
   extension: String
   hasStartedUploading: Boolean
   height: Int
@@ -77,6 +84,7 @@ input FileCreateWithoutItemInput {
   isUploaded: Boolean
   name: String
   size: String
+  title: String
   updatedAt: DateTime
   uploadGroup: UploadGroupCreateOneWithoutFilesInput!
   user: UserCreateOneWithoutFilesInput!
@@ -85,6 +93,7 @@ input FileCreateWithoutItemInput {
 
 input FileCreateWithoutUploadGroupInput {
   createdAt: DateTime
+  description: String
   extension: String
   hasStartedUploading: Boolean
   height: Int
@@ -94,6 +103,7 @@ input FileCreateWithoutUploadGroupInput {
   item: ItemCreateOneWithoutFileInput!
   name: String
   size: String
+  title: String
   updatedAt: DateTime
   user: UserCreateOneWithoutFilesInput!
   width: Int
@@ -101,6 +111,7 @@ input FileCreateWithoutUploadGroupInput {
 
 input FileCreateWithoutUserInput {
   createdAt: DateTime
+  description: String
   extension: String
   hasStartedUploading: Boolean
   height: Int
@@ -110,6 +121,7 @@ input FileCreateWithoutUserInput {
   item: ItemCreateOneWithoutFileInput!
   name: String
   size: String
+  title: String
   updatedAt: DateTime
   uploadGroup: UploadGroupCreateOneWithoutFilesInput!
   width: Int
@@ -123,6 +135,7 @@ input FileFilter {
 
 input FileOrderByInput {
   createdAt: OrderByArg
+  description: OrderByArg
   extension: OrderByArg
   hasStartedUploading: OrderByArg
   height: OrderByArg
@@ -131,6 +144,7 @@ input FileOrderByInput {
   isUploaded: OrderByArg
   name: OrderByArg
   size: OrderByArg
+  title: OrderByArg
   updatedAt: OrderByArg
   width: OrderByArg
 }
@@ -138,6 +152,7 @@ input FileOrderByInput {
 input FileWhereInput {
   AND: [FileWhereInput!]
   createdAt: DateTimeFilter
+  description: StringFilter
   extension: StringFilter
   hasStartedUploading: NullableBooleanFilter
   height: NullableIntFilter
@@ -149,6 +164,7 @@ input FileWhereInput {
   NOT: [FileWhereInput!]
   OR: [FileWhereInput!]
   size: NullableStringFilter
+  title: StringFilter
   updatedAt: DateTimeFilter
   uploadGroup: UploadGroupWhereInput
   user: UserWhereInput
@@ -591,6 +607,7 @@ type Mutation {
   processFiles(uploadGroupId: String): [File!]!
   refreshLinkMeta(href: String!, linkId: String!): Link!
   updateFavoriteManyItems(isFavorited: Boolean!, itemIds: [String!]!): [Item!]!
+  updateFile(description: String, fileId: String!, title: String): File!
   updateLink(description: String, href: String!, linkId: String!, title: String!): Link!
   updateNote(noteId: String!, raw: String!, text: String!): Note!
   updateStatusManyItems(itemIds: [String!]!, status: ItemStatus!): [Item!]!

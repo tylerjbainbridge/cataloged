@@ -80,7 +80,7 @@ const Leaf = ({ attributes, children, leaf }) => {
 };
 
 export const MarkdownEditor = React.memo(
-  ({ value = DEFAULT_VALUE, onChange }) => {
+  ({ value = DEFAULT_VALUE, placeholder = 'Start typing...', onChange }) => {
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
     const editorRef = React.useRef(null);
@@ -135,7 +135,7 @@ export const MarkdownEditor = React.memo(
           <Editable
             decorate={decorate}
             renderLeaf={renderLeaf}
-            placeholder="Write a note..."
+            placeholder={placeholder}
           />
         </Slate>
       </Box>

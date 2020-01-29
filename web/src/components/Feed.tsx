@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import _ from 'lodash';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { useLocalStorage } from 'react-use';
 import { Box, Spinner, Button, Tooltip, Text } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
-import queryString from 'query-string';
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+  clearAllBodyScrollLocks,
+} from 'body-scroll-lock';
 
 import { SelectContainer } from './SelectContainer';
 import { CreateFiles } from './CreateFiles';
@@ -28,11 +31,22 @@ import {
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { feed, feedVariables } from '../graphql/__generated__/feed';
 import { FeedModals } from './FeedModals';
-import { useLocation, useHistory } from 'react-router-dom';
+import {
+  useLocation,
+  useHistory,
+  Router,
+  BrowserRouter,
+  Route,
+  Switch,
+  useRouteMatch,
+  withRouter,
+} from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ListFeed } from './ListFeed';
 import { FaThLarge, FaList } from 'react-icons/fa';
 import { NewFilter } from './NewFilter';
+import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
+import { usePrevious } from '../hooks/usePrevious';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $after: String, $filters: [Filter!]) {
@@ -63,6 +77,9 @@ type FeedContext = {
   items: ItemFull[];
   openItemModal: (item: ItemFull) => any;
   filter: (feedVariables: feedVariables) => any;
+  initialLoad: boolean;
+  loading: boolean;
+  variables: feedVariables;
 };
 
 export const FeedContext = React.createContext<FeedContext>({} as FeedContext);
@@ -76,8 +93,15 @@ export const Feed = () => {
   const [activeItemId, setActiveItemId] = useState<ItemFull['id'] | null>(null);
   const { user } = useAuth();
 
+  const feedContainerRef = useRef(null);
   const location = useLocation();
   const history = useHistory();
+
+  const isViewingItem = useRouteMatch({
+    path: '/item/:id',
+    // strict: true,
+    // sensitive: true,
+  });
 
   const INITIAL_PAGINATION_VARIABLES = {
     first: mode === 'grid' ? 20 : 30,
@@ -93,6 +117,7 @@ export const Feed = () => {
       ...INITIAL_PAGINATION_VARIABLES,
       ...getFeedVariablesFromQueryString(location.search),
     },
+    fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
   });
 
@@ -116,6 +141,16 @@ export const Feed = () => {
       });
     }
   }, [variables]);
+
+  useEffect(() => {
+    if (isViewingItem) {
+      // @ts-ignore
+      if (feedContainerRef.current) disableBodyScroll(feedContainerRef.current);
+    } else if (feedContainerRef.current) {
+      // @ts-ignore
+      enableBodyScroll(feedContainerRef.current);
+    }
+  }, [isViewingItem]);
 
   const { filters } = variables;
 
@@ -161,12 +196,17 @@ export const Feed = () => {
         openItemModal,
         items,
         filter,
+        initialLoad,
+        loading,
+        variables,
       }}
     >
       <UploadProgress />
       <FeedModals />
       <SelectContainer>
         <Box height="100%">
+          {/* <Switch> */}
+          {isViewingItem && <FeedDrawerItemView />}
           <Box d="flex" justifyContent="center" height="100%">
             <Box
               padding={50}
@@ -201,8 +241,8 @@ export const Feed = () => {
                 <NewFilter variables={variables} loading={loading} />
                 {/* <Filter variables={variables} loading={loading} /> */}
                 {/* <Text fontSize="4xl" margin={0}>
-                Cataloged
-              </Text> */}
+                 Cataloged
+               </Text> */}
                 <Box
                   d="flex"
                   width="140px"
@@ -231,36 +271,34 @@ export const Feed = () => {
                 </Box>
               </Box>
               <br />
-              {items.length ? (
-                <>
-                  {initialLoad ? (
-                    <Box
-                      d="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      height="100%"
-                      width="100%"
-                    >
-                      <Spinner size="xl" />
-                    </Box>
-                  ) : mode === 'grid' ? (
-                    <GridFeed query={query} />
-                  ) : (
-                    <ListFeed query={query} />
-                  )}
-                </>
-              ) : (
-                <Box
-                  d="flex"
-                  justifyContent="center"
-                  height="100%"
-                  width="100%"
-                >
-                  <Text>
-                    {filters.length ? 'No results' : 'No items found'}
-                  </Text>
-                </Box>
-              )}
+              <Box ref={feedContainerRef}>
+                {initialLoad ? (
+                  <Box
+                    d="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    height="100%"
+                    width="100%"
+                  >
+                    <Spinner size="xl" />
+                  </Box>
+                ) : !items.length ? (
+                  <Box
+                    d="flex"
+                    justifyContent="center"
+                    height="100%"
+                    width="100%"
+                  >
+                    <Text>
+                      {filters.length ? 'No results' : 'No items found'}
+                    </Text>
+                  </Box>
+                ) : mode === 'grid' ? (
+                  <GridFeed query={query} />
+                ) : (
+                  <ListFeed query={query} />
+                )}
+              </Box>
 
               {networkStatus === 7 &&
                 !loading &&
@@ -281,6 +319,8 @@ export const Feed = () => {
               )}
             </Box>
           </Box>
+
+          {/* </Switch> */}
           <FeedBottomToolbar />
         </Box>
       </SelectContainer>

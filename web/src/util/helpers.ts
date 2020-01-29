@@ -47,8 +47,6 @@ export const getFeedVariablesFromQueryString = (search: any) => {
     return filter;
   });
 
-  console.log(filters);
-
   return { filters };
 };
 
