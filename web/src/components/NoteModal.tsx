@@ -28,32 +28,17 @@ import { useHotKey } from '../hooks/useHotKey';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { Disclosure } from './GlobalModal';
 import { useHistory } from 'react-router-dom';
-import { useGoToPath } from '../hooks/useGoToPath';
+import { useGoToPath, useGoToItem } from '../hooks/useGoTo';
 
 export const NoteModal = ({
-  item,
   children,
-  disclosure: parentDisclosure,
-  shouldRenderButton = true,
 }: {
   item?: ItemFull;
   disclosure?: Disclosure;
   shouldRenderButton?: boolean;
-  children?: (childProps: {
-    isOpen: boolean;
-    onOpen: () => void;
-    onClose: () => void;
-  }) => any;
+  children: (childProps: { createNote: any; isCreating: boolean }) => any;
 }) => {
-  const disclosure = useDisclosure();
-
-  const { isOpen, onOpen, onClose } = parentDisclosure || disclosure;
-
-  const [goTo] = useGoToPath();
-
-  useHotKey('c n', () => {
-    if (!note) onOpen();
-  });
+  const [goToItem] = useGoToItem();
 
   const [createNote, { data, loading: isCreating }] = useMutation(
     CREATE_NOTE_MUTATION,
@@ -64,28 +49,18 @@ export const NoteModal = ({
       },
       refetchQueries: ['feed'],
       onCompleted: data => {
-        goTo(`/item/${data?.createNote?.item?.id}`);
+        goToItem(data?.createNote?.item);
       },
     },
   );
 
-  const note = data?.createNote;
-
-  return (
-    <Tooltip
-      hasArrow
-      placement="bottom"
-      label="or press c + n"
-      aria-label="Add note"
-    >
-      <Button
-        variant="solid"
-        cursor="pointer"
-        isLoading={isCreating}
-        onClick={() => createNote()}
-      >
-        <Icon name="plus-square" />
-      </Button>
-    </Tooltip>
+  useHotKey(
+    'c n',
+    () => {
+      createNote();
+    },
+    { isGlobal: true },
   );
+
+  return children({ createNote, isCreating });
 };

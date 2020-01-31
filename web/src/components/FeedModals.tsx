@@ -52,14 +52,14 @@ export const FeedModals = () => {
         />
       )}
 
-      {activeItem?.note && (
-        <NoteModal
-          shouldRenderButton={false}
-          // @ts-ignore
-          item={activeItem}
-          disclosure={disclosure}
-        />
-      )}
+      {/* {activeItem?.note && (
+        // <NoteModal
+        //   shouldRenderButton={false}
+        //   // @ts-ignore
+        //   item={activeItem}
+        //   disclosure={disclosure}
+        // />
+      )} */}
 
       {activeItem?.link && (
         <LinkModal

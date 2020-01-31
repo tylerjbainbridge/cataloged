@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Feed } from '../components/Feed';
+import { Dashboard } from '../components/Dashboard';
 import { useAuth } from '../hooks/useAuth';
 import { EnterInviteCode } from '../components/EnterInviteCode';
 
-export const DashboardContainer = styled.div`
+export const MainContainer = styled.div`
   height: 100vh;
 `;
 
-export const Dashboard = () => {
+export const Main = () => {
   const { user } = useAuth();
 
   if (!user.isActive) {
@@ -17,8 +17,8 @@ export const Dashboard = () => {
   }
 
   return (
-    <DashboardContainer>
-      <Feed />
-    </DashboardContainer>
+    <MainContainer>
+      <Dashboard />
+    </MainContainer>
   );
 };

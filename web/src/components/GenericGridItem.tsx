@@ -22,13 +22,14 @@ import {
   ITEM_ACTUAL_WIDTH,
   ITEM_INNER_PADDING,
   ITEM_CONTENT_HEIGHT,
+  Item,
 } from './Item';
 import { SelectOnClick } from './SelectOnClick';
 import { getGenericItemData } from '../util/itemHelpers';
 import { LazyImage } from './LazyImage';
 import { FeedContext } from './Feed';
 import { useHistory } from 'react-router-dom';
-import { useGoToPath } from '../hooks/useGoToPath';
+import { useGoToPath, useGoToItem } from '../hooks/useGoTo';
 
 export const ItemHeader = ({
   children,
@@ -83,7 +84,7 @@ export const GenericGridItem = ({
     selectedMap,
   } = useContext(SelectContext);
 
-  const [goTo] = useGoToPath();
+  const [goToItem] = useGoToItem();
 
   const { openItemModal } = useContext(FeedContext);
 
@@ -234,7 +235,7 @@ export const GenericGridItem = ({
                   <SelectOnClick
                     onSingleClick={() => {
                       // onOpen()
-                      goTo(`/item/${item.id}`);
+                      goToItem(item);
                     }}
                     // @ts-ignore
                     onMetaClick={action}
