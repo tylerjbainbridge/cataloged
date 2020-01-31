@@ -44,7 +44,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
 
   const [goTo] = useGoToPath();
 
-  const { title, icon, image } = getGenericItemData(item);
+  const { title, icon, image, compressedImage } = getGenericItemData(item);
 
   const {
     isItemSelected,
@@ -205,9 +205,9 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
             </Box>
             <Box d="flex" height="100%" alignItems="center">
               <Box d="flex" height="100%" alignItems="center">
-                {image ? (
+                {image || compressedImage ? (
                   <LazyImage
-                    src={image}
+                    src={compressedImage || image}
                     width={isMobile ? '50px' : '90px'}
                     height="100%"
                     objectFit="cover"
