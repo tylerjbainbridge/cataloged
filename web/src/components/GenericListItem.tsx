@@ -88,9 +88,8 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
   // List view
   return (
     <LazyLoad
-      height="60px"
-      offset={1000}
-      unmountIfInvisible
+      height="50px"
+      offset={100}
       key={`${item.id}-${isItemSelected(item)}`}
     >
       <Click
