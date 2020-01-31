@@ -47,7 +47,15 @@ export const SelectContainer = ({
   const selectRange = (newItem: Item) => {
     if (!items) return;
 
+    console.log('select range item', newItem);
+
     const lastItem = Array.from(selectedMap.values())[selectedMap.size - 1];
+
+    console.log(
+      'select range item',
+      lastItem,
+      Array.from(selectedMap.values()),
+    );
 
     const lastItemIdx = items.findIndex(
       (elem: Item) => getId(elem) === getId(lastItem),
@@ -103,6 +111,7 @@ export const SelectContainer = ({
         onSelectRangeThunk,
         onResetAndSelectThunk,
         deselectAllItems,
+        selectRange,
       }}
     >
       {children}
