@@ -72,10 +72,7 @@ export const LazyImage = ({
       {src && showSpinner && !isBroken ? (
         <Spinner size={spinnerSize} />
       ) : (
-        <Icon
-          size={spinnerSize}
-          name={isBroken ? 'warning' : placeholderIcon}
-        />
+        <Icon size="16px" name={isBroken ? 'warning' : placeholderIcon} />
       )}
     </Box>
   ) : (
