@@ -203,16 +203,6 @@ export const CreateFiles = () => {
 
   return (
     <>
-      <Tooltip
-        hasArrow
-        placement="bottom"
-        label="or press c + f"
-        aria-label="Add file(s)"
-      >
-        <Button cursor="pointer" variant="solid" onClick={openModal}>
-          <Icon name="attachment" />
-        </Button>
-      </Tooltip>
       <Modal
         size="600px"
         isOpen={isModalOpen}

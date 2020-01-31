@@ -85,26 +85,25 @@ type FeedContext = {
 export const FeedContext = React.createContext<FeedContext>({} as FeedContext);
 
 export const Feed = () => {
-  const [mode, setMode] = useState<'grid' | 'list'>(
-    // @ts-ignore
-    localStorage.getItem('grid-mode') || 'grid',
-  );
-
-  const [activeItemId, setActiveItemId] = useState<ItemFull['id'] | null>(null);
-  const { user } = useAuth();
-
-  const feedContainerRef = useRef(null);
-  const location = useLocation();
-  const history = useHistory();
-
   const isViewingItem = useRouteMatch({
     path: '/item/:id',
     // strict: true,
     // sensitive: true,
   });
 
+  const [mode, setMode] = useState<'grid' | 'list'>(
+    // @ts-ignore
+    localStorage.getItem('grid-mode') || 'grid',
+  );
+
+  const [activeItemId, setActiveItemId] = useState<ItemFull['id'] | null>(null);
+
+  const feedContainerRef = useRef(null);
+  const location = useLocation();
+  const history = useHistory();
+
   const INITIAL_PAGINATION_VARIABLES = {
-    first: mode === 'grid' ? 20 : 30,
+    first: mode === 'grid' ? 30 : 50,
     after: null,
   };
 
@@ -137,7 +136,7 @@ export const Feed = () => {
       // @ts-ignore
       history.replace({
         // @ts-ignore
-        search: getQueryStringFromFilters(variables.filters || []),
+        search: getQueryStringFromFilters(variables.filters || [], location),
       });
     }
   }, [variables]);
@@ -204,18 +203,10 @@ export const Feed = () => {
       <UploadProgress />
       <FeedModals />
       <SelectContainer>
-        <Box height="100%">
+        <Box width="100%">
           {/* <Switch> */}
-          {isViewingItem && <FeedDrawerItemView />}
-          <Box d="flex" justifyContent="center" height="100%">
-            <Box
-              padding={50}
-              width={[
-                '100%', // base
-                '100%', // 480px upwards
-                '90%', // 768px upwards
-              ]}
-            >
+          <Box d="flex" justifyContent="center" width="100%">
+            <Box padding={50} width="100%">
               <Box
                 height={80}
                 d="flex"
@@ -223,52 +214,36 @@ export const Feed = () => {
                 justifyContent="space-between"
                 alignItems="center"
                 flexWrap="wrap"
-                // position="sticky"
-                // top={0}
-                // zIndex={1}
-                // bg="rgb(255, 255, 255, 0.7)"
+                position="sticky"
+                top={0}
+                zIndex={1}
+                bg="rgb(255, 255, 255, 0.7)"
               >
-                <Box
-                  d="flex"
-                  width="150px"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <CreateFiles />
-                  <CreateLink />
-                  <NoteModal />
-                </Box>
+                <Box />
                 <NewFilter variables={variables} loading={loading} />
                 {/* <Filter variables={variables} loading={loading} /> */}
                 {/* <Text fontSize="4xl" margin={0}>
                  Cataloged
                </Text> */}
-                <Box
-                  d="flex"
-                  width="140px"
-                  justifyContent="space-between"
-                  alignItems="center"
+                <Tooltip
+                  hasArrow
+                  label={mode === 'grid' ? 'list view' : 'grid view'}
+                  aria-label="set mode"
+                  zIndex={10}
                 >
-                  <Tooltip
-                    hasArrow
-                    label={mode === 'grid' ? 'list view' : 'grid view'}
-                    aria-label="set mode"
+                  <Button
+                    cursor="pointer"
+                    onClick={() =>
+                      mode === 'grid' ? setMode('list') : setMode('grid')
+                    }
                   >
-                    <Button
-                      cursor="pointer"
-                      onClick={() =>
-                        mode === 'grid' ? setMode('list') : setMode('grid')
-                      }
-                    >
-                      {mode === 'grid' ? (
-                        <FaList size={15} />
-                      ) : (
-                        <FaThLarge size={15} />
-                      )}
-                    </Button>
-                  </Tooltip>
-                  <SignOut />
-                </Box>
+                    {mode === 'grid' ? (
+                      <FaList size={15} />
+                    ) : (
+                      <FaThLarge size={15} />
+                    )}
+                  </Button>
+                </Tooltip>
               </Box>
               <br />
               <Box ref={feedContainerRef}>
@@ -298,15 +273,14 @@ export const Feed = () => {
                 ) : (
                   <ListFeed query={query} />
                 )}
+                {networkStatus === 7 &&
+                  !loading &&
+                  data?.itemsConnection?.pageInfo?.hasNextPage && (
+                    <Waypoint bottomOffset={-700} onEnter={nextPage} />
+                  )}
               </Box>
 
-              {networkStatus === 7 &&
-                !loading &&
-                data?.itemsConnection?.pageInfo?.hasNextPage && (
-                  <Waypoint bottomOffset={-400} onEnter={nextPage} />
-                )}
-
-              {loading && (
+              {loading && !!items?.length && (
                 <Box
                   d="flex"
                   justifyContent="center"

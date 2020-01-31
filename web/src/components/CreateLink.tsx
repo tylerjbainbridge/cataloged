@@ -27,7 +27,7 @@ import {
 } from '@chakra-ui/core';
 import { useGlobalModal, ModalName } from './GlobalModal';
 import { useHotKey } from '../hooks/useHotKey';
-import { useGoToPath } from '../hooks/useGoToPath';
+import { useGoToItem } from '../hooks/useGoTo';
 
 const CreateLinkSchema = yup.object().shape({
   href: yup
@@ -72,7 +72,7 @@ export const CreateLink = () => {
 
   watch('href');
 
-  const [goTo] = useGoToPath();
+  const [goToItem] = useGoToItem();
 
   const { href } = getValues();
 
@@ -95,7 +95,7 @@ export const CreateLink = () => {
         position: 'top',
       });
 
-      goTo(`/item/${data?.createLink?.item?.id}`);
+      goToItem(data?.createLink?.item);
     },
   });
 
@@ -118,17 +118,6 @@ export const CreateLink = () => {
 
   return (
     <>
-      <Tooltip
-        hasArrow
-        placement="bottom"
-        label="or press c + l"
-        aria-label="Add link"
-      >
-        <Button cursor="pointer" variant="solid" onClick={openModal}>
-          <Icon name="link" />
-        </Button>
-      </Tooltip>
-
       <Modal
         onClose={cleanup}
         scrollBehavior="inside"

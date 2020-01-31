@@ -6,25 +6,17 @@ import {
   DrawerCloseButton,
   DrawerHeader,
   DrawerBody,
-  Stack,
-  DrawerFooter,
-  Button,
   useDisclosure,
   Spinner,
 } from '@chakra-ui/core';
-import {
-  useLocation,
-  useHistory,
-  RouteChildrenProps,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+import qs from 'query-string';
+import { useLocation, useHistory } from 'react-router-dom';
 import { FileDrawer } from '../components/FileDrawer';
 import { useGetItem } from '../hooks/useGetItem';
 import { usePrevious } from '../hooks/usePrevious';
 import { NoteDrawer } from '../components/NoteDrawer';
 import { LinkDrawer } from '../components/LinkDrawer';
-import { useGoToPath } from '../hooks/useGoToPath';
+import { useReturnToFeedFromItem } from '../hooks/useGoTo';
 
 export interface ItemDrawerProps {
   toggleFullScreen: () => any;
@@ -34,18 +26,18 @@ export interface ItemDrawerProps {
 
 export const FeedDrawerItemView = () => {
   const [isAnimationDone, setIsAnimationDone] = useState(false);
-  const match = useRouteMatch({ path: '/item/:id' });
+  const location = useLocation();
 
-  const history = useHistory();
+  const itemId = qs.parse(location.search)?.itemId;
 
   const fullScreen = useDisclosure(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure(false);
 
-  const [goTo] = useGoToPath();
+  const [returnToFeed] = useReturnToFeedFromItem();
 
   // @ts-ignore
-  const { item, loading } = useGetItem(match.params?.id);
+  const { item, loading } = useGetItem(itemId);
 
   useEffect(() => {
     if (!loading && item) {
@@ -58,7 +50,7 @@ export const FeedDrawerItemView = () => {
   useEffect(() => {
     if (!isOpen && previousIsOpen) {
       setTimeout(() => {
-        goTo('/');
+        returnToFeed();
       }, 500);
     }
   }, [isOpen]);

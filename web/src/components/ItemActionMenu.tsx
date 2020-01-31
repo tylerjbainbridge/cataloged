@@ -13,7 +13,7 @@ import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { FaEllipsisH } from 'react-icons/fa';
 import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
 import { useOptimisticDeleteManyItems } from '../hooks/useOptimisticDeleteManyItems';
-import { useGoToPath } from '../hooks/useGoToPath';
+import { useReturnToFeedFromItem } from '../hooks/useGoTo';
 import { ItemStatusInput } from './ItemStatusInput';
 
 export interface ItemActionMenuProps {
@@ -33,7 +33,7 @@ export const ItemActionMenu = ({
   children = null,
   onDeleteCompleted,
 }: ItemActionMenuProps) => {
-  const [goTo] = useGoToPath();
+  const [returnToFeed] = useReturnToFeedFromItem();
 
   const [favoriteItem] = useOptimisticUpdateFavoriteManyItems(
     [item],
@@ -41,7 +41,7 @@ export const ItemActionMenu = ({
   );
 
   const [deleteItem] = useOptimisticDeleteManyItems([item], {
-    onCompleted: onDeleteCompleted || (() => goTo('/')),
+    onCompleted: onDeleteCompleted || (() => returnToFeed()),
   });
 
   const deleteNode = (

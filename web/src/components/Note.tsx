@@ -65,7 +65,7 @@ export const Note = ({ note, updateNote }: any) => {
       debouncedUpdateNote({
         noteId: note.id,
         raw: JSON.stringify(value),
-        text: removeMarkdown(textRef.current),
+        text: removeMarkdown(nextText),
       });
     }
 
