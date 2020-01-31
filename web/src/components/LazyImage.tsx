@@ -69,7 +69,7 @@ export const LazyImage = ({
       {...newProps}
       {...loadingContainerProps}
     >
-      {src && showSpinner ? (
+      {src && showSpinner && !isBroken ? (
         <Spinner size={spinnerSize} />
       ) : (
         <Icon size="50px" name={isBroken ? 'warning' : placeholderIcon} />
