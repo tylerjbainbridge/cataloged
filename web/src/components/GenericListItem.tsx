@@ -14,6 +14,9 @@ import {
   Stack,
   Select,
   MenuItem,
+  Checkbox,
+  ControlBox,
+  VisuallyHidden,
 } from '@chakra-ui/core';
 import _ from 'lodash';
 import LazyLoad from 'react-lazyload';
@@ -46,9 +49,10 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
   const {
     isItemSelected,
     onSelectRangeThunk,
-    onResetAndSelectThunk,
+    toggleItem,
     onToggleThunk,
     selectedMap,
+    selectRange,
   } = useContext(SelectContext);
 
   const baseHoverState = useDisclosure();
@@ -83,15 +87,27 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
 
   // List view
   return (
-    <LazyLoad height="60px" offset={1000} unmountIfInvisible>
+    <LazyLoad
+      height="60px"
+      offset={1000}
+      unmountIfInvisible
+      key={`${item.id}-${isItemSelected(item)}`}
+    >
       <Click
         onDoubleClick={(debouncedSingleClick: any) => {
           debouncedSingleClick.cancel();
-          // openItemModal(item);
 
-          goTo(`/item/${item.id}`);
+          if (selectedMap.size) {
+            goTo(`/item/${item.id}`);
+          }
         }}
-        onSingleClick={onResetAndSelectThunk(item)}
+        onSingleClick={() => {
+          if (selectedMap.size) {
+            toggleItem(item);
+          } else {
+            goTo(`/item/${item.id}`);
+          }
+        }}
         onMetaClick={onToggleThunk(item)}
         onShiftClick={onSelectRangeThunk(item)}
       >
@@ -133,6 +149,60 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
             }}
             {...clickProps}
           >
+            <Box
+              d="flex"
+              alignItems="center"
+              width="50px"
+              height="60px"
+              position="absolute"
+              marginLeft="-50px"
+            >
+              {(baseHoverState.isOpen ||
+                isItemSelected(item) ||
+                !!selectedMap.size) && (
+                <Box
+                  onClick={e => {
+                    e.stopPropagation();
+                    console.log('click', item.id, selectedMap.size);
+
+                    if (e.shiftKey) {
+                      selectRange(item);
+                    } else {
+                      toggleItem(item);
+                    }
+                  }}
+                >
+                  <label>
+                    <VisuallyHidden
+                      as="input"
+                      // @ts-ignore
+                      type="checkbox"
+                      defaultChecked={isItemSelected(item)}
+                    />
+                    <ControlBox
+                      cursor="pointer"
+                      borderWidth="1px"
+                      size="20px"
+                      rounded="lg"
+                      onClick={e => {
+                        e.stopPropagation();
+                      }}
+                      _checked={{
+                        bg: 'brand.purple',
+                        color: 'white',
+                        borderColor: 'brand.purple',
+                      }}
+                      _focus={{
+                        borderColor: 'green.600',
+                        boxShadow: 'outline',
+                      }}
+                    >
+                      <Icon name="check" size="16px" />
+                    </ControlBox>
+                  </label>
+                </Box>
+              )}
+            </Box>
             <Box d="flex" height="100%" alignItems="center">
               <Box d="flex" height="100%" alignItems="center">
                 {image ? (
@@ -162,10 +232,10 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                   ml={5}
                   width={[
                     '150px', // base
-                    '250px', // 480px upwards
-                    '250px', // 768px upwards
+                    '350px', // 480px upwards
+                    '350px', // 768px upwards
                   ]}
-                  mr={3}
+                  mr="15px"
                   isTruncated
                 >
                   <Text fontWeight="semibold" maxWidth="100%">
@@ -226,6 +296,14 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
               <ItemActionMenu item={item}>
                 {menuNodes => (
                   <>
+                    <MenuItem
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        toggleItem(item);
+                      }}
+                    >
+                      {isItemSelected(item) ? 'Deselect' : 'Select'}
+                    </MenuItem>
                     <MenuItem
                       onClick={(e: any) => {
                         goTo(`/item/${item.id}`);
