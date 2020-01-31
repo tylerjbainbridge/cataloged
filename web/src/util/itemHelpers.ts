@@ -6,6 +6,7 @@ export interface ItemGenericData {
   title: String;
   createdAt: String;
   image?: String | null;
+  compressedImage?: String | null;
   action?: Function;
   icon: IconProps['name'];
 }
@@ -20,6 +21,7 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
           title: `${item.file.name}.${item.file.extension}`,
           createdAt: item.file.createdAt,
           image: item.file.fullUrl,
+          compressedImage: item.file.squareUrl,
           icon: 'attachment',
         };
       }
