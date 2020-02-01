@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Drawer,
   DrawerOverlay,
@@ -25,7 +25,6 @@ export interface ItemDrawerProps {
 }
 
 export const FeedDrawerItemView = () => {
-  const [isAnimationDone, setIsAnimationDone] = useState(false);
   const location = useLocation();
 
   const itemId = qs.parse(location.search)?.itemId;

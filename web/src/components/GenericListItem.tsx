@@ -232,11 +232,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                   )}
                   <Box
                     ml={5}
-                    width={[
-                      '150px', // base
-                      '350px', // 480px upwards
-                      '350px', // 768px upwards
-                    ]}
+                    width={isMobile ? '100px' : '350px'}
                     mr="15px"
                     isTruncated
                   >
@@ -245,39 +241,40 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                     </Text>
                   </Box>
                 </Box>
-                <Box
-                  maxWidth="300px"
-                  minWidth="125px"
-                  d="flex"
-                  height="100%"
-                  mr={3}
-                  alignItems="center"
-                >
-                  <Text color="gray.400">
-                    {format(new Date(item.createdAt), 'MMM dd, yyyy')}
-                  </Text>
-                </Box>
-                <Box
-                  maxWidth="150px"
-                  minWidth="70px"
-                  d="flex"
-                  height="100%"
-                  mr={3}
-                  alignItems="center"
-                >
-                  <Text>{_.upperFirst(item.type)}</Text>
-                </Box>
-
                 {!isMobile && (
-                  <Box
-                    d="flex"
-                    height="100%"
-                    maxWidth="200px"
-                    minWidth="100px"
-                    alignItems="center"
-                  >
-                    <Labels item={item} />
-                  </Box>
+                  <>
+                    <Box
+                      maxWidth="300px"
+                      minWidth="125px"
+                      d="flex"
+                      height="100%"
+                      mr={3}
+                      alignItems="center"
+                    >
+                      <Text color="gray.400">
+                        {format(new Date(item.createdAt), 'MMM dd, yyyy')}
+                      </Text>
+                    </Box>
+                    <Box
+                      maxWidth="150px"
+                      minWidth="70px"
+                      d="flex"
+                      height="100%"
+                      mr={3}
+                      alignItems="center"
+                    >
+                      <Text>{_.upperFirst(item.type)}</Text>
+                    </Box>
+                    <Box
+                      d="flex"
+                      height="100%"
+                      maxWidth="200px"
+                      minWidth="100px"
+                      alignItems="center"
+                    >
+                      <Labels item={item} />
+                    </Box>
+                  </>
                 )}
               </Box>
               <Box>

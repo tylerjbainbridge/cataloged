@@ -8,7 +8,7 @@ export const useGoToPath = () => {
   const history = useHistory();
 
   const goTo = (
-    pathname: string = '/',
+    pathname: string | null,
     {
       remove = [],
       add = {},
@@ -18,7 +18,7 @@ export const useGoToPath = () => {
     } = {},
   ) => {
     history.push({
-      pathname,
+      pathname: pathname || location.pathname,
       search: qs.stringify({
         ..._.omit(qs.parse(location.search), remove),
         ...add,
@@ -32,11 +32,11 @@ export const useGoToPath = () => {
 export const useReturnToFeedFromItem = () => {
   const [goTo] = useGoToPath();
 
-  return [() => goTo('/', { remove: ['itemId'] })];
+  return [() => goTo(null, { remove: ['itemId'] })];
 };
 
 export const useGoToItem = () => {
   const [goTo] = useGoToPath();
 
-  return [(item: ItemFull) => goTo('/', { add: { itemId: item.id } })];
+  return [(item: ItemFull) => goTo(null, { add: { itemId: item.id } })];
 };
