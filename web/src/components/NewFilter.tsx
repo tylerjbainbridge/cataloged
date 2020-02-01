@@ -28,7 +28,7 @@ import {
   randomString,
   getQueryStringFromFilters,
 } from '../util/helpers';
-import { useDeepCompareEffect } from 'react-use';
+import { useDeepCompareEffect, useMedia } from 'react-use';
 import { useHotKey } from '../hooks/useHotKey';
 import { Labels } from './Labels';
 import { useGlobalModal } from './GlobalModal';
@@ -284,6 +284,8 @@ export const FilterInput = ({
 };
 
 export const NewFilter = ({ variables, loading }: NewFilterProps) => {
+  const isMobile = useMedia('(max-width: 768px)');
+
   const { isOpen, onClose, onOpen, onToggle } = useDisclosure();
 
   const { filter } = useContext(FeedContext);
@@ -387,7 +389,12 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
       initialFocusRef={addButtonRef}
     >
       <PopoverTrigger>{trigger}</PopoverTrigger>
-      <PopoverContent minWidth={fields.length ? 500 : 300} zIndex={500}>
+      <PopoverContent
+        minWidth={fields.length ? 500 : 300}
+        maxWidth="100%"
+        width={isMobile ? '100%' : undefined}
+        zIndex={500}
+      >
         <PopoverArrow />
         <PopoverBody>
           <Stack spacing={1}>
