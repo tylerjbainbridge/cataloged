@@ -132,6 +132,7 @@ export const FileDrawer = ({ item, onClose }: FileDrawerProps) => {
             p="20px"
             justifyContent="space-between"
             flexDirection="column"
+            overflowY="scroll"
           >
             <Box>
               <Stack spacing="20px">
