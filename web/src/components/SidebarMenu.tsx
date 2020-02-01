@@ -12,14 +12,42 @@ import {
   MenuItem,
   Spinner,
   Divider,
+  List,
+  ListItem,
+  BoxProps,
+  IconButton,
 } from '@chakra-ui/core';
+import { Link, LinkProps } from 'react-router-dom';
 
 import logo from '../images/logo.png';
 import { useAuth } from '../hooks/useAuth';
 import { useGlobalModal, ModalName } from './GlobalModal';
 import { NoteModal } from './NoteModal';
 
-export const SidebarMenu = () => {
+export const SIDEBAR_WIDTH = '250px';
+
+export interface LinkListItemProps extends BoxProps {
+  to: LinkProps['to'];
+}
+
+const LinkListItem = ({ children, to, ...props }: LinkListItemProps) => (
+  <Button
+    d="flex"
+    justifyContent="flex-start"
+    as={Link}
+    // @ts-ignore
+    to={to}
+    cursor="pointer"
+    width="100%"
+    textAlign="left"
+    bg="none"
+    {...props}
+  >
+    {children}
+  </Button>
+);
+
+export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
   const { user, signOut } = useAuth();
 
   const createFileModal = useGlobalModal(ModalName.CREATE_FILES_MODAL);
@@ -27,18 +55,18 @@ export const SidebarMenu = () => {
 
   return (
     <Box
-      width="250px"
       p="20px"
       height="100%"
       borderRight="1px solid lightgray"
       zIndex={1}
       bg="gray.50"
+      id="sidebar-container"
     >
       <Flex height="100%" justifyContent="space-between" flexDirection="column">
         <Stack spacing="25px">
           <Flex alignItems="center">
             <Image src={logo} size="30px" mr="7px" />
-            <Text fontSize="md" fontWeight="semibold" isTruncated>
+            <Text fontSize="sm" fontWeight="semibold" isTruncated>
               {user.email}
             </Text>
           </Flex>
@@ -77,6 +105,15 @@ export const SidebarMenu = () => {
             </Menu>
           </Box>
           <Divider />
+          <Box>
+            <Stack spacing="10px">
+              <Text color="gray.500">QUICK LINKS</Text>
+              <LinkListItem to="/files">Files</LinkListItem>
+              <LinkListItem to="/notes">Notes</LinkListItem>
+              <LinkListItem to="/links">Links</LinkListItem>
+              <LinkListItem to="/favorites">Favorites</LinkListItem>
+            </Stack>
+          </Box>
         </Stack>
         <Button
           d="flex"

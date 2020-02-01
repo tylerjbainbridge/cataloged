@@ -2,51 +2,41 @@ import React, { useState, useEffect, useRef } from 'react';
 import _ from 'lodash';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { Box, Spinner, Button, Tooltip, Text } from '@chakra-ui/core';
-import { Waypoint } from 'react-waypoint';
 import {
-  disableBodyScroll,
-  enableBodyScroll,
-  clearAllBodyScrollLocks,
-} from 'body-scroll-lock';
+  Box,
+  Spinner,
+  Button,
+  Tooltip,
+  Text,
+  IconButton,
+} from '@chakra-ui/core';
+import { Waypoint } from 'react-waypoint';
+import qs from 'query-string';
+
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
 import { SelectContainer } from './SelectContainer';
-import { CreateFiles } from './CreateFiles';
-import { CreateLink } from './CreateLink';
-import { SignOut } from './SignOut';
+
 import { UploadProgress } from './UploadProgress';
-import { Filter } from './Filter';
-import { NoteModal } from './NoteModal';
+
 import { ITEM_CONNECTION_FULL_FRAGMENT } from '../graphql/item';
 
 import { GridFeed } from './GridFeed';
 import { FeedBottomToolbar } from './FeedBottomToolbar';
 import {
   getNodesFromConnection,
-  getFilterVariablesFromFormValues,
-  getFormValuesFromFilterVariables,
   getFeedVariablesFromQueryString,
   getQueryStringFromFilters,
 } from '../util/helpers';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { feed, feedVariables } from '../graphql/__generated__/feed';
 import { FeedModals } from './FeedModals';
-import {
-  useLocation,
-  useHistory,
-  Router,
-  BrowserRouter,
-  Route,
-  Switch,
-  useRouteMatch,
-  withRouter,
-} from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
+
 import { ListFeed } from './ListFeed';
 import { FaThLarge, FaList } from 'react-icons/fa';
 import { NewFilter } from './NewFilter';
-import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
-import { usePrevious } from '../hooks/usePrevious';
+import { useMedia } from 'react-use';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $after: String, $filters: [Filter!]) {
@@ -84,23 +74,23 @@ type FeedContext = {
 
 export const FeedContext = React.createContext<FeedContext>({} as FeedContext);
 
-export const Feed = () => {
-  const isViewingItem = useRouteMatch({
-    path: '/item/:id',
-    // strict: true,
-    // sensitive: true,
-  });
-
+export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   const [mode, setMode] = useState<'grid' | 'list'>(
     // @ts-ignore
     localStorage.getItem('grid-mode') || 'grid',
   );
+
+  const match = useRouteMatch('/:type');
+
+  const isMobile = useMedia('(max-width: 768px)');
 
   const [activeItemId, setActiveItemId] = useState<ItemFull['id'] | null>(null);
 
   const feedContainerRef = useRef(null);
   const location = useLocation();
   const history = useHistory();
+
+  const isViewingItem = !!qs.parse(location.search)?.itemId;
 
   const INITIAL_PAGINATION_VARIABLES = {
     first: mode === 'grid' ? 30 : 50,
@@ -184,6 +174,10 @@ export const Feed = () => {
 
   const openItemModal = (item: ItemFull) => setActiveItemId(item.id);
 
+  const currentSidebarWidth =
+    // @ts-ignore
+    document.querySelector('#sidebar-container')?.offsetWidth;
+
   return (
     <FeedContext.Provider
       value={{
@@ -203,49 +197,82 @@ export const Feed = () => {
       <UploadProgress />
       <FeedModals />
       <SelectContainer>
-        <Box width="100%">
+        <Box d="flex" justifyContent="center" flex="1">
           {/* <Switch> */}
-          <Box d="flex" justifyContent="center" width="100%">
-            <Box padding={50} width="100%">
-              <Box
-                height={80}
-                d="flex"
-                minWidth="100%"
-                justifyContent="space-between"
-                alignItems="center"
-                flexWrap="wrap"
-                position="sticky"
-                top={0}
-                zIndex={1}
-                bg="rgb(255, 255, 255, 0.7)"
-              >
-                <Box />
-                <NewFilter variables={variables} loading={loading} />
-                {/* <Filter variables={variables} loading={loading} /> */}
-                {/* <Text fontSize="4xl" margin={0}>
-                 Cataloged
-               </Text> */}
+          <Box
+            height={80}
+            d="flex"
+            flex="1"
+            width={
+              sidebarState.isOpen || !isMobile
+                ? `calc(100% - ${currentSidebarWidth || 0}px)`
+                : '100%'
+            }
+            justifyContent="center"
+            alignItems="center"
+            position="fixed"
+            top={0}
+            zIndex={1}
+            padding="20px"
+            bg="rgb(255, 255, 255, 0.7)"
+          >
+            <Box
+              d="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              width={isMobile ? '100%' : '80%'}
+            >
+              {isMobile ? (
                 <Tooltip
                   hasArrow
-                  label={mode === 'grid' ? 'list view' : 'grid view'}
-                  aria-label="set mode"
+                  label={sidebarState.isOpen ? 'close sidebar' : 'open sidebar'}
+                  aria-label="toggle sidebar"
                   zIndex={10}
                 >
-                  <Button
-                    cursor="pointer"
-                    onClick={() =>
-                      mode === 'grid' ? setMode('list') : setMode('grid')
+                  <IconButton
+                    icon={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
+                    aria-label={
+                      sidebarState.isOpen ? 'close sidebar' : 'open sidebar'
                     }
-                  >
-                    {mode === 'grid' ? (
-                      <FaList size={15} />
-                    ) : (
-                      <FaThLarge size={15} />
-                    )}
-                  </Button>
+                    width="25px"
+                    size="sm"
+                    onClick={sidebarState.onToggle}
+                  />
                 </Tooltip>
-              </Box>
-              <br />
+              ) : (
+                <Box />
+              )}
+              {sidebarState.isOpen && isMobile ? null : (
+                <>
+                  <NewFilter variables={variables} loading={loading} />
+                  <Box>
+                    <Tooltip
+                      hasArrow
+                      label={mode === 'grid' ? 'list view' : 'grid view'}
+                      aria-label="set mode"
+                      zIndex={10}
+                    >
+                      <Button
+                        cursor="pointer"
+                        onClick={() =>
+                          mode === 'grid' ? setMode('list') : setMode('grid')
+                        }
+                      >
+                        {mode === 'grid' ? (
+                          <FaList size={15} />
+                        ) : (
+                          <FaThLarge size={15} />
+                        )}
+                      </Button>
+                    </Tooltip>
+                  </Box>
+                </>
+              )}
+            </Box>
+          </Box>
+
+          <Box d="flex" justifyContent="center" mt="80px" width="100%">
+            <Box width={isMobile ? '95%' : '80%'}>
               <Box ref={feedContainerRef}>
                 {initialLoad ? (
                   <Box

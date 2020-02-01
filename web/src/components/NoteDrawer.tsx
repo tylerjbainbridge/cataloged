@@ -10,6 +10,7 @@ import {
   FormControl,
   FormLabel,
   MenuItem,
+  Divider,
 } from '@chakra-ui/core';
 
 import { UPDATE_NOTE_MUTATION } from '../graphql/note';
@@ -21,6 +22,7 @@ import { ItemDrawerProps } from '../routes/FeedDrawerItemView';
 import { ItemActionMenu } from './ItemActionMenu';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
+import { useMedia } from 'react-use';
 
 export interface ItemWithNote extends ItemFull {
   note: ItemFull_note;
@@ -31,32 +33,30 @@ export interface NoteDrawerProps extends ItemDrawerProps {
 }
 
 export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
+  const isMobile = useMedia('(max-width: 768px)');
+
   const { note } = item;
 
   const [updateNote, { loading: isSaving }] = useMutation(UPDATE_NOTE_MUTATION);
 
   return (
     <>
-      <DrawerContent width="80%">
-        <Flex>
-          <Box
-            p={30}
-            width="calc(100% - 350px)"
-            justifyContent="center"
-            height="100%"
-          >
-            {note ? (
+      <DrawerContent d="flex" width={isMobile ? '100%' : '80%'} flexWrap="wrap">
+        {!isMobile && (
+          <Flex>
+            <Box
+              p={30}
+              width={isMobile ? '100%' : 'calc(100% - 350px)'}
+              justifyContent="center"
+              height="100%"
+            >
               <Note note={note} updateNote={updateNote} />
-            ) : (
-              <Box d="flex" justifyContent="center">
-                <Spinner />
-              </Box>
-            )}
-          </Box>
-        </Flex>
+            </Box>
+          </Flex>
+        )}
         <Flex
-          width="350px"
-          minWidth="350px"
+          width={isMobile ? '100%' : '350px'}
+          minWidth={isMobile ? '100%' : '350px'}
           float="right"
           height="100%"
           bg="white"
@@ -68,19 +68,31 @@ export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
           flexDirection="column"
         >
           <Box>
-            <Flex width="100%" justifyContent="flex-end">
-              <ItemActionMenu item={item}>
-                {menuNodes => (
-                  <>
-                    <MenuItem d="flex" alignItems="center" onClick={onClose}>
-                      <Icon name="close" fontSize="12px" mr="5px" /> Close
-                    </MenuItem>
-                    {Object.values(menuNodes)}
-                  </>
-                )}
-              </ItemActionMenu>
-            </Flex>
             <Stack spacing="20px">
+              <Flex width="100%" justifyContent="flex-end">
+                <ItemActionMenu item={item}>
+                  {menuNodes => (
+                    <>
+                      <MenuItem d="flex" alignItems="center" onClick={onClose}>
+                        <Icon name="close" fontSize="12px" mr="5px" /> Close
+                      </MenuItem>
+                      {Object.values(menuNodes)}
+                    </>
+                  )}
+                </ItemActionMenu>
+              </Flex>
+              {isMobile && (
+                <Box
+                  p={5}
+                  width={isMobile ? '100%' : 'calc(100% - 350px)'}
+                  justifyContent="center"
+                  height="100%"
+                  border="1px solid black"
+                  rounded="lg"
+                >
+                  <Note note={note} updateNote={updateNote} />
+                </Box>
+              )}
               <FormControl>
                 <FormLabel htmlFor="title">Status</FormLabel>
                 <ItemStatusInput item={item} size="md" />

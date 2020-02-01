@@ -1,18 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Sidebar from 'react-sidebar';
-import { useDisclosure } from '@chakra-ui/core';
+import { useDisclosure, IconButton } from '@chakra-ui/core';
 import qs from 'query-string';
 
 import { Feed } from './Feed';
-import { SidebarMenu } from './SidebarMenu';
+import { SidebarMenu, SIDEBAR_WIDTH } from './SidebarMenu';
 import { CreateLink } from './CreateLink';
 import { CreateFiles } from './CreateFiles';
 import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
-import { useRouteMatch, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useMedia } from 'react-use';
+
+const SIDEBAR_KEY = 'isSidebarOpen';
+
+const getSidebarOpenState = (): boolean => {
+  try {
+    // @ts-ignore
+    return Boolean(JSON.parse(localStorage.getItem(SIDEBAR_KEY)));
+  } catch (e) {
+    return true;
+  }
+};
 
 export const Dashboard = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    if (!isMounted) setIsMounted(true);
+  });
+
+  const isMobile = useMedia('(max-width: 768px)');
+
+  const sidebarState = useDisclosure(getSidebarOpenState() && !isMobile);
+
+  useEffect(() => {
+    localStorage.setItem(SIDEBAR_KEY, JSON.stringify(sidebarState.isOpen));
+  }, [sidebarState.isOpen]);
 
   const location = useLocation();
 
@@ -20,14 +44,15 @@ export const Dashboard = () => {
 
   return (
     <Sidebar
-      sidebar={<SidebarMenu />}
+      sidebar={<SidebarMenu sidebarState={sidebarState} />}
       shadow={false}
-      docked={isOpen}
-      open={isOpen}
-      transitions={!isOpen}
+      docked={sidebarState.isOpen || !isMobile}
+      open={sidebarState.isOpen || !isMobile}
+      // transitions={false}
+      defaultSidebarWidth={250}
     >
       {isViewingItem && <FeedDrawerItemView />}
-      <Feed />
+      <Feed sidebarState={sidebarState} />
       <CreateLink />
       <CreateFiles />
     </Sidebar>

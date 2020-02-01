@@ -33,6 +33,7 @@ import { ItemFull_link, ItemFull } from '../graphql/__generated__/ItemFull';
 import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
+import { useMedia } from 'react-use';
 
 export interface ItemWithLink extends ItemFull {
   link: ItemFull_link;
@@ -56,6 +57,8 @@ export interface UpdateLinkFormValues {
 }
 
 export const LinkDrawer = ({ item, onClose }: LinkDrawerProps) => {
+  const isMobile = useMedia('(max-width: 768px)');
+
   const { link } = item;
 
   const { getValues, setValue, watch, errors, register } = useForm<
@@ -112,10 +115,9 @@ export const LinkDrawer = ({ item, onClose }: LinkDrawerProps) => {
 
   return (
     <>
-      <DrawerContent width="500px">
+      <DrawerContent width={isMobile ? '100%' : '500px'}>
         <Flex
           width="100%"
-          minWidth="350px"
           float="right"
           height="100%"
           bg="white"
@@ -125,21 +127,22 @@ export const LinkDrawer = ({ item, onClose }: LinkDrawerProps) => {
           borderLeft="1px solid lightgray"
           justifyContent="space-between"
           flexDirection="column"
+          overflowY="scroll"
         >
           <Box>
-            <Flex width="100%" justifyContent="flex-end">
-              <ItemActionMenu item={item}>
-                {menuNodes => (
-                  <>
-                    <MenuItem d="flex" alignItems="center" onClick={onClose}>
-                      <Icon name="close" fontSize="12px" mr="5px" /> Close
-                    </MenuItem>
-                    {Object.values(menuNodes)}
-                  </>
-                )}
-              </ItemActionMenu>
-            </Flex>
             <Stack spacing="20px">
+              <Flex width="100%" justifyContent="flex-end">
+                <ItemActionMenu item={item}>
+                  {menuNodes => (
+                    <>
+                      <MenuItem d="flex" alignItems="center" onClick={onClose}>
+                        <Icon name="close" fontSize="12px" mr="5px" /> Close
+                      </MenuItem>
+                      {Object.values(menuNodes)}
+                    </>
+                  )}
+                </ItemActionMenu>
+              </Flex>
               <Stack spacing={5}>
                 {link.image && (
                   <LazyImage
@@ -224,6 +227,7 @@ export const LinkDrawer = ({ item, onClose }: LinkDrawerProps) => {
                   color="white"
                   bg="brand.purple"
                   width="100%"
+                  mb="20px"
                   onClick={() => window.open(link.href, '_blank')}
                 >
                   Visit site

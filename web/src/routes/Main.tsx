@@ -5,10 +5,6 @@ import { Dashboard } from '../components/Dashboard';
 import { useAuth } from '../hooks/useAuth';
 import { EnterInviteCode } from '../components/EnterInviteCode';
 
-export const MainContainer = styled.div`
-  height: 100vh;
-`;
-
 export const Main = () => {
   const { user } = useAuth();
 
@@ -16,9 +12,5 @@ export const Main = () => {
     return <EnterInviteCode />;
   }
 
-  return (
-    <MainContainer>
-      <Dashboard />
-    </MainContainer>
-  );
+  return <Dashboard />;
 };

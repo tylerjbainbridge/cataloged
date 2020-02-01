@@ -360,7 +360,6 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
       _hover={{ bg: '#e8e4ed', borderColor: 'brand.purple' }}
       size="md"
       border="none"
-      mt={['20px', '0px']}
       isLoading={loading && !!variables?.filters?.length}
       isDisabled={false}
       onClick={e => {
