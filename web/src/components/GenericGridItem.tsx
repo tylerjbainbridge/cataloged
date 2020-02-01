@@ -30,6 +30,7 @@ import { LazyImage } from './LazyImage';
 import { FeedContext } from './Feed';
 import { useHistory } from 'react-router-dom';
 import { useGoToPath, useGoToItem } from '../hooks/useGoTo';
+import { useMedia } from 'react-use';
 
 export const ItemHeader = ({
   children,
@@ -72,6 +73,8 @@ export const GenericGridItem = ({
   item,
   ...props
 }: GenericGridItemProps) => {
+  const isMobile = useMedia('(max-width: 768px)');
+
   const baseHoverState = useDisclosure();
   const menuHoverState = useDisclosure();
 
@@ -151,7 +154,7 @@ export const GenericGridItem = ({
                 onMouseLeave={baseHoverState.onClose}
                 position="relative"
               >
-                {(baseHoverState.isOpen || !!selectedMap.size) && (
+                {(baseHoverState.isOpen || !!selectedMap.size || isMobile) && (
                   <Box
                     d="flex"
                     justifyContent="space-between"
