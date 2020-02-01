@@ -9,6 +9,7 @@ import {
   Tooltip,
   Text,
   IconButton,
+  Icon,
 } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
 import qs from 'query-string';
@@ -223,22 +224,15 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
               width={isMobile ? '100%' : '80%'}
             >
               {isMobile ? (
-                <Tooltip
-                  hasArrow
-                  label={sidebarState.isOpen ? 'close sidebar' : 'open sidebar'}
-                  aria-label="toggle sidebar"
-                  zIndex={10}
-                >
-                  <IconButton
-                    icon={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
+                <Button cursor="pointer" onClick={sidebarState.onToggle}>
+                  <Icon
+                    name={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
                     aria-label={
                       sidebarState.isOpen ? 'close sidebar' : 'open sidebar'
                     }
-                    width="25px"
-                    size="sm"
-                    onClick={sidebarState.onToggle}
+                    width="15px"
                   />
-                </Tooltip>
+                </Button>
               ) : (
                 <Box />
               )}
