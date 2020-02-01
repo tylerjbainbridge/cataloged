@@ -8,6 +8,7 @@ import {
   Tooltip,
   Select,
 } from '@chakra-ui/core';
+import { useMedia } from 'react-use';
 
 import { SelectContext } from './SelectContainer';
 import { useHotKey } from '../hooks/useHotKey';
@@ -18,7 +19,9 @@ import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpda
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
 
-export const FeedBottomToolbar = () => {
+export const FeedBottomToolbar = ({ width }: any) => {
+  const isMobile = useMedia('(max-width: 768px)');
+
   const { selectedItems, deselectAllItems } = useContext(SelectContext);
   const [selectedStatus, updatedSelectedStatus] = useState<string | null>(null);
 
@@ -90,18 +93,20 @@ export const FeedBottomToolbar = () => {
       position="fixed"
       bottom={0}
       zIndex={2}
-      width="100%"
-      height="60px"
-      boxShadow="0px -1px 5px -1px rgba(0,0,0,0.75);"
+      width={width}
+      height={isMobile ? '120px' : '60px'}
+      boxShadow="0px -5px 5px -5px rgba(0,0,0,0.75);"
       backgroundColor="white"
     >
       <Box
         d="flex"
         alignItems="center"
         justifyContent="space-between"
-        width="70%"
+        width={isMobile ? '100%' : '70%'}
         maxWidth="800px"
-        height="30px"
+        height={isMobile ? '100%' : '30%'}
+        padding={isMobile ? '10px' : undefined}
+        flexWrap="wrap"
       >
         <Box d="flex" width="200px" alignItems="center">
           <Tooltip
@@ -122,9 +127,16 @@ export const FeedBottomToolbar = () => {
             {selectedItems.length} selected
           </Text>
         </Box>
-        <Box d="flex" height="100%" width="400px" alignItems="center">
+        <Box
+          d="flex"
+          height={!isMobile ? '100%' : undefined}
+          width="400px"
+          flexWrap="wrap"
+          alignItems="center"
+        >
           <Button
-            mr={3}
+            mr={isMobile ? 1 : 3}
+            p={isMobile ? 1 : undefined}
             cursor="pointer"
             variantColor="red"
             onClick={() => deleteItems()}
@@ -158,13 +170,20 @@ export const FeedBottomToolbar = () => {
             }}
             showSelectedLabels={false}
             trigger={
-              <Button mr={3} cursor="pointer" isLoading={isUpdatingLabels}>
+              <Button
+                mr={isMobile ? 1 : 3}
+                p={isMobile ? 1 : undefined}
+                cursor="pointer"
+                isLoading={isUpdatingLabels}
+              >
                 Label
               </Button>
             }
           />
 
           <Button
+            mr={isMobile ? 1 : 3}
+            p={isMobile ? '10px' : undefined}
             cursor="pointer"
             onClick={() => favoriteItems()}
             leftIcon="star"
@@ -172,9 +191,8 @@ export const FeedBottomToolbar = () => {
             {isFavorited ? 'Add' : 'Remove'}
           </Button>
           <Select
-            ml={3}
             cursor="pointer"
-            width="100px"
+            maxWidth="100px"
             placeholder="Status"
             onChange={(e: any) => {
               // @ts-ignore
