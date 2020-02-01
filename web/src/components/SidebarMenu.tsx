@@ -105,7 +105,7 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
             </Menu>
           </Box>
           <Divider />
-          <Box>
+          {/* <Box>
             <Stack spacing="10px">
               <Text color="gray.500">QUICK LINKS</Text>
               <LinkListItem to="/files">Files</LinkListItem>
@@ -113,7 +113,7 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
               <LinkListItem to="/links">Links</LinkListItem>
               <LinkListItem to="/favorites">Favorites</LinkListItem>
             </Stack>
-          </Box>
+          </Box> */}
         </Stack>
         <Button
           d="flex"
