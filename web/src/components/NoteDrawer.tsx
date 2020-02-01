@@ -66,6 +66,7 @@ export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
           borderLeft="1px solid lightgray"
           justifyContent="space-between"
           flexDirection="column"
+          overflowY="scroll"
         >
           <Box>
             <Stack spacing="20px">
