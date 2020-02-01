@@ -58,9 +58,9 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
       p="20px"
       height="100%"
       borderRight="1px solid lightgray"
-      zIndex={1}
       bg="gray.50"
       id="sidebar-container"
+      zIndex={3}
     >
       <Flex height="100%" justifyContent="space-between" flexDirection="column">
         <Stack spacing="25px">

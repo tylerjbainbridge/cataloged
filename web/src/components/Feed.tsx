@@ -322,8 +322,14 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
           </Box>
 
           {/* </Switch> */}
-          <FeedBottomToolbar />
         </Box>
+        <FeedBottomToolbar
+          width={
+            sidebarState.isOpen || !isMobile
+              ? `calc(100% - ${currentSidebarWidth || 0}px)`
+              : '100%'
+          }
+        />
       </SelectContainer>
     </FeedContext.Provider>
   );
