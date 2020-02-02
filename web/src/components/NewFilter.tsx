@@ -35,9 +35,10 @@ import { useHotKey } from '../hooks/useHotKey';
 import { Labels } from './Labels';
 import { useGlobalModal } from './GlobalModal';
 import { useAuth } from '../hooks/useAuth';
-import { FaFilter } from 'react-icons/fa';
+import { FaFilter, FaSave } from 'react-icons/fa';
 import { useLocation, useHistory } from 'react-router-dom';
 import { usePrevious } from '../hooks/usePrevious';
+import { AddOrUpdateSavedSearch } from './AddOrUpdateSavedSearch';
 
 // Dynamic set of inputs
 
@@ -445,8 +446,8 @@ export const NewFilter = ({
     <Popover
       //@ts-ignore
       // usePortal
-      closeOnBlur
       closeOnEsc
+      closeOnBlur={false}
       isOpen={isOpen}
       onClose={onClose}
       initialFocusRef={addButtonRef}
@@ -459,7 +460,7 @@ export const NewFilter = ({
             }
           : {
               maxHeight: '500px',
-              overflowY: 'scroll',
+              overflowY: 'auto',
             })}
         zIndex={500}
       >
@@ -508,38 +509,65 @@ export const NewFilter = ({
                 </Box>
               );
             })}
+            <Box width="100%" pb="5px" pt="5px">
+              <Divider />
+            </Box>
             <Stack
               isInline
               d="flex"
               width="100%"
               justifyContent={fields.length ? 'space-between' : 'flex-end'}
             >
-              {!!fields.length && (
+              <AddOrUpdateSavedSearch
+                filters={getFilterVariablesFromFormValues(
+                  // @ts-ignore
+                  !values[FORM_NAME]
+                    ? Object.values(values)
+                    : values[FORM_NAME],
+                )}
+              >
+                {({ onOpen }: any) => (
+                  <Button
+                    mr="10px"
+                    aria-label="add filter"
+                    type="button"
+                    alignSelf="flex-end"
+                    variant="outline"
+                    onClick={onOpen}
+                    isDisabled={!fields.length}
+                  >
+                    Update or Create
+                    <FaSave style={{ marginLeft: '5px' }} />
+                  </Button>
+                )}
+              </AddOrUpdateSavedSearch>
+
+              <Box>
+                {!!fields.length && (
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    color="gray"
+                    onClick={async () => {
+                      await filter({ filters: [] });
+                      remove();
+                      filterForm.reset({ [FORM_NAME]: [] });
+                      // onClose();
+                    }}
+                  >
+                    Clear
+                  </Button>
+                )}
                 <Button
-                  variant="ghost"
-                  type="button"
-                  color="gray"
-                  onClick={async () => {
-                    await filter({ filters: [] });
-                    remove();
-                    filterForm.reset({ [FORM_NAME]: [] });
-                    // onClose();
-                  }}
-                >
-                  Clear
-                </Button>
-              )}
-              <Tooltip hasArrow label="Add filter" aria-label="add filter">
-                <IconButton
-                  icon="add"
                   aria-label="add filter"
-                  variant="ghost"
                   type="button"
                   alignSelf="flex-end"
                   ref={addButtonRef}
                   onClick={() => append({ name: randomString() })}
-                />
-              </Tooltip>
+                >
+                  Add <FaFilter style={{ marginLeft: '5px' }} />
+                </Button>
+              </Box>
             </Stack>
           </Stack>
         </PopoverBody>

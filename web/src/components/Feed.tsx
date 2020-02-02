@@ -41,7 +41,7 @@ import { useMedia } from 'react-use';
 import { usePrevious } from '../hooks/usePrevious';
 
 export const FEED_QUERY = gql`
-  query feed($first: Int, $after: String, $filters: [Filter!]) {
+  query feed($first: Int, $after: String, $filters: [FilterInput!]) {
     itemsConnection(
       first: $first
       after: $after
@@ -81,8 +81,6 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     // @ts-ignore
     localStorage.getItem('grid-mode') || 'grid',
   );
-
-  const match = useRouteMatch('/:type');
 
   const isMobile = useMedia('(max-width: 768px)');
 
@@ -136,9 +134,10 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   useEffect(() => {
     if (!isMobile) {
       if (isViewingItem) {
-        // @ts-ignore
-        if (feedContainerRef.current)
+        if (feedContainerRef.current) {
+          // @ts-ignore
           disableBodyScroll(feedContainerRef.current);
+        }
       } else if (feedContainerRef.current) {
         // @ts-ignore
         enableBodyScroll(feedContainerRef.current);
@@ -150,7 +149,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   useEffect(() => {
     if (prevLocation && prevLocation.search !== location.search) {
-      refetch(getFeedVariablesFromQueryString(location.search));
+      // refetch(getFeedVariablesFromQueryString(location.search));
     }
   }, [location.search]);
 
@@ -193,7 +192,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   const onDebouncedFilterChange = (newFilters: any[]) => {
     history.replace({
-      pathname: location.pathname,
+      pathname: window.location.pathname,
       search: getQueryStringFromFilters(newFilters, location),
     });
   };
@@ -291,7 +290,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
           <Box d="flex" justifyContent="center" mt="100px" width="100%">
             <Box width={isMobile ? '100%' : '90%'} mr="20px" ml="20px">
               <Box ref={feedContainerRef}>
-                {initialLoad ? (
+                {initialLoad && !items.length ? (
                   <Box
                     d="flex"
                     justifyContent="center"
@@ -324,7 +323,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                   )}
               </Box>
 
-              {loading && !!items?.length && (
+              {loading && items.length > FEED_PAGE_LENGTH && (
                 <Box
                   d="flex"
                   justifyContent="center"

@@ -175,7 +175,14 @@ input FileWhereUniqueInput {
   id: String
 }
 
-input Filter {
+type Filter {
+  name: String!
+  operator: String!
+  value: FilterValue
+  values: [FilterValue!]
+}
+
+input FilterInput {
   name: String!
   operator: String!
   value: FilterValue
@@ -239,6 +246,17 @@ type InterestedUser {
   email: String!
   id: String!
   updatedAt: DateTime!
+}
+
+input IntFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: Int
+  notIn: [Int!]
 }
 
 type InviteCode {
@@ -588,6 +606,7 @@ input LinkWhereUniqueInput {
 
 type Mutation {
   addInviteCode(code: String!): InviteCode!
+  addOrUpdateSavedSearch(filters: [FilterInput!]!, name: String!, savedSearchId: String): SavedSearch!
   addToWaitlist(email: String!): InterestedUser!
   batchUpdateItemLabels(itemIds: [String!]!, labelIdsToAdd: [String!]!, labelIdsToRemove: [String!]!): [Item!]!
   connectLabelToItem(itemId: String!, name: String!): Item!
@@ -600,6 +619,7 @@ type Mutation {
   deleteLabel(labelId: String!): User!
   deleteManyItems(itemIds: [String!]!): [Item!]!
   deleteOneFile(where: FileWhereUniqueInput!): File
+  deleteSavedSearch(id: String): SavedSearch!
   disconnectLabelFromItem(itemId: String!, labelId: String!): Item!
   enterInviteCode(code: String!): User!
   generateSignedUrls(signedURLArgs: [SignedURLArgs!]): InProgressUpload!
@@ -724,12 +744,130 @@ type Query {
   file(where: FileWhereUniqueInput!): File
   googleURL: String!
   item(id: String!): Item!
-  itemsConnection(after: String, before: String, filters: [Filter!], first: Int, last: Int, orderBy: ItemOrderByInput, type: ItemType): ItemConnection!
+  itemsConnection(after: String, before: String, filters: [FilterInput!], first: Int, last: Int, orderBy: ItemOrderByInput, type: ItemType): ItemConnection!
   me: User
   mostRecentItem(type: String): Item
+  savedSearches: [SavedSearch!]!
   test: String!
   uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, where: UploadGroupWhereInput): [UploadGroup!]!
   users(after: String, before: String, first: Int, last: Int, skip: Int): [User!]!
+}
+
+type SavedSearch {
+  createdAt: DateTime!
+  filters: [Filter!]!
+  id: String!
+  name: String!
+  updatedAt: DateTime!
+  version: Int!
+}
+
+input SavedSearchCreateManyWithoutUserInput {
+  connect: [SavedSearchWhereUniqueInput!]
+  create: [SavedSearchCreateWithoutUserInput!]
+}
+
+input SavedSearchCreateOneWithoutFiltersInput {
+  connect: SavedSearchWhereUniqueInput
+  create: SavedSearchCreateWithoutFiltersInput
+}
+
+input SavedSearchCreateWithoutFiltersInput {
+  createdAt: DateTime
+  id: String
+  name: String!
+  updatedAt: DateTime
+  user: UserCreateOneWithoutSavedSearchesInput
+  version: Int!
+}
+
+input SavedSearchCreateWithoutUserInput {
+  createdAt: DateTime
+  filters: SavedSearchFilterCreateManyWithoutSavedSearchInput
+  id: String
+  name: String!
+  updatedAt: DateTime
+  version: Int!
+}
+
+input SavedSearchFilter {
+  every: SavedSearchWhereInput
+  none: SavedSearchWhereInput
+  some: SavedSearchWhereInput
+}
+
+input SavedSearchFilterCreateManyWithoutSavedSearchInput {
+  connect: [SavedSearchFilterWhereUniqueInput!]
+  create: [SavedSearchFilterCreateWithoutSavedSearchInput!]
+}
+
+input SavedSearchFilterCreateManyWithoutUserInput {
+  connect: [SavedSearchFilterWhereUniqueInput!]
+  create: [SavedSearchFilterCreateWithoutUserInput!]
+}
+
+input SavedSearchFilterCreateWithoutSavedSearchInput {
+  createdAt: DateTime
+  id: String
+  name: String!
+  operator: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutSavedSearchFiltersInput
+  value: String
+  values: String
+}
+
+input SavedSearchFilterCreateWithoutUserInput {
+  createdAt: DateTime
+  id: String
+  name: String!
+  operator: String
+  savedSearch: SavedSearchCreateOneWithoutFiltersInput
+  updatedAt: DateTime
+  value: String
+  values: String
+}
+
+input SavedSearchFilterFilter {
+  every: SavedSearchFilterWhereInput
+  none: SavedSearchFilterWhereInput
+  some: SavedSearchFilterWhereInput
+}
+
+input SavedSearchFilterWhereInput {
+  AND: [SavedSearchFilterWhereInput!]
+  createdAt: DateTimeFilter
+  id: StringFilter
+  name: StringFilter
+  NOT: [SavedSearchFilterWhereInput!]
+  operator: NullableStringFilter
+  OR: [SavedSearchFilterWhereInput!]
+  savedSearch: SavedSearchWhereInput
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+  value: NullableStringFilter
+  values: NullableStringFilter
+}
+
+input SavedSearchFilterWhereUniqueInput {
+  id: String
+}
+
+input SavedSearchWhereInput {
+  AND: [SavedSearchWhereInput!]
+  createdAt: DateTimeFilter
+  filters: SavedSearchFilterFilter
+  id: StringFilter
+  name: StringFilter
+  NOT: [SavedSearchWhereInput!]
+  OR: [SavedSearchWhereInput!]
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+  version: IntFilter
+}
+
+input SavedSearchWhereUniqueInput {
+  id: String
 }
 
 input SignedURLArgs {
@@ -850,6 +988,8 @@ input UserCreateInput {
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
   role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -879,6 +1019,16 @@ input UserCreateOneWithoutNotesInput {
   create: UserCreateWithoutNotesInput
 }
 
+input UserCreateOneWithoutSavedSearchesInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutSavedSearchesInput
+}
+
+input UserCreateOneWithoutSavedSearchFiltersInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutSavedSearchFiltersInput
+}
+
 input UserCreateOneWithoutUploadGroupsInput {
   connect: UserWhereUniqueInput
   create: UserCreateWithoutUploadGroupsInput
@@ -898,6 +1048,8 @@ input UserCreateWithoutFilesInput {
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
   role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -916,6 +1068,8 @@ input UserCreateWithoutItemsInput {
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
   role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -934,6 +1088,8 @@ input UserCreateWithoutLabelsInput {
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
   role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -952,6 +1108,8 @@ input UserCreateWithoutLinksInput {
   lastName: String
   notes: NoteCreateManyWithoutUserInput
   role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -970,6 +1128,48 @@ input UserCreateWithoutNotesInput {
   lastName: String
   links: LinkCreateManyWithoutUserInput
   role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  updatedAt: DateTime
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutSavedSearchesInput {
+  createdAt: DateTime
+  email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  role: String
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  updatedAt: DateTime
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutSavedSearchFiltersInput {
+  createdAt: DateTime
+  email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -989,6 +1189,8 @@ input UserCreateWithoutUploadGroupsInput {
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
   role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
   updatedAt: DateTime
 }
 
@@ -1027,6 +1229,8 @@ input UserWhereInput {
   notes: NoteFilter
   OR: [UserWhereInput!]
   role: StringFilter
+  savedSearches: SavedSearchFilter
+  savedSearchFilters: SavedSearchFilterFilter
   updatedAt: DateTimeFilter
   uploadGroups: UploadGroupFilter
 }

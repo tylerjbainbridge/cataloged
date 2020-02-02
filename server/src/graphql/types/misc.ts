@@ -71,12 +71,21 @@ export const FilterValue = scalarType({
   },
 });
 
-function oddValue(value) {
-  return value % 2 === 1 ? value : null;
-}
-
-export const Filter = inputObjectType({
+export const Filter = objectType({
   name: 'Filter',
+  definition(t) {
+    t.string('name');
+
+    t.string('operator');
+
+    // One of these must be supplied
+    t.field('value', { type: 'FilterValue', nullable: true });
+    t.list.field('values', { type: 'FilterValue', nullable: true });
+  },
+});
+
+export const FilterInput = inputObjectType({
+  name: 'FilterInput',
   definition(t) {
     t.string('name', { required: true });
 

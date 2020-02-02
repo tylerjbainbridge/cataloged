@@ -58,6 +58,17 @@ export const Query = objectType({
       resolve: feedResolver,
     });
 
+    t.list.field('savedSearches', {
+      type: 'SavedSearch',
+      resolve: (_, args, ctx) => {
+        return ctx.photon.savedSearches.findMany({
+          where: {
+            user: { id: ctx.user.id },
+          },
+        });
+      },
+    });
+
     t.list.field('uploadGroups', {
       type: 'UploadGroup',
       args: {

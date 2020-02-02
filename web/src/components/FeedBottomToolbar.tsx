@@ -104,11 +104,11 @@ export const FeedBottomToolbar = ({ width }: any) => {
         justifyContent="space-between"
         width={isMobile ? '100%' : '70%'}
         maxWidth="800px"
-        height={isMobile ? '100%' : '30%'}
+        height="100%"
         padding={isMobile ? '10px' : undefined}
         flexWrap="wrap"
       >
-        <Box d="flex" width="200px" alignItems="center">
+        <Box d="flex" width="200px" alignItems="center" height="100%">
           <Tooltip
             hasArrow
             aria-label="deselect all items"

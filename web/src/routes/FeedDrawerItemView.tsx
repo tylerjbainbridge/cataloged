@@ -26,6 +26,7 @@ export interface ItemDrawerProps {
 
 export const FeedDrawerItemView = () => {
   const location = useLocation();
+  const history = useHistory();
 
   const itemId = qs.parse(location.search)?.itemId;
 
@@ -39,8 +40,9 @@ export const FeedDrawerItemView = () => {
   const { item, loading } = useGetItem(itemId);
 
   useEffect(() => {
-    if (!loading && item) {
-      onOpen();
+    if (!loading) {
+      if (item) onOpen();
+      else returnToFeed();
     }
   }, [loading]);
 
