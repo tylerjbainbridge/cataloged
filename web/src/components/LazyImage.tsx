@@ -42,6 +42,7 @@ export const LazyImage = ({
     if (isReady) {
       img.onload = () => setIsImageLoaded(true);
       img.onerror = () => setIsBroken(true);
+      img.crossOrigin = 'Anonymous';
 
       setDimensions({
         width: img.width,
