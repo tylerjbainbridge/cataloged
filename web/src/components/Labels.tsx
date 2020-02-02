@@ -328,7 +328,7 @@ export const Labels = ({
         {!displayOnly && (
           <Popover
             // @ts-ignore
-            usePortal
+            // usePortal
             placement="bottom"
             isOpen={isOpen}
             initialFocusRef={firstFieldRef}

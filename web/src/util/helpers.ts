@@ -62,12 +62,6 @@ export const getFeedVariablesFromQueryString = (search: any) => {
     return filter;
   });
 
-  console.log({
-    parsed,
-    filters,
-    qs: queryString.parse(search, { arrayFormat: 'bracket' }),
-  });
-
   return { filters };
 };
 

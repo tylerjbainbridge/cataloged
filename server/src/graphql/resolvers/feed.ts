@@ -13,7 +13,7 @@ export const feedArgs = {
   ...paginationArgs,
   type: ItemType,
   orderBy: getFindManyOrderArgs('Item'),
-  filters: arg({ type: 'Filter', list: true }),
+  filters: arg({ type: 'FilterInput', list: true }),
   // // @ts-ignore
   // where: getWhereArgs('Item'),
   // // @ts-ignore

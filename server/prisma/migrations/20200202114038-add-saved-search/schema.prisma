@@ -4,7 +4,7 @@ generator photon {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRESQL_URL")
+  url = "***"
 }
 
 model InviteCode {
@@ -73,18 +73,15 @@ model SavedSearch {
 
   user User?
 
-  filters SavedSearchFilter[]
+  filters Filter[]
 }
 
-model SavedSearchFilter {
+model Filter {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name     String
-  operator String?
-  value    String?
-  values   String?
+  value String?
 
   user User?
 
