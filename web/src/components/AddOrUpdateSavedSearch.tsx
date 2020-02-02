@@ -92,7 +92,7 @@ export const AddOrUpdateSavedSearch = ({ filters, children }: any) => {
 
   return (
     <>
-      {children({ isOpen, onClose, onOpen, onToggle })}
+      {children({ isOpen, onClose, onOpen, onToggle, match })}
       <Modal initialFocusRef={inputRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
 

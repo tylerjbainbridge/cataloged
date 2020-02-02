@@ -526,7 +526,7 @@ export const NewFilter = ({
                     : values[FORM_NAME],
                 )}
               >
-                {({ onOpen }: any) => (
+                {({ onOpen, match }: any) => (
                   <Button
                     mr="10px"
                     aria-label="add filter"
@@ -536,7 +536,7 @@ export const NewFilter = ({
                     onClick={onOpen}
                     isDisabled={!fields.length}
                   >
-                    Update or Create
+                    {match ? 'Update or create new' : 'Save this search'}
                     <FaSave style={{ marginLeft: '5px' }} />
                   </Button>
                 )}
