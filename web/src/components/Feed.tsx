@@ -134,12 +134,15 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   // }, [variables]);
 
   useEffect(() => {
-    if (isViewingItem) {
-      // @ts-ignore
-      if (feedContainerRef.current) disableBodyScroll(feedContainerRef.current);
-    } else if (feedContainerRef.current) {
-      // @ts-ignore
-      enableBodyScroll(feedContainerRef.current);
+    if (!isMobile) {
+      if (isViewingItem) {
+        // @ts-ignore
+        if (feedContainerRef.current)
+          disableBodyScroll(feedContainerRef.current);
+      } else if (feedContainerRef.current) {
+        // @ts-ignore
+        enableBodyScroll(feedContainerRef.current);
+      }
     }
   }, [isViewingItem]);
 
