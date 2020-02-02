@@ -243,24 +243,16 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 </Box>
                 {!isMobile && (
                   <>
-                    <Box
-                      maxWidth="300px"
-                      minWidth="125px"
-                      d="flex"
-                      height="100%"
-                      mr={3}
-                      alignItems="center"
-                    >
+                    <Box d="flex" height="100%" mr="100px" alignItems="center">
                       <Text color="gray.400">
                         {format(new Date(item.createdAt), 'MMM dd, yyyy')}
                       </Text>
                     </Box>
                     <Box
-                      maxWidth="150px"
-                      minWidth="70px"
                       d="flex"
                       height="100%"
-                      mr={3}
+                      width="100px"
+                      mr="100px"
                       alignItems="center"
                     >
                       <Text>{_.upperFirst(item.type)}</Text>

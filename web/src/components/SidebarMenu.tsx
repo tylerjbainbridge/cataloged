@@ -17,38 +17,47 @@ import {
   BoxProps,
   IconButton,
 } from '@chakra-ui/core';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link, LinkProps, useLocation } from 'react-router-dom';
 
 import logo from '../images/logo.png';
 import { useAuth } from '../hooks/useAuth';
 import { useGlobalModal, ModalName } from './GlobalModal';
 import { NoteModal } from './NoteModal';
+import { getQueryStringFromFilters } from '../util/helpers';
 
 export const SIDEBAR_WIDTH = '250px';
 
 export interface LinkListItemProps extends BoxProps {
-  to: LinkProps['to'];
+  filters: any[];
 }
 
-const LinkListItem = ({ children, to, ...props }: LinkListItemProps) => (
-  <Button
-    d="flex"
-    justifyContent="flex-start"
-    as={Link}
-    // @ts-ignore
-    to={to}
-    cursor="pointer"
-    width="100%"
-    textAlign="left"
-    bg="none"
-    {...props}
-  >
-    {children}
-  </Button>
-);
+const LinkListItem = ({ children, filters, ...props }: LinkListItemProps) => {
+  const location = useLocation();
+
+  return (
+    <Button
+      d="flex"
+      justifyContent="flex-start"
+      as={Link}
+      // @ts-ignore
+      to={{
+        pathname: '/',
+        search: getQueryStringFromFilters(filters, location),
+      }}
+      cursor="pointer"
+      width="100%"
+      textAlign="left"
+      bg="none"
+      {...props}
+    >
+      {children}
+    </Button>
+  );
+};
 
 export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
   const { user, signOut } = useAuth();
+  const location = useLocation();
 
   const createFileModal = useGlobalModal(ModalName.CREATE_FILES_MODAL);
   const createLinkModal = useGlobalModal(ModalName.CREATE_LINK_MODAL);
@@ -105,15 +114,34 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
             </Menu>
           </Box>
           <Divider />
-          {/* <Box>
+          <Box>
             <Stack spacing="10px">
               <Text color="gray.500">QUICK LINKS</Text>
-              <LinkListItem to="/files">Files</LinkListItem>
-              <LinkListItem to="/notes">Notes</LinkListItem>
-              <LinkListItem to="/links">Links</LinkListItem>
-              <LinkListItem to="/favorites">Favorites</LinkListItem>
+              <LinkListItem filters={[]}>All</LinkListItem>
+              <LinkListItem
+                filters={[
+                  { name: 'isFavorited', operator: 'equals', value: true },
+                ]}
+              >
+                Favorites
+              </LinkListItem>
+              <LinkListItem
+                filters={[{ name: 'type', operator: 'equals', value: 'file' }]}
+              >
+                Files
+              </LinkListItem>
+              <LinkListItem
+                filters={[{ name: 'type', operator: 'equals', value: 'note' }]}
+              >
+                Notes
+              </LinkListItem>
+              <LinkListItem
+                filters={[{ name: 'type', operator: 'equals', value: 'link' }]}
+              >
+                Links
+              </LinkListItem>
             </Stack>
-          </Box> */}
+          </Box>
         </Stack>
         <Button
           d="flex"

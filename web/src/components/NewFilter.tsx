@@ -21,12 +21,14 @@ import {
   Tooltip,
   useDisclosure,
   Text,
+  Divider,
 } from '@chakra-ui/core';
 import { FeedContext } from './Feed';
 import {
   getFilterVariablesFromFormValues,
   randomString,
   getQueryStringFromFilters,
+  getFeedVariablesFromQueryString,
 } from '../util/helpers';
 import { useDeepCompareEffect, useMedia } from 'react-use';
 import { useHotKey } from '../hooks/useHotKey';
@@ -34,12 +36,15 @@ import { Labels } from './Labels';
 import { useGlobalModal } from './GlobalModal';
 import { useAuth } from '../hooks/useAuth';
 import { FaFilter } from 'react-icons/fa';
+import { useLocation, useHistory } from 'react-router-dom';
+import { usePrevious } from '../hooks/usePrevious';
 
 // Dynamic set of inputs
 
 export interface NewFilterProps {
   variables: any;
   loading: boolean;
+  onDebouncedFilterChange: (filters: any[]) => void;
 }
 
 export const FORM_NAME = 'filters';
@@ -117,6 +122,8 @@ export const FilterInput = ({
 }: any) => {
   const { user } = useAuth();
 
+  const isMobile = useMedia('(max-width: 768px)');
+
   // @ts-ignore
   const filterConfig = FILTER_CONFIGS[filter.name];
 
@@ -131,11 +138,21 @@ export const FilterInput = ({
   const styleProps: any = {
     cursor: 'pointer',
     variant: 'flushed',
+    ...(isMobile
+      ? {
+          width: '100%',
+          mb: '10px',
+        }
+      : {
+          width: '200px',
+        }),
   };
 
   const valueInputProps: any = {
     id: `field-${uniqueId}`,
   };
+
+  const commonProps = {};
 
   switch (filterConfig.type) {
     case 'select': {
@@ -170,6 +187,7 @@ export const FilterInput = ({
     case 'switch': {
       valueNode = (
         <Switch
+          {...styleProps}
           {...valueInputProps}
           isChecked={filter.value}
           onChange={(e: any) => {
@@ -183,17 +201,19 @@ export const FilterInput = ({
 
     case 'labels': {
       valueNode = (
-        <Labels
-          canAddLabels={false}
-          selectedLabels={filter.values.map((name: string) =>
-            user.labels.find(label => label.name === name),
-          )}
-          onSelectedLabelChange={(selectedLabels: any) => {
-            updateFilter({
-              values: selectedLabels.map(({ name }: any) => name),
-            });
-          }}
-        />
+        <Box width="auto" {...styleProps}>
+          <Labels
+            canAddLabels={false}
+            selectedLabels={filter.values.map((name: string) =>
+              user.labels.find(label => label.name === name),
+            )}
+            onSelectedLabelChange={(selectedLabels: any) => {
+              updateFilter({
+                values: selectedLabels.map(({ name }: any) => name),
+              });
+            }}
+          />
+        </Box>
       );
       break;
     }
@@ -201,10 +221,11 @@ export const FilterInput = ({
     case 'text': {
       valueNode = (
         <Input
+          mb={0}
+          width="200px"
           {...styleProps}
           {...valueInputProps}
-          variant="filled"
-          mb={0}
+          variant={!isMobile ? 'filled' : 'flushed'}
           value={filter.value}
           onChange={(e: any) => {
             updateFilter({ value: e.target.value });
@@ -216,21 +237,40 @@ export const FilterInput = ({
   }
 
   return (
-    <Flex mb={4} alignItems="center">
-      <IconButton
-        icon="delete"
-        mr={2}
-        aria-label="remove filter"
-        onClick={remove}
-        variant="ghost"
-      />
+    <Flex
+      width="100%"
+      mb={4}
+      alignItems="center"
+      flexWrap="wrap"
+      {...(isMobile
+        ? {
+            border: '1px solid lightgray',
+            rounded: 'lg',
+            padding: '10px',
+          }
+        : {})}
+    >
+      {!isMobile && (
+        <IconButton
+          icon="delete"
+          mr={2}
+          aria-label="remove filter"
+          onClick={remove}
+          variant="ghost"
+        />
+      )}
       <Select
         variant="flushed"
         cursor="pointer"
-        mb={0}
-        mr={2}
-        minWidth="100px"
-        maxWidth="100px"
+        {...(isMobile
+          ? {
+              mb: '10px',
+              width: '100%',
+            }
+          : {
+              mr: '10px',
+              width: '100px',
+            })}
         value={filter.name}
         onChange={(e: any) => {
           const name = e.target.value;
@@ -257,11 +297,16 @@ export const FilterInput = ({
         <Select
           cursor="pointer"
           variant="flushed"
-          mb={0}
-          mr={2}
-          minWidth="100px"
-          maxWidth="100px"
           value={filter.operator}
+          {...(isMobile
+            ? {
+                mb: '5px',
+                width: '100%',
+              }
+            : {
+                mr: '10px',
+                width: '100px',
+              })}
           onChange={(e: any) => {
             updateFilter({ operator: e.target.value });
           }}
@@ -279,12 +324,25 @@ export const FilterInput = ({
         </Select>
       )}
       {valueNode}
+      {isMobile && (
+        <Box width="100%">
+          <Button width="100%" onClick={remove} variantColor="red">
+            Remove
+          </Button>
+        </Box>
+      )}
     </Flex>
   );
 };
 
-export const NewFilter = ({ variables, loading }: NewFilterProps) => {
+export const NewFilter = ({
+  variables,
+  loading,
+  onDebouncedFilterChange,
+}: NewFilterProps) => {
   const isMobile = useMedia('(max-width: 768px)');
+
+  const location = useLocation();
 
   const { isOpen, onClose, onOpen, onToggle } = useDisclosure();
 
@@ -316,10 +374,7 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
         !values[FORM_NAME] ? Object.values(values) : values[FORM_NAME],
       );
 
-      if (!_.isEqual(filters, variables.filters)) {
-        console.log('updating', filters, variables.filters);
-        await filter({ filters });
-      }
+      onDebouncedFilterChange(filters);
     }, 1000),
   );
 
@@ -343,10 +398,19 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
     shouldBind: !isAnyModalOpen,
   });
 
+  const prevLocation = usePrevious(location);
+
+  useEffect(() => {
+    if (!isOpen && prevLocation && prevLocation.search !== location.search) {
+      filterForm.reset({
+        [FORM_NAME]:
+          getFeedVariablesFromQueryString(location.search)?.filters || [],
+      });
+    }
+  }, [location.search, isOpen]);
+
   useEffect(() => {
     if (isOpen) {
-      console.log('initializing', variables?.filters);
-
       filterForm.reset({
         [FORM_NAME]: variables?.filters || [],
       });
@@ -362,7 +426,7 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
       _hover={{ bg: '#e8e4ed', borderColor: 'brand.purple' }}
       size="md"
       border="none"
-      isLoading={loading && !!variables?.filters?.length}
+      isLoading={loading}
       isDisabled={false}
       onClick={e => {
         e.stopPropagation();
@@ -384,19 +448,31 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
       closeOnBlur
       closeOnEsc
       isOpen={isOpen}
-      // isOpen
       onClose={onClose}
       initialFocusRef={addButtonRef}
     >
       <PopoverTrigger>{trigger}</PopoverTrigger>
       <PopoverContent
-        minWidth={fields.length ? 500 : 300}
-        maxWidth="100%"
-        width={isMobile ? '100%' : undefined}
+        {...(!isMobile
+          ? {
+              minWidth: fields.length ? 500 : 300,
+            }
+          : {
+              maxHeight: '500px',
+              overflowY: 'scroll',
+            })}
         zIndex={500}
       >
-        <PopoverArrow />
-        <PopoverBody>
+        {/* <PopoverArrow /> */}
+        <PopoverBody
+          {...(isMobile
+            ? {
+                minWidth: '100%',
+              }
+            : {
+                minWidth: fields.length ? 500 : 300,
+              })}
+        >
           <Stack spacing={1}>
             {!fields.length && (
               <Text alignSelf="center" color="gray.500">
@@ -410,7 +486,7 @@ export const NewFilter = ({ variables, loading }: NewFilterProps) => {
               const value = values[name] || values[FORM_NAME]?.[index];
 
               return (
-                <Box key={field.id}>
+                <Box key={field.id} width="100%">
                   <Controller
                     control={filterForm.control}
                     name={name}

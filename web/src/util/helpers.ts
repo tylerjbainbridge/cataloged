@@ -2,6 +2,7 @@ import _ from 'lodash';
 // @ts-ignore
 import cleanDeep from 'clean-deep';
 import queryString from 'query-string';
+import { FILTER_CONFIGS } from '../components/NewFilter';
 
 export const randomString = (): string =>
   Math.random()
@@ -11,7 +12,13 @@ export const randomString = (): string =>
     .toString(36)
     .substring(2, 15);
 
-const NOT_FILTERS = ['itemId'];
+const FILTER_NAMES = Object.keys(FILTER_CONFIGS);
+
+const isFilterQueryArg = (...args: any[]) =>
+  FILTER_NAMES.find(name => {
+    const [value, key] = args;
+    return key.includes(name);
+  });
 
 export const getQueryStringFromFilters = (filters: any[], location: any) => {
   return queryString.stringify(
@@ -24,7 +31,7 @@ export const getQueryStringFromFilters = (filters: any[], location: any) => {
           ...p,
         };
       }, {}),
-      ..._.pick(queryString.parse(location?.search), NOT_FILTERS),
+      ..._.omitBy(queryString.parse(location?.search), isFilterQueryArg),
     },
     { arrayFormat: 'bracket' },
   );
@@ -38,9 +45,9 @@ export const getFilterVariablesFromFormValues = (filters: any[]) => {
 };
 
 export const getFeedVariablesFromQueryString = (search: any) => {
-  const parsed = _.omit(
+  const parsed = _.pickBy(
     queryString.parse(search, { arrayFormat: 'bracket' }),
-    NOT_FILTERS,
+    isFilterQueryArg,
   );
 
   const filters = Object.entries(parsed).map(([key, value]) => {
@@ -53,6 +60,12 @@ export const getFeedVariablesFromQueryString = (search: any) => {
     else filter.value = value;
 
     return filter;
+  });
+
+  console.log({
+    parsed,
+    filters,
+    qs: queryString.parse(search, { arrayFormat: 'bracket' }),
   });
 
   return { filters };
