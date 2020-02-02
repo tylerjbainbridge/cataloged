@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { SimpleGrid, Flex } from '@chakra-ui/core';
+import { SimpleGrid, Flex, Box } from '@chakra-ui/core';
 import { QueryResult } from 'react-apollo';
 
 import { ITEM_WIDTH, Item } from './Item';
@@ -15,9 +15,9 @@ export const GridFeed = (_: GridFeedProps) => {
 
   return (
     <Flex justifyContent="center">
-      <SimpleGrid width="90%" minChildWidth={ITEM_WIDTH} spacing={10}>
+      <Flex width="90%" flexWrap="wrap">
         {items.map(item => (
-          <Flex justifyContent="center" width="100%">
+          <Flex justifyContent="center" padding="15px">
             <Item item={item} key={item.id} />
           </Flex>
         ))}
@@ -26,7 +26,7 @@ export const GridFeed = (_: GridFeedProps) => {
       <Box w="100%" h="10" bg="blue.500" />
       <Box w="100%" h="10" bg="blue.500" />
       <Box w="100%" h="10" bg="blue.500" /> */}
-      </SimpleGrid>
+      </Flex>
     </Flex>
   );
 };

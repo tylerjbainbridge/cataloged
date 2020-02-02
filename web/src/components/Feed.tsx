@@ -38,6 +38,7 @@ import { ListFeed } from './ListFeed';
 import { FaThLarge, FaList } from 'react-icons/fa';
 import { NewFilter } from './NewFilter';
 import { useMedia } from 'react-use';
+import { usePrevious } from '../hooks/usePrevious';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $after: String, $filters: [Filter!]) {
@@ -122,15 +123,15 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
       ...filterVariables,
     });
 
-  useEffect(() => {
-    if (!loading) {
-      // @ts-ignore
-      history.replace({
-        // @ts-ignore
-        search: getQueryStringFromFilters(variables.filters || [], location),
-      });
-    }
-  }, [variables]);
+  // useEffect(() => {
+  //   if (!loading) {
+  //     // @ts-ignore
+  //     history.replace({
+  //       // @ts-ignore
+  //       search: getQueryStringFromFilters(variables.filters || [], location),
+  //     });
+  //   }
+  // }, [variables]);
 
   useEffect(() => {
     if (isViewingItem) {
@@ -141,6 +142,14 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
       enableBodyScroll(feedContainerRef.current);
     }
   }, [isViewingItem]);
+
+  const prevLocation = usePrevious(location);
+
+  useEffect(() => {
+    if (prevLocation && prevLocation.search !== location.search) {
+      refetch(getFeedVariablesFromQueryString(location.search));
+    }
+  }, [location.search]);
 
   const { filters } = variables;
 
@@ -178,6 +187,13 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   const currentSidebarWidth =
     // @ts-ignore
     document.querySelector('#sidebar-container')?.offsetWidth;
+
+  const onDebouncedFilterChange = (newFilters: any[]) => {
+    history.replace({
+      pathname: location.pathname,
+      search: getQueryStringFromFilters(newFilters, location),
+    });
+  };
 
   return (
     <FeedContext.Provider
@@ -238,7 +254,11 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
               )}
               {sidebarState.isOpen && isMobile ? null : (
                 <>
-                  <NewFilter variables={variables} loading={loading} />
+                  <NewFilter
+                    variables={variables}
+                    loading={loading}
+                    onDebouncedFilterChange={onDebouncedFilterChange}
+                  />
                   <Box>
                     <Tooltip
                       hasArrow
@@ -265,8 +285,8 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
             </Box>
           </Box>
 
-          <Box d="flex" justifyContent="center" mt="80px" width="100%">
-            <Box width={isMobile ? '95%' : '80%'}>
+          <Box d="flex" justifyContent="center" mt="100px" width="100%">
+            <Box width={isMobile ? '100%' : '90%'} mr="20px" ml="20px">
               <Box ref={feedContainerRef}>
                 {initialLoad ? (
                   <Box
@@ -285,7 +305,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                     height="100%"
                     width="100%"
                   >
-                    <Text>
+                    <Text textAlign="center">
                       {filters.length ? 'No results' : 'No items found'}
                     </Text>
                   </Box>

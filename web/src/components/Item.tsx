@@ -8,7 +8,7 @@ import { GenericListItem } from './GenericListItem';
 import { GenericGridItem } from './GenericGridItem';
 
 export const ITEM_INNER_PADDING = 5;
-export const ITEM_ACTUAL_WIDTH = 270;
+export const ITEM_ACTUAL_WIDTH = 250;
 export const ITEM_CONTENT_HEIGHT = 200;
 export const ITEM_WIDTH = ITEM_ACTUAL_WIDTH + ITEM_INNER_PADDING;
 

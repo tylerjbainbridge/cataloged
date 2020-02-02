@@ -327,6 +327,8 @@ export const Labels = ({
       >
         {!displayOnly && (
           <Popover
+            // @ts-ignore
+            usePortal
             placement="bottom"
             isOpen={isOpen}
             initialFocusRef={firstFieldRef}
@@ -359,7 +361,7 @@ export const Labels = ({
               )}
             </PopoverTrigger>
             <PopoverContent zIndex={100} width="400px">
-              <PopoverArrow bg="white" />
+              {/* <PopoverArrow bg="white" /> */}
               <Stack
                 spacing="5px"
                 shouldWrapChildren

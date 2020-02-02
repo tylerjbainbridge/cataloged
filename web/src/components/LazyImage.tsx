@@ -28,6 +28,7 @@ export const LazyImage = ({
   ...props
 }: LazeImageProps) => {
   const img = new Image();
+
   img.src = src;
 
   const [isImageLoaded, setIsImageLoaded] = useState<boolean | null>(
@@ -54,11 +55,13 @@ export const LazyImage = ({
     ...props,
   };
 
-  const isReadyToDisplay = !isReady || !isImageLoaded;
+  const isReadyToDisplay = isReady || isImageLoaded;
 
   // const isLandscape = dimensions.width > dimensions.height;
 
-  return isReadyToDisplay || !src || isBroken ? (
+  return isReadyToDisplay && src && !isBroken ? (
+    <ChackraImage src={src} {...newProps} />
+  ) : (
     <Box
       d="flex"
       justifyContent="center"
@@ -69,13 +72,13 @@ export const LazyImage = ({
       {...newProps}
       {...loadingContainerProps}
     >
-      {src && showSpinner && !isBroken ? (
+      {isBroken ? (
+        <Icon size="16px" name="warning" />
+      ) : src && showSpinner ? (
         <Spinner size={spinnerSize} />
       ) : (
-        <Icon size="16px" name={isBroken ? 'warning' : placeholderIcon} />
+        <Icon size="16px" name={placeholderIcon} />
       )}
     </Box>
-  ) : (
-    <ChackraImage src={src} {...newProps} />
   );
 };

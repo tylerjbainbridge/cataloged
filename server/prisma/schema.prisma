@@ -63,6 +63,14 @@ model GoogleAccount {
   updatedAt DateTime @updatedAt
 }
 
+// model SavedSearch {
+//   id        String   @id @default(cuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   user User?
+// }
+
 model Item {
   id          String   @id @default(cuid())
   isFavorited Boolean  @default(false)
@@ -79,11 +87,13 @@ model Item {
 
 model Label {
   id        String   @id @default(cuid())
-  name      String   @default("")
-  user      User
-  items     Item[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  name  String @default("")
+  user  User
+  items Item[]
+
 }
 
 model Link {
