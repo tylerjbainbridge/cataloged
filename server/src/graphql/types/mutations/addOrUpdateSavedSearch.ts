@@ -54,7 +54,7 @@ export const addOrUpdateSavedSearch = extendType({
                 data: {
                   name,
                   operator,
-                  value,
+                  value: value ? value.toString() : null,
                   ...(values ? { values: JSON.stringify(values) } : {}),
                   savedSearch: {
                     connect: { id: savedSearch.id },

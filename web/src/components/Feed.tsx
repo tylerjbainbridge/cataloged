@@ -298,7 +298,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                     height="100%"
                     width="100%"
                   >
-                    <Spinner size="xl" />
+                    {/* <Spinner size="xl" /> */}
                   </Box>
                 ) : !items.length ? (
                   <Box

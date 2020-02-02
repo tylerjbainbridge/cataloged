@@ -14,6 +14,8 @@ import {
   Divider,
   BoxProps,
   IconButton,
+  Tooltip,
+  Icon,
 } from '@chakra-ui/core';
 import { Link, useLocation, useRouteMatch, useHistory } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -186,7 +188,21 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
           <Divider />
           <Box>
             <Stack spacing="5px">
-              <Text color="gray.500">QUICK LINKS</Text>
+              <Text color="gray.500">
+                QUICK LINKS{' '}
+                <Tooltip
+                  zIndex={10}
+                  aria-label="help"
+                  label={'Use these links to quickly filter your feed.'}
+                >
+                  <Icon
+                    cursor="pointer"
+                    ml="5px"
+                    name="info"
+                    aria-label="info"
+                  />
+                </Tooltip>
+              </Text>
               <LinkListItem filters={[]}>All</LinkListItem>
               <LinkListItem
                 filters={[
@@ -212,12 +228,28 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
               </LinkListItem>
             </Stack>
           </Box>
-          {!!data?.savedSearches?.length && (
-            <Box>
-              <Stack spacing="5px">
-                <Text color="gray.500">SAVED SEARCHES</Text>
-                <Box maxHeight="500px" overflowY="auto">
-                  {(data?.savedSearches || []).map(
+          <Box>
+            <Stack spacing="5px">
+              <Text color="gray.500">
+                SAVED SEARCHES ({data?.savedSearches?.length || 0})
+                <Tooltip
+                  zIndex={10}
+                  aria-label="help"
+                  label={
+                    'To create a saved search, start by pressing the "Filter" button.'
+                  }
+                >
+                  <Icon
+                    cursor="pointer"
+                    ml="5px"
+                    name="info"
+                    aria-label="info"
+                  />
+                </Tooltip>
+              </Text>
+              <Box maxHeight="500px" overflowY="auto">
+                {!!data?.savedSearches?.length &&
+                  (data?.savedSearches || []).map(
                     ({ id, name, filters }: any) => (
                       <LinkListItem
                         // @ts-ignore
@@ -245,14 +277,13 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
                           />
                         }
                       >
-                        {name}
+                        {name || 'Untitled'}
                       </LinkListItem>
                     ),
                   )}
-                </Box>
-              </Stack>
-            </Box>
-          )}
+              </Box>
+            </Stack>
+          </Box>
         </Stack>
         <Button
           d="flex"
