@@ -288,7 +288,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
           </Box>
 
           <Box d="flex" justifyContent="center" mt="100px" width="100%">
-            <Box width={isMobile ? '100%' : '90%'} mr="20px" ml="20px">
+            <Box width={isMobile ? '100%' : (mode === 'grid' ? '95%' : '90%')} mr="20px" ml="20px">
               <Box ref={feedContainerRef}>
                 {initialLoad && !items.length ? (
                   <Box
