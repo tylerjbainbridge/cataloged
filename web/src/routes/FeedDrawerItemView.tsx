@@ -40,7 +40,7 @@ export const FeedDrawerItemView = () => {
   const { item, loading } = useGetItem(itemId);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && itemId) {
       if (item) onOpen();
       else returnToFeed();
     }

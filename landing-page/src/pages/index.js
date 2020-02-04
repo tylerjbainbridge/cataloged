@@ -1,5 +1,5 @@
-import React from "react"
-import { useForm } from "react-hook-form"
+import React from 'react';
+import { useForm } from 'react-hook-form';
 
 import {
   Box,
@@ -10,13 +10,16 @@ import {
   Button,
   FormControl,
   Text,
-} from "@chakra-ui/core"
-import { useMutation } from "@apollo/react-hooks"
-import { gql } from "apollo-boost"
+  Image,
+} from '@chakra-ui/core';
+import { useMutation } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
+import { useMedia } from 'react-use';
 
-import "../typography.css"
+import Layout, { client, customTheme } from '../components/layout';
+import favicon from '../images/favicon.png';
 
-import Layout, { client, customTheme } from "../components/layout"
+import '../typography.css';
 
 const JOIN_WAITLIST = gql`
   mutation addToWaitlist($email: String!) {
@@ -24,16 +27,16 @@ const JOIN_WAITLIST = gql`
       email
     }
   }
-`
+`;
 
 const IndexPage = () => {
-  const { register, handleSubmit, watch, reset, errors } = useForm()
+  const isMobile = useMedia('(max-width: 768px)');
+
+  const { register, handleSubmit, errors } = useForm();
 
   const [addToWaitlist, { data, loading }] = useMutation(JOIN_WAITLIST, {
     client,
-  })
-
-  console.log(data)
+  });
 
   return (
     <Layout>
@@ -44,22 +47,33 @@ const IndexPage = () => {
         alignItems="center"
         height="100vh"
         width="100%"
-        // backgroundColor="brand.purple"
       >
-        <Box position="relative" top="-100px" width="700px">
+        <Box position="relative" top="-100px" width="800px">
           <Box d="flex" justifyContent="center">
-            <Box
-              fontSize="120px"
-              fontFamily="Cooper BT"
-              color="brand.purple"
-              textDecoration={`underline solid ${customTheme.colors.brand.yellow}`}
-              textDecorationColor="brand.pink"
-              padding="30px"
-              fontSize={["60px", "120px"]}
-              padding={["15px", "20px"]}
-            >
-              Cataloged
-              {/* {"Cataloged".split("").map((letter, idx) => (
+            <Box d="flex" alignItems="center" height="250px" flexWrap="wrap">
+              <Box
+                d="flex"
+                {...(isMobile
+                  ? { width: '100%', justifyContent: 'center' }
+                  : {})}
+              >
+                <Image src={favicon} size="150px" />
+              </Box>
+              <Box
+                fontSize="120px"
+                fontFamily="Cooper BT"
+                color="brand.purple"
+                textDecoration={`underline solid ${customTheme.colors.brand.yellow}`}
+                textDecorationColor="brand.pink"
+                padding="30px"
+                fontSize={['60px', '120px']}
+                padding={['15px', '20px']}
+                {...(isMobile
+                  ? { d: 'flex', width: '100%', justifyContent: 'center' }
+                  : {})}
+              >
+                Cataloged
+                {/* {"Cataloged".split("").map((letter, idx) => (
                 <Box
                   as="span"
                   color={
@@ -69,11 +83,12 @@ const IndexPage = () => {
                   {letter}
                 </Box>
               ))} */}
+              </Box>
             </Box>
           </Box>
           <Box d="flex" justifyContent="center">
             <Box
-              fontSize={["20px", "30px"]}
+              fontSize={['20px', '30px']}
               fontFamily="Cooper BT"
               color="gray.400"
             >
@@ -104,7 +119,7 @@ const IndexPage = () => {
               ) : (
                 <form
                   onSubmit={handleSubmit(data => {
-                    if (data.email) addToWaitlist({ variables: data })
+                    if (data.email) addToWaitlist({ variables: data });
                   })}
                 >
                   <Box d="flex" flexWrap="wrap" justifyContent="center">
@@ -132,8 +147,8 @@ const IndexPage = () => {
                       bg="brand.pink"
                       color="white"
                       size="md"
-                      mt={["20px", "0px"]}
-                      _hover={{ bg: "rgb(237, 108, 127, .5)" }}
+                      mt={['20px', '0px']}
+                      _hover={{ bg: 'rgb(237, 108, 127, .5)' }}
                     >
                       Join waitlist
                     </Button>
@@ -145,7 +160,7 @@ const IndexPage = () => {
         </Box>
       </Box>
     </Layout>
-  )
-}
+  );
+};
 
-export default IndexPage
+export default IndexPage;
