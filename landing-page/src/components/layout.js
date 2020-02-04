@@ -1,48 +1,47 @@
-import React from "react"
-import Helmet from "react-helmet"
-import { ThemeProvider, CSSReset, theme } from "@chakra-ui/core"
-import { createGlobalStyle } from "styled-components"
-import ApolloClient from "apollo-boost"
-import { ApolloProvider } from "@apollo/react-hooks"
-import favicon from "../images/favicon.png"
+import React from 'react';
+import Helmet from 'react-helmet';
+import { ThemeProvider, CSSReset, theme } from '@chakra-ui/core';
+import { createGlobalStyle } from 'styled-components';
+
+import favicon from '../images/favicon.png';
 
 export const GlobalStyles = createGlobalStyle`
   body {
     background-color: white;
   }
-`
+`;
 
 export const customTheme = {
   ...theme,
   colors: {
     ...theme.colors,
     brand: {
-      pink: "#ED6C7F",
-      purple: "#5718FF",
-      yellow: "#F9D64D",
+      pink: '#ED6C7F',
+      purple: '#5718FF',
+      yellow: '#F9D64D',
     },
   },
-}
+};
 
-const description = "Organize what's important to you"
-const title = "Cataloged"
+const description = "Organize what's important to you";
+const title = 'Cataloged';
 const image =
-  "https://collections-file-storage-1.s3.amazonaws.com/assets/logo.png"
-const url = "https://cataloged.co/"
-const author = "Tyler Bainbridge"
+  'https://collections-file-storage-1.s3.amazonaws.com/assets/logo.png';
+const url = 'https://cataloged.co/';
+const author = 'Tyler Bainbridge';
 const keywords = [
-  "personal knowledge base",
-  "knowledge base",
-  "note taking",
-  "file storage",
-  "bookmarks",
-]
+  'personal knowledge base',
+  'knowledge base',
+  'note taking',
+  'file storage',
+  'bookmarks',
+];
 
 export default ({ children }) => (
   <>
     <Helmet
       title="Cataloged"
-      link={[{ rel: "shortcut icon", type: "image/png", href: `${favicon}` }]}
+      link={[{ rel: 'shortcut icon', type: 'image/png', href: `${favicon}` }]}
       title={title}
       titleTemplate={`%s | ${title}`}
       meta={[
@@ -67,7 +66,7 @@ export default ({ children }) => (
           content: image,
         },
         {
-          property: "og:url",
+          property: 'og:url',
           content: url,
         },
         {
@@ -105,4 +104,4 @@ export default ({ children }) => (
       {children}
     </ThemeProvider>
   </>
-)
+);
