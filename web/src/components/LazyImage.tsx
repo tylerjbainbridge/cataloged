@@ -40,9 +40,10 @@ export const LazyImage = ({
 
   useEffect(() => {
     if (isReady) {
+      img.crossOrigin = 'Anonymous';
+
       img.onload = () => setIsImageLoaded(true);
       img.onerror = () => setIsBroken(true);
-      img.crossOrigin = 'Anonymous';
 
       setDimensions({
         width: img.width,
