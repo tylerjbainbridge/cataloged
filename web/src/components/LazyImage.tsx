@@ -40,7 +40,7 @@ export const LazyImage = ({
 
   useEffect(() => {
     if (isReady) {
-      img.crossOrigin = 'Anonymous';
+      img.crossOrigin = 'anonymous';
 
       img.onload = () => setIsImageLoaded(true);
       img.onerror = () => setIsBroken(true);
