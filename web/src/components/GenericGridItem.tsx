@@ -276,6 +276,7 @@ export const GenericGridItem = ({
                                 alignItems="center"
                                 justifyContent="center"
                                 backgroundColor="gray.50"
+                                border="1px solid lightgray"
                                 {...clickProps}
                               >
                                 <Icon name="edit" size="50px" />
@@ -285,12 +286,15 @@ export const GenericGridItem = ({
 
                         case 'link':
                           if (item.link) {
-                            return item.link?.image ? (
+                            const src = item.link.image || item.link.favicon;
+
+                            return src ? (
                               <LazyImage
-                                src={item.link.image}
+                                src={src}
                                 width="100%"
                                 height="100%"
                                 objectFit="cover"
+                                shrinkAndCenterThreshold={200}
                                 placeholderIcon="external-link"
                                 {...clickProps}
                               />

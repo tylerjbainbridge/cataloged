@@ -16,7 +16,7 @@ import {
   Icon,
   useDisclosure,
 } from '@chakra-ui/core';
-
+import { useMedia } from 'react-use';
 import { LazyImage } from './LazyImage';
 
 import { ItemFull_file, ItemFull } from '../graphql/__generated__/ItemFull';
@@ -29,7 +29,6 @@ import { UPDATE_FILE_MUTATION } from '../graphql/file';
 import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
-import { useMedia } from 'react-use';
 
 export interface ItemWithFile extends ItemFull {
   file: ItemFull_file;

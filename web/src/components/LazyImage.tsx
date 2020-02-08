@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Spinner,
@@ -15,6 +15,8 @@ export interface LazeImageProps {
   showSpinner?: boolean;
   placeholderIcon?: IconProps['name'];
   spinnerSize?: SpinnerProps['size'];
+  failureNode?: JSX.Element | null;
+  shrinkAndCenterThreshold?: number | null;
 }
 
 export const LazyImage = ({
@@ -25,30 +27,40 @@ export const LazyImage = ({
   placeholderIcon = 'view-off',
   spinnerSize = 'xl',
   fit = false,
+  shrinkAndCenterThreshold = null,
+  failureNode,
   ...props
 }: LazeImageProps) => {
-  const img = new Image();
+  const img = React.useMemo(() => {
+    const temp = new Image();
 
-  img.src = src;
+    // temp.crossOrigin = 'anonymous';
+    temp.src = src;
+
+    return temp;
+  }, [src]);
 
   const [isImageLoaded, setIsImageLoaded] = useState<boolean | null>(
     !!img.naturalWidth || img.complete,
   );
+
   const [isBroken, setIsBroken] = useState(false);
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     if (isReady) {
-      img.crossOrigin = 'anonymous';
+      img.onload = function(evt) {
+        setIsImageLoaded(true);
+        // @ts-ignore
+        const width = this.width;
+        // @ts-ignore
+        const height = this.height;
 
-      img.onload = () => setIsImageLoaded(true);
+        setDimensions({ width, height });
+      };
+
       img.onerror = () => setIsBroken(true);
-
-      setDimensions({
-        width: img.width,
-        height: img.height,
-      });
     }
   }, [isReady, src]);
 
@@ -57,13 +69,51 @@ export const LazyImage = ({
     ...props,
   };
 
-  const isReadyToDisplay = isReady || isImageLoaded;
+  const isReadyToDisplay = (isReady || isImageLoaded) && src && !isBroken;
 
   // const isLandscape = dimensions.width > dimensions.height;
 
-  return isReadyToDisplay && src && !isBroken ? (
-    <ChackraImage src={src} {...newProps} />
-  ) : (
+  if (isBroken && failureNode !== undefined) {
+    return failureNode;
+  }
+
+  if (
+    isReadyToDisplay &&
+    shrinkAndCenterThreshold &&
+    dimensions.width &&
+    shrinkAndCenterThreshold > dimensions.width &&
+    dimensions.height &&
+    shrinkAndCenterThreshold > dimensions.height
+  ) {
+    console.log({ src, shrinkAndCenterThreshold, ...dimensions });
+
+    return (
+      <Box
+        d="flex"
+        justifyContent="center"
+        alignItems="center"
+        rounded="lg"
+        width={props.width}
+        height={props.height}
+        border="1px solid lightgray"
+      >
+        <ChackraImage
+          src={src}
+          {...newProps}
+          maxWidth={dimensions.width}
+          maxHeight={dimensions.height}
+        />
+      </Box>
+    );
+  }
+
+  if (isReadyToDisplay) {
+    return (
+      <ChackraImage src={src} border="1px solid lightgray" {...newProps} />
+    );
+  }
+
+  return (
     <Box
       d="flex"
       justifyContent="center"
@@ -71,6 +121,7 @@ export const LazyImage = ({
       rounded="lg"
       width={props.width}
       height={props.height}
+      border="1px solid lightgray"
       {...newProps}
       {...loadingContainerProps}
     >
