@@ -89,7 +89,11 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
 
   // List view
   return (
-    <Box d="flex" width="100%">
+    <Box
+      d="flex"
+      width="100%"
+      userSelect={selectedMap.size ? 'none' : undefined}
+    >
       <LazyLoad
         height="60px"
         width="100%"
