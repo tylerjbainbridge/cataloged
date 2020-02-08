@@ -7,7 +7,7 @@
 // ====================================================
 
 export interface createLink_createLink {
-  __typename: "Link";
+  __typename: 'Link';
   id: string;
   href: string;
 }
