@@ -22,14 +22,12 @@ import {
   ITEM_ACTUAL_WIDTH,
   ITEM_INNER_PADDING,
   ITEM_CONTENT_HEIGHT,
-  Item,
 } from './Item';
 import { SelectOnClick } from './SelectOnClick';
 import { getGenericItemData } from '../util/itemHelpers';
 import { LazyImage } from './LazyImage';
 import { FeedContext } from './Feed';
-import { useHistory } from 'react-router-dom';
-import { useGoToPath, useGoToItem } from '../hooks/useGoTo';
+import { useGoToItem } from '../hooks/useGoTo';
 import { useMedia } from 'react-use';
 
 export const ItemHeader = ({
@@ -85,6 +83,8 @@ export const GenericGridItem = ({
     onToggleThunk,
     onResetAndSelectThunk,
     selectedMap,
+    toggleItem,
+    onSelectRangeThunk,
   } = useContext(SelectContext);
 
   const [goToItem] = useGoToItem();
@@ -123,6 +123,26 @@ export const GenericGridItem = ({
 
   const onOpen = () => openItemModal(item);
 
+  const clickHandlers = (handleAction = true) => ({
+    onDoubleClick: (debouncedSingleClick: any) => {
+      debouncedSingleClick.cancel();
+
+      if (selectedMap.size && handleAction) {
+        goToItem(item);
+      }
+    },
+    onSingleClick: () => {
+      if (selectedMap.size || !handleAction) {
+        toggleItem(item);
+      } else if (handleAction) {
+        goToItem(item);
+      }
+    },
+    onMetaClick: handleAction ? action : undefined,
+    onShiftClick: onSelectRangeThunk(item),
+    item: item,
+  });
+
   return (
     <>
       <Box
@@ -133,6 +153,7 @@ export const GenericGridItem = ({
         maxWidth={ITEM_ACTUAL_WIDTH}
         height={315}
         padding={`${ITEM_INNER_PADDING}px`}
+        userSelect={selectedMap.size ? 'none' : undefined}
       >
         <Stack p="4">
           <Box>
@@ -173,21 +194,26 @@ export const GenericGridItem = ({
                     onMouseOver={menuHoverState.onOpen}
                     onMouseLeave={menuHoverState.onClose}
                   >
-                    <Tooltip
-                      hasArrow
-                      aria-label="select item"
-                      label="press s while hovering to toggle"
-                      placement="bottom"
-                    >
-                      <Icon
-                        fontSize="15px"
-                        name="check-circle"
-                        cursor="pointer"
-                        aria-label="select item"
-                        color={isSelected ? 'black' : 'white'}
-                        onClick={onResetAndSelectThunk(item)}
-                      />
-                    </Tooltip>
+                    <SelectOnClick {...clickHandlers(false)}>
+                      {clickProps => (
+                        <Tooltip
+                          hasArrow
+                          aria-label="select item"
+                          label="press s while hovering to toggle"
+                          placement="bottom"
+                        >
+                          <Icon
+                            fontSize="15px"
+                            name="check-circle"
+                            cursor="pointer"
+                            aria-label="select item"
+                            color={isSelected ? 'black' : 'white'}
+                            {...clickProps}
+                          />
+                        </Tooltip>
+                      )}
+                    </SelectOnClick>
+
                     <Box d="flex" height="100%" alignItems="center">
                       <Tooltip
                         hasArrow
@@ -235,15 +261,7 @@ export const GenericGridItem = ({
                     : {})}
                   {...props}
                 >
-                  <SelectOnClick
-                    onSingleClick={() => {
-                      // onOpen()
-                      goToItem(item);
-                    }}
-                    // @ts-ignore
-                    onMetaClick={action}
-                    item={item}
-                  >
+                  <SelectOnClick {...clickHandlers()}>
                     {clickProps => {
                       switch (item.type) {
                         case 'file':
