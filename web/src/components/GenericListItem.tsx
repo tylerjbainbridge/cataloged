@@ -46,7 +46,9 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
 
   const [goToItem] = useGoToItem();
 
-  const { title, icon, image, compressedImage } = getGenericItemData(item);
+  const { title, icon, image, compressedImage, action } = getGenericItemData(
+    item,
+  );
 
   const {
     isItemSelected,
@@ -115,7 +117,13 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
               goToItem(item);
             }
           }}
-          onMetaClick={onToggleThunk(item)}
+          onMetaClick={() => {
+            if (selectedMap.size) {
+              toggleItem(item);
+            } else if (action) {
+              action();
+            }
+          }}
           onShiftClick={onSelectRangeThunk(item)}
         >
           {clickProps => (

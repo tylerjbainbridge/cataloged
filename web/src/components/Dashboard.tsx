@@ -9,8 +9,9 @@ import { SidebarMenu, SIDEBAR_WIDTH } from './SidebarMenu';
 import { CreateLink } from './CreateLink';
 import { CreateFiles } from './CreateFiles';
 import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Switch, Route } from 'react-router-dom';
 import { useMedia } from 'react-use';
+import { Settings } from '../routes/Settings';
 
 const SIDEBAR_KEY = 'isSidebarOpen';
 
@@ -52,9 +53,16 @@ export const Dashboard = () => {
       defaultSidebarWidth={250}
     >
       {isViewingItem && <FeedDrawerItemView />}
-      <Feed sidebarState={sidebarState} />
       <CreateLink />
       <CreateFiles />
+      <Switch>
+        <Route path="/settings">
+          <Settings />
+        </Route>
+        <Route path="*">
+          <Feed sidebarState={sidebarState} />
+        </Route>
+      </Switch>
     </Sidebar>
   );
 };
