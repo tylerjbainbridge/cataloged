@@ -272,6 +272,7 @@ export const GenericGridItem = ({
                                 width="100%"
                                 height="100%"
                                 objectFit="cover"
+                                hasBorder
                                 isReady={item.file.isUploaded}
                                 src={
                                   !item.file.isUploaded
@@ -308,6 +309,7 @@ export const GenericGridItem = ({
 
                             return src ? (
                               <LazyImage
+                                hasBorder
                                 src={src}
                                 width="100%"
                                 height="100%"
