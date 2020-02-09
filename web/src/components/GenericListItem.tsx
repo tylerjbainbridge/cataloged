@@ -221,6 +221,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 <Box d="flex" height="100%" alignItems="center">
                   {image || compressedImage ? (
                     <LazyImage
+                      hasBorder
                       src={compressedImage || image}
                       width={isMobile ? '50px' : '90px'}
                       height="100%"
@@ -238,6 +239,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                       alignItems="center"
                       justifyContent="center"
                       backgroundColor="gray.50"
+                      border="1px solid lightgray"
                     >
                       <Icon name={icon} size="16px" />
                     </Box>

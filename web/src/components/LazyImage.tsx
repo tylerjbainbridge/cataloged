@@ -17,6 +17,7 @@ export interface LazeImageProps {
   spinnerSize?: SpinnerProps['size'];
   failureNode?: JSX.Element | null;
   shrinkAndCenterThreshold?: number | null;
+  hasBorder?: boolean;
 }
 
 export const LazyImage = ({
@@ -26,6 +27,7 @@ export const LazyImage = ({
   loadingContainerProps,
   placeholderIcon = 'view-off',
   spinnerSize = 'xl',
+  hasBorder = false,
   fit = false,
   shrinkAndCenterThreshold = null,
   failureNode,
@@ -85,7 +87,7 @@ export const LazyImage = ({
     dimensions.height &&
     shrinkAndCenterThreshold > dimensions.height
   ) {
-    console.log({ src, shrinkAndCenterThreshold, ...dimensions });
+    // console.log({ src, shrinkAndCenterThreshold, ...dimensions });
 
     return (
       <Box
@@ -95,7 +97,7 @@ export const LazyImage = ({
         rounded="lg"
         width={props.width}
         height={props.height}
-        border="1px solid lightgray"
+        border={hasBorder ? '1px solid lightgray' : undefined}
       >
         <ChackraImage
           src={src}
@@ -109,7 +111,11 @@ export const LazyImage = ({
 
   if (isReadyToDisplay) {
     return (
-      <ChackraImage src={src} border="1px solid lightgray" {...newProps} />
+      <ChackraImage
+        src={src}
+        border={hasBorder ? '1px solid lightgray' : undefined}
+        {...newProps}
+      />
     );
   }
 
@@ -121,7 +127,7 @@ export const LazyImage = ({
       rounded="lg"
       width={props.width}
       height={props.height}
-      border="1px solid lightgray"
+      border={hasBorder ? '1px solid lightgray' : undefined}
       {...newProps}
       {...loadingContainerProps}
     >
