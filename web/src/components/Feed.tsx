@@ -186,12 +186,6 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     document.querySelector('#sidebar-container')?.offsetWidth;
 
   const onDebouncedFilterChange = (newFilters: any[]) => {
-    console.log(
-      'search string',
-      location,
-      getQueryStringFromFilters(newFilters, location),
-    );
-
     history.replace({
       pathname: window.location.pathname,
       search: getQueryStringFromFilters(newFilters, window.location),
