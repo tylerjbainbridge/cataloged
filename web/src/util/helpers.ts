@@ -2,7 +2,7 @@ import _ from 'lodash';
 // @ts-ignore
 import cleanDeep from 'clean-deep';
 import queryString from 'query-string';
-import { FILTER_CONFIGS } from '../components/NewFilter';
+import { FILTER_CONFIGS } from '../components/Filter';
 
 export const randomString = (): string =>
   Math.random()

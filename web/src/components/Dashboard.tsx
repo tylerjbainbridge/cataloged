@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import Sidebar from 'react-sidebar';
-import { useDisclosure, IconButton } from '@chakra-ui/core';
+import { useDisclosure } from '@chakra-ui/core';
 import qs from 'query-string';
 
 import { Feed } from './Feed';
@@ -9,11 +9,22 @@ import { SidebarMenu, SIDEBAR_WIDTH } from './SidebarMenu';
 import { CreateLink } from './CreateLink';
 import { CreateFiles } from './CreateFiles';
 import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
-import { useLocation, Switch, Route } from 'react-router-dom';
+import { useLocation, Switch, Route, useRouteMatch } from 'react-router-dom';
 import { useMedia } from 'react-use';
 import { Settings } from '../routes/Settings';
 
 const SIDEBAR_KEY = 'isSidebarOpen';
+
+export interface ContextProps {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onToggle: () => void;
+}
+
+export const SidebarContext = React.createContext<ContextProps>(
+  {} as ContextProps,
+);
 
 const getSidebarOpenState = (): boolean => {
   try {
@@ -42,27 +53,24 @@ export const Dashboard = () => {
   const location = useLocation();
 
   const isViewingItem = qs.parse(location.search)?.itemId;
+  const isViewingSettings = useRouteMatch('*/settings');
 
   return (
-    <Sidebar
-      sidebar={<SidebarMenu sidebarState={sidebarState} />}
-      shadow={false}
-      docked={sidebarState.isOpen || !isMobile}
-      open={sidebarState.isOpen || !isMobile}
-      // transitions={false}
-      defaultSidebarWidth={250}
-    >
-      {isViewingItem && <FeedDrawerItemView />}
-      <CreateLink />
-      <CreateFiles />
-      <Switch>
-        <Route path="/settings">
-          <Settings />
-        </Route>
-        <Route path="*">
-          <Feed sidebarState={sidebarState} />
-        </Route>
-      </Switch>
-    </Sidebar>
+    <SidebarContext.Provider value={sidebarState}>
+      <Sidebar
+        sidebar={<SidebarMenu sidebarState={sidebarState} />}
+        shadow={false}
+        docked={sidebarState.isOpen || !isMobile}
+        open={sidebarState.isOpen || !isMobile}
+        // transitions={false}
+        defaultSidebarWidth={250}
+      >
+        {isViewingItem && !isViewingSettings && <FeedDrawerItemView />}
+        {isViewingSettings && <Settings />}
+        <CreateLink />
+        <CreateFiles />
+        <Feed sidebarState={sidebarState} />
+      </Sidebar>
+    </SidebarContext.Provider>
   );
 };
