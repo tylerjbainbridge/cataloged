@@ -36,9 +36,10 @@ import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 
 import { ListFeed } from './ListFeed';
 import { FaThLarge, FaList } from 'react-icons/fa';
-import { NewFilter } from './NewFilter';
+import { Filter } from './Filter';
 import { useMedia } from 'react-use';
 import { usePrevious } from '../hooks/usePrevious';
+import { TopNavBar } from './TopNavBar';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $after: String, $filters: [FilterInput!]) {
@@ -108,6 +109,8 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     },
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
+    // 5 seconds
+    pollInterval: 5000,
   });
 
   const { loading, data, networkStatus, refetch, fetchMore, variables } = query;
@@ -213,75 +216,38 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
       <SelectContainer>
         <Box d="flex" justifyContent="center" flex="1">
           {/* <Switch> */}
-          <Box
-            height={80}
-            d="flex"
-            flex="1"
-            width={
-              sidebarState.isOpen || !isMobile
-                ? `calc(100% - ${currentSidebarWidth || 0}px)`
-                : '100%'
+          <TopNavBar
+            middleNode={
+              <Filter
+                variables={variables}
+                loading={networkStatus !== 6 && loading}
+                onDebouncedFilterChange={onDebouncedFilterChange}
+              />
             }
-            justifyContent="center"
-            alignItems="center"
-            position="fixed"
-            top={0}
-            zIndex={1}
-            padding="20px"
-            bg="rgb(255, 255, 255, 0.7)"
-          >
-            <Box
-              d="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              width={isMobile ? '100%' : '80%'}
-            >
-              {isMobile ? (
-                <Button cursor="pointer" onClick={sidebarState.onToggle}>
-                  <Icon
-                    name={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
-                    aria-label={
-                      sidebarState.isOpen ? 'close sidebar' : 'open sidebar'
+            rightNode={
+              <Box>
+                <Tooltip
+                  hasArrow
+                  label={mode === 'grid' ? 'list view' : 'grid view'}
+                  aria-label="set mode"
+                  zIndex={10}
+                >
+                  <Button
+                    cursor="pointer"
+                    onClick={() =>
+                      mode === 'grid' ? setMode('list') : setMode('grid')
                     }
-                    width="15px"
-                  />
-                </Button>
-              ) : (
-                <Box />
-              )}
-              {sidebarState.isOpen && isMobile ? null : (
-                <>
-                  <NewFilter
-                    variables={variables}
-                    loading={loading}
-                    onDebouncedFilterChange={onDebouncedFilterChange}
-                  />
-                  <Box>
-                    <Tooltip
-                      hasArrow
-                      label={mode === 'grid' ? 'list view' : 'grid view'}
-                      aria-label="set mode"
-                      zIndex={10}
-                    >
-                      <Button
-                        cursor="pointer"
-                        onClick={() =>
-                          mode === 'grid' ? setMode('list') : setMode('grid')
-                        }
-                      >
-                        {mode === 'grid' ? (
-                          <FaList size={15} />
-                        ) : (
-                          <FaThLarge size={15} />
-                        )}
-                      </Button>
-                    </Tooltip>
-                  </Box>
-                </>
-              )}
-            </Box>
-          </Box>
-
+                  >
+                    {mode === 'grid' ? (
+                      <FaList size={15} />
+                    ) : (
+                      <FaThLarge size={15} />
+                    )}
+                  </Button>
+                </Tooltip>
+              </Box>
+            }
+          />
           <Box d="flex" justifyContent="center" mt="100px" width="100%">
             <Box
               width={isMobile ? '100%' : mode === 'grid' ? '95%' : '90%'}

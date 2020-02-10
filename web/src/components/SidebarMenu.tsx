@@ -20,6 +20,9 @@ import {
 import { Link, useLocation, useRouteMatch, useHistory } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
+// @ts-ignore
+import resolveUrl from 'resolve-url';
+
 import logo from '../images/logo.png';
 import { useAuth } from '../hooks/useAuth';
 import { useGlobalModal, ModalName } from './GlobalModal';
@@ -74,24 +77,29 @@ const LinkListItem = ({
 
   return (
     <Flex width="100%">
-      <Button
-        d="flex"
-        justifyContent="flex-start"
+      <Box
+        width="100%"
         as={Link}
         // @ts-ignore
         to={{
           pathname: pathname || '/',
           search: getQueryStringFromFilters(filters, location),
         }}
-        cursor="pointer"
-        width="100%"
-        textAlign="left"
-        bg="none"
-        color={isActive ? 'brand.purple' : undefined}
         {...props}
       >
-        {children}
-      </Button>
+        <Button
+          d="flex"
+          justifyContent="flex-start"
+          cursor="pointer"
+          width="100%"
+          textAlign="left"
+          bg="none"
+          color={isActive ? 'brand.purple' : undefined}
+        >
+          {children}
+        </Button>
+      </Box>
+
       {rightNode}
     </Flex>
   );
@@ -104,8 +112,11 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const match = useRouteMatch('/search/:id');
+  const searchMatch = useRouteMatch('/search/:id');
+  const match = useRouteMatch('*');
+
   const history = useHistory();
+  const location = useLocation();
 
   const [deleteSavedSearch, { loading: isDeleting }] = useMutation(
     DELETE_SAVED_SEARCH,
@@ -121,15 +132,15 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
   );
 
   useEffect(() => {
-    if (match) {
+    if (searchMatch) {
       const activeSearch = (data?.savedSearches || []).find(
         // @ts-ignore
-        savedSearch => match?.params?.id === savedSearch.id,
+        savedSearch => searchMatch?.params?.id === savedSearch.id,
       );
 
       if (!activeSearch) history.push('/');
     }
-  }, [match]);
+  }, [searchMatch]);
 
   const createFileModal = useGlobalModal(ModalName.CREATE_FILES_MODAL);
   const createLinkModal = useGlobalModal(ModalName.CREATE_LINK_MODAL);
@@ -145,7 +156,17 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
     >
       <Flex height="100%" justifyContent="space-between" flexDirection="column">
         <Stack spacing="25px">
-          <Flex alignItems="center">
+          <Flex
+            cursor="pointer"
+            as={Link}
+            alignItems="center"
+            // @ts-ignore
+            to={{
+              // @ts-ignore
+              pathname: `${match.url}/settings`.replace('//', '/'),
+              search: location.search,
+            }}
+          >
             <Image src={logo} size="30px" mr="7px" />
             <Text fontSize="sm" fontWeight="semibold" isTruncated>
               {user.email}

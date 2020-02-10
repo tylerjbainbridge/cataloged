@@ -26,7 +26,6 @@ export interface ItemDrawerProps {
 
 export const FeedDrawerItemView = () => {
   const location = useLocation();
-  const history = useHistory();
 
   const itemId = qs.parse(location.search)?.itemId;
 
