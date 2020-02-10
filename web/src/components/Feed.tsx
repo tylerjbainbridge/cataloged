@@ -121,15 +121,10 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
       ...filterVariables,
     });
 
+  // TODO: FIX SCROLL TO LOGIC
   // useEffect(() => {
-  //   if (!loading) {
-  //     // @ts-ignore
-  //     history.replace({
-  //       // @ts-ignore
-  //       search: getQueryStringFromFilters(variables.filters || [], location),
-  //     });
-  //   }
-  // }, [variables]);
+  //   window.scrollTo(0, 100);
+  // }, [location?.search]);
 
   useEffect(() => {
     if (!isMobile) {
@@ -191,9 +186,15 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     document.querySelector('#sidebar-container')?.offsetWidth;
 
   const onDebouncedFilterChange = (newFilters: any[]) => {
+    console.log(
+      'search string',
+      location,
+      getQueryStringFromFilters(newFilters, location),
+    );
+
     history.replace({
       pathname: window.location.pathname,
-      search: getQueryStringFromFilters(newFilters, location),
+      search: getQueryStringFromFilters(newFilters, window.location),
     });
   };
 
@@ -288,7 +289,11 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
           </Box>
 
           <Box d="flex" justifyContent="center" mt="100px" width="100%">
-            <Box width={isMobile ? '100%' : (mode === 'grid' ? '95%' : '90%')} mr="20px" ml="20px">
+            <Box
+              width={isMobile ? '100%' : mode === 'grid' ? '95%' : '90%'}
+              mr="20px"
+              ml="20px"
+            >
               <Box ref={feedContainerRef}>
                 {initialLoad && !items.length ? (
                   <Box
