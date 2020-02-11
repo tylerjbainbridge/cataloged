@@ -14,13 +14,13 @@ export const addInviteCode = extendType({
       resolve: async (root, args, ctx) => {
         if (ctx.user.role !== 'admin') return null;
 
-        const [existing] = await ctx.photon.inviteCodes.findMany({
+        const [existing] = await ctx.prisma.inviteCode.findMany({
           where: args,
         });
 
         if (existing) return existing;
 
-        return await ctx.photon.inviteCodes.create({
+        return await ctx.prisma.inviteCode.create({
           data: args,
         });
       },

@@ -15,7 +15,7 @@ export const createNote = extendType({
         text: stringArg({ required: true }),
       },
       resolve: async (root, args, ctx) => {
-        return await ctx.photon.notes.create({
+        return await ctx.prisma.note.create({
           data: {
             ...args,
             user: {

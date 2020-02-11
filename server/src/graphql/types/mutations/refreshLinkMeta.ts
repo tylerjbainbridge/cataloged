@@ -18,7 +18,7 @@ export const refreshLinkMeta = extendType({
           args.href,
         );
 
-        await ctx.photon.users.update({
+        await ctx.prisma.user.update({
           where: { id: ctx.user.id },
           data: {
             links: {
@@ -32,7 +32,7 @@ export const refreshLinkMeta = extendType({
           },
         });
 
-        return await ctx.photon.links.findOne({
+        return await ctx.prisma.link.findOne({
           where: { id: args.linkId },
         });
       },

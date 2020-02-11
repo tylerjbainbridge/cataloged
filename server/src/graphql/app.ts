@@ -8,19 +8,30 @@ import { applyMiddleware } from 'graphql-middleware';
 import { nexusPrismaPlugin } from 'nexus-prisma';
 
 import types from './types';
-import { photon } from '../data/photon';
+import { prisma } from '../data/photon';
 import { GoogleService } from '../services/GoogleService';
 import { getUserFromRequest } from '../helpers/auth';
 import { getHostUrl } from '../helpers/request';
 import { permissions } from './permissions';
+import { Context } from '../typescript/types';
 
 const schema = Nexus.makeSchema({
   types: [...types],
+  typegenAutoConfig: {
+    contextType: '{ prisma: PrismaClient.PrismaClient }',
+    sources: [{ source: '@prisma/client', alias: 'PrismaClient' }],
+  },
   plugins: [
     nexusPrismaPlugin({
-      inputs: {
-        photon: '@prisma/client',
-      },
+      prismaClient: ctx => ctx.prisma,
+      inputs: { prismaClient: '@prisma/client' },
+      // computedInputs: {
+      //   user: ({ args, ctx, info }) => ({
+      //     connect: {
+      //       id: ctx.user?.id,
+      //     },
+      //   }),
+      // },
     }),
   ],
   outputs: {
@@ -32,7 +43,6 @@ const schema = Nexus.makeSchema({
 const app = express();
 
 app.use(morgan('tiny'));
-
 const server = new ApolloServer({
   schema: applyMiddleware(schema, permissions),
   introspection: process.env.NODE_ENV !== 'production',
@@ -41,8 +51,8 @@ const server = new ApolloServer({
     console.error(err.originalError);
     return err;
   },
-  context: async ({ req }: { req: any }) => ({
-    photon,
+  context: async ({ req }: { req: any }): Promise<Context> => ({
+    prisma,
     user: await getUserFromRequest(req),
     google: new GoogleService(getHostUrl(req)),
   }),
@@ -52,10 +62,6 @@ server.applyMiddleware({ app, path: '/' });
 
 const cleanup = async (exitCode: any) => {
   console.log({ exitCode });
-  // await photon.disconnect().catch(e => {
-  //   console.log('error disconnecting');
-  //   console.log(e);
-  // });
   server.stop();
   process.exit();
 };

@@ -17,7 +17,7 @@ export const updateLink = extendType({
       resolve: async (root, args, ctx) => {
         const { linkId, ...newData } = args;
 
-        await ctx.photon.users.update({
+        await ctx.prisma.user.update({
           where: { id: ctx.user.id },
           data: {
             links: {
@@ -31,7 +31,7 @@ export const updateLink = extendType({
           },
         });
 
-        return await ctx.photon.links.findOne({
+        return await ctx.prisma.link.findOne({
           where: { id: linkId },
         });
       },

@@ -12,7 +12,7 @@ export const deleteLabel = extendType({
         labelId: stringArg({ required: true }),
       },
       resolve: async (root, args, ctx) => {
-        await ctx.photon.labels.delete({
+        await ctx.prisma.label.delete({
           where: { id: args.labelId },
         });
 

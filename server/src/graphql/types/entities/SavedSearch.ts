@@ -14,7 +14,7 @@ export const SavedSearch = objectType({
       type: 'Filter',
       // @ts-ignore
       resolve: async (parent, args, ctx) => {
-        const rawSavedSearchFilters = await ctx.photon.savedSearchFilters.findMany(
+        const rawSavedSearchFilters = await ctx.prisma.savedSearchFilter.findMany(
           {
             where: {
               savedSearch: {

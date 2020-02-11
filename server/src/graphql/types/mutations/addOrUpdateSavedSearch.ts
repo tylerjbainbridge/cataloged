@@ -19,7 +19,7 @@ export const addOrUpdateSavedSearch = extendType({
         let savedSearch: any = null;
 
         if (!args.savedSearchId) {
-          savedSearch = await ctx.photon.savedSearches.create({
+          savedSearch = await ctx.prisma.savedSearch.create({
             data: {
               name: args.name,
               version: CURRENT_VERSION,
@@ -31,7 +31,7 @@ export const addOrUpdateSavedSearch = extendType({
             },
           });
         } else {
-          savedSearch = await ctx.photon.savedSearches.update({
+          savedSearch = await ctx.prisma.savedSearch.update({
             where: { id: args.savedSearchId },
             data: {
               name: args.name,
@@ -39,7 +39,7 @@ export const addOrUpdateSavedSearch = extendType({
           });
         }
 
-        await ctx.photon.savedSearchFilters.deleteMany({
+        await ctx.prisma.savedSearchFilter.deleteMany({
           where: {
             savedSearch: {
               id: savedSearch.id,
@@ -50,7 +50,7 @@ export const addOrUpdateSavedSearch = extendType({
         await Promise.all(
           (args.filters || []).map(
             async ({ name, operator, value, values }: any) => {
-              await ctx.photon.savedSearchFilters.create({
+              await ctx.prisma.savedSearchFilter.create({
                 data: {
                   name,
                   operator,

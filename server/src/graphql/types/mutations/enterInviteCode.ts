@@ -12,13 +12,13 @@ export const enterInviteCode = extendType({
         code: stringArg({ required: true }),
       },
       resolve: async (root, args, ctx) => {
-        const [code] = await ctx.photon.inviteCodes.findMany({
+        const [code] = await ctx.prisma.inviteCode.findMany({
           where: args,
         });
 
         if (!code) throw new Error('Invalid code');
 
-        return await ctx.photon.users.update({
+        return await ctx.prisma.user.update({
           where: { id: ctx.user.id },
           data: {
             isActive: true,

@@ -12,13 +12,13 @@ export const addToWaitlist = extendType({
         email: stringArg({ required: true }),
       },
       resolve: async (root, args, ctx) => {
-        const [existing] = await ctx.photon.interestedUsers.findMany({
+        const [existing] = await ctx.prisma.interestedUser.findMany({
           where: { email: args.email },
         });
 
         if (existing) return existing;
 
-        return await ctx.photon.interestedUsers.create({ data: args });
+        return await ctx.prisma.interestedUser.create({ data: args });
       },
     });
   },

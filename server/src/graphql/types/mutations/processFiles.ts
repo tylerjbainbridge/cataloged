@@ -30,7 +30,7 @@ export const processFiles = extendType({
           throw new Error('must supply keys.');
         }
 
-        const upload = await ctx.photon.uploadGroups.findOne({
+        const upload = await ctx.prisma.uploadGroup.findOne({
           where: { id: args.uploadGroupId },
           include: { files: true },
         });
@@ -41,7 +41,7 @@ export const processFiles = extendType({
             let file;
 
             try {
-              file = await ctx.photon.files.update({
+              file = await ctx.prisma.file.update({
                 where: { id },
                 data: { hasStartedUploading: true },
               });
@@ -55,7 +55,7 @@ export const processFiles = extendType({
 
               await AWSService.uploadImage(stream, ctx.user, file);
 
-              await ctx.photon.files.update({
+              await ctx.prisma.file.update({
                 where: { id: file.id },
                 data: {
                   isUploaded: true,
@@ -65,7 +65,7 @@ export const processFiles = extendType({
               return file;
             } catch (e) {
               if (file) {
-                await ctx.photon.files.update({
+                await ctx.prisma.file.update({
                   where: { id: file.id },
                   data: {
                     isFailed: true,
@@ -79,7 +79,7 @@ export const processFiles = extendType({
           { concurrency: MAX_CONCURRENCY },
         );
 
-        await ctx.photon.uploadGroups.update({
+        await ctx.prisma.uploadGroup.update({
           where: { id: upload.id },
           data: {
             isComplete: true,

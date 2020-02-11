@@ -1,10 +1,10 @@
 import Bluebird from 'bluebird';
 
-import { photon } from '../data/photon';
+import { prisma } from '../data/photon';
 
 export class ItemService {
   static deleteMany = async (itemIds: string[]) => {
-    const items = await photon.items.findMany({
+    const items = await prisma.item.findMany({
       where: { id: { in: itemIds } },
       include: {
         note: true,
@@ -25,7 +25,7 @@ export class ItemService {
         Object.keys(relations).filter(key => relations[key]),
         (key: string) =>
           // @ts-ignore
-          photon[`${key}s`].delete({
+          prisma[`${key}s`].delete({
             where: { id: relations[key].id },
           }),
         { concurrency: 1 },
@@ -34,7 +34,7 @@ export class ItemService {
       await Bluebird.map(
         item.labels,
         (label: any) =>
-          photon.labels.update({
+          prisma.label.update({
             where: { id: label.id },
             data: {
               items: { disconnect: { id: item.id } },
@@ -43,7 +43,7 @@ export class ItemService {
         { concurrency: 1 },
       );
 
-      await photon.items.delete({
+      await prisma.item.delete({
         where: { id: item.id },
       });
     });
@@ -56,7 +56,7 @@ export class ItemService {
     userId: string,
     labelName: string,
   ) => {
-    const [label] = await photon.labels.findMany({
+    const [label] = await prisma.label.findMany({
       first: 1,
       where: { name: labelName },
     });
@@ -67,23 +67,23 @@ export class ItemService {
     };
 
     if (!label) {
-      await photon.labels.create({
+      await prisma.label.create({
         data: { name: labelName, ...connectArgs },
       });
     } else {
-      await photon.labels.update({
+      await prisma.label.update({
         where: { id: label.id },
         data: connectArgs,
       });
     }
 
-    return await photon.items.findOne({
+    return await prisma.item.findOne({
       where: { id: itemId },
     });
   };
 
   static connectLabel = async (itemId: string, labelId: string) => {
-    return await photon.items.update({
+    return await prisma.item.update({
       where: { id: itemId },
       data: {
         labels: {
@@ -94,7 +94,7 @@ export class ItemService {
   };
 
   static disconnectLabel = async (itemId: string, labelId: string) => {
-    return await photon.items.update({
+    return await prisma.item.update({
       where: { id: itemId },
       data: {
         labels: {
