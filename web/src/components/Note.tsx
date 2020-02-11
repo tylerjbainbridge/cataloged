@@ -11,6 +11,7 @@ import { useOptimisticDeleteItem } from '../hooks/useOptimisticDeleteItem';
 
 import { UPDATE_NOTE_MUTATION } from '../graphql/note';
 import { useDebounce } from '../hooks/useDebounce';
+import SlateRichTextEditor from './SlateRichTextEditor';
 
 export const serializeToPlainText = (nodes: any[]) => {
   return nodes.map(n => Node.string(n)).join('\n');
@@ -31,7 +32,12 @@ export interface UpdateNoteFormValues {
   value: any[];
 }
 
-export const Note = ({ note, updateNote }: any) => {
+export const Note = ({
+  note,
+  updateNote,
+  editorContainerProps,
+  editorInnerContainerProps,
+}: any) => {
   const { getValues, watch, setValue, register } = useForm<
     UpdateNoteFormValues
   >({
@@ -42,10 +48,11 @@ export const Note = ({ note, updateNote }: any) => {
 
   const { value } = getValues();
 
-  const textRef = useRef(serializeToPlainText(value));
+  const valueRef = useRef(value);
 
-  const debouncedUpdateNote = useDebounce((variables: any) =>
-    updateNote({ variables }),
+  const debouncedUpdateNote = useDebounce(
+    (variables: any) => updateNote({ variables }),
+    250,
   );
 
   const [deleteItem] = useOptimisticDeleteItem(note.item);
@@ -58,32 +65,34 @@ export const Note = ({ note, updateNote }: any) => {
   }, [register]);
 
   useEffect(() => {
-    const nextText = serializeToPlainText(value);
+    const nextValue = value;
 
-    if (nextText !== textRef.current) {
+    if (!_.isEqual(nextValue, valueRef.current)) {
       //@ts-ignore
       debouncedUpdateNote({
         noteId: note.id,
         raw: JSON.stringify(value),
-        text: removeMarkdown(nextText),
+        text: removeMarkdown(serializeToPlainText(value)),
       });
     }
 
-    textRef.current = nextText;
+    valueRef.current = nextValue;
   }, [value]);
 
   // Clean up and delete if needed.
   useEffect(
     () => () => {
       debouncedUpdateNote.cancel();
-      if (!textRef.current) deleteItem();
+      if (!valueRef.current) deleteItem();
     },
     [],
   );
 
   return (
-    <MarkdownEditor
+    <SlateRichTextEditor
       // @ts-ignore
+      editorContainerProps={editorContainerProps}
+      editorInnerContainerProps={editorInnerContainerProps}
       value={value}
       placeholder="Start typing..."
       onChange={(slateVal: any[]) => {

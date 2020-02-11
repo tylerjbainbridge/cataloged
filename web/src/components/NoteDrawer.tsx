@@ -43,16 +43,19 @@ export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
     <>
       <DrawerContent d="flex" width={isMobile ? '100%' : '80%'} flexWrap="wrap">
         {!isMobile && (
-          <Flex>
-            <Box
-              p={30}
-              width={isMobile ? '100%' : 'calc(100% - 350px)'}
-              justifyContent="center"
-              height="100%"
-            >
-              <Note note={note} updateNote={updateNote} />
-            </Box>
-          </Flex>
+          <Box
+            d="flex"
+            width={isMobile ? '100%' : 'calc(100% - 350px)'}
+            justifyContent="center"
+            height="100%"
+          >
+            <Note
+              note={note}
+              updateNote={updateNote}
+              editorContainerProps={{ d: 'flex', justifyContent: 'center' }}
+              editorInnerContainerProps={{ width: '70%', pt: '50px' }}
+            />
+          </Box>
         )}
         <Flex
           width={isMobile ? '100%' : '350px'}
