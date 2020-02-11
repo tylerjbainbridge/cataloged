@@ -28,15 +28,19 @@ model InterestedUser {
 }
 
 model File {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   extension           String   @default("")
   hasStartedUploading Boolean?
   height              Int?
-  id                  String   @id @default(cuid())
-  isFailed            Boolean?
-  isUploaded          Boolean?
-  item                Item
-  name                String   @default("")
-  size                String?
+
+  isFailed   Boolean?
+  isUploaded Boolean?
+  item       Item
+  name       String   @default("")
+  size       String?
 
   title       String @default("")
   description String @default("")
@@ -44,23 +48,21 @@ model File {
   uploadGroup UploadGroup
   user        User
   width       Int?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model GoogleAccount {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   accountId    String? @unique
   email        String?
   firstName    String?
-  id           String  @id @default(cuid())
   lastName     String?
   picture      String?
   refreshToken String?
-  user         User
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user User
 }
 
 model SavedSearch {
@@ -92,20 +94,91 @@ model SavedSearchFilter {
 }
 
 model Item {
-  id          String   @id @default(cuid())
-  isFavorited Boolean  @default(false)
-  status      String?  @default("NOT_STARTED")
-  link        Link?
-  note        Note?
-  type        String   @default("")
-  user        User?
-  file        File?
-  labels      Label[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  isFavorited Boolean @default(false)
+  status      String? @default("NOT_STARTED")
+  type        String  @default("")
+
+  link   Link?
+  note   Note?
+  user   User?
+  file   File?
+  labels Label[]
 }
 
 model Label {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @default("")
+
+  user  User
+  items Item[]
+}
+
+
+
+model Link {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  description String?
+  favicon     String?
+  href        String  @default("")
+  image       String?
+  notes       String  @default("")
+  title       String?
+
+  user User
+  item Item?
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title String? @default("")
+
+  raw  String @default("")
+  text String @default("")
+
+  user User
+  item Item?
+
+}
+
+model UploadGroup {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  isComplete Boolean?
+  isFailed   Boolean?
+  user       User
+  files      File[]
+}
+
+model Collection {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type String @default(now())
+
+  person Person
+
+  user User
+
+  items Item[]
+}
+
+model Person {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -115,45 +188,13 @@ model Label {
   items Item[]
 }
 
-model Link {
-  description String?
-  favicon     String?
-  href        String  @default("")
-  id          String  @id @default(cuid())
-  image       String?
-  notes       String  @default("")
-  title       String?
-  user        User
-  item        Item?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Note {
-  id        String   @id @default(cuid())
-  raw       String   @default("")
-  text      String   @default("")
-  user      User
-  item      Item?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model UploadGroup {
-  id         String   @id @default(cuid())
-  isComplete Boolean?
-  isFailed   Boolean?
-  user       User
-  files      File[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
 model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   email          String          @default("") @unique
   firstName      String?
-  id             String          @id @default(cuid())
   lastName       String?
   files          File[]
   googleAccounts GoogleAccount[]
@@ -168,6 +209,5 @@ model User {
 
   inviteCode InviteCode?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
 }
