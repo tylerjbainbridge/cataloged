@@ -12,7 +12,7 @@ export const deleteSavedSearch = extendType({
         id: stringArg(),
       },
       resolve: async (root, args, ctx) => {
-        await ctx.photon.savedSearchFilters.deleteMany({
+        await ctx.prisma.savedSearchFilter.deleteMany({
           where: {
             savedSearch: {
               id: args.id,
@@ -20,11 +20,11 @@ export const deleteSavedSearch = extendType({
           },
         });
 
-        const savedSearch = await ctx.photon.savedSearches.findOne({
+        const savedSearch = await ctx.prisma.savedSearch.findOne({
           where: { id: args.id },
         });
 
-        await ctx.photon.savedSearches.delete({
+        await ctx.prisma.savedSearch.delete({
           where: { id: args.id },
         });
 

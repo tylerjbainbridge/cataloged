@@ -38,7 +38,7 @@ export const Query = objectType({
         id: stringArg({ required: true }),
       },
       resolve: async (_, args, ctx) => {
-        const [item] = await ctx.photon.items.findMany({
+        const [item] = await ctx.prisma.item.findMany({
           where: {
             id: args.id,
             user: { id: ctx.user.id },
@@ -61,7 +61,7 @@ export const Query = objectType({
     t.list.field('savedSearches', {
       type: 'SavedSearch',
       resolve: (_, args, ctx) => {
-        return ctx.photon.savedSearches.findMany({
+        return ctx.prisma.savedSearch.findMany({
           where: {
             user: { id: ctx.user.id },
           },
@@ -81,7 +81,7 @@ export const Query = objectType({
       resolve: (_, args, ctx) => {
         const { where, ...rest } = args;
 
-        return ctx.photon.uploadGroups.findMany({
+        return ctx.prisma.uploadGroup.findMany({
           where: {
             // @ts-ignore
             ...(where || {}),
@@ -133,7 +133,7 @@ export const Query = objectType({
           type: stringArg(),
         },
         resolve: async (root, args, ctx) => {
-          const [first] = await ctx.photon.items.findMany({
+          const [first] = await ctx.prisma.item.findMany({
             first: 1,
             where: { type: args.type || 'link', user: { id: ctx.user.id } },
           });
@@ -157,7 +157,7 @@ export const Query = objectType({
     //     searchString: stringArg({ nullable: true })
     //   },
     //   resolve: (_, { searchString }, ctx) => {
-    //     return ctx.photon.files.findMany({
+    //     return ctx.prisma.file.findMany({
     //       where: {
     //         OR: [
     //           { title: { contains: searchString } },

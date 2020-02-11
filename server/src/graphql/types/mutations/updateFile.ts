@@ -18,7 +18,7 @@ export const updateFile = extendType({
 
         console.log(newData, args);
 
-        await ctx.photon.users.update({
+        await ctx.prisma.user.update({
           where: { id: ctx.user.id },
           data: {
             files: {
@@ -32,7 +32,7 @@ export const updateFile = extendType({
           },
         });
 
-        return await ctx.photon.files.findOne({
+        return await ctx.prisma.file.findOne({
           where: { id: fileId },
         });
       },

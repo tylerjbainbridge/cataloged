@@ -1,4 +1,4 @@
-generator photon {
+generator prisma {
   provider = "prisma-client-js"
 }
 

@@ -30,7 +30,7 @@ export const googleSignIn = extendType({
         let account;
 
         try {
-          account = await ctx.photon.googleAccounts.findOne({
+          account = await ctx.prisma.googleAccount.findOne({
             where: { accountId },
             include: { user: true },
           });
@@ -39,7 +39,7 @@ export const googleSignIn = extendType({
         let user: User;
 
         if (!account) {
-          user = await ctx.photon.users.create({
+          user = await ctx.prisma.user.create({
             data: {
               email,
               firstName,

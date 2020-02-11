@@ -3,7 +3,7 @@
  * Do not make changes to this file directly
  */
 
-
+import * as PrismaClient from "@prisma/client"
 import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
@@ -950,23 +950,11 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   ItemStatus: "DONE" | "IN_PROGRESS" | "NOT_STARTED"
   ItemType: "file" | "link" | "note"
-  OrderByArg: "asc" | "desc"
+  OrderByArg: PrismaClient.OrderByArg
 }
 
 export interface NexusGenRootTypes {
-  File: { // root type
-    createdAt: any; // DateTime!
-    description: string; // String!
-    extension: string; // String!
-    height?: number | null; // Int
-    id: string; // String!
-    isUploaded?: boolean | null; // Boolean
-    name: string; // String!
-    size?: string | null; // String
-    title: string; // String!
-    updatedAt: any; // DateTime!
-    width?: number | null; // Int
-  }
+  File: PrismaClient.File;
   Filter: { // root type
     name: string; // String!
     operator: string; // String!
@@ -977,25 +965,9 @@ export interface NexusGenRootTypes {
     signedUrls: string[]; // [String!]!
     uploadGroup?: NexusGenRootTypes['UploadGroup'] | null; // UploadGroup
   }
-  InterestedUser: { // root type
-    createdAt: any; // DateTime!
-    email: string; // String!
-    id: string; // String!
-    updatedAt: any; // DateTime!
-  }
-  InviteCode: { // root type
-    code: string; // String!
-    createdAt: any; // DateTime!
-    id: string; // String!
-    updatedAt: any; // DateTime!
-  }
-  Item: { // root type
-    createdAt: any; // DateTime!
-    id: string; // String!
-    isFavorited: boolean; // Boolean!
-    type: string; // String!
-    updatedAt: any; // DateTime!
-  }
+  InterestedUser: PrismaClient.InterestedUser;
+  InviteCode: PrismaClient.InviteCode;
+  Item: PrismaClient.Item;
   ItemConnection: { // root type
     edges: NexusGenRootTypes['ItemEdge'][]; // [ItemEdge!]!
     pageInfo: NexusGenRootTypes['PageInfo']; // PageInfo!
@@ -1007,31 +979,10 @@ export interface NexusGenRootTypes {
   JWT: { // root type
     token: string; // String!
   }
-  Label: { // root type
-    createdAt: any; // DateTime!
-    id: string; // String!
-    name: string; // String!
-    updatedAt: any; // DateTime!
-  }
-  Link: { // root type
-    createdAt: any; // DateTime!
-    description?: string | null; // String
-    favicon?: string | null; // String
-    href: string; // String!
-    id: string; // String!
-    image?: string | null; // String
-    notes: string; // String!
-    title?: string | null; // String
-    updatedAt: any; // DateTime!
-  }
+  Label: PrismaClient.Label;
+  Link: PrismaClient.Link;
   Mutation: {};
-  Note: { // root type
-    createdAt: any; // DateTime!
-    id: string; // String!
-    raw: string; // String!
-    text: string; // String!
-    updatedAt: any; // DateTime!
-  }
+  Note: PrismaClient.Note;
   PageInfo: { // root type
     endCursor?: string | null; // String
     hasNextPage: boolean; // Boolean!
@@ -1039,26 +990,9 @@ export interface NexusGenRootTypes {
     startCursor?: string | null; // String
   }
   Query: {};
-  SavedSearch: { // root type
-    createdAt: any; // DateTime!
-    id: string; // String!
-    name: string; // String!
-    updatedAt: any; // DateTime!
-    version: number; // Int!
-  }
-  UploadGroup: { // root type
-    createdAt: any; // DateTime!
-    id: string; // String!
-    isComplete?: boolean | null; // Boolean
-    updatedAt: any; // DateTime!
-  }
-  User: { // root type
-    email: string; // String!
-    firstName?: string | null; // String
-    id: string; // String!
-    isActive: boolean; // Boolean!
-    lastName?: string | null; // String
-  }
+  SavedSearch: PrismaClient.SavedSearch;
+  UploadGroup: PrismaClient.UploadGroup;
+  User: PrismaClient.User;
   String: string;
   Int: number;
   Float: number;
@@ -1606,7 +1540,7 @@ export type NexusGenScalarNames = "Boolean" | "DateTime" | "FilterValue" | "Floa
 export type NexusGenUnionNames = never;
 
 export interface NexusGenTypes {
-  context: any;
+  context: { prisma: PrismaClient.PrismaClient };
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   argTypes: NexusGenArgTypes;

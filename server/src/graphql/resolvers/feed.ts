@@ -150,7 +150,7 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
 
   return findManyCursor(
     _args =>
-      ctx.photon.items.findMany(
+      ctx.prisma.item.findMany(
         merge({
           ..._args,
           ...filter,

@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 
 import { User } from '@prisma/client';
-import { photon } from '../data/photon';
+import { prisma } from '../data/photon';
 
 export interface Payload {
   id: User['id'];
@@ -20,7 +20,7 @@ export class TokenService {
     const { id: userId }: Payload =
       typeof result === 'string' ? JSON.parse(result) : result;
 
-    const user = await photon.users.findOne({ where: { id: userId } });
+    const user = await prisma.user.findOne({ where: { id: userId } });
 
     return user;
   }

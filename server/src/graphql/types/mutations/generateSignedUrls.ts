@@ -13,7 +13,7 @@ export const generateSignedUrls = extendType({
       resolve: async (root, args, ctx) => {
         if (!ctx.user) throw new Error('Whoops, not authorized');
 
-        const uploadGroup = await ctx.photon.uploadGroups.create({
+        const uploadGroup = await ctx.prisma.uploadGroup.create({
           data: { isComplete: false, user: { connect: { id: ctx.user.id } } },
         });
 
@@ -29,7 +29,7 @@ export const generateSignedUrls = extendType({
             }) => {
               const [fileName, ...extension] = name.split('.');
 
-              const file = await ctx.photon.files.create({
+              const file = await ctx.prisma.file.create({
                 data: {
                   name: fileName,
                   extension: extension.join(),

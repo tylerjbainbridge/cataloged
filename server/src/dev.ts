@@ -1,5 +1,4 @@
 import app from './graphql/app';
-import { photon } from './data/photon';
 
 process.on('unhandledRejection', async (...args) => {
   console.log('ERROR', ...args);

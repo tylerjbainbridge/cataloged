@@ -18,18 +18,18 @@ export const createLabel = extendType({
         if (args.itemId) _.set(data, 'item.connect.id', args.itemId);
         _.set(data, 'user.connect.id', ctx.user.id);
 
-        const [existingLabel] = await ctx.photon.labels.findMany({
+        const [existingLabel] = await ctx.prisma.label.findMany({
           where: { name },
         });
 
         if (existingLabel) {
-          await ctx.photon.labels.update({
+          await ctx.prisma.label.update({
             where: { id: existingLabel.id },
             data,
           });
         }
 
-        await ctx.photon.labels.create({ data });
+        await ctx.prisma.label.create({ data });
 
         return ctx.user;
       },

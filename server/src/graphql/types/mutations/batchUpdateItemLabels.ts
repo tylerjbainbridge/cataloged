@@ -16,7 +16,7 @@ export const batchUpdateItemLabels = extendType({
         labelIdsToRemove: stringArg({ required: true, list: true }),
       },
       resolve: async (root, args, ctx) => {
-        const items = await ctx.photon.items.findMany({
+        const items = await ctx.prisma.item.findMany({
           where: { id: { in: args.itemIds } },
           include: {
             labels: true,
@@ -40,7 +40,7 @@ export const batchUpdateItemLabels = extendType({
           });
         });
 
-        return await ctx.photon.items.findMany({
+        return await ctx.prisma.item.findMany({
           where: { id: { in: args.itemIds } },
           include: {
             labels: true,

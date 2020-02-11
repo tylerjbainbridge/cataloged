@@ -12,12 +12,12 @@ export const updateStatusManyItems = extendType({
         status: arg({ type: 'ItemStatus', required: true }),
       },
       resolve: async (root, args, ctx) => {
-        await ctx.photon.items.updateMany({
+        await ctx.prisma.item.updateMany({
           where: { id: { in: args.itemIds } },
           data: { status: args.status },
         });
 
-        return await ctx.photon.items.findMany({
+        return await ctx.prisma.item.findMany({
           where: { id: { in: args.itemIds } },
         });
       },

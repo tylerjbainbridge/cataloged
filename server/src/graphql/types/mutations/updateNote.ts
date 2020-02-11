@@ -18,7 +18,7 @@ export const updateNote = extendType({
       resolve: async (root, args, ctx) => {
         const { noteId, ...rest } = args;
 
-        await ctx.photon.users.update({
+        await ctx.prisma.user.update({
           where: { id: ctx.user.id },
           data: {
             notes: {
@@ -32,7 +32,7 @@ export const updateNote = extendType({
           },
         });
 
-        return await ctx.photon.notes.findOne({
+        return await ctx.prisma.note.findOne({
           where: { id: noteId },
         });
       },

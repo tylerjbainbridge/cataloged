@@ -12,12 +12,12 @@ export const updateFavoriteManyItems = extendType({
         isFavorited: booleanArg({ required: true }),
       },
       resolve: async (root, args, ctx) => {
-        await ctx.photon.items.updateMany({
+        await ctx.prisma.item.updateMany({
           where: { id: { in: args.itemIds } },
           data: { isFavorited: args.isFavorited },
         });
 
-        return await ctx.photon.items.findMany({
+        return await ctx.prisma.item.findMany({
           where: { id: { in: args.itemIds } },
         });
       },
