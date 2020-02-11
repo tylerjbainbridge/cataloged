@@ -50,7 +50,7 @@ const IndexPage = () => {
       >
         <Box position="relative" top="-100px" width="800px">
           <Box d="flex" justifyContent="center">
-            <Box d="flex" alignItems="center" height="250px" flexWrap="wrap">
+            <Box d="flex" alignItems="center" justifyContent="center" height="250px" flexWrap="wrap">
               <Box
                 d="flex"
                 {...(isMobile
