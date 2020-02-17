@@ -55,7 +55,8 @@
     "pg": "^7.12.0",
     "prisma2": "2.0.0-preview021",
     "sharp": "^0.23.0",
-    "simple-jwt": "^1.0.3"
+    "simple-jwt": "^1.0.3",
+    "typescript": "^3.7.5"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.3.3",
@@ -71,7 +72,6 @@
     "@types/sharp": "^0.22.2",
     "prettier": "^1.18.2",
     "ts-node": "^8.3.0",
-    "ts-node-dev": "1.0.0-pre.40",
-    "typescript": "3.7.4"
+    "ts-node-dev": "1.0.0-pre.40"
   }
 }
