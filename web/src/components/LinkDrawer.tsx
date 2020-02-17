@@ -225,7 +225,7 @@ export const LinkDrawer = ({ item, onClose }: LinkDrawerProps) => {
                 <Divider />
                 <Button
                   color="white"
-                  bg="brand.purple"
+                  bg="brand.purple.main"
                   width="100%"
                   mb="20px"
                   onClick={() => window.open(link.href, '_blank')}

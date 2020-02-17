@@ -2,7 +2,7 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { Filter, ItemStatus } from "./apolloTypes";
+import { FilterInput, ItemStatus } from "./apolloTypes";
 
 // ====================================================
 // GraphQL query operation: feed
@@ -32,6 +32,9 @@ export interface feed_itemsConnection_edges_node_link_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: feed_itemsConnection_edges_node_link_item_labels[];
 }
 
@@ -59,6 +62,9 @@ export interface feed_itemsConnection_edges_node_file_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: feed_itemsConnection_edges_node_file_item_labels[];
 }
 
@@ -88,6 +94,9 @@ export interface feed_itemsConnection_edges_node_note_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: feed_itemsConnection_edges_node_note_item_labels[];
 }
 
@@ -101,10 +110,42 @@ export interface feed_itemsConnection_edges_node_note {
   item: feed_itemsConnection_edges_node_note_item | null;
 }
 
+export interface feed_itemsConnection_edges_node_googleContact_item_labels {
+  __typename: "Label";
+  id: string;
+  name: string;
+}
+
+export interface feed_itemsConnection_edges_node_googleContact_item {
+  __typename: "Item";
+  id: string;
+  type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
+  labels: feed_itemsConnection_edges_node_googleContact_item_labels[];
+}
+
+export interface feed_itemsConnection_edges_node_googleContact {
+  __typename: "GoogleContact";
+  id: string;
+  resourceName: string;
+  photoUrl: string | null;
+  name: string | null;
+  email: string | null;
+  otherEmails: string[];
+  phoneNumber: string | null;
+  otherPhoneNumbers: string[];
+  companyTitle: string | null;
+  companyName: string | null;
+  item: feed_itemsConnection_edges_node_googleContact_item;
+}
+
 export interface feed_itemsConnection_edges_node {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
   createdAt: any;
   updatedAt: any;
   isFavorited: boolean;
@@ -113,6 +154,7 @@ export interface feed_itemsConnection_edges_node {
   link: feed_itemsConnection_edges_node_link | null;
   file: feed_itemsConnection_edges_node_file | null;
   note: feed_itemsConnection_edges_node_note | null;
+  googleContact: feed_itemsConnection_edges_node_googleContact | null;
 }
 
 export interface feed_itemsConnection_edges {
@@ -134,5 +176,5 @@ export interface feed {
 export interface feedVariables {
   first?: number | null;
   after?: string | null;
-  filters?: Filter[] | null;
+  filters?: FilterInput[] | null;
 }

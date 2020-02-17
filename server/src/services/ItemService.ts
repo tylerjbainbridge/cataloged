@@ -10,6 +10,7 @@ export class ItemService {
         note: true,
         file: true,
         link: true,
+        googleContact: true,
         labels: true,
       },
     });
@@ -19,13 +20,14 @@ export class ItemService {
         note: item.note,
         file: item.file,
         link: item.link,
+        googleContact: item.googleContact,
       };
 
       await Bluebird.map(
         Object.keys(relations).filter(key => relations[key]),
         (key: string) =>
           // @ts-ignore
-          prisma[`${key}s`].delete({
+          prisma[key].delete({
             where: { id: relations[key].id },
           }),
         { concurrency: 1 },
@@ -43,9 +45,15 @@ export class ItemService {
         { concurrency: 1 },
       );
 
-      await prisma.item.delete({
+      // SOFT DELETE
+      await prisma.item.update({
         where: { id: item.id },
+        data: { deletedAt: new Date() },
       });
+
+      // await prisma.item.delete({
+      //   where: { id: item.id },
+      // });
     });
 
     return items;

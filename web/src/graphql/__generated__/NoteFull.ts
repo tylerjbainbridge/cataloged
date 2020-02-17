@@ -16,6 +16,9 @@ export interface NoteFull_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: NoteFull_item_labels[];
 }
 

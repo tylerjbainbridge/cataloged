@@ -1,0 +1,72 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "GoogleContact",
+      "field": "name",
+      "type": "String",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "GoogleContact",
+      "field": "email",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "GoogleContact",
+      "field": "otherEmails",
+      "type": "String",
+      "arity": "List"
+    },
+    {
+      "tag": "CreateField",
+      "model": "GoogleContact",
+      "field": "companyTitle",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "GoogleContact",
+      "field": "companyName",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "GoogleContact",
+      "field": "photoUrl",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "GoogleContact",
+      "field": "names"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "GoogleContact",
+      "field": "emailAddresses"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "GoogleContact",
+      "field": "occupations"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "GoogleContact",
+      "field": "organizations"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "GoogleContact",
+      "field": "photos"
+    }
+  ]
+}

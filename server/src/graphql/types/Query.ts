@@ -1,4 +1,4 @@
-import { objectType, arg, stringArg } from 'nexus';
+import { objectType, arg, stringArg, booleanArg } from 'nexus';
 import { merge, set } from 'lodash';
 
 import { knex } from '../../data/knex';
@@ -27,7 +27,35 @@ export const Query = objectType({
     });
 
     t.string('googleURL', {
-      resolve: (root, args, ctx) => ctx.google.getUrl(),
+      args: {
+        origin: stringArg(),
+        isAuthMethod: booleanArg(),
+        googleAccountId: stringArg(),
+        syncContent: stringArg(),
+        scopes: stringArg({ list: true }),
+      },
+      resolve: (_, args, ctx) => {
+        const {
+          origin,
+          isAuthMethod,
+          scopes,
+          googleAccountId,
+          syncContent,
+        } = args;
+
+        const state: any = {};
+
+        if (origin) state.origin = origin;
+
+        if (isAuthMethod) state.isAuthMethod = isAuthMethod;
+
+        if (googleAccountId) state.googleAccountId = googleAccountId;
+
+        if (syncContent) state.syncContent = syncContent;
+
+        // @ts-ignore
+        return ctx.google.getUrl({ state, additionalScopes: scopes });
+      },
     });
 
     t.crud.users();
@@ -41,6 +69,7 @@ export const Query = objectType({
         const [item] = await ctx.prisma.item.findMany({
           where: {
             id: args.id,
+            deletedAt: null,
             user: { id: ctx.user.id },
           },
           first: 1,

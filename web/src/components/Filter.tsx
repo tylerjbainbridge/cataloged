@@ -72,7 +72,13 @@ export const FILTER_CONFIGS = {
       value: undefined,
       operator: 'equals',
     },
-    options: [[undefined, 'all'], 'file', 'note', 'link'],
+    options: [
+      [undefined, 'all'],
+      'file',
+      'note',
+      'link',
+      ['googleContact', 'contact'],
+    ],
   },
   // Status
   status: {
@@ -422,9 +428,9 @@ export const Filter = ({
     <Button
       cursor="pointer"
       variant="outline"
-      bg="#F9F5FE"
-      color="brand.purple"
-      _hover={{ bg: '#e8e4ed', borderColor: 'brand.purple' }}
+      bg="brand.purple.light"
+      color="brand.purple.main"
+      _hover={{ bg: '#e8e4ed', borderColor: 'brand.purple.main' }}
       size="md"
       border="none"
       isLoading={loading}

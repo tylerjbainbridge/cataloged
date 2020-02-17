@@ -16,6 +16,9 @@ export interface updateLink_updateLink_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: updateLink_updateLink_item_labels[];
 }
 

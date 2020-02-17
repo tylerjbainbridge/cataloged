@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
 import { getAuthUser_me } from '../graphql/__generated__/getAuthUser';
-import { googleSignIn_googleSignIn } from '../graphql/__generated__/googleSignIn';
+import { googleAuth_googleAuth } from '../graphql/__generated__/googleAuth';
 
 const GET_AUTH_USER = gql`
   query getAuthUser {
@@ -13,6 +13,13 @@ const GET_AUTH_USER = gql`
       email
 
       isActive
+
+      role
+
+      googleAccounts {
+        id
+        email
+      }
 
       inviteCode {
         code
@@ -28,7 +35,7 @@ const GET_AUTH_USER = gql`
 
 type ContextProps = {
   user: getAuthUser_me;
-  token: googleSignIn_googleSignIn['token'] | null;
+  token: googleAuth_googleAuth['token'] | null;
   setToken: Dispatch<SetStateAction<string | null>>;
   signOut: Function;
   refetchUser: () => Promise<any>;
@@ -43,7 +50,7 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const [token, setToken] = useState<googleSignIn_googleSignIn['token'] | null>(
+  const [token, setToken] = useState<googleAuth_googleAuth['token'] | null>(
     localStorage.getItem('token'),
   );
 

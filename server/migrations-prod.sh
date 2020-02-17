@@ -1,5 +1,6 @@
-source .env.production.local;
+source ../.env.production.local;
 
-echo "Running production migrations: $POSTGRESQL_URL";
-
-npx prisma2 migrate up --experimental
+# echo "Saving migrations ($POSTGRESQL_URL)";
+# prisma2 migrate save --experimental
+echo "Running migrations ($POSTGRESQL_URL)";
+prisma2 migrate up --experimental

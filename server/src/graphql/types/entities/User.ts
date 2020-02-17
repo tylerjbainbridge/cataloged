@@ -11,6 +11,8 @@ export const User = objectType({
     t.model.inviteCode();
     t.model.isActive();
 
+    t.model.role();
+
     t.string(
       'fullName',
       ({ firstName, lastName }) => `${firstName} ${lastName}`,
@@ -22,6 +24,10 @@ export const User = objectType({
 
     t.model.items({
       pagination: true,
+    });
+
+    t.model.googleAccounts({
+      pagination: false,
     });
 
     t.model.labels({ ordering: true });

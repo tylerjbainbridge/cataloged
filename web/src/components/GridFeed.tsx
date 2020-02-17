@@ -17,8 +17,8 @@ export const GridFeed = (_: GridFeedProps) => {
     <Flex justifyContent="center">
       <Flex width="90%" flexWrap="wrap">
         {items.map(item => (
-          <Flex justifyContent="center" padding="15px">
-            <Item item={item} key={item.id} />
+          <Flex key={item.id} justifyContent="center" padding="15px">
+            <Item item={item} />
           </Flex>
         ))}
         {/* <Box w="100%" h="10" bg="blue.500" />

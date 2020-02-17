@@ -7,17 +7,22 @@ import {
   DrawerHeader,
   DrawerBody,
   useDisclosure,
-  Spinner,
+  Button,
+  Stack,
+  Heading,
+  Divider,
+  Flex,
+  useToast,
+  Text,
 } from '@chakra-ui/core';
 import qs from 'query-string';
 import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
-import { FileDrawer } from '../components/FileDrawer';
-import { useGetItem } from '../hooks/useGetItem';
 import { usePrevious } from '../hooks/usePrevious';
-import { NoteDrawer } from '../components/NoteDrawer';
-import { LinkDrawer } from '../components/LinkDrawer';
-import { useReturnToFeedFromItem } from '../hooks/useGoTo';
+import { useRemoveFromQueryString } from '../hooks/useGoTo';
+import { useAuth } from '../hooks/useAuth';
 import { useMedia } from 'react-use';
+import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
+import { gql } from 'apollo-boost';
 
 export interface ItemDrawerProps {
   toggleFullScreen: () => any;
@@ -25,10 +30,107 @@ export interface ItemDrawerProps {
   onClose: () => any;
 }
 
+export const GET_GOOGLE_URLS = gql`
+  query getGoogleContactsURL(
+    $scopes: [String!]
+    $googleAccountId: String
+    $syncContent: String
+  ) {
+    googleContactsURL: googleURL(
+      origin: "/settings"
+      isAuthMethod: false
+      scopes: $scopes
+      googleAccountId: $googleAccountId
+      syncContent: $syncContent
+    )
+  }
+`;
+
+export const SYNC_GOOGLE_CONTACTS = gql`
+  mutation syncGoogleContacts($googleAccountId: String!) {
+    syncGoogleContacts(googleAccountId: $googleAccountId)
+  }
+`;
+
+export const ConnectButton = ({
+  scopes,
+  googleAccountId,
+  syncContent,
+}: any) => {
+  const location = useLocation();
+
+  const [removeFromQueryString] = useRemoveFromQueryString();
+
+  const toast = useToast();
+
+  const getUrl = useQuery(GET_GOOGLE_URLS, {
+    variables: {
+      scopes,
+      syncContent,
+      googleAccountId,
+    },
+  });
+
+  const [syncGoogleContacts, mutationState] = useMutation(
+    SYNC_GOOGLE_CONTACTS,
+    {
+      variables: {
+        googleAccountId,
+      },
+      onCompleted: data => {
+        console.log('done syncing');
+
+        removeFromQueryString(['syncContent', 'googleAccountId']);
+
+        toast({
+          title: `Sync complete (${data.syncGoogleContacts})`,
+          status: 'success',
+          duration: 2000,
+          position: 'top',
+        });
+      },
+    },
+  );
+
+  useEffect(() => {
+    const parsed = qs.parse(location.search);
+
+    if (
+      parsed?.syncContent === 'contacts' &&
+      parsed?.googleAccountId === googleAccountId
+    ) {
+      syncGoogleContacts();
+    }
+  }, []);
+
+  return (
+    <Button
+      cursor="pointer"
+      variant="outline"
+      bg="brand.pink.light"
+      color="brand.pink.main"
+      _hover={{ bg: '#e8e4ed', borderColor: 'brand.pink.main' }}
+      border="2px solid"
+      borderColor="brand.pink.main"
+      size="md"
+      maxWidth="50%"
+      isLoading={getUrl.loading || mutationState.loading}
+      isDisabled={!getUrl.data?.googleContactsURL}
+      onClick={() => {
+        window.location.replace(getUrl.data?.googleContactsURL);
+      }}
+    >
+      Add Google Contacts
+    </Button>
+  );
+};
+
 export const Settings = () => {
   const location = useLocation();
   const history = useHistory();
   const isMobile = useMedia('(max-width: 768px)');
+
+  const { user, signOut } = useAuth();
 
   const match = useRouteMatch('/settings');
 
@@ -43,7 +145,6 @@ export const Settings = () => {
   useEffect(() => {
     if (!isOpen && previousIsOpen) {
       setTimeout(() => {
-        console.log(location.pathname.replace('/settings', ''));
         history.push({
           pathname: location.pathname.replace('/settings', '') || '/',
           search: location.search,
@@ -73,8 +174,45 @@ export const Settings = () => {
           Settings
         </DrawerHeader>
 
-        <DrawerBody d="flex" justifyContent="center" p="5px">
-          No settings yet- coming soon!
+        <DrawerBody d="flex" p="15px">
+          <Flex
+            height="100%"
+            width="100%"
+            justifyContent="space-between"
+            flexDirection="column"
+          >
+            <Stack spacing="15px">
+              <Heading size="sm">Google Accounts</Heading>
+              <Divider />
+              {user.googleAccounts.map((googleAccount: any) => (
+                <Stack>
+                  <Text>{googleAccount.email}</Text>
+                  <ConnectButton
+                    key={googleAccount.id}
+                    syncContent="contacts"
+                    scopes={[
+                      'https://www.googleapis.com/auth/contacts.readonly',
+                    ]}
+                    googleAccountId={googleAccount.id}
+                  />
+                </Stack>
+              ))}
+            </Stack>
+            <Button
+              d="flex"
+              alignItems="center"
+              cursor="pointer"
+              p="3px"
+              m={0}
+              maxWidth="50%"
+              onClick={() => {
+                window.localStorage.removeItem('cataloged-cache');
+                signOut();
+              }}
+            >
+              Sign out
+            </Button>
+          </Flex>
         </DrawerBody>
       </DrawerContent>
     </Drawer>

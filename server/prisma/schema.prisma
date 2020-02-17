@@ -55,14 +55,47 @@ model GoogleAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  accountId    String? @unique
-  email        String?
-  firstName    String?
-  lastName     String?
-  picture      String?
-  refreshToken String?
+  accountId String? @unique
+  email     String?
+  firstName String?
+  lastName  String?
+  picture   String?
 
-  user User
+  refreshToken String?
+  accessToken  String?
+
+  expiresAt DateTime
+
+  isAuthMethod Boolean?
+
+  metadata String?
+
+  user           User
+  googleContacts GoogleContact[]
+}
+
+model GoogleContact {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  resourceName String
+  name         String?
+
+  email       String?
+  otherEmails String[]
+
+  phoneNumber       String?
+  otherPhoneNumbers String[]
+
+  companyTitle String?
+  companyName  String?
+
+  photoUrl String?
+
+  user          User
+  item          Item
+  googleAccount GoogleAccount
 }
 
 model SavedSearch {
@@ -98,14 +131,22 @@ model Item {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  deletedAt DateTime?
+
   isFavorited Boolean @default(false)
   status      String? @default("NOT_STARTED")
   type        String  @default("")
 
-  link   Link?
-  note   Note?
-  user   User?
-  file   File?
+  date DateTime @default(now())
+
+
+  link Link?
+  note Note?
+  user User?
+  file File?
+
+  googleContact GoogleContact?
+
   labels Label[]
 }
 

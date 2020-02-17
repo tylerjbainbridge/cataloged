@@ -74,7 +74,7 @@ export const EnterInviteCode = () => {
                 // @ts-ignore
                 required
                 placeholder="Enter code"
-                // focusBorderColor="brand.purple"
+                // focusBorderColor="brand.purple.main"
                 width="300px"
                 mr="10px"
                 ref={register}

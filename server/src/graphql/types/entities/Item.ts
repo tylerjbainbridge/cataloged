@@ -9,6 +9,7 @@ export const Item = objectType({
 
     t.model.createdAt();
     t.model.updatedAt();
+    t.model.date();
 
     t.model.isFavorited();
 
@@ -21,6 +22,7 @@ export const Item = objectType({
     t.model.file();
     t.model.link();
     t.model.note();
+    t.model.googleContact();
 
     t.model.labels({ ordering: true });
 

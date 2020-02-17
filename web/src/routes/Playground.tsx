@@ -4,8 +4,8 @@ import gql from 'graphql-tag';
 
 import { Box } from '@chakra-ui/core';
 
-import { Labels } from '../components/Labels';
 import { useQuery } from '@apollo/react-hooks';
+import { SpotlightSearch } from '../components/SpotlightSearch';
 
 const GET_MOST_RECENT_ITEM = gql`
   query mostRecentItem($type: String) {
@@ -59,14 +59,15 @@ export const Playground = () => {
         d="flex"
         margin={20}
         padding={20}
-        size={400}
-        width={600}
+        size={600}
+        width={800}
+        bg="lightgray"
         // borderStyle="solid"
         // borderColor="lightgray"
         // borderWidth={2}
         rounded="lg"
       >
-        <Labels item={item} />
+        <SpotlightSearch />
       </Box>
     </Box>
   );

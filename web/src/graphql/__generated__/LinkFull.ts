@@ -16,6 +16,9 @@ export interface LinkFull_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: LinkFull_item_labels[];
 }
 

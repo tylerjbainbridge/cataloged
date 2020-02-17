@@ -29,6 +29,20 @@ export const useGoToPath = () => {
   return [goTo];
 };
 
+export const useRemoveFromQueryString = () => {
+  const location = useLocation();
+  const history = useHistory();
+
+  const removeFromQueryString = (toRemove: string[]) => {
+    history.push({
+      pathname: location.pathname,
+      search: qs.stringify(_.omit(qs.parse(location.search), toRemove)),
+    });
+  };
+
+  return [removeFromQueryString];
+};
+
 export const useReturnToFeedFromItem = () => {
   const [goTo] = useGoToPath();
 

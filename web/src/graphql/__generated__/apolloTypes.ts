@@ -12,7 +12,7 @@ export enum ItemStatus {
   NOT_STARTED = "NOT_STARTED",
 }
 
-export interface Filter {
+export interface FilterInput {
   name: string;
   operator: string;
   value?: any | null;

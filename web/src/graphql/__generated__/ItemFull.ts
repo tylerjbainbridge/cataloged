@@ -24,6 +24,9 @@ export interface ItemFull_link_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: ItemFull_link_item_labels[];
 }
 
@@ -51,6 +54,9 @@ export interface ItemFull_file_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: ItemFull_file_item_labels[];
 }
 
@@ -80,6 +86,9 @@ export interface ItemFull_note_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: ItemFull_note_item_labels[];
 }
 
@@ -93,10 +102,42 @@ export interface ItemFull_note {
   item: ItemFull_note_item | null;
 }
 
+export interface ItemFull_googleContact_item_labels {
+  __typename: "Label";
+  id: string;
+  name: string;
+}
+
+export interface ItemFull_googleContact_item {
+  __typename: "Item";
+  id: string;
+  type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
+  labels: ItemFull_googleContact_item_labels[];
+}
+
+export interface ItemFull_googleContact {
+  __typename: "GoogleContact";
+  id: string;
+  resourceName: string;
+  photoUrl: string | null;
+  name: string | null;
+  email: string | null;
+  otherEmails: string[];
+  phoneNumber: string | null;
+  otherPhoneNumbers: string[];
+  companyTitle: string | null;
+  companyName: string | null;
+  item: ItemFull_googleContact_item;
+}
+
 export interface ItemFull {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
   createdAt: any;
   updatedAt: any;
   isFavorited: boolean;
@@ -105,4 +146,5 @@ export interface ItemFull {
   link: ItemFull_link | null;
   file: ItemFull_file | null;
   note: ItemFull_note | null;
+  googleContact: ItemFull_googleContact | null;
 }

@@ -6,6 +6,12 @@
 // GraphQL query operation: getAuthUser
 // ====================================================
 
+export interface getAuthUser_me_googleAccounts {
+  __typename: "GoogleAccount";
+  id: string;
+  email: string | null;
+}
+
 export interface getAuthUser_me_inviteCode {
   __typename: "InviteCode";
   code: string;
@@ -23,6 +29,8 @@ export interface getAuthUser_me {
   fullName: string;
   email: string;
   isActive: boolean;
+  role: string;
+  googleAccounts: getAuthUser_me_googleAccounts[];
   inviteCode: getAuthUser_me_inviteCode | null;
   labels: getAuthUser_me_labels[];
 }

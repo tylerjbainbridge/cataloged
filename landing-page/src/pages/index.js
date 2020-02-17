@@ -62,7 +62,7 @@ const IndexPage = () => {
               <Box
                 fontSize="120px"
                 fontFamily="Cooper BT"
-                color="brand.purple"
+                color="brand.purple.main"
                 textDecoration={`underline solid ${customTheme.colors.brand.yellow}`}
                 textDecorationColor="brand.pink"
                 padding="30px"
@@ -77,7 +77,7 @@ const IndexPage = () => {
                 <Box
                   as="span"
                   color={
-                    ["brand.purple", "brand.pink", "brand.yellow"][idx % 3]
+                    ["brand.purple.main", "brand.pink", "brand.yellow"][idx % 3]
                   }
                 >
                   {letter}
@@ -105,7 +105,7 @@ const IndexPage = () => {
                   // borderColor="brand.pink"
                   p="15px"
                   textAlign="center"
-                  color="brand.purple"
+                  color="brand.purple.main"
                   fontSize="2xl"
                 >
                   <Text fontFamily="Cooper BT" fontWeight="bold" pb={0}>
@@ -133,7 +133,7 @@ const IndexPage = () => {
                           type="email"
                           required
                           placeholder="Enter email"
-                          // focusBorderColor="brand.purple"
+                          // focusBorderColor="brand.purple.main"
                           width="300px"
                           mr="10px"
                           ref={register}

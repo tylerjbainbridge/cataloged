@@ -16,8 +16,6 @@ export const updateFile = extendType({
       resolve: async (root, args, ctx) => {
         const { fileId, ...newData } = args;
 
-        console.log(newData, args);
-
         await ctx.prisma.user.update({
           where: { id: ctx.user.id },
           data: {

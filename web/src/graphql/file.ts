@@ -22,6 +22,8 @@ export const FILE_FULL_FRAGMENT = gql`
       id
       type
 
+      date
+
       createdAt
       updatedAt
 

@@ -16,6 +16,9 @@ export interface FileFull_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: FileFull_item_labels[];
 }
 

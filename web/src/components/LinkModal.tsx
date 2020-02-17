@@ -151,14 +151,14 @@ export const LinkModal = ({
         onClose={onClose}
       >
         <ModalOverlay />
-        <ModalContent maxWidth={500} maxHeight={700}>
+        <ModalContent rounded="lg" maxWidth={500} maxHeight={700}>
           <ModalHeader></ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Stack spacing={5}>
               {link.image && (
                 <LazyImage
-                  rounded
+                  rounded="lg"
                   src={link.image}
                   height="200px"
                   objectFit="cover"

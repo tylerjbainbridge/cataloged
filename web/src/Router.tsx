@@ -3,11 +3,12 @@ import { Route, Switch } from 'react-router-dom';
 
 import { Main } from './routes/Main';
 import { Note } from './components/Note';
-import { Playground } from './routes/Playground';
+// import { Playground } from './routes/Playground';
 import { GoogleCallback } from './routes/GoogleCallback';
 import { ForceSignIn } from './routes/ForceSignIn';
 
 import { useAuth } from './hooks/useAuth';
+import { GRAPHQL_ENDPOINT } from './config';
 
 export const Router = () => {
   const auth = useAuth();
@@ -20,9 +21,20 @@ export const Router = () => {
         <Note />
       </Route> */}
 
-      {/* <Route path="/playground" exact>
-        <Playground />
-      </Route> */}
+      {/* {process.env.NODE_ENV === 'development' && (
+        <Route path="/playground" exact>
+          <Playground />
+        </Route>
+      )} */}
+      {/* 
+      {auth.user && auth.user.role === 'admin' && (
+        <Route path="/graphql" exact>
+          <Playground
+            endpoint={`${GRAPHQL_ENDPOINT}?token=${localStorage.token}`}
+          />
+        </Route>
+      )} */}
+
       <Route path="/google/redirect" exact>
         <GoogleCallback />
       </Route>

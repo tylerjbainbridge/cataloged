@@ -6,13 +6,22 @@ import { Box, Button } from '@chakra-ui/core';
 import { getGoogleUrl } from '../graphql/__generated__/getGoogleUrl';
 
 export const GET_GOOGLE_URL = gql`
-  query getGoogleUrl {
-    googleURL
+  query getGoogleUrl(
+    $origin: String
+    $isAuthMethod: Boolean
+    $scopes: [String!]
+  ) {
+    googleURL(origin: $origin, isAuthMethod: $isAuthMethod, scopes: $scopes)
   }
 `;
 
 export const SignIn = () => {
-  const { loading, error, data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL);
+  const { loading, error, data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL, {
+    variables: {
+      origin: '/',
+      isAuthMethod: true,
+    },
+  });
 
   return (
     <Box

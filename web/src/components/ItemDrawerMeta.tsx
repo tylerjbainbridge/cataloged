@@ -21,10 +21,10 @@ export const ItemDrawerMeta = ({ item, children = null }: ItemDrawerMeta) => {
     <Stack spacing="20px">
       {children}
       <Stat>
-        <StatLabel>Created</StatLabel>
-        <StatNumber>
-          {format(new Date(item.createdAt), 'MMM dd, yyyy')}
-        </StatNumber>
+        <StatLabel>
+          {item.type === 'googleContact' ? 'Updated' : 'Created'}
+        </StatLabel>
+        <StatNumber>{format(new Date(item.date), 'MMM dd, yyyy')}</StatNumber>
       </Stat>
       {/* <Stat>
         <StatLabel>Updated</StatLabel>
