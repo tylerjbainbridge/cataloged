@@ -400,10 +400,10 @@ export const Filter = ({
     debouncedFilter(values);
   }, [values, fields.length]);
 
-  // useHotKey('/', onToggle, {
-  //   isGlobal: true,
-  //   shouldBind: !isAnyModalOpen,
-  // });
+  useHotKey('mod mod', onToggle, {
+    isGlobal: true,
+    shouldBind: !isAnyModalOpen,
+  });
 
   const prevLocation = usePrevious(location);
 

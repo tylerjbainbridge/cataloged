@@ -61,13 +61,11 @@ export const useHotKey = (
     }
   }, []);
 
-  const handlerAsCallback = React.useCallback(
-    e => {
-      if (e.preventDefault) e.preventDefault();
-      handler();
-    },
-    [handler],
-  );
+  const handlerAsCallback = React.useCallback(() => {
+    handler();
+
+    return false;
+  }, [handler]);
 
   const { current: mousetrap } = React.useRef(
     // ref ? new Mousetrap(ref) :
@@ -77,7 +75,18 @@ export const useHotKey = (
   const prevShouldBind = usePrevious(shouldBind);
 
   const bind = () => {
-    mousetrap[isGlobal ? 'bindGlobal' : 'bind'](keybind, handlerAsCallback);
+    mousetrap[isGlobal ? 'bindGlobal' : 'bind'](keybind, e => {
+      if (e.preventDefault) {
+        e.preventDefault();
+      } else {
+        // internet explorer
+        e.returnValue = false;
+      }
+
+      handlerAsCallback(e);
+
+      return false;
+    });
   };
 
   const unbind = () => {
