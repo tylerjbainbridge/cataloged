@@ -19,6 +19,7 @@
     "slate-md-editor": "^1.5.4"
   },
   "devDependencies": {
+    "typescript": "^3.7.5",
     "prettier": "^1.18.2"
   }
 }

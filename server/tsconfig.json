@@ -2,7 +2,8 @@
   "compilerOptions": {
     "sourceMap": true,
     "outDir": "dist",
-    "lib": ["esnext", "dom"],
+    "target": "ES2018",
+    "lib": ["esnext", "ES2018", "dom"],
     "noImplicitAny": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
