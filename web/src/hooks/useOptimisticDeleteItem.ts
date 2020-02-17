@@ -5,11 +5,12 @@ import { FEED_QUERY } from '../components/Feed';
 import { useToast } from '@chakra-ui/core';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { ItemConnectionFull_edges } from '../graphql/__generated__/ItemConnectionFull';
+import { confirmMutation } from '../util/helpers';
 
 export const useOptimisticDeleteItem = (item: any, options = {}) => {
   const toast = useToast();
 
-  return useMutation(DELETE_ITEM_MUTATION, {
+  const mutation = useMutation(DELETE_ITEM_MUTATION, {
     variables: { itemId: item.id },
     onCompleted: (...args) => {
       if (item.type === 'note' && item?.note?.text) {
@@ -51,4 +52,9 @@ export const useOptimisticDeleteItem = (item: any, options = {}) => {
       });
     },
   });
+
+  return confirmMutation(
+    mutation,
+    `Are you sure you'd like to delete this item?`,
+  );
 };

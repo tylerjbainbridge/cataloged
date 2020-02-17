@@ -32,6 +32,7 @@ export { refreshLinkMeta } from './mutations/refreshLinkMeta';
 export { syncGoogleContacts } from './mutations/syncGoogleContacts';
 export { syncGoogleDrive } from './mutations/syncGoogleDrive';
 export { taskFixItemDates } from './mutations/taskFixItemDates';
+export { taskFixLinks } from './mutations/taskFixLinks';
 export { updateFavoriteManyItems } from './mutations/updateFavoriteManyItems';
 export { updateFile } from './mutations/updateFile';
 export { updateLink } from './mutations/updateLink';

@@ -94,3 +94,14 @@ export const getNodesFromConnection = <T>(connection: any) => {
 
   return nodes;
 };
+
+export const confirmMutation = ([mutateFunc, ...rest]: any, message: any) => [
+  (...args: any) => {
+    const res = window.confirm(message || 'Are you sure');
+
+    if (res) {
+      return mutateFunc(...args);
+    }
+  },
+  ...(rest as any),
+];
