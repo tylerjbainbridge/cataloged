@@ -1,13 +1,23 @@
 import React, { useEffect } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useApolloClient } from '@apollo/react-hooks';
 
-import { Box, Spinner } from '@chakra-ui/core';
+import {
+  Box,
+  Spinner,
+  Stack,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  Button,
+} from '@chakra-ui/core';
 
 import { GET_GOOGLE_URL } from './SignIn';
 import { getGoogleUrl } from '../graphql/__generated__/getGoogleUrl';
 
 export const ForceSignIn = () => {
-  const { data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL, {
+  const client = useApolloClient();
+
+  const { data, error } = useQuery<getGoogleUrl>(GET_GOOGLE_URL, {
     variables: {
       origin: '/',
       isAuthMethod: true,
@@ -28,7 +38,28 @@ export const ForceSignIn = () => {
       width="100vw"
       height="100vh"
     >
-      <Spinner size="xl" />
+      {error ? (
+        <Stack spacing="15px">
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle mr={2}>
+              Something went wrong, try clearing the cache.
+            </AlertTitle>
+          </Alert>
+          <Button
+            size="sm"
+            onClick={() => {
+              client.clearStore();
+              localStorage.removeItem('token');
+              window.location.replace('/');
+            }}
+          >
+            Clear cache
+          </Button>
+        </Stack>
+      ) : (
+        <Spinner size="xl" />
+      )}
     </Box>
   );
 };
