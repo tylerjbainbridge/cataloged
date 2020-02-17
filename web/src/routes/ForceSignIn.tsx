@@ -7,7 +7,12 @@ import { GET_GOOGLE_URL } from './SignIn';
 import { getGoogleUrl } from '../graphql/__generated__/getGoogleUrl';
 
 export const ForceSignIn = () => {
-  const { data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL);
+  const { data } = useQuery<getGoogleUrl>(GET_GOOGLE_URL, {
+    variables: {
+      origin: '/',
+      isAuthMethod: true,
+    },
+  });
 
   useEffect(() => {
     if (data) {

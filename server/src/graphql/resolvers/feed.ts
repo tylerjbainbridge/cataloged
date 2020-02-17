@@ -7,7 +7,7 @@ import {
   getFindManyOrderArgs,
 } from '../types/helpers';
 import { findManyCursor } from '../../helpers/prisma';
-import { ItemType } from '../types/misc';
+import { ItemType, ITEM_TYPES } from '../types/misc';
 
 export const feedArgs = {
   ...paginationArgs,
@@ -23,6 +23,13 @@ export const STRING_FILTERS = {
   note: ['text'],
   file: ['name', 'extension'],
   link: ['href', 'title', 'description'],
+  googleContact: [
+    'name',
+    'email',
+    'companyName',
+    'companyTitle',
+    'phoneNumber',
+  ],
 };
 
 const getTrueValue = (value: string) => {
@@ -54,6 +61,10 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
       type: 'link',
     },
 
+    googleContact: {
+      type: 'googleContact',
+    },
+
     file: {
       type: 'file',
       file: {
@@ -64,6 +75,8 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
   };
 
   const baseFilters: any[] = [];
+
+  let typeFilter: any = null;
 
   (filters || []).forEach(
     (filter: {
@@ -76,14 +89,18 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
         case 'status':
         case 'isFavorited':
         case 'type':
-          // @ts-ignore
-          baseFilters.push(
-            set(
-              {},
-              `${filter.name}.${filter.operator}`,
-              getTrueValue(filter.value),
-            ),
+          typeFilter = set(
+            {},
+            `${filter.name}.${filter.operator}`,
+            getTrueValue(filter.value),
           );
+
+          break;
+
+        case 'includesContacts':
+          getTrueValue(filter.value);
+
+          typeFilter = set({}, 'type.in', [...ITEM_TYPES]);
 
           break;
 
@@ -134,9 +151,18 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
     },
   );
 
+  if (!typeFilter) {
+    typeFilter = set({}, 'type.not', 'googleContact');
+  }
+
+  baseFilters.push(typeFilter);
+
+  console.log(baseFilters);
+
   const filter = merge(
     {
       where: {
+        deletedAt: null,
         // @ts-ignore
         user: { id: ctx.user.id },
         [mode]: [{ OR: Object.values(itemSpecificFilters) }, ...baseFilters],
@@ -145,8 +171,8 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
     filterConfig,
   );
 
-  console.log('args', JSON.stringify(args, null, 4));
-  console.log('filter', JSON.stringify(filter, null, 4));
+  // console.log('args', JSON.stringify(args, null, 4));
+  // console.log('filter', JSON.stringify(filter, null, 4));
 
   return findManyCursor(
     _args =>

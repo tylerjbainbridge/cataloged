@@ -7,6 +7,71 @@ input BooleanFilter {
   not: Boolean
 }
 
+input CollectionCreateManyWithoutPersonInput {
+  connect: [CollectionWhereUniqueInput!]
+  create: [CollectionCreateWithoutPersonInput!]
+}
+
+input CollectionCreateManyWithoutUserInput {
+  connect: [CollectionWhereUniqueInput!]
+  create: [CollectionCreateWithoutUserInput!]
+}
+
+input CollectionCreateOneWithoutItemsInput {
+  connect: CollectionWhereUniqueInput
+  create: CollectionCreateWithoutItemsInput
+}
+
+input CollectionCreateWithoutItemsInput {
+  createdAt: DateTime
+  id: String
+  person: PersonCreateOneWithoutCollectionsInput!
+  type: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutCollectionsInput!
+}
+
+input CollectionCreateWithoutPersonInput {
+  createdAt: DateTime
+  id: String
+  items: ItemCreateManyWithoutCollectionInput
+  type: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutCollectionsInput!
+}
+
+input CollectionCreateWithoutUserInput {
+  createdAt: DateTime
+  id: String
+  items: ItemCreateManyWithoutCollectionInput
+  person: PersonCreateOneWithoutCollectionsInput!
+  type: String
+  updatedAt: DateTime
+}
+
+input CollectionFilter {
+  every: CollectionWhereInput
+  none: CollectionWhereInput
+  some: CollectionWhereInput
+}
+
+input CollectionWhereInput {
+  AND: [CollectionWhereInput!]
+  createdAt: DateTimeFilter
+  id: StringFilter
+  items: ItemFilter
+  NOT: [CollectionWhereInput!]
+  OR: [CollectionWhereInput!]
+  person: PersonWhereInput
+  type: StringFilter
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+}
+
+input CollectionWhereUniqueInput {
+  id: String
+}
+
 scalar DateTime
 
 input DateTimeFilter {
@@ -192,18 +257,52 @@ input FilterInput {
 """String or Boolean"""
 scalar FilterValue
 
+type GoogleAccount {
+  createdAt: DateTime!
+  email: String
+  id: String!
+  updatedAt: DateTime!
+}
+
 input GoogleAccountCreateManyWithoutUserInput {
   connect: [GoogleAccountWhereUniqueInput!]
   create: [GoogleAccountCreateWithoutUserInput!]
 }
 
-input GoogleAccountCreateWithoutUserInput {
+input GoogleAccountCreateOneWithoutGoogleContactsInput {
+  connect: GoogleAccountWhereUniqueInput
+  create: GoogleAccountCreateWithoutGoogleContactsInput
+}
+
+input GoogleAccountCreateWithoutGoogleContactsInput {
+  accessToken: String
   accountId: String
   createdAt: DateTime
   email: String
+  expiresAt: DateTime!
   firstName: String
   id: String
+  isAuthMethod: Boolean
   lastName: String
+  metadata: String
+  picture: String
+  refreshToken: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutGoogleAccountsInput!
+}
+
+input GoogleAccountCreateWithoutUserInput {
+  accessToken: String
+  accountId: String
+  createdAt: DateTime
+  email: String
+  expiresAt: DateTime!
+  firstName: String
+  googleContacts: GoogleContactCreateManyWithoutGoogleAccountInput
+  id: String
+  isAuthMethod: Boolean
+  lastName: String
+  metadata: String
   picture: String
   refreshToken: String
   updatedAt: DateTime
@@ -216,13 +315,18 @@ input GoogleAccountFilter {
 }
 
 input GoogleAccountWhereInput {
+  accessToken: NullableStringFilter
   accountId: NullableStringFilter
   AND: [GoogleAccountWhereInput!]
   createdAt: DateTimeFilter
   email: NullableStringFilter
+  expiresAt: DateTimeFilter
   firstName: NullableStringFilter
+  googleContacts: GoogleContactFilter
   id: StringFilter
+  isAuthMethod: NullableBooleanFilter
   lastName: NullableStringFilter
+  metadata: NullableStringFilter
   NOT: [GoogleAccountWhereInput!]
   OR: [GoogleAccountWhereInput!]
   picture: NullableStringFilter
@@ -233,6 +337,126 @@ input GoogleAccountWhereInput {
 
 input GoogleAccountWhereUniqueInput {
   accountId: String
+  id: String
+}
+
+type GoogleContact {
+  companyName: String
+  companyTitle: String
+  createdAt: DateTime!
+  email: String
+  googleAccount: GoogleAccount!
+  id: String!
+  item: Item!
+  name: String
+  otherEmails: [String!]!
+  otherPhoneNumbers: [String!]!
+  phoneNumber: String
+  photoUrl: String
+  resourceName: String!
+  updatedAt: DateTime!
+}
+
+input GoogleContactCreateManyWithoutGoogleAccountInput {
+  connect: [GoogleContactWhereUniqueInput!]
+  create: [GoogleContactCreateWithoutGoogleAccountInput!]
+}
+
+input GoogleContactCreateManyWithoutUserInput {
+  connect: [GoogleContactWhereUniqueInput!]
+  create: [GoogleContactCreateWithoutUserInput!]
+}
+
+input GoogleContactCreateOneWithoutItemInput {
+  connect: GoogleContactWhereUniqueInput
+  create: GoogleContactCreateWithoutItemInput
+}
+
+input GoogleContactCreateotherEmailsInput {
+  set: [String!]
+}
+
+input GoogleContactCreateotherPhoneNumbersInput {
+  set: [String!]
+}
+
+input GoogleContactCreateWithoutGoogleAccountInput {
+  companyName: String
+  companyTitle: String
+  createdAt: DateTime
+  email: String
+  id: String
+  item: ItemCreateOneWithoutGoogleContactInput!
+  name: String
+  otherEmails: GoogleContactCreateotherEmailsInput
+  otherPhoneNumbers: GoogleContactCreateotherPhoneNumbersInput
+  phoneNumber: String
+  photoUrl: String
+  resourceName: String!
+  updatedAt: DateTime
+  user: UserCreateOneWithoutGoogleContactsInput!
+}
+
+input GoogleContactCreateWithoutItemInput {
+  companyName: String
+  companyTitle: String
+  createdAt: DateTime
+  email: String
+  googleAccount: GoogleAccountCreateOneWithoutGoogleContactsInput!
+  id: String
+  name: String
+  otherEmails: GoogleContactCreateotherEmailsInput
+  otherPhoneNumbers: GoogleContactCreateotherPhoneNumbersInput
+  phoneNumber: String
+  photoUrl: String
+  resourceName: String!
+  updatedAt: DateTime
+  user: UserCreateOneWithoutGoogleContactsInput!
+}
+
+input GoogleContactCreateWithoutUserInput {
+  companyName: String
+  companyTitle: String
+  createdAt: DateTime
+  email: String
+  googleAccount: GoogleAccountCreateOneWithoutGoogleContactsInput!
+  id: String
+  item: ItemCreateOneWithoutGoogleContactInput!
+  name: String
+  otherEmails: GoogleContactCreateotherEmailsInput
+  otherPhoneNumbers: GoogleContactCreateotherPhoneNumbersInput
+  phoneNumber: String
+  photoUrl: String
+  resourceName: String!
+  updatedAt: DateTime
+}
+
+input GoogleContactFilter {
+  every: GoogleContactWhereInput
+  none: GoogleContactWhereInput
+  some: GoogleContactWhereInput
+}
+
+input GoogleContactWhereInput {
+  AND: [GoogleContactWhereInput!]
+  companyName: NullableStringFilter
+  companyTitle: NullableStringFilter
+  createdAt: DateTimeFilter
+  email: NullableStringFilter
+  googleAccount: GoogleAccountWhereInput
+  id: StringFilter
+  item: ItemWhereInput
+  name: NullableStringFilter
+  NOT: [GoogleContactWhereInput!]
+  OR: [GoogleContactWhereInput!]
+  phoneNumber: NullableStringFilter
+  photoUrl: NullableStringFilter
+  resourceName: StringFilter
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+}
+
+input GoogleContactWhereUniqueInput {
   id: String
 }
 
@@ -302,7 +526,9 @@ input InviteCodeWhereUniqueInput {
 
 type Item {
   createdAt: DateTime!
+  date: DateTime!
   file: File
+  googleContact: GoogleContact
   id: String!
   isFavorited: Boolean!
   labels(after: String, before: String, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
@@ -318,9 +544,19 @@ type ItemConnection {
   pageInfo: PageInfo!
 }
 
+input ItemCreateManyWithoutCollectionInput {
+  connect: [ItemWhereUniqueInput!]
+  create: [ItemCreateWithoutCollectionInput!]
+}
+
 input ItemCreateManyWithoutLabelsInput {
   connect: [ItemWhereUniqueInput!]
   create: [ItemCreateWithoutLabelsInput!]
+}
+
+input ItemCreateManyWithoutPersonInput {
+  connect: [ItemWhereUniqueInput!]
+  create: [ItemCreateWithoutPersonInput!]
 }
 
 input ItemCreateManyWithoutUserInput {
@@ -333,6 +569,11 @@ input ItemCreateOneWithoutFileInput {
   create: ItemCreateWithoutFileInput
 }
 
+input ItemCreateOneWithoutGoogleContactInput {
+  connect: ItemWhereUniqueInput
+  create: ItemCreateWithoutGoogleContactInput
+}
+
 input ItemCreateOneWithoutLinkInput {
   connect: ItemWhereUniqueInput
   create: ItemCreateWithoutLinkInput
@@ -343,13 +584,54 @@ input ItemCreateOneWithoutNoteInput {
   create: ItemCreateWithoutNoteInput
 }
 
-input ItemCreateWithoutFileInput {
+input ItemCreateWithoutCollectionInput {
   createdAt: DateTime
+  date: DateTime
+  deletedAt: DateTime
+  file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  person: PersonCreateOneWithoutItemsInput
+  status: String
+  type: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutItemsInput
+}
+
+input ItemCreateWithoutFileInput {
+  collection: CollectionCreateOneWithoutItemsInput
+  createdAt: DateTime
+  date: DateTime
+  deletedAt: DateTime
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
+  isFavorited: Boolean
+  labels: LabelCreateManyWithoutItemsInput
+  link: LinkCreateOneWithoutItemInput
+  note: NoteCreateOneWithoutItemInput
+  person: PersonCreateOneWithoutItemsInput
+  status: String
+  type: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutItemsInput
+}
+
+input ItemCreateWithoutGoogleContactInput {
+  collection: CollectionCreateOneWithoutItemsInput
+  createdAt: DateTime
+  date: DateTime
+  deletedAt: DateTime
+  file: FileCreateOneWithoutItemInput
+  id: String
+  isFavorited: Boolean
+  labels: LabelCreateManyWithoutItemsInput
+  link: LinkCreateOneWithoutItemInput
+  note: NoteCreateOneWithoutItemInput
+  person: PersonCreateOneWithoutItemsInput
   status: String
   type: String
   updatedAt: DateTime
@@ -357,12 +639,17 @@ input ItemCreateWithoutFileInput {
 }
 
 input ItemCreateWithoutLabelsInput {
+  collection: CollectionCreateOneWithoutItemsInput
   createdAt: DateTime
+  date: DateTime
+  deletedAt: DateTime
   file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  person: PersonCreateOneWithoutItemsInput
   status: String
   type: String
   updatedAt: DateTime
@@ -370,12 +657,17 @@ input ItemCreateWithoutLabelsInput {
 }
 
 input ItemCreateWithoutLinkInput {
+  collection: CollectionCreateOneWithoutItemsInput
   createdAt: DateTime
+  date: DateTime
+  deletedAt: DateTime
   file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
   labels: LabelCreateManyWithoutItemsInput
   note: NoteCreateOneWithoutItemInput
+  person: PersonCreateOneWithoutItemsInput
   status: String
   type: String
   updatedAt: DateTime
@@ -383,12 +675,35 @@ input ItemCreateWithoutLinkInput {
 }
 
 input ItemCreateWithoutNoteInput {
+  collection: CollectionCreateOneWithoutItemsInput
   createdAt: DateTime
+  date: DateTime
+  deletedAt: DateTime
   file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
+  person: PersonCreateOneWithoutItemsInput
+  status: String
+  type: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutItemsInput
+}
+
+input ItemCreateWithoutPersonInput {
+  collection: CollectionCreateOneWithoutItemsInput
+  createdAt: DateTime
+  date: DateTime
+  deletedAt: DateTime
+  file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
+  isFavorited: Boolean
+  labels: LabelCreateManyWithoutItemsInput
+  link: LinkCreateOneWithoutItemInput
+  note: NoteCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -396,13 +711,18 @@ input ItemCreateWithoutNoteInput {
 }
 
 input ItemCreateWithoutUserInput {
+  collection: CollectionCreateOneWithoutItemsInput
   createdAt: DateTime
+  date: DateTime
+  deletedAt: DateTime
   file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  person: PersonCreateOneWithoutItemsInput
   status: String
   type: String
   updatedAt: DateTime
@@ -421,6 +741,8 @@ input ItemFilter {
 
 input ItemOrderByInput {
   createdAt: OrderByArg
+  date: OrderByArg
+  deletedAt: OrderByArg
   id: OrderByArg
   isFavorited: OrderByArg
   status: OrderByArg
@@ -436,14 +758,19 @@ enum ItemStatus {
 
 enum ItemType {
   file
+  googleContact
   link
   note
 }
 
 input ItemWhereInput {
   AND: [ItemWhereInput!]
+  collection: CollectionWhereInput
   createdAt: DateTimeFilter
+  date: DateTimeFilter
+  deletedAt: NullableDateTimeFilter
   file: FileWhereInput
+  googleContact: GoogleContactWhereInput
   id: StringFilter
   isFavorited: BooleanFilter
   labels: LabelFilter
@@ -451,6 +778,7 @@ input ItemWhereInput {
   NOT: [ItemWhereInput!]
   note: NoteWhereInput
   OR: [ItemWhereInput!]
+  person: PersonWhereInput
   status: NullableStringFilter
   type: StringFilter
   updatedAt: DateTimeFilter
@@ -623,9 +951,12 @@ type Mutation {
   disconnectLabelFromItem(itemId: String!, labelId: String!): Item!
   enterInviteCode(code: String!): User!
   generateSignedUrls(signedURLArgs: [SignedURLArgs!]): InProgressUpload!
-  googleSignIn(code: String!): JWT!
+  googleAuth(code: String!, isAuthMethod: Boolean): JWT!
   processFiles(uploadGroupId: String): [File!]!
   refreshLinkMeta(href: String!, linkId: String!): Link!
+  syncGoogleContacts(googleAccountId: String!): Int!
+  syncGoogleDrive(googleAccountId: String!): String!
+  taskFixItemDates: String!
   updateFavoriteManyItems(isFavorited: Boolean!, itemIds: [String!]!): [Item!]!
   updateFile(description: String, fileId: String!, title: String): File!
   updateLink(description: String, href: String!, linkId: String!, title: String!): Link!
@@ -657,6 +988,7 @@ input NoteCreateWithoutItemInput {
   id: String
   raw: String
   text: String
+  title: String
   updatedAt: DateTime
   user: UserCreateOneWithoutNotesInput!
 }
@@ -667,6 +999,7 @@ input NoteCreateWithoutUserInput {
   item: ItemCreateOneWithoutNoteInput
   raw: String
   text: String
+  title: String
   updatedAt: DateTime
 }
 
@@ -685,6 +1018,7 @@ input NoteWhereInput {
   OR: [NoteWhereInput!]
   raw: StringFilter
   text: StringFilter
+  title: NullableStringFilter
   updatedAt: DateTimeFilter
   user: UserWhereInput
 }
@@ -696,6 +1030,17 @@ input NoteWhereUniqueInput {
 input NullableBooleanFilter {
   equals: Boolean
   not: Boolean
+}
+
+input NullableDateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: DateTime
+  notIn: [DateTime!]
 }
 
 input NullableIntFilter {
@@ -735,6 +1080,71 @@ type PageInfo {
   startCursor: String
 }
 
+input PersonCreateManyWithoutUserInput {
+  connect: [PersonWhereUniqueInput!]
+  create: [PersonCreateWithoutUserInput!]
+}
+
+input PersonCreateOneWithoutCollectionsInput {
+  connect: PersonWhereUniqueInput
+  create: PersonCreateWithoutCollectionsInput
+}
+
+input PersonCreateOneWithoutItemsInput {
+  connect: PersonWhereUniqueInput
+  create: PersonCreateWithoutItemsInput
+}
+
+input PersonCreateWithoutCollectionsInput {
+  createdAt: DateTime
+  id: String
+  items: ItemCreateManyWithoutPersonInput
+  name: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutPersonsInput!
+}
+
+input PersonCreateWithoutItemsInput {
+  collections: CollectionCreateManyWithoutPersonInput
+  createdAt: DateTime
+  id: String
+  name: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutPersonsInput!
+}
+
+input PersonCreateWithoutUserInput {
+  collections: CollectionCreateManyWithoutPersonInput
+  createdAt: DateTime
+  id: String
+  items: ItemCreateManyWithoutPersonInput
+  name: String
+  updatedAt: DateTime
+}
+
+input PersonFilter {
+  every: PersonWhereInput
+  none: PersonWhereInput
+  some: PersonWhereInput
+}
+
+input PersonWhereInput {
+  AND: [PersonWhereInput!]
+  collections: CollectionFilter
+  createdAt: DateTimeFilter
+  id: StringFilter
+  items: ItemFilter
+  name: StringFilter
+  NOT: [PersonWhereInput!]
+  OR: [PersonWhereInput!]
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+}
+
+input PersonWhereUniqueInput {
+  id: String
+}
+
 type Query {
   _files(after: String, before: String, first: Int, last: Int, orderBy: FileOrderByInput, skip: Int, where: FileWhereInput): [File!]!
   _inviteCodes(after: String, before: String, first: Int, last: Int, orderBy: InviteCodeOrderByInput, skip: Int, where: InviteCodeWhereInput): [InviteCode!]!
@@ -742,7 +1152,7 @@ type Query {
   _uploadgroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
   _users(after: String, before: String, first: Int, last: Int, orderBy: UserOrderByInput, skip: Int, where: UserWhereInput): [User!]!
   file(where: FileWhereUniqueInput!): File
-  googleURL: String!
+  googleURL(googleAccountId: String, isAuthMethod: Boolean, origin: String, scopes: [String!], syncContent: String): String!
   item(id: String!): Item!
   itemsConnection(after: String, before: String, filters: [FilterInput!], first: Int, last: Int, orderBy: ItemOrderByInput, type: ItemType): ItemConnection!
   me: User
@@ -965,20 +1375,24 @@ type User {
   files(after: String, before: String, first: Int, last: Int, skip: Int): [File!]!
   firstName: String
   fullName: String!
+  googleAccounts: [GoogleAccount!]!
   id: String!
   inviteCode: InviteCode
   isActive: Boolean!
   items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]!
   labels(after: String, before: String, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   lastName: String
+  role: String!
 }
 
 input UserCreateInput {
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
   inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
@@ -987,6 +1401,7 @@ input UserCreateInput {
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
@@ -994,9 +1409,24 @@ input UserCreateInput {
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
+input UserCreateOneWithoutCollectionsInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutCollectionsInput
+}
+
 input UserCreateOneWithoutFilesInput {
   connect: UserWhereUniqueInput
   create: UserCreateWithoutFilesInput
+}
+
+input UserCreateOneWithoutGoogleAccountsInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutGoogleAccountsInput
+}
+
+input UserCreateOneWithoutGoogleContactsInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutGoogleContactsInput
 }
 
 input UserCreateOneWithoutItemsInput {
@@ -1019,6 +1449,11 @@ input UserCreateOneWithoutNotesInput {
   create: UserCreateWithoutNotesInput
 }
 
+input UserCreateOneWithoutPersonsInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutPersonsInput
+}
+
 input UserCreateOneWithoutSavedSearchesInput {
   connect: UserWhereUniqueInput
   create: UserCreateWithoutSavedSearchesInput
@@ -1034,9 +1469,80 @@ input UserCreateOneWithoutUploadGroupsInput {
   create: UserCreateWithoutUploadGroupsInput
 }
 
-input UserCreateWithoutFilesInput {
+input UserCreateWithoutCollectionsInput {
   createdAt: DateTime
   email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
+  role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  updatedAt: DateTime
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutFilesInput {
+  collections: CollectionCreateManyWithoutUserInput
+  createdAt: DateTime
+  email: String
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
+  role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  updatedAt: DateTime
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutGoogleAccountsInput {
+  collections: CollectionCreateManyWithoutUserInput
+  createdAt: DateTime
+  email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
+  role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  updatedAt: DateTime
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutGoogleContactsInput {
+  collections: CollectionCreateManyWithoutUserInput
+  createdAt: DateTime
+  email: String
+  files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
   id: String
@@ -1047,6 +1553,7 @@ input UserCreateWithoutFilesInput {
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
@@ -1055,11 +1562,13 @@ input UserCreateWithoutFilesInput {
 }
 
 input UserCreateWithoutItemsInput {
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
   inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
@@ -1067,6 +1576,7 @@ input UserCreateWithoutItemsInput {
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
@@ -1075,11 +1585,13 @@ input UserCreateWithoutItemsInput {
 }
 
 input UserCreateWithoutLabelsInput {
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
   inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
@@ -1087,6 +1599,7 @@ input UserCreateWithoutLabelsInput {
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
@@ -1095,11 +1608,13 @@ input UserCreateWithoutLabelsInput {
 }
 
 input UserCreateWithoutLinksInput {
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
   inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
@@ -1107,6 +1622,7 @@ input UserCreateWithoutLinksInput {
   labels: LabelCreateManyWithoutUserInput
   lastName: String
   notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
@@ -1115,11 +1631,13 @@ input UserCreateWithoutLinksInput {
 }
 
 input UserCreateWithoutNotesInput {
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
   inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
@@ -1127,6 +1645,7 @@ input UserCreateWithoutNotesInput {
   labels: LabelCreateManyWithoutUserInput
   lastName: String
   links: LinkCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
@@ -1134,12 +1653,14 @@ input UserCreateWithoutNotesInput {
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutSavedSearchesInput {
+input UserCreateWithoutPersonsInput {
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
   inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
@@ -1148,6 +1669,30 @@ input UserCreateWithoutSavedSearchesInput {
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  updatedAt: DateTime
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutSavedSearchesInput {
+  collections: CollectionCreateManyWithoutUserInput
+  createdAt: DateTime
+  email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
   role: String
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
   updatedAt: DateTime
@@ -1155,11 +1700,13 @@ input UserCreateWithoutSavedSearchesInput {
 }
 
 input UserCreateWithoutSavedSearchFiltersInput {
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
   inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
@@ -1168,6 +1715,7 @@ input UserCreateWithoutSavedSearchFiltersInput {
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   updatedAt: DateTime
@@ -1175,11 +1723,13 @@ input UserCreateWithoutSavedSearchFiltersInput {
 }
 
 input UserCreateWithoutUploadGroupsInput {
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
   files: FileCreateManyWithoutUserInput
   firstName: String
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
   inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
@@ -1188,6 +1738,7 @@ input UserCreateWithoutUploadGroupsInput {
   lastName: String
   links: LinkCreateManyWithoutUserInput
   notes: NoteCreateManyWithoutUserInput
+  persons: PersonCreateManyWithoutUserInput
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
@@ -1213,11 +1764,13 @@ input UserOrderByInput {
 
 input UserWhereInput {
   AND: [UserWhereInput!]
+  collections: CollectionFilter
   createdAt: DateTimeFilter
   email: StringFilter
   files: FileFilter
   firstName: NullableStringFilter
   googleAccounts: GoogleAccountFilter
+  googleContacts: GoogleContactFilter
   id: StringFilter
   inviteCode: InviteCodeWhereInput
   isActive: BooleanFilter
@@ -1228,6 +1781,7 @@ input UserWhereInput {
   NOT: [UserWhereInput!]
   notes: NoteFilter
   OR: [UserWhereInput!]
+  persons: PersonFilter
   role: StringFilter
   savedSearches: SavedSearchFilter
   savedSearchFilters: SavedSearchFilterFilter

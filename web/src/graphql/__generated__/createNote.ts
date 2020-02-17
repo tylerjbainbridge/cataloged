@@ -16,6 +16,9 @@ export interface createNote_createNote_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: createNote_createNote_item_labels[];
 }
 

@@ -16,6 +16,9 @@ export interface updateFile_updateFile_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: updateFile_updateFile_item_labels[];
 }
 

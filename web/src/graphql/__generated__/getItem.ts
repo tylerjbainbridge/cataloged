@@ -24,6 +24,9 @@ export interface getItem_item_link_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: getItem_item_link_item_labels[];
 }
 
@@ -51,6 +54,9 @@ export interface getItem_item_file_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: getItem_item_file_item_labels[];
 }
 
@@ -80,6 +86,9 @@ export interface getItem_item_note_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: getItem_item_note_item_labels[];
 }
 
@@ -93,10 +102,42 @@ export interface getItem_item_note {
   item: getItem_item_note_item | null;
 }
 
+export interface getItem_item_googleContact_item_labels {
+  __typename: "Label";
+  id: string;
+  name: string;
+}
+
+export interface getItem_item_googleContact_item {
+  __typename: "Item";
+  id: string;
+  type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
+  labels: getItem_item_googleContact_item_labels[];
+}
+
+export interface getItem_item_googleContact {
+  __typename: "GoogleContact";
+  id: string;
+  resourceName: string;
+  photoUrl: string | null;
+  name: string | null;
+  email: string | null;
+  otherEmails: string[];
+  phoneNumber: string | null;
+  otherPhoneNumbers: string[];
+  companyTitle: string | null;
+  companyName: string | null;
+  item: getItem_item_googleContact_item;
+}
+
 export interface getItem_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
   createdAt: any;
   updatedAt: any;
   isFavorited: boolean;
@@ -105,6 +146,7 @@ export interface getItem_item {
   link: getItem_item_link | null;
   file: getItem_item_file | null;
   note: getItem_item_note | null;
+  googleContact: getItem_item_googleContact | null;
 }
 
 export interface getItem {

@@ -32,6 +32,9 @@ export interface ItemConnectionFull_edges_node_link_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: ItemConnectionFull_edges_node_link_item_labels[];
 }
 
@@ -59,6 +62,9 @@ export interface ItemConnectionFull_edges_node_file_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: ItemConnectionFull_edges_node_file_item_labels[];
 }
 
@@ -88,6 +94,9 @@ export interface ItemConnectionFull_edges_node_note_item {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
   labels: ItemConnectionFull_edges_node_note_item_labels[];
 }
 
@@ -101,10 +110,42 @@ export interface ItemConnectionFull_edges_node_note {
   item: ItemConnectionFull_edges_node_note_item | null;
 }
 
+export interface ItemConnectionFull_edges_node_googleContact_item_labels {
+  __typename: "Label";
+  id: string;
+  name: string;
+}
+
+export interface ItemConnectionFull_edges_node_googleContact_item {
+  __typename: "Item";
+  id: string;
+  type: string;
+  date: any;
+  createdAt: any;
+  updatedAt: any;
+  labels: ItemConnectionFull_edges_node_googleContact_item_labels[];
+}
+
+export interface ItemConnectionFull_edges_node_googleContact {
+  __typename: "GoogleContact";
+  id: string;
+  resourceName: string;
+  photoUrl: string | null;
+  name: string | null;
+  email: string | null;
+  otherEmails: string[];
+  phoneNumber: string | null;
+  otherPhoneNumbers: string[];
+  companyTitle: string | null;
+  companyName: string | null;
+  item: ItemConnectionFull_edges_node_googleContact_item;
+}
+
 export interface ItemConnectionFull_edges_node {
   __typename: "Item";
   id: string;
   type: string;
+  date: any;
   createdAt: any;
   updatedAt: any;
   isFavorited: boolean;
@@ -113,6 +154,7 @@ export interface ItemConnectionFull_edges_node {
   link: ItemConnectionFull_edges_node_link | null;
   file: ItemConnectionFull_edges_node_file | null;
   note: ItemConnectionFull_edges_node_note | null;
+  googleContact: ItemConnectionFull_edges_node_googleContact | null;
 }
 
 export interface ItemConnectionFull_edges {

@@ -31,6 +31,62 @@ export interface NexusGenInputs {
     equals?: boolean | null; // Boolean
     not?: boolean | null; // Boolean
   }
+  CollectionCreateManyWithoutPersonInput: { // input type
+    connect?: NexusGenInputs['CollectionWhereUniqueInput'][] | null; // [CollectionWhereUniqueInput!]
+    create?: NexusGenInputs['CollectionCreateWithoutPersonInput'][] | null; // [CollectionCreateWithoutPersonInput!]
+  }
+  CollectionCreateManyWithoutUserInput: { // input type
+    connect?: NexusGenInputs['CollectionWhereUniqueInput'][] | null; // [CollectionWhereUniqueInput!]
+    create?: NexusGenInputs['CollectionCreateWithoutUserInput'][] | null; // [CollectionCreateWithoutUserInput!]
+  }
+  CollectionCreateOneWithoutItemsInput: { // input type
+    connect?: NexusGenInputs['CollectionWhereUniqueInput'] | null; // CollectionWhereUniqueInput
+    create?: NexusGenInputs['CollectionCreateWithoutItemsInput'] | null; // CollectionCreateWithoutItemsInput
+  }
+  CollectionCreateWithoutItemsInput: { // input type
+    createdAt?: any | null; // DateTime
+    id?: string | null; // String
+    person: NexusGenInputs['PersonCreateOneWithoutCollectionsInput']; // PersonCreateOneWithoutCollectionsInput!
+    type?: string | null; // String
+    updatedAt?: any | null; // DateTime
+    user: NexusGenInputs['UserCreateOneWithoutCollectionsInput']; // UserCreateOneWithoutCollectionsInput!
+  }
+  CollectionCreateWithoutPersonInput: { // input type
+    createdAt?: any | null; // DateTime
+    id?: string | null; // String
+    items?: NexusGenInputs['ItemCreateManyWithoutCollectionInput'] | null; // ItemCreateManyWithoutCollectionInput
+    type?: string | null; // String
+    updatedAt?: any | null; // DateTime
+    user: NexusGenInputs['UserCreateOneWithoutCollectionsInput']; // UserCreateOneWithoutCollectionsInput!
+  }
+  CollectionCreateWithoutUserInput: { // input type
+    createdAt?: any | null; // DateTime
+    id?: string | null; // String
+    items?: NexusGenInputs['ItemCreateManyWithoutCollectionInput'] | null; // ItemCreateManyWithoutCollectionInput
+    person: NexusGenInputs['PersonCreateOneWithoutCollectionsInput']; // PersonCreateOneWithoutCollectionsInput!
+    type?: string | null; // String
+    updatedAt?: any | null; // DateTime
+  }
+  CollectionFilter: { // input type
+    every?: NexusGenInputs['CollectionWhereInput'] | null; // CollectionWhereInput
+    none?: NexusGenInputs['CollectionWhereInput'] | null; // CollectionWhereInput
+    some?: NexusGenInputs['CollectionWhereInput'] | null; // CollectionWhereInput
+  }
+  CollectionWhereInput: { // input type
+    AND?: NexusGenInputs['CollectionWhereInput'][] | null; // [CollectionWhereInput!]
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    items?: NexusGenInputs['ItemFilter'] | null; // ItemFilter
+    NOT?: NexusGenInputs['CollectionWhereInput'][] | null; // [CollectionWhereInput!]
+    OR?: NexusGenInputs['CollectionWhereInput'][] | null; // [CollectionWhereInput!]
+    person?: NexusGenInputs['PersonWhereInput'] | null; // PersonWhereInput
+    type?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+  }
+  CollectionWhereUniqueInput: { // input type
+    id?: string | null; // String
+  }
   DateTimeFilter: { // input type
     equals?: any | null; // DateTime
     gt?: any | null; // DateTime
@@ -176,13 +232,38 @@ export interface NexusGenInputs {
     connect?: NexusGenInputs['GoogleAccountWhereUniqueInput'][] | null; // [GoogleAccountWhereUniqueInput!]
     create?: NexusGenInputs['GoogleAccountCreateWithoutUserInput'][] | null; // [GoogleAccountCreateWithoutUserInput!]
   }
-  GoogleAccountCreateWithoutUserInput: { // input type
+  GoogleAccountCreateOneWithoutGoogleContactsInput: { // input type
+    connect?: NexusGenInputs['GoogleAccountWhereUniqueInput'] | null; // GoogleAccountWhereUniqueInput
+    create?: NexusGenInputs['GoogleAccountCreateWithoutGoogleContactsInput'] | null; // GoogleAccountCreateWithoutGoogleContactsInput
+  }
+  GoogleAccountCreateWithoutGoogleContactsInput: { // input type
+    accessToken?: string | null; // String
     accountId?: string | null; // String
     createdAt?: any | null; // DateTime
     email?: string | null; // String
+    expiresAt: any; // DateTime!
     firstName?: string | null; // String
     id?: string | null; // String
+    isAuthMethod?: boolean | null; // Boolean
     lastName?: string | null; // String
+    metadata?: string | null; // String
+    picture?: string | null; // String
+    refreshToken?: string | null; // String
+    updatedAt?: any | null; // DateTime
+    user: NexusGenInputs['UserCreateOneWithoutGoogleAccountsInput']; // UserCreateOneWithoutGoogleAccountsInput!
+  }
+  GoogleAccountCreateWithoutUserInput: { // input type
+    accessToken?: string | null; // String
+    accountId?: string | null; // String
+    createdAt?: any | null; // DateTime
+    email?: string | null; // String
+    expiresAt: any; // DateTime!
+    firstName?: string | null; // String
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutGoogleAccountInput'] | null; // GoogleContactCreateManyWithoutGoogleAccountInput
+    id?: string | null; // String
+    isAuthMethod?: boolean | null; // Boolean
+    lastName?: string | null; // String
+    metadata?: string | null; // String
     picture?: string | null; // String
     refreshToken?: string | null; // String
     updatedAt?: any | null; // DateTime
@@ -193,13 +274,18 @@ export interface NexusGenInputs {
     some?: NexusGenInputs['GoogleAccountWhereInput'] | null; // GoogleAccountWhereInput
   }
   GoogleAccountWhereInput: { // input type
+    accessToken?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
     accountId?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
     AND?: NexusGenInputs['GoogleAccountWhereInput'][] | null; // [GoogleAccountWhereInput!]
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     email?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    expiresAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     firstName?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    googleContacts?: NexusGenInputs['GoogleContactFilter'] | null; // GoogleContactFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    isAuthMethod?: NexusGenInputs['NullableBooleanFilter'] | null; // NullableBooleanFilter
     lastName?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    metadata?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
     NOT?: NexusGenInputs['GoogleAccountWhereInput'][] | null; // [GoogleAccountWhereInput!]
     OR?: NexusGenInputs['GoogleAccountWhereInput'][] | null; // [GoogleAccountWhereInput!]
     picture?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
@@ -209,6 +295,98 @@ export interface NexusGenInputs {
   }
   GoogleAccountWhereUniqueInput: { // input type
     accountId?: string | null; // String
+    id?: string | null; // String
+  }
+  GoogleContactCreateManyWithoutGoogleAccountInput: { // input type
+    connect?: NexusGenInputs['GoogleContactWhereUniqueInput'][] | null; // [GoogleContactWhereUniqueInput!]
+    create?: NexusGenInputs['GoogleContactCreateWithoutGoogleAccountInput'][] | null; // [GoogleContactCreateWithoutGoogleAccountInput!]
+  }
+  GoogleContactCreateManyWithoutUserInput: { // input type
+    connect?: NexusGenInputs['GoogleContactWhereUniqueInput'][] | null; // [GoogleContactWhereUniqueInput!]
+    create?: NexusGenInputs['GoogleContactCreateWithoutUserInput'][] | null; // [GoogleContactCreateWithoutUserInput!]
+  }
+  GoogleContactCreateOneWithoutItemInput: { // input type
+    connect?: NexusGenInputs['GoogleContactWhereUniqueInput'] | null; // GoogleContactWhereUniqueInput
+    create?: NexusGenInputs['GoogleContactCreateWithoutItemInput'] | null; // GoogleContactCreateWithoutItemInput
+  }
+  GoogleContactCreateWithoutGoogleAccountInput: { // input type
+    companyName?: string | null; // String
+    companyTitle?: string | null; // String
+    createdAt?: any | null; // DateTime
+    email?: string | null; // String
+    id?: string | null; // String
+    item: NexusGenInputs['ItemCreateOneWithoutGoogleContactInput']; // ItemCreateOneWithoutGoogleContactInput!
+    name?: string | null; // String
+    otherEmails?: NexusGenInputs['GoogleContactCreateotherEmailsInput'] | null; // GoogleContactCreateotherEmailsInput
+    otherPhoneNumbers?: NexusGenInputs['GoogleContactCreateotherPhoneNumbersInput'] | null; // GoogleContactCreateotherPhoneNumbersInput
+    phoneNumber?: string | null; // String
+    photoUrl?: string | null; // String
+    resourceName: string; // String!
+    updatedAt?: any | null; // DateTime
+    user: NexusGenInputs['UserCreateOneWithoutGoogleContactsInput']; // UserCreateOneWithoutGoogleContactsInput!
+  }
+  GoogleContactCreateWithoutItemInput: { // input type
+    companyName?: string | null; // String
+    companyTitle?: string | null; // String
+    createdAt?: any | null; // DateTime
+    email?: string | null; // String
+    googleAccount: NexusGenInputs['GoogleAccountCreateOneWithoutGoogleContactsInput']; // GoogleAccountCreateOneWithoutGoogleContactsInput!
+    id?: string | null; // String
+    name?: string | null; // String
+    otherEmails?: NexusGenInputs['GoogleContactCreateotherEmailsInput'] | null; // GoogleContactCreateotherEmailsInput
+    otherPhoneNumbers?: NexusGenInputs['GoogleContactCreateotherPhoneNumbersInput'] | null; // GoogleContactCreateotherPhoneNumbersInput
+    phoneNumber?: string | null; // String
+    photoUrl?: string | null; // String
+    resourceName: string; // String!
+    updatedAt?: any | null; // DateTime
+    user: NexusGenInputs['UserCreateOneWithoutGoogleContactsInput']; // UserCreateOneWithoutGoogleContactsInput!
+  }
+  GoogleContactCreateWithoutUserInput: { // input type
+    companyName?: string | null; // String
+    companyTitle?: string | null; // String
+    createdAt?: any | null; // DateTime
+    email?: string | null; // String
+    googleAccount: NexusGenInputs['GoogleAccountCreateOneWithoutGoogleContactsInput']; // GoogleAccountCreateOneWithoutGoogleContactsInput!
+    id?: string | null; // String
+    item: NexusGenInputs['ItemCreateOneWithoutGoogleContactInput']; // ItemCreateOneWithoutGoogleContactInput!
+    name?: string | null; // String
+    otherEmails?: NexusGenInputs['GoogleContactCreateotherEmailsInput'] | null; // GoogleContactCreateotherEmailsInput
+    otherPhoneNumbers?: NexusGenInputs['GoogleContactCreateotherPhoneNumbersInput'] | null; // GoogleContactCreateotherPhoneNumbersInput
+    phoneNumber?: string | null; // String
+    photoUrl?: string | null; // String
+    resourceName: string; // String!
+    updatedAt?: any | null; // DateTime
+  }
+  GoogleContactCreateotherEmailsInput: { // input type
+    set?: string[] | null; // [String!]
+  }
+  GoogleContactCreateotherPhoneNumbersInput: { // input type
+    set?: string[] | null; // [String!]
+  }
+  GoogleContactFilter: { // input type
+    every?: NexusGenInputs['GoogleContactWhereInput'] | null; // GoogleContactWhereInput
+    none?: NexusGenInputs['GoogleContactWhereInput'] | null; // GoogleContactWhereInput
+    some?: NexusGenInputs['GoogleContactWhereInput'] | null; // GoogleContactWhereInput
+  }
+  GoogleContactWhereInput: { // input type
+    AND?: NexusGenInputs['GoogleContactWhereInput'][] | null; // [GoogleContactWhereInput!]
+    companyName?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    companyTitle?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    email?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    googleAccount?: NexusGenInputs['GoogleAccountWhereInput'] | null; // GoogleAccountWhereInput
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    item?: NexusGenInputs['ItemWhereInput'] | null; // ItemWhereInput
+    name?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    NOT?: NexusGenInputs['GoogleContactWhereInput'][] | null; // [GoogleContactWhereInput!]
+    OR?: NexusGenInputs['GoogleContactWhereInput'][] | null; // [GoogleContactWhereInput!]
+    phoneNumber?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    photoUrl?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    resourceName?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+  }
+  GoogleContactWhereUniqueInput: { // input type
     id?: string | null; // String
   }
   IntFilter: { // input type
@@ -250,9 +428,17 @@ export interface NexusGenInputs {
   InviteCodeWhereUniqueInput: { // input type
     id?: string | null; // String
   }
+  ItemCreateManyWithoutCollectionInput: { // input type
+    connect?: NexusGenInputs['ItemWhereUniqueInput'][] | null; // [ItemWhereUniqueInput!]
+    create?: NexusGenInputs['ItemCreateWithoutCollectionInput'][] | null; // [ItemCreateWithoutCollectionInput!]
+  }
   ItemCreateManyWithoutLabelsInput: { // input type
     connect?: NexusGenInputs['ItemWhereUniqueInput'][] | null; // [ItemWhereUniqueInput!]
     create?: NexusGenInputs['ItemCreateWithoutLabelsInput'][] | null; // [ItemCreateWithoutLabelsInput!]
+  }
+  ItemCreateManyWithoutPersonInput: { // input type
+    connect?: NexusGenInputs['ItemWhereUniqueInput'][] | null; // [ItemWhereUniqueInput!]
+    create?: NexusGenInputs['ItemCreateWithoutPersonInput'][] | null; // [ItemCreateWithoutPersonInput!]
   }
   ItemCreateManyWithoutUserInput: { // input type
     connect?: NexusGenInputs['ItemWhereUniqueInput'][] | null; // [ItemWhereUniqueInput!]
@@ -262,6 +448,10 @@ export interface NexusGenInputs {
     connect?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
     create?: NexusGenInputs['ItemCreateWithoutFileInput'] | null; // ItemCreateWithoutFileInput
   }
+  ItemCreateOneWithoutGoogleContactInput: { // input type
+    connect?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
+    create?: NexusGenInputs['ItemCreateWithoutGoogleContactInput'] | null; // ItemCreateWithoutGoogleContactInput
+  }
   ItemCreateOneWithoutLinkInput: { // input type
     connect?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
     create?: NexusGenInputs['ItemCreateWithoutLinkInput'] | null; // ItemCreateWithoutLinkInput
@@ -270,62 +460,138 @@ export interface NexusGenInputs {
     connect?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
     create?: NexusGenInputs['ItemCreateWithoutNoteInput'] | null; // ItemCreateWithoutNoteInput
   }
-  ItemCreateWithoutFileInput: { // input type
+  ItemCreateWithoutCollectionInput: { // input type
     createdAt?: any | null; // DateTime
+    date?: any | null; // DateTime
+    deletedAt?: any | null; // DateTime
+    file?: NexusGenInputs['FileCreateOneWithoutItemInput'] | null; // FileCreateOneWithoutItemInput
+    googleContact?: NexusGenInputs['GoogleContactCreateOneWithoutItemInput'] | null; // GoogleContactCreateOneWithoutItemInput
     id?: string | null; // String
     isFavorited?: boolean | null; // Boolean
     labels?: NexusGenInputs['LabelCreateManyWithoutItemsInput'] | null; // LabelCreateManyWithoutItemsInput
     link?: NexusGenInputs['LinkCreateOneWithoutItemInput'] | null; // LinkCreateOneWithoutItemInput
     note?: NexusGenInputs['NoteCreateOneWithoutItemInput'] | null; // NoteCreateOneWithoutItemInput
+    person?: NexusGenInputs['PersonCreateOneWithoutItemsInput'] | null; // PersonCreateOneWithoutItemsInput
+    status?: string | null; // String
+    type?: string | null; // String
+    updatedAt?: any | null; // DateTime
+    user?: NexusGenInputs['UserCreateOneWithoutItemsInput'] | null; // UserCreateOneWithoutItemsInput
+  }
+  ItemCreateWithoutFileInput: { // input type
+    collection?: NexusGenInputs['CollectionCreateOneWithoutItemsInput'] | null; // CollectionCreateOneWithoutItemsInput
+    createdAt?: any | null; // DateTime
+    date?: any | null; // DateTime
+    deletedAt?: any | null; // DateTime
+    googleContact?: NexusGenInputs['GoogleContactCreateOneWithoutItemInput'] | null; // GoogleContactCreateOneWithoutItemInput
+    id?: string | null; // String
+    isFavorited?: boolean | null; // Boolean
+    labels?: NexusGenInputs['LabelCreateManyWithoutItemsInput'] | null; // LabelCreateManyWithoutItemsInput
+    link?: NexusGenInputs['LinkCreateOneWithoutItemInput'] | null; // LinkCreateOneWithoutItemInput
+    note?: NexusGenInputs['NoteCreateOneWithoutItemInput'] | null; // NoteCreateOneWithoutItemInput
+    person?: NexusGenInputs['PersonCreateOneWithoutItemsInput'] | null; // PersonCreateOneWithoutItemsInput
+    status?: string | null; // String
+    type?: string | null; // String
+    updatedAt?: any | null; // DateTime
+    user?: NexusGenInputs['UserCreateOneWithoutItemsInput'] | null; // UserCreateOneWithoutItemsInput
+  }
+  ItemCreateWithoutGoogleContactInput: { // input type
+    collection?: NexusGenInputs['CollectionCreateOneWithoutItemsInput'] | null; // CollectionCreateOneWithoutItemsInput
+    createdAt?: any | null; // DateTime
+    date?: any | null; // DateTime
+    deletedAt?: any | null; // DateTime
+    file?: NexusGenInputs['FileCreateOneWithoutItemInput'] | null; // FileCreateOneWithoutItemInput
+    id?: string | null; // String
+    isFavorited?: boolean | null; // Boolean
+    labels?: NexusGenInputs['LabelCreateManyWithoutItemsInput'] | null; // LabelCreateManyWithoutItemsInput
+    link?: NexusGenInputs['LinkCreateOneWithoutItemInput'] | null; // LinkCreateOneWithoutItemInput
+    note?: NexusGenInputs['NoteCreateOneWithoutItemInput'] | null; // NoteCreateOneWithoutItemInput
+    person?: NexusGenInputs['PersonCreateOneWithoutItemsInput'] | null; // PersonCreateOneWithoutItemsInput
     status?: string | null; // String
     type?: string | null; // String
     updatedAt?: any | null; // DateTime
     user?: NexusGenInputs['UserCreateOneWithoutItemsInput'] | null; // UserCreateOneWithoutItemsInput
   }
   ItemCreateWithoutLabelsInput: { // input type
+    collection?: NexusGenInputs['CollectionCreateOneWithoutItemsInput'] | null; // CollectionCreateOneWithoutItemsInput
     createdAt?: any | null; // DateTime
+    date?: any | null; // DateTime
+    deletedAt?: any | null; // DateTime
     file?: NexusGenInputs['FileCreateOneWithoutItemInput'] | null; // FileCreateOneWithoutItemInput
+    googleContact?: NexusGenInputs['GoogleContactCreateOneWithoutItemInput'] | null; // GoogleContactCreateOneWithoutItemInput
     id?: string | null; // String
     isFavorited?: boolean | null; // Boolean
     link?: NexusGenInputs['LinkCreateOneWithoutItemInput'] | null; // LinkCreateOneWithoutItemInput
     note?: NexusGenInputs['NoteCreateOneWithoutItemInput'] | null; // NoteCreateOneWithoutItemInput
+    person?: NexusGenInputs['PersonCreateOneWithoutItemsInput'] | null; // PersonCreateOneWithoutItemsInput
     status?: string | null; // String
     type?: string | null; // String
     updatedAt?: any | null; // DateTime
     user?: NexusGenInputs['UserCreateOneWithoutItemsInput'] | null; // UserCreateOneWithoutItemsInput
   }
   ItemCreateWithoutLinkInput: { // input type
+    collection?: NexusGenInputs['CollectionCreateOneWithoutItemsInput'] | null; // CollectionCreateOneWithoutItemsInput
     createdAt?: any | null; // DateTime
+    date?: any | null; // DateTime
+    deletedAt?: any | null; // DateTime
     file?: NexusGenInputs['FileCreateOneWithoutItemInput'] | null; // FileCreateOneWithoutItemInput
+    googleContact?: NexusGenInputs['GoogleContactCreateOneWithoutItemInput'] | null; // GoogleContactCreateOneWithoutItemInput
     id?: string | null; // String
     isFavorited?: boolean | null; // Boolean
     labels?: NexusGenInputs['LabelCreateManyWithoutItemsInput'] | null; // LabelCreateManyWithoutItemsInput
     note?: NexusGenInputs['NoteCreateOneWithoutItemInput'] | null; // NoteCreateOneWithoutItemInput
+    person?: NexusGenInputs['PersonCreateOneWithoutItemsInput'] | null; // PersonCreateOneWithoutItemsInput
     status?: string | null; // String
     type?: string | null; // String
     updatedAt?: any | null; // DateTime
     user?: NexusGenInputs['UserCreateOneWithoutItemsInput'] | null; // UserCreateOneWithoutItemsInput
   }
   ItemCreateWithoutNoteInput: { // input type
+    collection?: NexusGenInputs['CollectionCreateOneWithoutItemsInput'] | null; // CollectionCreateOneWithoutItemsInput
     createdAt?: any | null; // DateTime
+    date?: any | null; // DateTime
+    deletedAt?: any | null; // DateTime
     file?: NexusGenInputs['FileCreateOneWithoutItemInput'] | null; // FileCreateOneWithoutItemInput
+    googleContact?: NexusGenInputs['GoogleContactCreateOneWithoutItemInput'] | null; // GoogleContactCreateOneWithoutItemInput
     id?: string | null; // String
     isFavorited?: boolean | null; // Boolean
     labels?: NexusGenInputs['LabelCreateManyWithoutItemsInput'] | null; // LabelCreateManyWithoutItemsInput
     link?: NexusGenInputs['LinkCreateOneWithoutItemInput'] | null; // LinkCreateOneWithoutItemInput
+    person?: NexusGenInputs['PersonCreateOneWithoutItemsInput'] | null; // PersonCreateOneWithoutItemsInput
+    status?: string | null; // String
+    type?: string | null; // String
+    updatedAt?: any | null; // DateTime
+    user?: NexusGenInputs['UserCreateOneWithoutItemsInput'] | null; // UserCreateOneWithoutItemsInput
+  }
+  ItemCreateWithoutPersonInput: { // input type
+    collection?: NexusGenInputs['CollectionCreateOneWithoutItemsInput'] | null; // CollectionCreateOneWithoutItemsInput
+    createdAt?: any | null; // DateTime
+    date?: any | null; // DateTime
+    deletedAt?: any | null; // DateTime
+    file?: NexusGenInputs['FileCreateOneWithoutItemInput'] | null; // FileCreateOneWithoutItemInput
+    googleContact?: NexusGenInputs['GoogleContactCreateOneWithoutItemInput'] | null; // GoogleContactCreateOneWithoutItemInput
+    id?: string | null; // String
+    isFavorited?: boolean | null; // Boolean
+    labels?: NexusGenInputs['LabelCreateManyWithoutItemsInput'] | null; // LabelCreateManyWithoutItemsInput
+    link?: NexusGenInputs['LinkCreateOneWithoutItemInput'] | null; // LinkCreateOneWithoutItemInput
+    note?: NexusGenInputs['NoteCreateOneWithoutItemInput'] | null; // NoteCreateOneWithoutItemInput
     status?: string | null; // String
     type?: string | null; // String
     updatedAt?: any | null; // DateTime
     user?: NexusGenInputs['UserCreateOneWithoutItemsInput'] | null; // UserCreateOneWithoutItemsInput
   }
   ItemCreateWithoutUserInput: { // input type
+    collection?: NexusGenInputs['CollectionCreateOneWithoutItemsInput'] | null; // CollectionCreateOneWithoutItemsInput
     createdAt?: any | null; // DateTime
+    date?: any | null; // DateTime
+    deletedAt?: any | null; // DateTime
     file?: NexusGenInputs['FileCreateOneWithoutItemInput'] | null; // FileCreateOneWithoutItemInput
+    googleContact?: NexusGenInputs['GoogleContactCreateOneWithoutItemInput'] | null; // GoogleContactCreateOneWithoutItemInput
     id?: string | null; // String
     isFavorited?: boolean | null; // Boolean
     labels?: NexusGenInputs['LabelCreateManyWithoutItemsInput'] | null; // LabelCreateManyWithoutItemsInput
     link?: NexusGenInputs['LinkCreateOneWithoutItemInput'] | null; // LinkCreateOneWithoutItemInput
     note?: NexusGenInputs['NoteCreateOneWithoutItemInput'] | null; // NoteCreateOneWithoutItemInput
+    person?: NexusGenInputs['PersonCreateOneWithoutItemsInput'] | null; // PersonCreateOneWithoutItemsInput
     status?: string | null; // String
     type?: string | null; // String
     updatedAt?: any | null; // DateTime
@@ -337,6 +603,8 @@ export interface NexusGenInputs {
   }
   ItemOrderByInput: { // input type
     createdAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    date?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    deletedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isFavorited?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     status?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
@@ -345,8 +613,12 @@ export interface NexusGenInputs {
   }
   ItemWhereInput: { // input type
     AND?: NexusGenInputs['ItemWhereInput'][] | null; // [ItemWhereInput!]
+    collection?: NexusGenInputs['CollectionWhereInput'] | null; // CollectionWhereInput
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    date?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    deletedAt?: NexusGenInputs['NullableDateTimeFilter'] | null; // NullableDateTimeFilter
     file?: NexusGenInputs['FileWhereInput'] | null; // FileWhereInput
+    googleContact?: NexusGenInputs['GoogleContactWhereInput'] | null; // GoogleContactWhereInput
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     isFavorited?: NexusGenInputs['BooleanFilter'] | null; // BooleanFilter
     labels?: NexusGenInputs['LabelFilter'] | null; // LabelFilter
@@ -354,6 +626,7 @@ export interface NexusGenInputs {
     NOT?: NexusGenInputs['ItemWhereInput'][] | null; // [ItemWhereInput!]
     note?: NexusGenInputs['NoteWhereInput'] | null; // NoteWhereInput
     OR?: NexusGenInputs['ItemWhereInput'][] | null; // [ItemWhereInput!]
+    person?: NexusGenInputs['PersonWhereInput'] | null; // PersonWhereInput
     status?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
     type?: NexusGenInputs['StringFilter'] | null; // StringFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
@@ -478,6 +751,7 @@ export interface NexusGenInputs {
     id?: string | null; // String
     raw?: string | null; // String
     text?: string | null; // String
+    title?: string | null; // String
     updatedAt?: any | null; // DateTime
     user: NexusGenInputs['UserCreateOneWithoutNotesInput']; // UserCreateOneWithoutNotesInput!
   }
@@ -487,6 +761,7 @@ export interface NexusGenInputs {
     item?: NexusGenInputs['ItemCreateOneWithoutNoteInput'] | null; // ItemCreateOneWithoutNoteInput
     raw?: string | null; // String
     text?: string | null; // String
+    title?: string | null; // String
     updatedAt?: any | null; // DateTime
   }
   NoteFilter: { // input type
@@ -503,6 +778,7 @@ export interface NexusGenInputs {
     OR?: NexusGenInputs['NoteWhereInput'][] | null; // [NoteWhereInput!]
     raw?: NexusGenInputs['StringFilter'] | null; // StringFilter
     text?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    title?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
   }
@@ -512,6 +788,16 @@ export interface NexusGenInputs {
   NullableBooleanFilter: { // input type
     equals?: boolean | null; // Boolean
     not?: boolean | null; // Boolean
+  }
+  NullableDateTimeFilter: { // input type
+    equals?: any | null; // DateTime
+    gt?: any | null; // DateTime
+    gte?: any | null; // DateTime
+    in?: any[] | null; // [DateTime!]
+    lt?: any | null; // DateTime
+    lte?: any | null; // DateTime
+    not?: any | null; // DateTime
+    notIn?: any[] | null; // [DateTime!]
   }
   NullableIntFilter: { // input type
     equals?: number | null; // Int
@@ -535,6 +821,62 @@ export interface NexusGenInputs {
     not?: string | null; // String
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
+  }
+  PersonCreateManyWithoutUserInput: { // input type
+    connect?: NexusGenInputs['PersonWhereUniqueInput'][] | null; // [PersonWhereUniqueInput!]
+    create?: NexusGenInputs['PersonCreateWithoutUserInput'][] | null; // [PersonCreateWithoutUserInput!]
+  }
+  PersonCreateOneWithoutCollectionsInput: { // input type
+    connect?: NexusGenInputs['PersonWhereUniqueInput'] | null; // PersonWhereUniqueInput
+    create?: NexusGenInputs['PersonCreateWithoutCollectionsInput'] | null; // PersonCreateWithoutCollectionsInput
+  }
+  PersonCreateOneWithoutItemsInput: { // input type
+    connect?: NexusGenInputs['PersonWhereUniqueInput'] | null; // PersonWhereUniqueInput
+    create?: NexusGenInputs['PersonCreateWithoutItemsInput'] | null; // PersonCreateWithoutItemsInput
+  }
+  PersonCreateWithoutCollectionsInput: { // input type
+    createdAt?: any | null; // DateTime
+    id?: string | null; // String
+    items?: NexusGenInputs['ItemCreateManyWithoutPersonInput'] | null; // ItemCreateManyWithoutPersonInput
+    name?: string | null; // String
+    updatedAt?: any | null; // DateTime
+    user: NexusGenInputs['UserCreateOneWithoutPersonsInput']; // UserCreateOneWithoutPersonsInput!
+  }
+  PersonCreateWithoutItemsInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutPersonInput'] | null; // CollectionCreateManyWithoutPersonInput
+    createdAt?: any | null; // DateTime
+    id?: string | null; // String
+    name?: string | null; // String
+    updatedAt?: any | null; // DateTime
+    user: NexusGenInputs['UserCreateOneWithoutPersonsInput']; // UserCreateOneWithoutPersonsInput!
+  }
+  PersonCreateWithoutUserInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutPersonInput'] | null; // CollectionCreateManyWithoutPersonInput
+    createdAt?: any | null; // DateTime
+    id?: string | null; // String
+    items?: NexusGenInputs['ItemCreateManyWithoutPersonInput'] | null; // ItemCreateManyWithoutPersonInput
+    name?: string | null; // String
+    updatedAt?: any | null; // DateTime
+  }
+  PersonFilter: { // input type
+    every?: NexusGenInputs['PersonWhereInput'] | null; // PersonWhereInput
+    none?: NexusGenInputs['PersonWhereInput'] | null; // PersonWhereInput
+    some?: NexusGenInputs['PersonWhereInput'] | null; // PersonWhereInput
+  }
+  PersonWhereInput: { // input type
+    AND?: NexusGenInputs['PersonWhereInput'][] | null; // [PersonWhereInput!]
+    collections?: NexusGenInputs['CollectionFilter'] | null; // CollectionFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    items?: NexusGenInputs['ItemFilter'] | null; // ItemFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    NOT?: NexusGenInputs['PersonWhereInput'][] | null; // [PersonWhereInput!]
+    OR?: NexusGenInputs['PersonWhereInput'][] | null; // [PersonWhereInput!]
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+  }
+  PersonWhereUniqueInput: { // input type
+    id?: string | null; // String
   }
   SavedSearchCreateManyWithoutUserInput: { // input type
     connect?: NexusGenInputs['SavedSearchWhereUniqueInput'][] | null; // [SavedSearchWhereUniqueInput!]
@@ -700,11 +1042,13 @@ export interface NexusGenInputs {
     id?: string | null; // String
   }
   UserCreateInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
     createdAt?: any | null; // DateTime
     email?: string | null; // String
     files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
     firstName?: string | null; // String
     googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
     id?: string | null; // String
     inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
     isActive?: boolean | null; // Boolean
@@ -713,15 +1057,28 @@ export interface NexusGenInputs {
     lastName?: string | null; // String
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
     savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
     updatedAt?: any | null; // DateTime
     uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
   }
+  UserCreateOneWithoutCollectionsInput: { // input type
+    connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+    create?: NexusGenInputs['UserCreateWithoutCollectionsInput'] | null; // UserCreateWithoutCollectionsInput
+  }
   UserCreateOneWithoutFilesInput: { // input type
     connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
     create?: NexusGenInputs['UserCreateWithoutFilesInput'] | null; // UserCreateWithoutFilesInput
+  }
+  UserCreateOneWithoutGoogleAccountsInput: { // input type
+    connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+    create?: NexusGenInputs['UserCreateWithoutGoogleAccountsInput'] | null; // UserCreateWithoutGoogleAccountsInput
+  }
+  UserCreateOneWithoutGoogleContactsInput: { // input type
+    connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+    create?: NexusGenInputs['UserCreateWithoutGoogleContactsInput'] | null; // UserCreateWithoutGoogleContactsInput
   }
   UserCreateOneWithoutItemsInput: { // input type
     connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
@@ -739,6 +1096,10 @@ export interface NexusGenInputs {
     connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
     create?: NexusGenInputs['UserCreateWithoutNotesInput'] | null; // UserCreateWithoutNotesInput
   }
+  UserCreateOneWithoutPersonsInput: { // input type
+    connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+    create?: NexusGenInputs['UserCreateWithoutPersonsInput'] | null; // UserCreateWithoutPersonsInput
+  }
   UserCreateOneWithoutSavedSearchFiltersInput: { // input type
     connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
     create?: NexusGenInputs['UserCreateWithoutSavedSearchFiltersInput'] | null; // UserCreateWithoutSavedSearchFiltersInput
@@ -751,9 +1112,77 @@ export interface NexusGenInputs {
     connect?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
     create?: NexusGenInputs['UserCreateWithoutUploadGroupsInput'] | null; // UserCreateWithoutUploadGroupsInput
   }
-  UserCreateWithoutFilesInput: { // input type
+  UserCreateWithoutCollectionsInput: { // input type
     createdAt?: any | null; // DateTime
     email?: string | null; // String
+    files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
+    firstName?: string | null; // String
+    googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
+    id?: string | null; // String
+    inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
+    isActive?: boolean | null; // Boolean
+    items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
+    labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
+    lastName?: string | null; // String
+    links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
+    notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
+    role?: string | null; // String
+    savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
+    savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
+    updatedAt?: any | null; // DateTime
+    uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
+  }
+  UserCreateWithoutFilesInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
+    createdAt?: any | null; // DateTime
+    email?: string | null; // String
+    firstName?: string | null; // String
+    googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
+    id?: string | null; // String
+    inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
+    isActive?: boolean | null; // Boolean
+    items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
+    labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
+    lastName?: string | null; // String
+    links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
+    notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
+    role?: string | null; // String
+    savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
+    savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
+    updatedAt?: any | null; // DateTime
+    uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
+  }
+  UserCreateWithoutGoogleAccountsInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
+    createdAt?: any | null; // DateTime
+    email?: string | null; // String
+    files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
+    firstName?: string | null; // String
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
+    id?: string | null; // String
+    inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
+    isActive?: boolean | null; // Boolean
+    items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
+    labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
+    lastName?: string | null; // String
+    links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
+    notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
+    role?: string | null; // String
+    savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
+    savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
+    updatedAt?: any | null; // DateTime
+    uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
+  }
+  UserCreateWithoutGoogleContactsInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
+    createdAt?: any | null; // DateTime
+    email?: string | null; // String
+    files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
     firstName?: string | null; // String
     googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
     id?: string | null; // String
@@ -764,6 +1193,7 @@ export interface NexusGenInputs {
     lastName?: string | null; // String
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
     savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
@@ -771,11 +1201,13 @@ export interface NexusGenInputs {
     uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
   }
   UserCreateWithoutItemsInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
     createdAt?: any | null; // DateTime
     email?: string | null; // String
     files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
     firstName?: string | null; // String
     googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
     id?: string | null; // String
     inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
     isActive?: boolean | null; // Boolean
@@ -783,6 +1215,7 @@ export interface NexusGenInputs {
     lastName?: string | null; // String
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
     savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
@@ -790,11 +1223,13 @@ export interface NexusGenInputs {
     uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
   }
   UserCreateWithoutLabelsInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
     createdAt?: any | null; // DateTime
     email?: string | null; // String
     files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
     firstName?: string | null; // String
     googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
     id?: string | null; // String
     inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
     isActive?: boolean | null; // Boolean
@@ -802,6 +1237,7 @@ export interface NexusGenInputs {
     lastName?: string | null; // String
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
     savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
@@ -809,11 +1245,13 @@ export interface NexusGenInputs {
     uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
   }
   UserCreateWithoutLinksInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
     createdAt?: any | null; // DateTime
     email?: string | null; // String
     files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
     firstName?: string | null; // String
     googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
     id?: string | null; // String
     inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
     isActive?: boolean | null; // Boolean
@@ -821,6 +1259,7 @@ export interface NexusGenInputs {
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
     savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
@@ -828,11 +1267,13 @@ export interface NexusGenInputs {
     uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
   }
   UserCreateWithoutNotesInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
     createdAt?: any | null; // DateTime
     email?: string | null; // String
     files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
     firstName?: string | null; // String
     googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
     id?: string | null; // String
     inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
     isActive?: boolean | null; // Boolean
@@ -840,6 +1281,29 @@ export interface NexusGenInputs {
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
+    role?: string | null; // String
+    savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
+    savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
+    updatedAt?: any | null; // DateTime
+    uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
+  }
+  UserCreateWithoutPersonsInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
+    createdAt?: any | null; // DateTime
+    email?: string | null; // String
+    files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
+    firstName?: string | null; // String
+    googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
+    id?: string | null; // String
+    inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
+    isActive?: boolean | null; // Boolean
+    items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
+    labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
+    lastName?: string | null; // String
+    links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
+    notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
     savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
@@ -847,11 +1311,13 @@ export interface NexusGenInputs {
     uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
   }
   UserCreateWithoutSavedSearchFiltersInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
     createdAt?: any | null; // DateTime
     email?: string | null; // String
     files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
     firstName?: string | null; // String
     googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
     id?: string | null; // String
     inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
     isActive?: boolean | null; // Boolean
@@ -860,17 +1326,20 @@ export interface NexusGenInputs {
     lastName?: string | null; // String
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
     updatedAt?: any | null; // DateTime
     uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
   }
   UserCreateWithoutSavedSearchesInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
     createdAt?: any | null; // DateTime
     email?: string | null; // String
     files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
     firstName?: string | null; // String
     googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
     id?: string | null; // String
     inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
     isActive?: boolean | null; // Boolean
@@ -879,17 +1348,20 @@ export interface NexusGenInputs {
     lastName?: string | null; // String
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
     updatedAt?: any | null; // DateTime
     uploadGroups?: NexusGenInputs['UploadGroupCreateManyWithoutUserInput'] | null; // UploadGroupCreateManyWithoutUserInput
   }
   UserCreateWithoutUploadGroupsInput: { // input type
+    collections?: NexusGenInputs['CollectionCreateManyWithoutUserInput'] | null; // CollectionCreateManyWithoutUserInput
     createdAt?: any | null; // DateTime
     email?: string | null; // String
     files?: NexusGenInputs['FileCreateManyWithoutUserInput'] | null; // FileCreateManyWithoutUserInput
     firstName?: string | null; // String
     googleAccounts?: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'] | null; // GoogleAccountCreateManyWithoutUserInput
+    googleContacts?: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'] | null; // GoogleContactCreateManyWithoutUserInput
     id?: string | null; // String
     inviteCode?: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'] | null; // InviteCodeCreateOneWithoutUsersInput
     isActive?: boolean | null; // Boolean
@@ -898,6 +1370,7 @@ export interface NexusGenInputs {
     lastName?: string | null; // String
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
+    persons?: NexusGenInputs['PersonCreateManyWithoutUserInput'] | null; // PersonCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
     savedSearchFilters?: NexusGenInputs['SavedSearchFilterCreateManyWithoutUserInput'] | null; // SavedSearchFilterCreateManyWithoutUserInput
@@ -920,11 +1393,13 @@ export interface NexusGenInputs {
   }
   UserWhereInput: { // input type
     AND?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    collections?: NexusGenInputs['CollectionFilter'] | null; // CollectionFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
     files?: NexusGenInputs['FileFilter'] | null; // FileFilter
     firstName?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
     googleAccounts?: NexusGenInputs['GoogleAccountFilter'] | null; // GoogleAccountFilter
+    googleContacts?: NexusGenInputs['GoogleContactFilter'] | null; // GoogleContactFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     inviteCode?: NexusGenInputs['InviteCodeWhereInput'] | null; // InviteCodeWhereInput
     isActive?: NexusGenInputs['BooleanFilter'] | null; // BooleanFilter
@@ -935,6 +1410,7 @@ export interface NexusGenInputs {
     NOT?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     notes?: NexusGenInputs['NoteFilter'] | null; // NoteFilter
     OR?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    persons?: NexusGenInputs['PersonFilter'] | null; // PersonFilter
     role?: NexusGenInputs['StringFilter'] | null; // StringFilter
     savedSearches?: NexusGenInputs['SavedSearchFilter'] | null; // SavedSearchFilter
     savedSearchFilters?: NexusGenInputs['SavedSearchFilterFilter'] | null; // SavedSearchFilterFilter
@@ -949,7 +1425,7 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   ItemStatus: "DONE" | "IN_PROGRESS" | "NOT_STARTED"
-  ItemType: "file" | "link" | "note"
+  ItemType: "file" | "googleContact" | "link" | "note"
   OrderByArg: PrismaClient.OrderByArg
 }
 
@@ -961,6 +1437,8 @@ export interface NexusGenRootTypes {
     value?: any | null; // FilterValue
     values?: any[] | null; // [FilterValue!]
   }
+  GoogleAccount: PrismaClient.GoogleAccount;
+  GoogleContact: PrismaClient.GoogleContact;
   InProgressUpload: { // root type
     signedUrls: string[]; // [String!]!
     uploadGroup?: NexusGenRootTypes['UploadGroup'] | null; // UploadGroup
@@ -1005,6 +1483,15 @@ export interface NexusGenRootTypes {
 
 export interface NexusGenAllTypes extends NexusGenRootTypes {
   BooleanFilter: NexusGenInputs['BooleanFilter'];
+  CollectionCreateManyWithoutPersonInput: NexusGenInputs['CollectionCreateManyWithoutPersonInput'];
+  CollectionCreateManyWithoutUserInput: NexusGenInputs['CollectionCreateManyWithoutUserInput'];
+  CollectionCreateOneWithoutItemsInput: NexusGenInputs['CollectionCreateOneWithoutItemsInput'];
+  CollectionCreateWithoutItemsInput: NexusGenInputs['CollectionCreateWithoutItemsInput'];
+  CollectionCreateWithoutPersonInput: NexusGenInputs['CollectionCreateWithoutPersonInput'];
+  CollectionCreateWithoutUserInput: NexusGenInputs['CollectionCreateWithoutUserInput'];
+  CollectionFilter: NexusGenInputs['CollectionFilter'];
+  CollectionWhereInput: NexusGenInputs['CollectionWhereInput'];
+  CollectionWhereUniqueInput: NexusGenInputs['CollectionWhereUniqueInput'];
   DateTimeFilter: NexusGenInputs['DateTimeFilter'];
   FileCreateInput: NexusGenInputs['FileCreateInput'];
   FileCreateManyWithoutUploadGroupInput: NexusGenInputs['FileCreateManyWithoutUploadGroupInput'];
@@ -1019,25 +1506,44 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
   FileWhereUniqueInput: NexusGenInputs['FileWhereUniqueInput'];
   FilterInput: NexusGenInputs['FilterInput'];
   GoogleAccountCreateManyWithoutUserInput: NexusGenInputs['GoogleAccountCreateManyWithoutUserInput'];
+  GoogleAccountCreateOneWithoutGoogleContactsInput: NexusGenInputs['GoogleAccountCreateOneWithoutGoogleContactsInput'];
+  GoogleAccountCreateWithoutGoogleContactsInput: NexusGenInputs['GoogleAccountCreateWithoutGoogleContactsInput'];
   GoogleAccountCreateWithoutUserInput: NexusGenInputs['GoogleAccountCreateWithoutUserInput'];
   GoogleAccountFilter: NexusGenInputs['GoogleAccountFilter'];
   GoogleAccountWhereInput: NexusGenInputs['GoogleAccountWhereInput'];
   GoogleAccountWhereUniqueInput: NexusGenInputs['GoogleAccountWhereUniqueInput'];
+  GoogleContactCreateManyWithoutGoogleAccountInput: NexusGenInputs['GoogleContactCreateManyWithoutGoogleAccountInput'];
+  GoogleContactCreateManyWithoutUserInput: NexusGenInputs['GoogleContactCreateManyWithoutUserInput'];
+  GoogleContactCreateOneWithoutItemInput: NexusGenInputs['GoogleContactCreateOneWithoutItemInput'];
+  GoogleContactCreateWithoutGoogleAccountInput: NexusGenInputs['GoogleContactCreateWithoutGoogleAccountInput'];
+  GoogleContactCreateWithoutItemInput: NexusGenInputs['GoogleContactCreateWithoutItemInput'];
+  GoogleContactCreateWithoutUserInput: NexusGenInputs['GoogleContactCreateWithoutUserInput'];
+  GoogleContactCreateotherEmailsInput: NexusGenInputs['GoogleContactCreateotherEmailsInput'];
+  GoogleContactCreateotherPhoneNumbersInput: NexusGenInputs['GoogleContactCreateotherPhoneNumbersInput'];
+  GoogleContactFilter: NexusGenInputs['GoogleContactFilter'];
+  GoogleContactWhereInput: NexusGenInputs['GoogleContactWhereInput'];
+  GoogleContactWhereUniqueInput: NexusGenInputs['GoogleContactWhereUniqueInput'];
   IntFilter: NexusGenInputs['IntFilter'];
   InviteCodeCreateOneWithoutUsersInput: NexusGenInputs['InviteCodeCreateOneWithoutUsersInput'];
   InviteCodeCreateWithoutUsersInput: NexusGenInputs['InviteCodeCreateWithoutUsersInput'];
   InviteCodeOrderByInput: NexusGenInputs['InviteCodeOrderByInput'];
   InviteCodeWhereInput: NexusGenInputs['InviteCodeWhereInput'];
   InviteCodeWhereUniqueInput: NexusGenInputs['InviteCodeWhereUniqueInput'];
+  ItemCreateManyWithoutCollectionInput: NexusGenInputs['ItemCreateManyWithoutCollectionInput'];
   ItemCreateManyWithoutLabelsInput: NexusGenInputs['ItemCreateManyWithoutLabelsInput'];
+  ItemCreateManyWithoutPersonInput: NexusGenInputs['ItemCreateManyWithoutPersonInput'];
   ItemCreateManyWithoutUserInput: NexusGenInputs['ItemCreateManyWithoutUserInput'];
   ItemCreateOneWithoutFileInput: NexusGenInputs['ItemCreateOneWithoutFileInput'];
+  ItemCreateOneWithoutGoogleContactInput: NexusGenInputs['ItemCreateOneWithoutGoogleContactInput'];
   ItemCreateOneWithoutLinkInput: NexusGenInputs['ItemCreateOneWithoutLinkInput'];
   ItemCreateOneWithoutNoteInput: NexusGenInputs['ItemCreateOneWithoutNoteInput'];
+  ItemCreateWithoutCollectionInput: NexusGenInputs['ItemCreateWithoutCollectionInput'];
   ItemCreateWithoutFileInput: NexusGenInputs['ItemCreateWithoutFileInput'];
+  ItemCreateWithoutGoogleContactInput: NexusGenInputs['ItemCreateWithoutGoogleContactInput'];
   ItemCreateWithoutLabelsInput: NexusGenInputs['ItemCreateWithoutLabelsInput'];
   ItemCreateWithoutLinkInput: NexusGenInputs['ItemCreateWithoutLinkInput'];
   ItemCreateWithoutNoteInput: NexusGenInputs['ItemCreateWithoutNoteInput'];
+  ItemCreateWithoutPersonInput: NexusGenInputs['ItemCreateWithoutPersonInput'];
   ItemCreateWithoutUserInput: NexusGenInputs['ItemCreateWithoutUserInput'];
   ItemFilter: NexusGenInputs['ItemFilter'];
   ItemOrderByInput: NexusGenInputs['ItemOrderByInput'];
@@ -1066,8 +1572,18 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
   NoteWhereInput: NexusGenInputs['NoteWhereInput'];
   NoteWhereUniqueInput: NexusGenInputs['NoteWhereUniqueInput'];
   NullableBooleanFilter: NexusGenInputs['NullableBooleanFilter'];
+  NullableDateTimeFilter: NexusGenInputs['NullableDateTimeFilter'];
   NullableIntFilter: NexusGenInputs['NullableIntFilter'];
   NullableStringFilter: NexusGenInputs['NullableStringFilter'];
+  PersonCreateManyWithoutUserInput: NexusGenInputs['PersonCreateManyWithoutUserInput'];
+  PersonCreateOneWithoutCollectionsInput: NexusGenInputs['PersonCreateOneWithoutCollectionsInput'];
+  PersonCreateOneWithoutItemsInput: NexusGenInputs['PersonCreateOneWithoutItemsInput'];
+  PersonCreateWithoutCollectionsInput: NexusGenInputs['PersonCreateWithoutCollectionsInput'];
+  PersonCreateWithoutItemsInput: NexusGenInputs['PersonCreateWithoutItemsInput'];
+  PersonCreateWithoutUserInput: NexusGenInputs['PersonCreateWithoutUserInput'];
+  PersonFilter: NexusGenInputs['PersonFilter'];
+  PersonWhereInput: NexusGenInputs['PersonWhereInput'];
+  PersonWhereUniqueInput: NexusGenInputs['PersonWhereUniqueInput'];
   SavedSearchCreateManyWithoutUserInput: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'];
   SavedSearchCreateOneWithoutFiltersInput: NexusGenInputs['SavedSearchCreateOneWithoutFiltersInput'];
   SavedSearchCreateWithoutFiltersInput: NexusGenInputs['SavedSearchCreateWithoutFiltersInput'];
@@ -1093,19 +1609,27 @@ export interface NexusGenAllTypes extends NexusGenRootTypes {
   UploadGroupWhereInput: NexusGenInputs['UploadGroupWhereInput'];
   UploadGroupWhereUniqueInput: NexusGenInputs['UploadGroupWhereUniqueInput'];
   UserCreateInput: NexusGenInputs['UserCreateInput'];
+  UserCreateOneWithoutCollectionsInput: NexusGenInputs['UserCreateOneWithoutCollectionsInput'];
   UserCreateOneWithoutFilesInput: NexusGenInputs['UserCreateOneWithoutFilesInput'];
+  UserCreateOneWithoutGoogleAccountsInput: NexusGenInputs['UserCreateOneWithoutGoogleAccountsInput'];
+  UserCreateOneWithoutGoogleContactsInput: NexusGenInputs['UserCreateOneWithoutGoogleContactsInput'];
   UserCreateOneWithoutItemsInput: NexusGenInputs['UserCreateOneWithoutItemsInput'];
   UserCreateOneWithoutLabelsInput: NexusGenInputs['UserCreateOneWithoutLabelsInput'];
   UserCreateOneWithoutLinksInput: NexusGenInputs['UserCreateOneWithoutLinksInput'];
   UserCreateOneWithoutNotesInput: NexusGenInputs['UserCreateOneWithoutNotesInput'];
+  UserCreateOneWithoutPersonsInput: NexusGenInputs['UserCreateOneWithoutPersonsInput'];
   UserCreateOneWithoutSavedSearchFiltersInput: NexusGenInputs['UserCreateOneWithoutSavedSearchFiltersInput'];
   UserCreateOneWithoutSavedSearchesInput: NexusGenInputs['UserCreateOneWithoutSavedSearchesInput'];
   UserCreateOneWithoutUploadGroupsInput: NexusGenInputs['UserCreateOneWithoutUploadGroupsInput'];
+  UserCreateWithoutCollectionsInput: NexusGenInputs['UserCreateWithoutCollectionsInput'];
   UserCreateWithoutFilesInput: NexusGenInputs['UserCreateWithoutFilesInput'];
+  UserCreateWithoutGoogleAccountsInput: NexusGenInputs['UserCreateWithoutGoogleAccountsInput'];
+  UserCreateWithoutGoogleContactsInput: NexusGenInputs['UserCreateWithoutGoogleContactsInput'];
   UserCreateWithoutItemsInput: NexusGenInputs['UserCreateWithoutItemsInput'];
   UserCreateWithoutLabelsInput: NexusGenInputs['UserCreateWithoutLabelsInput'];
   UserCreateWithoutLinksInput: NexusGenInputs['UserCreateWithoutLinksInput'];
   UserCreateWithoutNotesInput: NexusGenInputs['UserCreateWithoutNotesInput'];
+  UserCreateWithoutPersonsInput: NexusGenInputs['UserCreateWithoutPersonsInput'];
   UserCreateWithoutSavedSearchFiltersInput: NexusGenInputs['UserCreateWithoutSavedSearchFiltersInput'];
   UserCreateWithoutSavedSearchesInput: NexusGenInputs['UserCreateWithoutSavedSearchesInput'];
   UserCreateWithoutUploadGroupsInput: NexusGenInputs['UserCreateWithoutUploadGroupsInput'];
@@ -1143,6 +1667,28 @@ export interface NexusGenFieldTypes {
     value: any | null; // FilterValue
     values: any[] | null; // [FilterValue!]
   }
+  GoogleAccount: { // field return type
+    createdAt: any; // DateTime!
+    email: string | null; // String
+    id: string; // String!
+    updatedAt: any; // DateTime!
+  }
+  GoogleContact: { // field return type
+    companyName: string | null; // String
+    companyTitle: string | null; // String
+    createdAt: any; // DateTime!
+    email: string | null; // String
+    googleAccount: NexusGenRootTypes['GoogleAccount']; // GoogleAccount!
+    id: string; // String!
+    item: NexusGenRootTypes['Item']; // Item!
+    name: string | null; // String
+    otherEmails: string[]; // [String!]!
+    otherPhoneNumbers: string[]; // [String!]!
+    phoneNumber: string | null; // String
+    photoUrl: string | null; // String
+    resourceName: string; // String!
+    updatedAt: any; // DateTime!
+  }
   InProgressUpload: { // field return type
     signedUrls: string[]; // [String!]!
     uploadGroup: NexusGenRootTypes['UploadGroup'] | null; // UploadGroup
@@ -1161,7 +1707,9 @@ export interface NexusGenFieldTypes {
   }
   Item: { // field return type
     createdAt: any; // DateTime!
+    date: any; // DateTime!
     file: NexusGenRootTypes['File'] | null; // File
+    googleContact: NexusGenRootTypes['GoogleContact'] | null; // GoogleContact
     id: string; // String!
     isFavorited: boolean; // Boolean!
     labels: NexusGenRootTypes['Label'][]; // [Label!]!
@@ -1220,9 +1768,12 @@ export interface NexusGenFieldTypes {
     disconnectLabelFromItem: NexusGenRootTypes['Item']; // Item!
     enterInviteCode: NexusGenRootTypes['User']; // User!
     generateSignedUrls: NexusGenRootTypes['InProgressUpload']; // InProgressUpload!
-    googleSignIn: NexusGenRootTypes['JWT']; // JWT!
+    googleAuth: NexusGenRootTypes['JWT']; // JWT!
     processFiles: NexusGenRootTypes['File'][]; // [File!]!
     refreshLinkMeta: NexusGenRootTypes['Link']; // Link!
+    syncGoogleContacts: number; // Int!
+    syncGoogleDrive: string; // String!
+    taskFixItemDates: string; // String!
     updateFavoriteManyItems: NexusGenRootTypes['Item'][]; // [Item!]!
     updateFile: NexusGenRootTypes['File']; // File!
     updateLink: NexusGenRootTypes['Link']; // Link!
@@ -1280,12 +1831,14 @@ export interface NexusGenFieldTypes {
     files: NexusGenRootTypes['File'][]; // [File!]!
     firstName: string | null; // String
     fullName: string; // String!
+    googleAccounts: NexusGenRootTypes['GoogleAccount'][]; // [GoogleAccount!]!
     id: string; // String!
     inviteCode: NexusGenRootTypes['InviteCode'] | null; // InviteCode
     isActive: boolean; // Boolean!
     items: NexusGenRootTypes['Item'][]; // [Item!]!
     labels: NexusGenRootTypes['Label'][]; // [Label!]!
     lastName: string | null; // String
+    role: string; // String!
   }
 }
 
@@ -1372,8 +1925,9 @@ export interface NexusGenArgTypes {
     generateSignedUrls: { // args
       signedURLArgs?: NexusGenInputs['SignedURLArgs'][] | null; // [SignedURLArgs!]
     }
-    googleSignIn: { // args
+    googleAuth: { // args
       code: string; // String!
+      isAuthMethod?: boolean | null; // Boolean
     }
     processFiles: { // args
       uploadGroupId?: string | null; // String
@@ -1381,6 +1935,12 @@ export interface NexusGenArgTypes {
     refreshLinkMeta: { // args
       href: string; // String!
       linkId: string; // String!
+    }
+    syncGoogleContacts: { // args
+      googleAccountId: string; // String!
+    }
+    syncGoogleDrive: { // args
+      googleAccountId: string; // String!
     }
     updateFavoriteManyItems: { // args
       isFavorited: boolean; // Boolean!
@@ -1456,6 +2016,13 @@ export interface NexusGenArgTypes {
     file: { // args
       where: NexusGenInputs['FileWhereUniqueInput']; // FileWhereUniqueInput!
     }
+    googleURL: { // args
+      googleAccountId?: string | null; // String
+      isAuthMethod?: boolean | null; // Boolean
+      origin?: string | null; // String
+      scopes?: string[] | null; // [String!]
+      syncContent?: string | null; // String
+    }
     item: { // args
       id: string; // String!
     }
@@ -1527,9 +2094,9 @@ export interface NexusGenAbstractResolveReturnTypes {
 
 export interface NexusGenInheritedFields {}
 
-export type NexusGenObjectNames = "File" | "Filter" | "InProgressUpload" | "InterestedUser" | "InviteCode" | "Item" | "ItemConnection" | "ItemEdge" | "JWT" | "Label" | "Link" | "Mutation" | "Note" | "PageInfo" | "Query" | "SavedSearch" | "UploadGroup" | "User";
+export type NexusGenObjectNames = "File" | "Filter" | "GoogleAccount" | "GoogleContact" | "InProgressUpload" | "InterestedUser" | "InviteCode" | "Item" | "ItemConnection" | "ItemEdge" | "JWT" | "Label" | "Link" | "Mutation" | "Note" | "PageInfo" | "Query" | "SavedSearch" | "UploadGroup" | "User";
 
-export type NexusGenInputNames = "BooleanFilter" | "DateTimeFilter" | "FileCreateInput" | "FileCreateManyWithoutUploadGroupInput" | "FileCreateManyWithoutUserInput" | "FileCreateOneWithoutItemInput" | "FileCreateWithoutItemInput" | "FileCreateWithoutUploadGroupInput" | "FileCreateWithoutUserInput" | "FileFilter" | "FileOrderByInput" | "FileWhereInput" | "FileWhereUniqueInput" | "FilterInput" | "GoogleAccountCreateManyWithoutUserInput" | "GoogleAccountCreateWithoutUserInput" | "GoogleAccountFilter" | "GoogleAccountWhereInput" | "GoogleAccountWhereUniqueInput" | "IntFilter" | "InviteCodeCreateOneWithoutUsersInput" | "InviteCodeCreateWithoutUsersInput" | "InviteCodeOrderByInput" | "InviteCodeWhereInput" | "InviteCodeWhereUniqueInput" | "ItemCreateManyWithoutLabelsInput" | "ItemCreateManyWithoutUserInput" | "ItemCreateOneWithoutFileInput" | "ItemCreateOneWithoutLinkInput" | "ItemCreateOneWithoutNoteInput" | "ItemCreateWithoutFileInput" | "ItemCreateWithoutLabelsInput" | "ItemCreateWithoutLinkInput" | "ItemCreateWithoutNoteInput" | "ItemCreateWithoutUserInput" | "ItemFilter" | "ItemOrderByInput" | "ItemWhereInput" | "ItemWhereUniqueInput" | "LabelCreateManyWithoutItemsInput" | "LabelCreateManyWithoutUserInput" | "LabelCreateWithoutItemsInput" | "LabelCreateWithoutUserInput" | "LabelFilter" | "LabelOrderByInput" | "LabelWhereInput" | "LabelWhereUniqueInput" | "LinkCreateManyWithoutUserInput" | "LinkCreateOneWithoutItemInput" | "LinkCreateWithoutItemInput" | "LinkCreateWithoutUserInput" | "LinkFilter" | "LinkWhereInput" | "LinkWhereUniqueInput" | "NoteCreateManyWithoutUserInput" | "NoteCreateOneWithoutItemInput" | "NoteCreateWithoutItemInput" | "NoteCreateWithoutUserInput" | "NoteFilter" | "NoteWhereInput" | "NoteWhereUniqueInput" | "NullableBooleanFilter" | "NullableIntFilter" | "NullableStringFilter" | "SavedSearchCreateManyWithoutUserInput" | "SavedSearchCreateOneWithoutFiltersInput" | "SavedSearchCreateWithoutFiltersInput" | "SavedSearchCreateWithoutUserInput" | "SavedSearchFilter" | "SavedSearchFilterCreateManyWithoutSavedSearchInput" | "SavedSearchFilterCreateManyWithoutUserInput" | "SavedSearchFilterCreateWithoutSavedSearchInput" | "SavedSearchFilterCreateWithoutUserInput" | "SavedSearchFilterFilter" | "SavedSearchFilterWhereInput" | "SavedSearchFilterWhereUniqueInput" | "SavedSearchWhereInput" | "SavedSearchWhereUniqueInput" | "SignedURLArgs" | "StringFilter" | "UploadGroupCreateManyWithoutUserInput" | "UploadGroupCreateOneWithoutFilesInput" | "UploadGroupCreateWithoutFilesInput" | "UploadGroupCreateWithoutUserInput" | "UploadGroupFilter" | "UploadGroupOrderByInput" | "UploadGroupWhereInput" | "UploadGroupWhereUniqueInput" | "UserCreateInput" | "UserCreateOneWithoutFilesInput" | "UserCreateOneWithoutItemsInput" | "UserCreateOneWithoutLabelsInput" | "UserCreateOneWithoutLinksInput" | "UserCreateOneWithoutNotesInput" | "UserCreateOneWithoutSavedSearchFiltersInput" | "UserCreateOneWithoutSavedSearchesInput" | "UserCreateOneWithoutUploadGroupsInput" | "UserCreateWithoutFilesInput" | "UserCreateWithoutItemsInput" | "UserCreateWithoutLabelsInput" | "UserCreateWithoutLinksInput" | "UserCreateWithoutNotesInput" | "UserCreateWithoutSavedSearchFiltersInput" | "UserCreateWithoutSavedSearchesInput" | "UserCreateWithoutUploadGroupsInput" | "UserFilter" | "UserOrderByInput" | "UserWhereInput" | "UserWhereUniqueInput";
+export type NexusGenInputNames = "BooleanFilter" | "CollectionCreateManyWithoutPersonInput" | "CollectionCreateManyWithoutUserInput" | "CollectionCreateOneWithoutItemsInput" | "CollectionCreateWithoutItemsInput" | "CollectionCreateWithoutPersonInput" | "CollectionCreateWithoutUserInput" | "CollectionFilter" | "CollectionWhereInput" | "CollectionWhereUniqueInput" | "DateTimeFilter" | "FileCreateInput" | "FileCreateManyWithoutUploadGroupInput" | "FileCreateManyWithoutUserInput" | "FileCreateOneWithoutItemInput" | "FileCreateWithoutItemInput" | "FileCreateWithoutUploadGroupInput" | "FileCreateWithoutUserInput" | "FileFilter" | "FileOrderByInput" | "FileWhereInput" | "FileWhereUniqueInput" | "FilterInput" | "GoogleAccountCreateManyWithoutUserInput" | "GoogleAccountCreateOneWithoutGoogleContactsInput" | "GoogleAccountCreateWithoutGoogleContactsInput" | "GoogleAccountCreateWithoutUserInput" | "GoogleAccountFilter" | "GoogleAccountWhereInput" | "GoogleAccountWhereUniqueInput" | "GoogleContactCreateManyWithoutGoogleAccountInput" | "GoogleContactCreateManyWithoutUserInput" | "GoogleContactCreateOneWithoutItemInput" | "GoogleContactCreateWithoutGoogleAccountInput" | "GoogleContactCreateWithoutItemInput" | "GoogleContactCreateWithoutUserInput" | "GoogleContactCreateotherEmailsInput" | "GoogleContactCreateotherPhoneNumbersInput" | "GoogleContactFilter" | "GoogleContactWhereInput" | "GoogleContactWhereUniqueInput" | "IntFilter" | "InviteCodeCreateOneWithoutUsersInput" | "InviteCodeCreateWithoutUsersInput" | "InviteCodeOrderByInput" | "InviteCodeWhereInput" | "InviteCodeWhereUniqueInput" | "ItemCreateManyWithoutCollectionInput" | "ItemCreateManyWithoutLabelsInput" | "ItemCreateManyWithoutPersonInput" | "ItemCreateManyWithoutUserInput" | "ItemCreateOneWithoutFileInput" | "ItemCreateOneWithoutGoogleContactInput" | "ItemCreateOneWithoutLinkInput" | "ItemCreateOneWithoutNoteInput" | "ItemCreateWithoutCollectionInput" | "ItemCreateWithoutFileInput" | "ItemCreateWithoutGoogleContactInput" | "ItemCreateWithoutLabelsInput" | "ItemCreateWithoutLinkInput" | "ItemCreateWithoutNoteInput" | "ItemCreateWithoutPersonInput" | "ItemCreateWithoutUserInput" | "ItemFilter" | "ItemOrderByInput" | "ItemWhereInput" | "ItemWhereUniqueInput" | "LabelCreateManyWithoutItemsInput" | "LabelCreateManyWithoutUserInput" | "LabelCreateWithoutItemsInput" | "LabelCreateWithoutUserInput" | "LabelFilter" | "LabelOrderByInput" | "LabelWhereInput" | "LabelWhereUniqueInput" | "LinkCreateManyWithoutUserInput" | "LinkCreateOneWithoutItemInput" | "LinkCreateWithoutItemInput" | "LinkCreateWithoutUserInput" | "LinkFilter" | "LinkWhereInput" | "LinkWhereUniqueInput" | "NoteCreateManyWithoutUserInput" | "NoteCreateOneWithoutItemInput" | "NoteCreateWithoutItemInput" | "NoteCreateWithoutUserInput" | "NoteFilter" | "NoteWhereInput" | "NoteWhereUniqueInput" | "NullableBooleanFilter" | "NullableDateTimeFilter" | "NullableIntFilter" | "NullableStringFilter" | "PersonCreateManyWithoutUserInput" | "PersonCreateOneWithoutCollectionsInput" | "PersonCreateOneWithoutItemsInput" | "PersonCreateWithoutCollectionsInput" | "PersonCreateWithoutItemsInput" | "PersonCreateWithoutUserInput" | "PersonFilter" | "PersonWhereInput" | "PersonWhereUniqueInput" | "SavedSearchCreateManyWithoutUserInput" | "SavedSearchCreateOneWithoutFiltersInput" | "SavedSearchCreateWithoutFiltersInput" | "SavedSearchCreateWithoutUserInput" | "SavedSearchFilter" | "SavedSearchFilterCreateManyWithoutSavedSearchInput" | "SavedSearchFilterCreateManyWithoutUserInput" | "SavedSearchFilterCreateWithoutSavedSearchInput" | "SavedSearchFilterCreateWithoutUserInput" | "SavedSearchFilterFilter" | "SavedSearchFilterWhereInput" | "SavedSearchFilterWhereUniqueInput" | "SavedSearchWhereInput" | "SavedSearchWhereUniqueInput" | "SignedURLArgs" | "StringFilter" | "UploadGroupCreateManyWithoutUserInput" | "UploadGroupCreateOneWithoutFilesInput" | "UploadGroupCreateWithoutFilesInput" | "UploadGroupCreateWithoutUserInput" | "UploadGroupFilter" | "UploadGroupOrderByInput" | "UploadGroupWhereInput" | "UploadGroupWhereUniqueInput" | "UserCreateInput" | "UserCreateOneWithoutCollectionsInput" | "UserCreateOneWithoutFilesInput" | "UserCreateOneWithoutGoogleAccountsInput" | "UserCreateOneWithoutGoogleContactsInput" | "UserCreateOneWithoutItemsInput" | "UserCreateOneWithoutLabelsInput" | "UserCreateOneWithoutLinksInput" | "UserCreateOneWithoutNotesInput" | "UserCreateOneWithoutPersonsInput" | "UserCreateOneWithoutSavedSearchFiltersInput" | "UserCreateOneWithoutSavedSearchesInput" | "UserCreateOneWithoutUploadGroupsInput" | "UserCreateWithoutCollectionsInput" | "UserCreateWithoutFilesInput" | "UserCreateWithoutGoogleAccountsInput" | "UserCreateWithoutGoogleContactsInput" | "UserCreateWithoutItemsInput" | "UserCreateWithoutLabelsInput" | "UserCreateWithoutLinksInput" | "UserCreateWithoutNotesInput" | "UserCreateWithoutPersonsInput" | "UserCreateWithoutSavedSearchFiltersInput" | "UserCreateWithoutSavedSearchesInput" | "UserCreateWithoutUploadGroupsInput" | "UserFilter" | "UserOrderByInput" | "UserWhereInput" | "UserWhereUniqueInput";
 
 export type NexusGenEnumNames = "ItemStatus" | "ItemType" | "OrderByArg";
 
@@ -1540,7 +2107,7 @@ export type NexusGenScalarNames = "Boolean" | "DateTime" | "FilterValue" | "Floa
 export type NexusGenUnionNames = never;
 
 export interface NexusGenTypes {
-  context: { prisma: PrismaClient.PrismaClient };
+  context: {};
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   argTypes: NexusGenArgTypes;

@@ -7,7 +7,7 @@ import {
   scalarType,
 } from 'nexus';
 
-export const ITEM_TYPES = ['link', 'file', 'note'];
+export const ITEM_TYPES = ['link', 'file', 'note', 'googleContact'];
 
 export enum ITEM_STATUS {
   NOT_STARTED = 'NOT_STARTED',

@@ -32,11 +32,10 @@ import { useMedia } from 'react-use';
 
 export const ItemHeader = ({
   children,
-  item,
+  createdAt,
   ...props
 }: {
   children: any;
-  item: ItemFull;
   [k: string]: any;
 }) => (
   <Click {...props}>
@@ -56,7 +55,7 @@ export const ItemHeader = ({
           {children}
         </Text>
 
-        <Text>{formatRelative(new Date(item.createdAt), new Date())}</Text>
+        <Text>{formatRelative(new Date(createdAt), new Date())}</Text>
       </Box>
     )}
   </Click>
@@ -76,7 +75,14 @@ export const GenericGridItem = ({
   const baseHoverState = useDisclosure();
   const menuHoverState = useDisclosure();
 
-  const { title, action } = getGenericItemData(item);
+  const {
+    title,
+    action,
+    image,
+    createdAt,
+    icon,
+    subTitle,
+  } = getGenericItemData(item);
 
   const {
     isItemSelected,
@@ -316,7 +322,7 @@ export const GenericGridItem = ({
                                 objectFit="cover"
                                 shrinkAndCenterThreshold={200}
                                 placeholderIcon="external-link"
-                                {...clickProps}
+                                clickProps={clickProps}
                               />
                             ) : (
                               <Box
@@ -334,6 +340,40 @@ export const GenericGridItem = ({
                             );
                           }
 
+                        case 'googleContact':
+                          if (item.googleContact) {
+                            return image ? (
+                              <LazyImage
+                                hasBorder
+                                src={image}
+                                width="100%"
+                                height="100%"
+                                objectFit="cover"
+                                shrinkAndCenterThreshold={200}
+                                placeholderIcon="external-link"
+                                clickProps={clickProps}
+                              />
+                            ) : (
+                              <Box
+                                d="flex"
+                                width="100%"
+                                height="100%"
+                                rounded="lg"
+                                alignItems="center"
+                                justifyContent="center"
+                                backgroundColor="gray.50"
+                                {...clickProps}
+                              >
+                                {typeof icon === 'string' ? (
+                                  // @ts-ignore
+                                  <Icon name={icon} size="56px" />
+                                ) : (
+                                  React.cloneElement(icon, { size: '56px' })
+                                )}
+                              </Box>
+                            );
+                          }
+
                         default:
                           return null;
                       }
@@ -342,7 +382,7 @@ export const GenericGridItem = ({
                 </Box>
               </Box>
             </Tooltip>
-            <ItemHeader item={item} onSingleClick={action || onOpen}>
+            <ItemHeader createdAt={createdAt} onSingleClick={action || onOpen}>
               {item.type === 'link' && <Icon name="link" fontSize="s" mr={2} />}
               {title}
             </ItemHeader>

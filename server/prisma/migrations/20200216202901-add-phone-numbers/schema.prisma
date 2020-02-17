@@ -1,0 +1,250 @@
+generator prisma {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+model InviteCode {
+  id String @id @default(cuid())
+
+  code String
+
+  users User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InterestedUser {
+  id String @id @default(cuid())
+
+  email String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model File {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  extension           String   @default("")
+  hasStartedUploading Boolean?
+  height              Int?
+
+  isFailed   Boolean?
+  isUploaded Boolean?
+  item       Item
+  name       String   @default("")
+  size       String?
+
+  title       String @default("")
+  description String @default("")
+
+  uploadGroup UploadGroup
+  user        User
+  width       Int?
+}
+
+model GoogleAccount {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accountId String? @unique
+  email     String?
+  firstName String?
+  lastName  String?
+  picture   String?
+
+  refreshToken String?
+  accessToken  String?
+
+  expiresAt DateTime
+
+  isAuthMethod Boolean?
+
+  metadata String?
+
+  user           User
+  googleContacts GoogleContact[]
+}
+
+model GoogleContact {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  resourceName String @unique
+  name         String
+
+  email       String?
+  otherEmails String[]
+
+  phoneNumber       String?
+  otherPhoneNumbers String[]
+
+  companyTitle String?
+  companyName  String?
+
+  photoUrl String?
+
+  user          User
+  googleAccount GoogleAccount
+}
+
+model SavedSearch {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name    String
+  version Int
+
+  user User?
+
+  filters SavedSearchFilter[]
+}
+
+model SavedSearchFilter {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name     String
+  operator String?
+  value    String?
+  values   String?
+
+  user User?
+
+  savedSearch SavedSearch?
+}
+
+model Item {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  isFavorited Boolean @default(false)
+  status      String? @default("NOT_STARTED")
+  type        String  @default("")
+
+  date DateTime @default(now())
+
+  link Link?
+  note Note?
+  user User?
+  file File?
+
+  googleContact GoogleContact?
+
+  labels Label[]
+}
+
+model Label {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @default("")
+
+  user  User
+  items Item[]
+}
+
+
+
+model Link {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  description String?
+  favicon     String?
+  href        String  @default("")
+  image       String?
+  notes       String  @default("")
+  title       String?
+
+  user User
+  item Item?
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title String? @default("")
+
+  raw  String @default("")
+  text String @default("")
+
+  user User
+  item Item?
+
+}
+
+model UploadGroup {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  isComplete Boolean?
+  isFailed   Boolean?
+  user       User
+  files      File[]
+}
+
+model Collection {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type String @default(now())
+
+  person Person
+
+  user User
+
+  items Item[]
+}
+
+model Person {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name  String @default("")
+  user  User
+  items Item[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email          String          @default("") @unique
+  firstName      String?
+  lastName       String?
+  files          File[]
+  googleAccounts GoogleAccount[]
+  items          Item[]
+  labels         Label[]
+  links          Link[]
+  notes          Note[]
+  uploadGroups   UploadGroup[]
+
+  role     String  @default("")
+  isActive Boolean @default(false)
+
+  inviteCode InviteCode?
+
+
+}

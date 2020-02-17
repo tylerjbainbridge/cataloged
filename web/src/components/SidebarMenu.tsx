@@ -94,7 +94,7 @@ const LinkListItem = ({
           width="100%"
           textAlign="left"
           bg="none"
-          color={isActive ? 'brand.purple' : undefined}
+          color={isActive ? 'brand.purple.main' : undefined}
         >
           {children}
         </Button>
@@ -247,6 +247,13 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
               >
                 Links
               </LinkListItem>
+              <LinkListItem
+                filters={[
+                  { name: 'type', operator: 'equals', value: 'googleContact' },
+                ]}
+              >
+                Contacts
+              </LinkListItem>
             </Stack>
           </Box>
           <Box>
@@ -306,19 +313,6 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
             </Stack>
           </Box>
         </Stack>
-        <Button
-          d="flex"
-          alignItems="center"
-          cursor="pointer"
-          p="3px"
-          m={0}
-          onClick={() => {
-            window.localStorage.removeItem('cataloged-cache');
-            signOut();
-          }}
-        >
-          Sign out
-        </Button>
       </Flex>
     </Box>
   );

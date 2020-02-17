@@ -1,20 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import {
   useDisclosure,
   PseudoBox,
   Box,
   Icon,
   Text,
-  Popover,
-  PopoverTrigger,
-  Button,
-  PopoverContent,
-  PopoverArrow,
-  PopoverBody,
-  Stack,
-  Select,
   MenuItem,
-  Checkbox,
   ControlBox,
   VisuallyHidden,
 } from '@chakra-ui/core';
@@ -34,21 +25,25 @@ import { useHotKey } from '../hooks/useHotKey';
 import { Click } from './Click';
 import { LazyImage } from './LazyImage';
 import { Labels } from './Labels';
-import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
-import { ItemStatus } from '../graphql/__generated__/apolloTypes';
 import { useMedia } from 'react-use';
 import { useGoToItem } from '../hooks/useGoTo';
 import { ItemActionMenu } from './ItemActionMenu';
-import { ItemStatusInput } from './ItemStatusInput';
 
 export const GenericListItem = ({ item }: { item: ItemFull }) => {
   const isMobile = useMedia('(max-width: 768px)');
 
   const [goToItem] = useGoToItem();
 
-  const { title, icon, image, compressedImage, action } = getGenericItemData(
-    item,
-  );
+  const {
+    title,
+    subTitle,
+    icon,
+    image,
+    compressedImage,
+    action,
+    displayType,
+    type,
+  } = getGenericItemData(item);
 
   const {
     isItemSelected,
@@ -202,9 +197,9 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                           e.stopPropagation();
                         }}
                         _checked={{
-                          bg: 'brand.purple',
+                          bg: 'brand.purple.main',
                           color: 'white',
-                          borderColor: 'brand.purple',
+                          borderColor: 'brand.purple.main',
                         }}
                         _focus={{
                           borderColor: 'green.600',
@@ -241,7 +236,12 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                       backgroundColor="gray.50"
                       border="1px solid lightgray"
                     >
-                      <Icon name={icon} size="16px" />
+                      {typeof icon === 'string' ? (
+                        // @ts-ignore
+                        <Icon name={icon} size="16px" />
+                      ) : (
+                        React.cloneElement(icon, { size: '16px' })
+                      )}
                     </Box>
                   )}
                   <Box
@@ -251,7 +251,12 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                     isTruncated
                   >
                     <Text fontWeight="semibold" maxWidth="100%">
-                      {title}
+                      {title}{' '}
+                      {subTitle && (
+                        <Text fontWeight="lighter" color="gray.500">
+                          {subTitle}
+                        </Text>
+                      )}
                     </Text>
                   </Box>
                 </Box>
@@ -269,7 +274,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                       mr="100px"
                       alignItems="center"
                     >
-                      <Text>{_.upperFirst(item.type)}</Text>
+                      <Text>{displayType || type}</Text>
                     </Box>
                     <Box
                       d="flex"

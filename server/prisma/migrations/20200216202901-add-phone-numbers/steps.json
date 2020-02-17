@@ -1,0 +1,19 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "GoogleContact",
+      "field": "phoneNumber",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "GoogleContact",
+      "field": "otherPhoneNumbers",
+      "type": "String",
+      "arity": "List"
+    }
+  ]
+}

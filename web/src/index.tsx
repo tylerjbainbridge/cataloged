@@ -8,6 +8,7 @@ import { persistCache } from 'apollo-cache-persist';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 import { BrowserRouter } from 'react-router-dom';
+import * as Sentry from '@sentry/browser';
 
 import * as serviceWorker from './serviceWorker';
 import { GRAPHQL_ENDPOINT } from './config';
@@ -15,6 +16,10 @@ import { Router } from './Router';
 import { Auth } from './components/Auth';
 import { theme } from './ui/theme';
 import { GlobalModalProvider } from './components/GlobalModal';
+
+Sentry.init({
+  dsn: 'https://3cbc91c3ee1e456db2c87d85b24f197c@sentry.io/1553570',
+});
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');

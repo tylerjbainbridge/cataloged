@@ -18,6 +18,7 @@ export interface LazeImageProps {
   failureNode?: JSX.Element | null;
   shrinkAndCenterThreshold?: number | null;
   hasBorder?: boolean;
+  clickProps?: any;
 }
 
 export const LazyImage = ({
@@ -31,6 +32,7 @@ export const LazyImage = ({
   fit = false,
   shrinkAndCenterThreshold = null,
   failureNode,
+  clickProps,
   ...props
 }: LazeImageProps) => {
   const img = React.useMemo(() => {
@@ -98,12 +100,13 @@ export const LazyImage = ({
         width={props.width}
         height={props.height}
         border={hasBorder ? '1px solid lightgray' : undefined}
+        {...clickProps}
       >
         <ChackraImage
           src={src}
           {...newProps}
-          maxWidth={dimensions.width}
-          maxHeight={dimensions.height}
+          maxWidth={dimensions.width > 50 ? dimensions.width : 50}
+          maxHeight={dimensions.height > 50 ? dimensions.height : 50}
         />
       </Box>
     );
@@ -114,6 +117,7 @@ export const LazyImage = ({
       <ChackraImage
         src={src}
         border={hasBorder ? '1px solid lightgray' : undefined}
+        {...clickProps}
         {...newProps}
       />
     );

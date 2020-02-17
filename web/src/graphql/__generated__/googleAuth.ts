@@ -3,18 +3,18 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: googleSignIn
+// GraphQL mutation operation: googleAuth
 // ====================================================
 
-export interface googleSignIn_googleSignIn {
+export interface googleAuth_googleAuth {
   __typename: "JWT";
   token: string;
 }
 
-export interface googleSignIn {
-  googleSignIn: googleSignIn_googleSignIn;
+export interface googleAuth {
+  googleAuth: googleAuth_googleAuth;
 }
 
-export interface googleSignInVariables {
+export interface googleAuthVariables {
   code: string;
 }

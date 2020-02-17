@@ -13,7 +13,6 @@ const requireAuth = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
 });
 
 const admin = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
-  console.log(ctx.user);
   if (ctx.user === null || ctx.user.role !== 'admin') {
     throw new Error('Insufficient permissions!');
   }
@@ -23,9 +22,15 @@ const admin = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
 
 const allow = rule({ cache: 'no_cache' })(() => true);
 
+const bannedPatterns = ['_', 'task'];
+
 const noPrivateFields = rule({ cache: 'no_cache' })(
   (parent, args, ctx, info) => {
-    if (getFieldName(info).startsWith('_') && ctx.user.role !== 'admin') {
+    if (
+      // @ts-ignore
+      bannedPatterns.some(pattern => getFieldName(info).startsWith(pattern)) &&
+      ctx.user.role !== 'admin'
+    ) {
       throw new Error('Private!');
     }
 
@@ -44,7 +49,7 @@ export const permissions = shield(
       '*': and(requireAuth, noPrivateFields),
       addToWaitlist: allow,
       addInviteCode: admin,
-      googleSignIn: allow,
+      googleAuth: allow,
     },
   },
   {

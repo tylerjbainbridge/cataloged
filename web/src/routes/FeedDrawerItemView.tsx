@@ -17,6 +17,7 @@ import { usePrevious } from '../hooks/usePrevious';
 import { NoteDrawer } from '../components/NoteDrawer';
 import { LinkDrawer } from '../components/LinkDrawer';
 import { useReturnToFeedFromItem } from '../hooks/useGoTo';
+import { GoogleContactDrawer } from '../components/GoogleContactDrawer';
 
 export interface ItemDrawerProps {
   toggleFullScreen: () => any;
@@ -76,6 +77,9 @@ export const FeedDrawerItemView = () => {
     case 'link':
       drawerNode = <LinkDrawer {...drawerProps} />;
       break;
+
+    case 'googleContact':
+      drawerNode = <GoogleContactDrawer {...drawerProps} />;
   }
 
   return (

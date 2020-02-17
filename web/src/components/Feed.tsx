@@ -13,6 +13,8 @@ import {
 } from '@chakra-ui/core';
 import { Waypoint } from 'react-waypoint';
 import qs from 'query-string';
+import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
+import { FaThLarge, FaList } from 'react-icons/fa';
 
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
@@ -32,10 +34,8 @@ import {
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { feed, feedVariables } from '../graphql/__generated__/feed';
 import { FeedModals } from './FeedModals';
-import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 
 import { ListFeed } from './ListFeed';
-import { FaThLarge, FaList } from 'react-icons/fa';
 import { Filter } from './Filter';
 import { useMedia } from 'react-use';
 import { usePrevious } from '../hooks/usePrevious';
@@ -49,7 +49,7 @@ export const FEED_QUERY = gql`
 
       filters: $filters
 
-      orderBy: { createdAt: desc }
+      orderBy: { date: desc }
     ) @connection(key: "feed_connection") {
       ...ItemConnectionFull
     }
@@ -110,7 +110,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
     // 5 seconds
-    pollInterval: 5000,
+    // pollInterval: 5000,
   });
 
   const { loading, data, networkStatus, refetch, fetchMore, variables } = query;
@@ -155,8 +155,9 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   const lastEdge = _.last(data?.itemsConnection?.edges || []);
 
-  const nextPage = () =>
-    fetchMore({
+  const nextPage = () => {
+    console.log({ lastEdge });
+    return fetchMore({
       variables: {
         ...variables,
         after: lastEdge?.cursor,
@@ -177,6 +178,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
           : previousResult;
       },
     });
+  };
 
   const isLastItem = ({ id }: ItemFull) => {
     return lastEdge?.node?.id === id;
@@ -281,7 +283,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                 ) : (
                   <ListFeed query={query} />
                 )}
-                {networkStatus === 7 &&
+                {data &&
                   !loading &&
                   data?.itemsConnection?.pageInfo?.hasNextPage && (
                     <Waypoint bottomOffset={-700} onEnter={nextPage} />

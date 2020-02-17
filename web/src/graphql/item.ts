@@ -2,12 +2,14 @@ import gql from 'graphql-tag';
 import { NOTE_FULL_FRAGMENT } from './note';
 import { LINK_FULL_FRAGMENT } from './link';
 import { FILE_FULL_FRAGMENT } from './file';
+import { GOOGLE_CONTACT_FULL_FRAGMENT } from './googleContact';
 
 export const ITEM_FULL_FRAGMENT = gql`
   fragment ItemFull on Item {
     id
     type
 
+    date
     createdAt
     updatedAt
 
@@ -30,11 +32,16 @@ export const ITEM_FULL_FRAGMENT = gql`
     note {
       ...NoteFull
     }
+
+    googleContact {
+      ...GoogleContactFull
+    }
   }
 
   ${LINK_FULL_FRAGMENT}
   ${NOTE_FULL_FRAGMENT}
   ${FILE_FULL_FRAGMENT}
+  ${GOOGLE_CONTACT_FULL_FRAGMENT}
 `;
 
 export const ITEM_CONNECTION_FULL_FRAGMENT = gql`

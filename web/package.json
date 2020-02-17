@@ -10,6 +10,7 @@
     "build:app": "react-scripts build",
     "now-build": "npm run build:app",
     "eject:app": "react-scripts eject",
+    "refresh:types": "yarn run remove:types && yarn run generate:types",
     "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"src/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=src/graphql/__generated__/apolloTypes.ts --outputFlat=src/graphql/__generated__",
     "remove:types": "find . | grep -E \"(__generated__)\" | xargs rm -rf"
   },
@@ -18,6 +19,7 @@
     "@chakra-ui/core": "^0.5.2",
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.23",
+    "@sentry/browser": "^5.12.1",
     "@types/apollo-upload-client": "^8.1.2",
     "@types/body-scroll-lock": "^2.6.1",
     "@types/color": "^3.0.1",
@@ -38,6 +40,7 @@
     "apollo-link-context": "^1.0.18",
     "apollo-upload-client": "^11.0.0",
     "aws-sdk": "^2.525.0",
+    "base64url": "^3.0.1",
     "body-scroll-lock": "^2.6.4",
     "clean-deep": "^3.2.0",
     "color": "^3.1.2",
