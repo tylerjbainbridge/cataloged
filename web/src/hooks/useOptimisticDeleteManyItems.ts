@@ -5,6 +5,7 @@ import { FEED_QUERY } from '../components/Feed';
 import { useToast } from '@chakra-ui/core';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { ItemConnectionFull_edges } from '../graphql/__generated__/ItemConnectionFull';
+import { confirmMutation } from '../util/helpers';
 
 export const useOptimisticDeleteManyItems = (
   items: ItemFull[],
@@ -14,7 +15,7 @@ export const useOptimisticDeleteManyItems = (
 
   const itemIds = items.map(({ id }) => id);
 
-  return useMutation(DELETE_MANY_ITEMS_MUTATION, {
+  const mutation = useMutation(DELETE_MANY_ITEMS_MUTATION, {
     variables: { itemIds },
     ...options,
     onCompleted: (...args) => {
@@ -57,4 +58,11 @@ export const useOptimisticDeleteManyItems = (
       });
     },
   });
+
+  return confirmMutation(
+    mutation,
+    `Are you sure you'd like to delete ${itemIds.length} item${
+      itemIds.length > 1 ? 's' : ''
+    }?`,
+  );
 };

@@ -21,9 +21,12 @@ export const createLink = extendType({
           args.href,
         );
 
+        const host = new URL(href);
+
         const link = await ctx.prisma.link.create({
           data: {
             href: args.href,
+            host,
             notes: '',
             title,
             description,
