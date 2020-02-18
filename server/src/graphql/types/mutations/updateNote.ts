@@ -14,6 +14,7 @@ export const updateNote = extendType({
         noteId: stringArg({ required: true }),
         raw: stringArg({ required: true }),
         text: stringArg({ required: true }),
+        title: stringArg(),
       },
       resolve: async (root, args, ctx) => {
         const { noteId, ...rest } = args;

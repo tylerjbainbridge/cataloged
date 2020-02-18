@@ -37,7 +37,8 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
       if (item.note) {
         return {
           type: item.type,
-          title: item.note.text,
+          // @ts-ignore
+          title: item.note.title || item.note.text.split('\n').pop(),
           createdAt: item.date,
           image: null,
           icon: 'chat',

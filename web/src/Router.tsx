@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { Main } from './routes/Main';
-import { Note } from './components/Note';
 // import { Playground } from './routes/Playground';
 import { GoogleCallback } from './routes/GoogleCallback';
 import { ForceSignIn } from './routes/ForceSignIn';

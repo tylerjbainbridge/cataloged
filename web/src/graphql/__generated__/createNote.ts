@@ -27,6 +27,7 @@ export interface createNote_createNote {
   id: string;
   raw: string;
   text: string;
+  title: string | null;
   createdAt: any;
   updatedAt: any;
   item: createNote_createNote_item | null;

@@ -6,6 +6,7 @@ export const NOTE_FULL_FRAGMENT = gql`
 
     raw
     text
+    title
 
     createdAt
     updatedAt
@@ -38,8 +39,13 @@ export const CREATE_NOTE_MUTATION = gql`
 `;
 
 export const UPDATE_NOTE_MUTATION = gql`
-  mutation updateNote($noteId: String!, $raw: String!, $text: String!) {
-    updateNote(noteId: $noteId, raw: $raw, text: $text) {
+  mutation updateNote(
+    $noteId: String!
+    $raw: String!
+    $text: String!
+    $title: String
+  ) {
+    updateNote(noteId: $noteId, raw: $raw, text: $text, title: $title) {
       ...NoteFull
     }
   }

@@ -1520,6 +1520,7 @@ export interface NexusGenFieldTypes {
     item: NexusGenRootTypes['Item'] | null; // Item
     raw: string; // String!
     text: string; // String!
+    title: string | null; // String
     updatedAt: any; // DateTime!
   }
   PageInfo: { // field return type
@@ -1695,6 +1696,7 @@ export interface NexusGenArgTypes {
       noteId: string; // String!
       raw: string; // String!
       text: string; // String!
+      title?: string | null; // String
     }
     updateStatusManyItems: { // args
       itemIds: string[]; // [String!]!

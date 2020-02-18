@@ -134,13 +134,9 @@ export const Toolbar: React.FunctionComponent = React.forwardRef(
       className={cx(
         className,
         css`
-          bottom: 0px;
-          position: absolute;
-          /* width: 100%; */
           padding: 1px 18px 17px;
           background-color: white;
           border-top: 2px solid #eee;
-          margin-bottom: 10px;
         `,
       )}
     />

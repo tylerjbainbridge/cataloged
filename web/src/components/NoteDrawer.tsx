@@ -15,7 +15,7 @@ import {
 
 import { UPDATE_NOTE_MUTATION } from '../graphql/note';
 
-import { Note } from './Note';
+import { NoteEditor } from './NoteEditor';
 import { Labels } from './Labels';
 import { ItemFull, ItemFull_note } from '../graphql/__generated__/ItemFull';
 import { ItemDrawerProps } from '../routes/FeedDrawerItemView';
@@ -49,12 +49,30 @@ export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
             justifyContent="center"
             height="100%"
           >
-            <Note
-              note={note}
-              updateNote={updateNote}
-              editorContainerProps={{ d: 'flex', justifyContent: 'center' }}
-              editorInnerContainerProps={{ width: '70%', pt: '50px' }}
-            />
+            <NoteEditor note={note} updateNote={updateNote}>
+              {({ editable, toolbar, titleInput }: any) => (
+                <>
+                  <Box width="100%" position="absolute" top={0}>
+                    {titleInput}
+                  </Box>
+                  <Flex
+                    justifyContent="center"
+                    height="100%"
+                    width="100%"
+                    overflowY="auto"
+                  >
+                    <Box height="100%" width="80%" pb="200px" pt="90px">
+                      <Box height="100%" width="100%">
+                        {editable}
+                      </Box>
+                    </Box>
+                  </Flex>
+                  <Box width="100%" position="absolute" bottom={0}>
+                    {toolbar}
+                  </Box>
+                </>
+              )}
+            </NoteEditor>
           </Box>
         )}
         <Flex
@@ -94,7 +112,14 @@ export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
                   border="1px solid black"
                   rounded="lg"
                 >
-                  <Note note={note} updateNote={updateNote} />
+                  <NoteEditor note={note} updateNote={updateNote}>
+                    {({ editable, toolbar }: any) => (
+                      <Box>
+                        {editable}
+                        {toolbar}
+                      </Box>
+                    )}
+                  </NoteEditor>
                 </Box>
               )}
               <FormControl>

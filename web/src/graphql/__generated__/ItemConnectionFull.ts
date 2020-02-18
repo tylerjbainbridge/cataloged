@@ -105,6 +105,7 @@ export interface ItemConnectionFull_edges_node_note {
   id: string;
   raw: string;
   text: string;
+  title: string | null;
   createdAt: any;
   updatedAt: any;
   item: ItemConnectionFull_edges_node_note_item | null;

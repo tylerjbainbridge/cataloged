@@ -27,6 +27,7 @@ export interface NoteFull {
   id: string;
   raw: string;
   text: string;
+  title: string | null;
   createdAt: any;
   updatedAt: any;
   item: NoteFull_item | null;
