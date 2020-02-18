@@ -19,7 +19,7 @@ export const createLabel = extendType({
         _.set(data, 'user.connect.id', ctx.user.id);
 
         const [existingLabel] = await ctx.prisma.label.findMany({
-          where: { name },
+          where: { name: args.name },
         });
 
         if (existingLabel) {
