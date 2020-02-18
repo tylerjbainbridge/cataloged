@@ -100,7 +100,7 @@ export const NoteEditor = ({
   useEffect(
     () => () => {
       debouncedUpdateNote.cancel();
-      if (!serializeToPlainText(values.value)) deleteItem();
+      if (!serializeToPlainText(values.value) && !values.title) deleteItem();
     },
     [],
   );
