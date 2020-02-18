@@ -9,6 +9,7 @@ export const Note = objectType({
 
     t.model.raw();
     t.model.text();
+    t.model.title();
 
     t.model.item();
   },

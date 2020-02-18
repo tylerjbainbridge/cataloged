@@ -7,9 +7,9 @@
 // ====================================================
 
 export interface syncGoogleContacts {
-  syncGoogleContacts: string;
+  syncGoogleContacts: number;
 }
 
 export interface syncGoogleContactsVariables {
-  googleAccountId?: string | null;
+  googleAccountId: string;
 }

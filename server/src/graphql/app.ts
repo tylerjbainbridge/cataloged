@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync } from 'fs';
 if (process.env.NODE_ENV === 'development') {
   const ENV_PATH = path.join(
     __dirname,
-    true ? '../../../.env.production.local' : '../../../.env',
+    false ? '../../../.env.production.local' : '../../../.env',
   );
 
   const env = readFileSync(ENV_PATH)

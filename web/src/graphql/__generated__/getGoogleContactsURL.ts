@@ -11,7 +11,7 @@ export interface getGoogleContactsURL {
 }
 
 export interface getGoogleContactsURLVariables {
-  scopes?: string | null;
+  scopes?: string[] | null;
   googleAccountId?: string | null;
   syncContent?: string | null;
 }

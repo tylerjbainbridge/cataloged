@@ -28,42 +28,7 @@ import {
   FaList,
 } from 'react-icons/fa';
 
-const DEFAULT_VALUE = [
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'This is editable ' },
-      { text: 'rich', bold: true },
-      { text: ' text, ' },
-      { text: 'much', italic: true },
-      { text: ' better than a ' },
-      { text: '<textarea>', code: true },
-      { text: '!' },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text:
-          "Since it's rich text, you can do things like turn a selection of text ",
-      },
-      { text: 'bold', bold: true },
-      {
-        text:
-          ', or add a semantically rendered block quote in the middle of the page, like this:',
-      },
-    ],
-  },
-  {
-    type: 'block-quote',
-    children: [{ text: 'A wise quote.' }],
-  },
-  {
-    type: 'paragraph',
-    children: [{ text: 'Try it out for yourself!' }],
-  },
-];
+const DEFAULT_VALUE: any = [];
 
 const HOTKEYS = {
   'mod+b': 'bold',
@@ -87,11 +52,32 @@ const SHORTCUTS = {
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
+const SlateReadOnly = ({ value }: any) => {
+  const renderElement = useCallback(props => <Element {...props} />, []);
+  const renderLeaf = useCallback(props => <Leaf {...props} />, []);
+  // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+
+  const editor: any = useMemo(
+    () => withShortcuts(withReact(withHistory(createEditor()))),
+    [],
+  );
+
+  return (
+    <Slate editor={editor} value={value} onChange={() => {}}>
+      <Editable
+        renderElement={renderElement}
+        renderLeaf={renderLeaf}
+        readOnly
+      />
+    </Slate>
+  );
+};
+
 const SlateRichTextEditor = ({
   value = DEFAULT_VALUE,
   placeholder = 'Start typing...',
-  editorContainerProps = {},
-  editorInnerContainerProps = {},
+  editorRef,
+  children,
   onChange,
 }: any) => {
   const renderElement = useCallback(props => <Element {...props} />, []);
@@ -103,67 +89,76 @@ const SlateRichTextEditor = ({
     [],
   );
 
-  useEffect(() => {
-    ReactEditor.focus(editor);
-  }, []);
+  if (editorRef) editorRef(editor);
+
+  // useEffect(() => {
+  //   ReactEditor.focus(editor);
+  // }, []);
+
+  const editable = (
+    <Editable
+      renderElement={renderElement}
+      renderLeaf={renderLeaf}
+      placeholder={placeholder}
+      spellCheck
+      autoFocus
+      onKeyDown={event => {
+        for (const hotkey in HOTKEYS) {
+          // @ts-ignore
+          if (isHotkey(hotkey, event)) {
+            event.preventDefault();
+            // @ts-ignore
+            const mark = HOTKEYS[hotkey];
+            toggleMark(editor, mark);
+          }
+        }
+      }}
+    />
+  );
+
+  const toolbar = (
+    <Toolbar>
+      <MarkButton format="bold" icon={<FaBold />} />
+      <MarkButton format="italic" icon={<FaItalic />} />
+      <MarkButton format="underline" icon={<FaUnderline />} />
+      <MarkButton format="code" icon={<FaCode />} />
+      <BlockButton
+        format="heading-one"
+        icon={
+          <Box d="flex" alignItems="center">
+            <FaHeading display="inline" /> 1
+          </Box>
+        }
+      />
+      <BlockButton
+        format="heading-two"
+        icon={
+          <Box d="flex" alignItems="center">
+            <FaHeading display="inline" /> 2
+          </Box>
+        }
+      />
+      <BlockButton format="block-quote" icon={<FaQuoteRight />} />
+      <BlockButton format="numbered-list" icon={<FaListOl />} />
+      <BlockButton format="bulleted-list" icon={<FaList />} />
+    </Toolbar>
+  );
 
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
-      <Box
-        cursor="text"
-        height="100%"
-        width="100%"
-        onClick={() => {
-          ReactEditor.focus(editor);
-        }}
-        {...editorContainerProps}
-      >
-        <Box {...editorInnerContainerProps}>
-          <Editable
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-            placeholder="Enter some rich text…"
-            spellCheck
-            autoFocus
-            onKeyDown={event => {
-              for (const hotkey in HOTKEYS) {
-                // @ts-ignore
-                if (isHotkey(hotkey, event)) {
-                  event.preventDefault();
-                  // @ts-ignore
-                  const mark = HOTKEYS[hotkey];
-                  toggleMark(editor, mark);
-                }
-              }
-            }}
-          />
-        </Box>
+      <Box height="100%" width="100%">
+        {children({
+          editor,
+          editable,
+          toolbar,
+          containerProps: {
+            cursor: 'text',
+            onClick: () => {
+              ReactEditor.focus(editor);
+            },
+          },
+        })}
       </Box>
-      <Toolbar>
-        <MarkButton format="bold" icon={<FaBold />} />
-        <MarkButton format="italic" icon={<FaItalic />} />
-        <MarkButton format="underline" icon={<FaUnderline />} />
-        <MarkButton format="code" icon={<FaCode />} />
-        <BlockButton
-          format="heading-one"
-          icon={
-            <Box d="flex" alignItems="center">
-              <FaHeading display="inline" /> 1
-            </Box>
-          }
-        />
-        <BlockButton
-          format="heading-two"
-          icon={
-            <Box d="flex" alignItems="center">
-              <FaHeading display="inline" /> 2
-            </Box>
-          }
-        />
-        <BlockButton format="block-quote" icon={<FaQuoteRight />} />
-        <BlockButton format="numbered-list" icon={<FaListOl />} />
-        <BlockButton format="bulleted-list" icon={<FaList />} />
-      </Toolbar>
     </Slate>
   );
 };
@@ -288,11 +283,21 @@ const isMarkActive = (editor: Editor, format: any) => {
 };
 
 const Element = ({ attributes, children, element }: RenderElementProps) => {
+  const textProps = { fontSize: '18px ' };
+
   switch (element.type) {
     case 'block-quote':
-      return <blockquote {...attributes}>{children}</blockquote>;
+      return (
+        <blockquote {...textProps} {...attributes}>
+          {children}
+        </blockquote>
+      );
     case 'bulleted-list':
-      return <ul {...attributes}>{children}</ul>;
+      return (
+        <ul {...textProps} {...attributes}>
+          {children}
+        </ul>
+      );
     case 'heading-one':
       return (
         <Heading as="h1" size="xl" {...attributes}>
@@ -306,11 +311,23 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
         </Heading>
       );
     case 'list-item':
-      return <li {...attributes}>{children}</li>;
+      return (
+        <li {...textProps} {...attributes}>
+          {children}
+        </li>
+      );
     case 'numbered-list':
-      return <ol {...attributes}>{children}</ol>;
+      return (
+        <ol {...textProps} {...attributes}>
+          {children}
+        </ol>
+      );
     default:
-      return <Text {...attributes}>{children}</Text>;
+      return (
+        <Text {...textProps} {...attributes}>
+          {children}
+        </Text>
+      );
   }
 };
 

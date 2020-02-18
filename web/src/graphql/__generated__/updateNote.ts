@@ -27,6 +27,7 @@ export interface updateNote_updateNote {
   id: string;
   raw: string;
   text: string;
+  title: string | null;
   createdAt: any;
   updatedAt: any;
   item: updateNote_updateNote_item | null;
@@ -40,4 +41,5 @@ export interface updateNoteVariables {
   noteId: string;
   raw: string;
   text: string;
+  title?: string | null;
 }

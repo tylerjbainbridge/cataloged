@@ -839,7 +839,7 @@ type Mutation {
   updateFavoriteManyItems(isFavorited: Boolean!, itemIds: [String!]!): [Item!]!
   updateFile(description: String, fileId: String!, title: String): File!
   updateLink(description: String, href: String!, linkId: String!, title: String!): Link!
-  updateNote(noteId: String!, raw: String!, text: String!): Note!
+  updateNote(noteId: String!, raw: String!, text: String!, title: String): Note!
   updateStatusManyItems(itemIds: [String!]!, status: ItemStatus!): [Item!]!
 }
 
@@ -849,6 +849,7 @@ type Note {
   item: Item
   raw: String!
   text: String!
+  title: String
   updatedAt: DateTime!
 }
 
