@@ -32,9 +32,9 @@ const MentionExample = () => {
     [],
   );
 
-  const chars = CHARACTERS.filter(c =>
-    c.toLowerCase().startsWith(search.toLowerCase()),
-  ).slice(0, 10);
+  const chars = ['file', 'note']
+    .filter(c => c.toLowerCase().startsWith(search.toLowerCase()))
+    .slice(0, 10);
 
   const onKeyDown = useCallback(
     event => {
@@ -54,7 +54,7 @@ const MentionExample = () => {
           case 'Enter':
             event.preventDefault();
             Transforms.select(editor, target);
-            insertMention(editor, chars[index]);
+            insertMention(editor, `type:${chars[index]}`);
             setTarget(null);
             break;
           case 'Escape':
@@ -91,20 +91,43 @@ const MentionExample = () => {
         const { selection } = editor;
 
         if (selection && Range.isCollapsed(selection)) {
-          const [start] = Range.edges(selection);
+          console.log(Range.edges(selection));
+
+          const [start, end] = Range.edges(selection);
           const wordBefore = Editor.before(editor, start, { unit: 'word' });
 
-          const before = wordBefore && Editor.before(editor, wordBefore);
+          console.log({ start, wordBefore });
+
+          const before =
+            wordBefore && Editor.before(editor, wordBefore)
+              ? Editor.before(editor, wordBefore)
+              : end;
+
+          console.log({ before });
+
           const beforeRange = before && Editor.range(editor, before, start);
           const beforeText = beforeRange && Editor.string(editor, beforeRange);
-          const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/);
+
+          const beforeMatch =
+            beforeText &&
+            beforeText.includes('type:') &&
+            beforeText.split('type:');
 
           const after = Editor.after(editor, start);
           const afterRange = Editor.range(editor, start, after);
           const afterText = Editor.string(editor, afterRange);
           const afterMatch = afterText.match(/^(\s|$)/);
 
-          if (beforeMatch && afterMatch) {
+          console.log({ beforeMatch, afterText });
+
+          if (beforeMatch && true) {
+            console.log({
+              before,
+              beforeRange,
+              beforeText,
+              beforeMatch,
+              afterMatch,
+            });
             setTarget(beforeRange);
             setSearch(beforeMatch[1]);
             setIndex(0);
@@ -169,8 +192,8 @@ const withMentions = (editor: Editor) => {
   return editor;
 };
 
-const insertMention = (editor: Editor, character: any) => {
-  const mention = { type: 'mention', character, children: [{ text: '' }] };
+const insertMention = (editor: Editor, query: any) => {
+  const mention = { type: 'mention', query, children: [{ text: '' }] };
 
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
@@ -204,7 +227,7 @@ const MentionElement = ({ attributes, children, element }: any) => {
         boxShadow: selected && focused ? '0 0 0 2px #B4D5FF' : 'none',
       }}
     >
-      @{element.character}
+      {element.query}
       {children}
     </span>
   );
@@ -212,29 +235,7 @@ const MentionElement = ({ attributes, children, element }: any) => {
 
 const initialValue = [
   {
-    children: [
-      {
-        text:
-          'This example shows how you might implement a simple @-mentions feature that lets users autocomplete mentioning a user by their username. Which, in this case means Star Wars characters. The mentions are rendered as void inline elements inside the document.',
-      },
-    ],
-  },
-  {
-    children: [
-      { text: 'Try mentioning characters, like ' },
-      {
-        type: 'mention',
-        character: 'R2-D2',
-        children: [{ text: '' }],
-      },
-      { text: ' or ' },
-      {
-        type: 'mention',
-        character: 'Mace Windu',
-        children: [{ text: '' }],
-      },
-      { text: '!' },
-    ],
+    children: [{ text: '', marks: [] }],
   },
 ];
 
