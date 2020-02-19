@@ -15,12 +15,71 @@ import {
   useSelected,
   useFocused,
 } from 'slate-react';
-
+import Downshift, { useSelect } from 'downshift';
 import { Portal } from './SlateComponents';
+import { Box } from '@chakra-ui/core';
+
+const withMentions = (editor: Editor) => {
+  const { isInline, isVoid } = editor;
+
+  editor.isInline = (element: any) => {
+    return (element.type || '').includes('mention') ? true : isInline(element);
+  };
+
+  editor.isVoid = (element: any) => {
+    return (element.type || '').includes('mention') ? true : isVoid(element);
+  };
+
+  return editor;
+};
+
+const Element = (props: any) => {
+  const { attributes, children, element } = props;
+
+  switch (element.type) {
+    case 'mention':
+      return <MentionElement {...props} />;
+    case 'mention-part':
+      return <span {...attributes}>{children}</span>;
+    default:
+      return <p {...attributes}>{children}</p>;
+  }
+};
+
+const MentionElement = ({ attributes, children, element }: any) => {
+  const selected = useSelected();
+  const focused = useFocused();
+  return (
+    <span
+      {...attributes}
+      contentEditable={false}
+      style={{
+        padding: '3px 3px 2px',
+        margin: '0 1px',
+        verticalAlign: 'baseline',
+        display: 'inline-block',
+        borderRadius: '4px',
+        backgroundColor: '#eee',
+        fontSize: '0.9em',
+        boxShadow: selected && focused ? '0 0 0 2px #B4D5FF' : 'none',
+      }}
+    >
+      {element.query}
+      {children}
+    </span>
+  );
+};
+
+const initialValue = [
+  {
+    children: [{ text: 'type:', marks: [] }],
+  },
+];
 
 const MentionExample = () => {
   const ref = useRef();
   const [value, setValue] = useState(initialValue);
+  // Target range for search
   const [target, setTarget] = useState();
   const [index, setIndex] = useState(0);
 
@@ -35,6 +94,23 @@ const MentionExample = () => {
   const chars = ['file', 'note']
     .filter(c => c.toLowerCase().startsWith(search.toLowerCase()))
     .slice(0, 10);
+
+  const {
+    isOpen,
+    selectedItem,
+    getToggleButtonProps,
+    getLabelProps,
+    getMenuProps,
+    highlightedIndex,
+    getItemProps,
+  } = useSelect({ items: chars });
+
+  const insertMention = (editor: Editor, query: any) => {
+    const mention = { type: 'mention', query, children: [{ text: '' }] };
+
+    Transforms.insertNodes(editor, mention);
+    Transforms.move(editor);
+  };
 
   const onKeyDown = useCallback(
     event => {
@@ -55,6 +131,8 @@ const MentionExample = () => {
             event.preventDefault();
             Transforms.select(editor, target);
             insertMention(editor, `type:${chars[index]}`);
+
+            // Transforms.insertText(editor, `type:${chars[index]}`);
             setTarget(null);
             break;
           case 'Escape':
@@ -90,47 +168,56 @@ const MentionExample = () => {
         setValue(value);
         const { selection } = editor;
 
+        // Range.isCollapsed indicates whether a range of text is selected or whether it is on a single point
         if (selection && Range.isCollapsed(selection)) {
+          // Get the start and end points of a range in order.
+          const [start] = Range.edges(selection);
           console.log(Range.edges(selection));
 
-          const [start, end] = Range.edges(selection);
-          const wordBefore = Editor.before(editor, start, { unit: 'word' });
+          // Find the point of the word before
+          const wordBefore = Editor.before(editor, selection, {
+            unit: 'word',
+          });
 
-          console.log({ start, wordBefore });
+          const before = wordBefore;
 
-          const before =
-            wordBefore && Editor.before(editor, wordBefore)
-              ? Editor.before(editor, wordBefore)
-              : end;
-
-          console.log({ before });
-
+          // Find the range between the end of
           const beforeRange = before && Editor.range(editor, before, start);
           const beforeText = beforeRange && Editor.string(editor, beforeRange);
 
-          const beforeMatch =
-            beforeText &&
-            beforeText.includes('type:') &&
-            beforeText.split('type:');
+          console.log({ wordBefore, beforeText });
+
+          const names = ['type'];
+          const operators = ['equals', 'not'];
+
+          let filter = null;
+
+          if (beforeText) {
+            //beforeText.includes('type:') && beforeText.split('type:');
+            const parsed = beforeText.split(':').map(str => str.trim());
+            const [name, ...rest] = parsed;
+
+            if (names.includes(name)) {
+              if (rest.length === 1) {
+                const [value] = rest;
+                filter = { name, value };
+              }
+            }
+          }
 
           const after = Editor.after(editor, start);
           const afterRange = Editor.range(editor, start, after);
           const afterText = Editor.string(editor, afterRange);
           const afterMatch = afterText.match(/^(\s|$)/);
 
-          console.log({ beforeMatch, afterText });
-
-          if (beforeMatch && true) {
-            console.log({
-              before,
-              beforeRange,
-              beforeText,
-              beforeMatch,
-              afterMatch,
-            });
+          if (filter && afterMatch) {
             setTarget(beforeRange);
-            setSearch(beforeMatch[1]);
+            setSearch(filter?.value);
             setIndex(0);
+            // setTarget({ filter, range: beforeRange });
+            // console.log('search', filter);
+            // setSearch(filter.value);
+            // setIndex(0);
             return;
           }
         }
@@ -138,11 +225,13 @@ const MentionExample = () => {
         setTarget(null);
       }}
     >
-      <Editable
-        renderElement={renderElement}
-        onKeyDown={onKeyDown}
-        placeholder="Enter some text..."
-      />
+      <Box>
+        <Editable
+          renderElement={renderElement}
+          onKeyDown={onKeyDown}
+          placeholder="Enter some text..."
+        />
+      </Box>
       {target && chars.length > 0 && (
         <Portal>
           <div
@@ -177,67 +266,6 @@ const MentionExample = () => {
     </Slate>
   );
 };
-
-const withMentions = (editor: Editor) => {
-  const { isInline, isVoid } = editor;
-
-  editor.isInline = (element: any) => {
-    return element.type === 'mention' ? true : isInline(element);
-  };
-
-  editor.isVoid = (element: any) => {
-    return element.type === 'mention' ? true : isVoid(element);
-  };
-
-  return editor;
-};
-
-const insertMention = (editor: Editor, query: any) => {
-  const mention = { type: 'mention', query, children: [{ text: '' }] };
-
-  Transforms.insertNodes(editor, mention);
-  Transforms.move(editor);
-};
-
-const Element = (props: any) => {
-  const { attributes, children, element } = props;
-  switch (element.type) {
-    case 'mention':
-      return <MentionElement {...props} />;
-    default:
-      return <p {...attributes}>{children}</p>;
-  }
-};
-
-const MentionElement = ({ attributes, children, element }: any) => {
-  const selected = useSelected();
-  const focused = useFocused();
-  return (
-    <span
-      {...attributes}
-      contentEditable={false}
-      style={{
-        padding: '3px 3px 2px',
-        margin: '0 1px',
-        verticalAlign: 'baseline',
-        display: 'inline-block',
-        borderRadius: '4px',
-        backgroundColor: '#eee',
-        fontSize: '0.9em',
-        boxShadow: selected && focused ? '0 0 0 2px #B4D5FF' : 'none',
-      }}
-    >
-      {element.query}
-      {children}
-    </span>
-  );
-};
-
-const initialValue = [
-  {
-    children: [{ text: '', marks: [] }],
-  },
-];
 
 const CHARACTERS = [
   'Aayla Secura',
