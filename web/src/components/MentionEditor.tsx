@@ -5,7 +5,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Editor, Transforms, Range, createEditor } from 'slate';
+import ReactDOM from 'react-dom';
+import { Editor, Transforms, Range, createEditor, Node } from 'slate';
 import { withHistory } from 'slate-history';
 import {
   Slate,
@@ -14,76 +15,46 @@ import {
   withReact,
   useSelected,
   useFocused,
+  RenderElementProps,
 } from 'slate-react';
-import Downshift, { useSelect } from 'downshift';
-import { Portal } from './SlateComponents';
-import { Box } from '@chakra-ui/core';
+import Downshift from 'downshift';
+import { Text, Box } from '@chakra-ui/core';
 
-const withMentions = (editor: Editor) => {
-  const { isInline, isVoid } = editor;
-
-  editor.isInline = (element: any) => {
-    return (element.type || '').includes('mention') ? true : isInline(element);
-  };
-
-  editor.isVoid = (element: any) => {
-    return (element.type || '').includes('mention') ? true : isVoid(element);
-  };
-
-  return editor;
-};
-
-const Element = (props: any) => {
-  const { attributes, children, element } = props;
-
-  switch (element.type) {
-    case 'mention':
-      return <MentionElement {...props} />;
-    case 'mention-part':
-      return <span {...attributes}>{children}</span>;
-    default:
-      return <p {...attributes}>{children}</p>;
-  }
-};
-
-const MentionElement = ({ attributes, children, element }: any) => {
-  const selected = useSelected();
-  const focused = useFocused();
-  return (
-    <span
-      {...attributes}
-      contentEditable={false}
-      style={{
-        padding: '3px 3px 2px',
-        margin: '0 1px',
-        verticalAlign: 'baseline',
-        display: 'inline-block',
-        borderRadius: '4px',
-        backgroundColor: '#eee',
-        fontSize: '0.9em',
-        boxShadow: selected && focused ? '0 0 0 2px #B4D5FF' : 'none',
-      }}
-    >
-      {element.query}
-      {children}
-    </span>
-  );
+export const Portal = ({ children }: any) => {
+  return ReactDOM.createPortal(children, document.body);
 };
 
 const initialValue = [
   {
     children: [{ text: 'type:', marks: [] }],
   },
+] || [
+  {
+    children: [
+      {
+        type: 'mention',
+        character: 'R2-D2',
+        children: [{ text: '' }],
+      },
+      { text: '    ' },
+    ],
+  },
 ];
+
+const CHARACTERS = ['files', 'notes', 'links'];
+
+const initialSearchState = {
+  search: '',
+  targetRange: null,
+  index: 0,
+  trigger: '',
+};
 
 const MentionExample = () => {
   const ref = useRef();
   const [value, setValue] = useState(initialValue);
-  // Target range for search
-  const [target, setTarget] = useState();
-  const [index, setIndex] = useState(0);
 
-  const [search, setSearch] = useState('');
+  const [searchState, setState] = useState(initialSearchState);
 
   const renderElement = useCallback(props => <Element {...props} />, []);
   const editor = useMemo(
@@ -91,72 +62,83 @@ const MentionExample = () => {
     [],
   );
 
-  const chars = ['file', 'note']
-    .filter(c => c.toLowerCase().startsWith(search.toLowerCase()))
-    .slice(0, 10);
+  const chars = CHARACTERS.filter(c =>
+    c.toLowerCase().startsWith(searchState.search.toLowerCase()),
+  ).slice(0, 10);
 
-  const {
-    isOpen,
-    selectedItem,
-    getToggleButtonProps,
-    getLabelProps,
-    getMenuProps,
-    highlightedIndex,
-    getItemProps,
-  } = useSelect({ items: chars });
+  useEffect(() => {
+    // @ts-ignore
+    ReactEditor.focus(editor);
+  }, []);
 
-  const insertMention = (editor: Editor, query: any) => {
-    const mention = { type: 'mention', query, children: [{ text: '' }] };
-
-    Transforms.insertNodes(editor, mention);
-    Transforms.move(editor);
-  };
+  console.log(searchState, chars);
 
   const onKeyDown = useCallback(
     event => {
-      if (target) {
-        switch (event.key) {
-          case 'ArrowDown':
+      switch (event.key) {
+        case 'ArrowDown':
+          if (searchState.targetRange) {
             event.preventDefault();
-            const prevIndex = index >= chars.length - 1 ? 0 : index + 1;
-            setIndex(prevIndex);
-            break;
-          case 'ArrowUp':
-            event.preventDefault();
-            const nextIndex = index <= 0 ? chars.length - 1 : index - 1;
-            setIndex(nextIndex);
-            break;
-          case 'Tab':
-          case 'Enter':
-            event.preventDefault();
-            Transforms.select(editor, target);
-            insertMention(editor, `type:${chars[index]}`);
+            const prevIndex =
+              searchState.index >= chars.length - 1 ? 0 : searchState.index + 1;
+            setState({ ...searchState, index: prevIndex });
+          }
 
-            // Transforms.insertText(editor, `type:${chars[index]}`);
-            setTarget(null);
-            break;
-          case 'Escape':
+          break;
+        case 'ArrowUp':
+          if (searchState.targetRange) {
             event.preventDefault();
-            setTarget(null);
-            break;
-        }
+            const nextIndex =
+              searchState.index <= 0 ? chars.length - 1 : searchState.index - 1;
+            setState({ ...searchState, index: nextIndex });
+          }
+          break;
+        case 'Tab':
+        case 'Enter':
+          event.preventDefault();
+          if (searchState.trigger) {
+            // @ts-ignore
+            Transforms.select(editor, searchState.targetRange);
+
+            insertMention(editor, `type:${chars[searchState.index]}`);
+          } else {
+            // @ts-ignore
+            Transforms.select(editor, searchState.targetRange);
+
+            // Editor.before(editor, start);
+            insertMention(editor, searchState.search);
+          }
+          setState(initialSearchState);
+          break;
+        case 'Escape':
+          event.preventDefault();
+          setState(initialSearchState);
+          break;
+        default:
+          break;
       }
     },
-    [index, search, target],
+    [searchState.search, searchState.targetRange, searchState.index],
   );
 
-  useEffect(() => {
-    if (target && chars.length > 0) {
-      const el = ref.current;
-      // @ts-ignore
-      const domRange = ReactEditor.toDOMRange(editor, target);
-      const rect = domRange.getBoundingClientRect();
-      // @ts-ignore
-      el.style.top = `${rect.top + window.pageYOffset + 24}px`;
-      // @ts-ignore
-      el.style.left = `${rect.left + window.pageXOffset}px`;
-    }
-  }, [chars.length, editor, index, search, target]);
+  // useEffect(() => {
+  //   if (searchState.targetRange && searchState.trigger && chars.length > 0) {
+  //     const el = ref.current;
+  //     // @ts-ignore
+  //     const domRange = ReactEditor.toDOMRange(editor, searchState.targetRange);
+  //     const rect = domRange.getBoundingClientRect();
+  //     // @ts-ignore
+  //     el.style.top = `${rect.top + window.pageYOffset + 24}px`;
+  //     // @ts-ignore
+  //     el.style.left = `${rect.left + window.pageXOffset}px`;
+  //   }
+  // }, [
+  //   chars.length,
+  //   editor,
+  //   searchState.search,
+  //   searchState.targetRange,
+  //   searchState.index,
+  // ]);
 
   return (
     <Slate
@@ -168,509 +150,196 @@ const MentionExample = () => {
         setValue(value);
         const { selection } = editor;
 
-        // Range.isCollapsed indicates whether a range of text is selected or whether it is on a single point
         if (selection && Range.isCollapsed(selection)) {
-          // Get the start and end points of a range in order.
           const [start] = Range.edges(selection);
-          console.log(Range.edges(selection));
 
-          // Find the point of the word before
-          const wordBefore = Editor.before(editor, selection, {
-            unit: 'word',
+          const [node, path] = Editor.node(editor, selection);
+
+          const nodeString = Node.string(node).trim();
+
+          const beforeRange = Editor.range(editor, path, start);
+          console.log({ node, path, beforeRange });
+
+          const targetRange = nodeString.match(/^type:/g);
+
+          // @ts-ignore
+          const range = Editor.range(editor, path[0], start);
+
+          const search = targetRange
+            ? nodeString.replace('type:', '').trim()
+            : nodeString;
+
+          // @ts-ignore
+          setState({
+            search,
+            targetRange: beforeRange,
+            trigger: targetRange ? 'type' : '',
+            index: 0,
           });
-
-          const before = wordBefore;
-
-          // Find the range between the end of
-          const beforeRange = before && Editor.range(editor, before, start);
-          const beforeText = beforeRange && Editor.string(editor, beforeRange);
-
-          console.log({ wordBefore, beforeText });
-
-          const names = ['type'];
-          const operators = ['equals', 'not'];
-
-          let filter = null;
-
-          if (beforeText) {
-            //beforeText.includes('type:') && beforeText.split('type:');
-            const parsed = beforeText.split(':').map(str => str.trim());
-            const [name, ...rest] = parsed;
-
-            if (names.includes(name)) {
-              if (rest.length === 1) {
-                const [value] = rest;
-                filter = { name, value };
-              }
-            }
-          }
-
-          const after = Editor.after(editor, start);
-          const afterRange = Editor.range(editor, start, after);
-          const afterText = Editor.string(editor, afterRange);
-          const afterMatch = afterText.match(/^(\s|$)/);
-
-          if (filter && afterMatch) {
-            setTarget(beforeRange);
-            setSearch(filter?.value);
-            setIndex(0);
-            // setTarget({ filter, range: beforeRange });
-            // console.log('search', filter);
-            // setSearch(filter.value);
-            // setIndex(0);
-            return;
-          }
         }
-
-        setTarget(null);
       }}
     >
-      <Box>
-        <Editable
-          renderElement={renderElement}
-          onKeyDown={onKeyDown}
-          placeholder="Enter some text..."
-        />
-      </Box>
-      {target && chars.length > 0 && (
-        <Portal>
-          <div
-            // @ts-ignore
-            ref={ref}
-            style={{
-              top: '-9999px',
-              left: '-9999px',
-              position: 'absolute',
-              zIndex: 1,
-              padding: '3px',
-              background: 'white',
-              borderRadius: '4px',
-              boxShadow: '0 1px 5px rgba(0,0,0,.2)',
-            }}
-          >
-            {chars.map((char, i) => (
-              <div
-                key={char}
-                style={{
-                  padding: '1px 3px',
-                  borderRadius: '3px',
-                  background: i === index ? '#B4D5FF' : 'transparent',
-                }}
-              >
-                {char}
-              </div>
-            ))}
-          </div>
-        </Portal>
-      )}
+      <Downshift
+        isOpen={!!searchState.search}
+        inputValue={searchState.search}
+        onChange={selection =>
+          alert(selection ? `You selected ${selection}` : 'Selection Cleared')
+        }
+      >
+        {({
+          getInputProps,
+          getItemProps,
+          getLabelProps,
+          getMenuProps,
+          isOpen,
+          inputValue,
+          highlightedIndex,
+          selectedItem,
+          getRootProps,
+        }) => {
+          return (
+            <Box>
+              <Box {...getRootProps()}>
+                <Box
+                  p="3px"
+                  pb="5px"
+                  height="15px"
+                  borderBottom="2px solid black"
+                >
+                  <Editable
+                    renderElement={renderElement}
+                    onKeyDown={onKeyDown}
+                    placeholder="Enter some text..."
+                  />
+                </Box>
+                <Box {...getMenuProps()}>
+                  {isOpen
+                    ? chars.map((item, index) => (
+                        <li
+                          {...getItemProps({
+                            key: item,
+                            index,
+                            item,
+                            style: {
+                              backgroundColor:
+                                highlightedIndex === index
+                                  ? 'lightgray'
+                                  : 'white',
+                              fontWeight:
+                                selectedItem === item ? 'bold' : 'normal',
+                            },
+                          })}
+                        >
+                          {item}
+                        </li>
+                      ))
+                    : null}
+                </Box>
+              </Box>
+            </Box>
+          );
+        }}
+      </Downshift>
+
+      {false &&
+        searchState.targetRange &&
+        searchState.trigger &&
+        chars.length > 0 && (
+          <Portal>
+            <div
+              // @ts-ignore
+              ref={ref}
+              style={{
+                top: '-9999px',
+                left: '-9999px',
+                position: 'absolute',
+                zIndex: 1,
+                padding: '3px',
+                background: 'white',
+                borderRadius: '4px',
+                boxShadow: '0 1px 5px rgba(0,0,0,.2)',
+              }}
+            >
+              {chars.map((char, i) => (
+                <div
+                  key={char}
+                  style={{
+                    padding: '1px 3px',
+                    borderRadius: '3px',
+                    background:
+                      i === searchState.index ? '#B4D5FF' : 'transparent',
+                  }}
+                >
+                  {char}
+                </div>
+              ))}
+            </div>
+          </Portal>
+        )}
     </Slate>
   );
 };
 
-const CHARACTERS = [
-  'Aayla Secura',
-  'Adi Gallia',
-  'Admiral Dodd Rancit',
-  'Admiral Firmus Piett',
-  'Admiral Gial Ackbar',
-  'Admiral Ozzel',
-  'Admiral Raddus',
-  'Admiral Terrinald Screed',
-  'Admiral Trench',
-  'Admiral U.O. Statura',
-  'Agen Kolar',
-  'Agent Kallus',
-  'Aiolin and Morit Astarte',
-  'Aks Moe',
-  'Almec',
-  'Alton Kastle',
-  'Amee',
-  'AP-5',
-  'Armitage Hux',
-  'Artoo',
-  'Arvel Crynyd',
-  'Asajj Ventress',
-  'Aurra Sing',
-  'AZI-3',
-  'Bala-Tik',
-  'Barada',
-  'Bargwill Tomder',
-  'Baron Papanoida',
-  'Barriss Offee',
-  'Baze Malbus',
-  'Bazine Netal',
-  'BB-8',
-  'BB-9E',
-  'Ben Quadinaros',
-  'Berch Teller',
-  'Beru Lars',
-  'Bib Fortuna',
-  'Biggs Darklighter',
-  'Black Krrsantan',
-  'Bo-Katan Kryze',
-  'Boba Fett',
-  'Bobbajo',
-  'Bodhi Rook',
-  'Borvo the Hutt',
-  'Boss Nass',
-  'Bossk',
-  'Breha Antilles-Organa',
-  'Bren Derlin',
-  'Brendol Hux',
-  'BT-1',
-  'C-3PO',
-  'C1-10P',
-  'Cad Bane',
-  'Caluan Ematt',
-  'Captain Gregor',
-  'Captain Phasma',
-  'Captain Quarsh Panaka',
-  'Captain Rex',
-  'Carlist Rieekan',
-  'Casca Panzoro',
-  'Cassian Andor',
-  'Cassio Tagge',
-  'Cham Syndulla',
-  'Che Amanwe Papanoida',
-  'Chewbacca',
-  'Chi Eekway Papanoida',
-  'Chief Chirpa',
-  'Chirrut Îmwe',
-  'Ciena Ree',
-  'Cin Drallig',
-  'Clegg Holdfast',
-  'Cliegg Lars',
-  'Coleman Kcaj',
-  'Coleman Trebor',
-  'Colonel Kaplan',
-  'Commander Bly',
-  'Commander Cody (CC-2224)',
-  'Commander Fil (CC-3714)',
-  'Commander Fox',
-  'Commander Gree',
-  'Commander Jet',
-  'Commander Wolffe',
-  'Conan Antonio Motti',
-  'Conder Kyl',
-  'Constable Zuvio',
-  'Cordé',
-  'Cpatain Typho',
-  'Crix Madine',
-  'Cut Lawquane',
-  'Dak Ralter',
-  'Dapp',
-  'Darth Bane',
-  'Darth Maul',
-  'Darth Tyranus',
-  'Daultay Dofine',
-  'Del Meeko',
-  'Delian Mors',
-  'Dengar',
-  'Depa Billaba',
-  'Derek Klivian',
-  'Dexter Jettster',
-  'Dineé Ellberger',
-  'DJ',
-  'Doctor Aphra',
-  'Doctor Evazan',
-  'Dogma',
-  'Dormé',
-  'Dr. Cylo',
-  'Droidbait',
-  'Droopy McCool',
-  'Dryden Vos',
-  'Dud Bolt',
-  'Ebe E. Endocott',
-  'Echuu Shen-Jon',
-  'Eeth Koth',
-  'Eighth Brother',
-  'Eirtaé',
-  'Eli Vanto',
-  'Ellé',
-  'Ello Asty',
-  'Embo',
-  'Eneb Ray',
-  'Enfys Nest',
-  'EV-9D9',
-  'Evaan Verlaine',
-  'Even Piell',
-  'Ezra Bridger',
-  'Faro Argyus',
-  'Feral',
-  'Fifth Brother',
-  'Finis Valorum',
-  'Finn',
-  'Fives',
-  'FN-1824',
-  'FN-2003',
-  'Fodesinbeed Annodue',
-  'Fulcrum',
-  'FX-7',
-  'GA-97',
-  'Galen Erso',
-  'Gallius Rax',
-  'Garazeb "Zeb" Orrelios',
-  'Gardulla the Hutt',
-  'Garrick Versio',
-  'Garven Dreis',
-  'Gavyn Sykes',
-  'Gideon Hask',
-  'Gizor Dellso',
-  'Gonk droid',
-  'Grand Inquisitor',
-  'Greeata Jendowanian',
-  'Greedo',
-  'Greer Sonnel',
-  'Grievous',
-  'Grummgar',
-  'Gungi',
-  'Hammerhead',
-  'Han Solo',
-  'Harter Kalonia',
-  'Has Obbit',
-  'Hera Syndulla',
-  'Hevy',
-  'Hondo Ohnaka',
-  'Huyang',
-  'Iden Versio',
-  'IG-88',
-  'Ima-Gun Di',
-  'Inquisitors',
-  'Inspector Thanoth',
-  'Jabba',
-  'Jacen Syndulla',
-  'Jan Dodonna',
-  'Jango Fett',
-  'Janus Greejatus',
-  'Jar Jar Binks',
-  'Jas Emari',
-  'Jaxxon',
-  'Jek Tono Porkins',
-  'Jeremoch Colton',
-  'Jira',
-  'Jobal Naberrie',
-  'Jocasta Nu',
-  'Joclad Danva',
-  'Joh Yowza',
-  'Jom Barell',
-  'Joph Seastriker',
-  'Jova Tarkin',
-  'Jubnuk',
-  'Jyn Erso',
-  'K-2SO',
-  'Kanan Jarrus',
-  'Karbin',
-  'Karina the Great',
-  'Kes Dameron',
-  'Ketsu Onyo',
-  'Ki-Adi-Mundi',
-  'King Katuunko',
-  'Kit Fisto',
-  'Kitster Banai',
-  'Klaatu',
-  'Klik-Klak',
-  'Korr Sella',
-  'Kylo Ren',
-  'L3-37',
-  'Lama Su',
-  'Lando Calrissian',
-  'Lanever Villecham',
-  'Leia Organa',
-  'Letta Turmond',
-  'Lieutenant Kaydel Ko Connix',
-  'Lieutenant Thire',
-  'Lobot',
-  'Logray',
-  'Lok Durd',
-  'Longo Two-Guns',
-  'Lor San Tekka',
-  'Lorth Needa',
-  'Lott Dod',
-  'Luke Skywalker',
-  'Lumat',
-  'Luminara Unduli',
-  'Lux Bonteri',
-  'Lyn Me',
-  'Lyra Erso',
-  'Mace Windu',
-  'Malakili',
-  'Mama the Hutt',
-  'Mars Guo',
-  'Mas Amedda',
-  'Mawhonic',
-  'Max Rebo',
-  'Maximilian Veers',
-  'Maz Kanata',
-  'ME-8D9',
-  'Meena Tills',
-  'Mercurial Swift',
-  'Mina Bonteri',
-  'Miraj Scintel',
-  'Mister Bones',
-  'Mod Terrik',
-  'Moden Canady',
-  'Mon Mothma',
-  'Moradmin Bast',
-  'Moralo Eval',
-  'Morley',
-  'Mother Talzin',
-  'Nahdar Vebb',
-  'Nahdonnis Praji',
-  'Nien Nunb',
-  'Niima the Hutt',
-  'Nines',
-  'Norra Wexley',
-  'Nute Gunray',
-  'Nuvo Vindi',
-  'Obi-Wan Kenobi',
-  'Odd Ball',
-  'Ody Mandrell',
-  'Omi',
-  'Onaconda Farr',
-  'Oola',
-  'OOM-9',
-  'Oppo Rancisis',
-  'Orn Free Taa',
-  'Oro Dassyne',
-  'Orrimarko',
-  'Osi Sobeck',
-  'Owen Lars',
-  'Pablo-Jill',
-  'Padmé Amidala',
-  'Pagetti Rook',
-  'Paige Tico',
-  'Paploo',
-  'Petty Officer Thanisson',
-  'Pharl McQuarrie',
-  'Plo Koon',
-  'Po Nudo',
-  'Poe Dameron',
-  'Poggle the Lesser',
-  'Pong Krell',
-  'Pooja Naberrie',
-  'PZ-4CO',
-  'Quarrie',
-  'Quay Tolsite',
-  'Queen Apailana',
-  'Queen Jamillia',
-  'Queen Neeyutnee',
-  'Qui-Gon Jinn',
-  'Quiggold',
-  'Quinlan Vos',
-  'R2-D2',
-  'R2-KT',
-  'R3-S6',
-  'R4-P17',
-  'R5-D4',
-  'RA-7',
-  'Rabé',
-  'Rako Hardeen',
-  'Ransolm Casterfo',
-  'Rappertunie',
-  'Ratts Tyerell',
-  'Raymus Antilles',
-  'Ree-Yees',
-  'Reeve Panzoro',
-  'Rey',
-  'Ric Olié',
-  'Riff Tamson',
-  'Riley',
-  'Rinnriyin Di',
-  'Rio Durant',
-  'Rogue Squadron',
-  'Romba',
-  'Roos Tarpals',
-  'Rose Tico',
-  'Rotta the Hutt',
-  'Rukh',
-  'Rune Haako',
-  'Rush Clovis',
-  'Ruwee Naberrie',
-  'Ryoo Naberrie',
-  'Sabé',
-  'Sabine Wren',
-  'Saché',
-  'Saelt-Marae',
-  'Saesee Tiin',
-  'Salacious B. Crumb',
-  'San Hill',
-  'Sana Starros',
-  'Sarco Plank',
-  'Sarkli',
-  'Satine Kryze',
-  'Savage Opress',
-  'Sebulba',
-  'Senator Organa',
-  'Sergeant Kreel',
-  'Seventh Sister',
-  'Shaak Ti',
-  'Shara Bey',
-  'Shmi Skywalker',
-  'Shu Mai',
-  'Sidon Ithano',
-  'Sifo-Dyas',
-  'Sim Aloo',
-  'Siniir Rath Velus',
-  'Sio Bibble',
-  'Sixth Brother',
-  'Slowen Lo',
-  'Sly Moore',
-  'Snaggletooth',
-  'Snap Wexley',
-  'Snoke',
-  'Sola Naberrie',
-  'Sora Bulq',
-  'Strono Tuggs',
-  'Sy Snootles',
-  'Tallissan Lintra',
-  'Tarfful',
-  'Tasu Leech',
-  'Taun We',
-  'TC-14',
-  'Tee Watt Kaa',
-  'Teebo',
-  'Teedo',
-  'Teemto Pagalies',
-  'Temiri Blagg',
-  'Tessek',
-  'Tey How',
-  'Thane Kyrell',
-  'The Bendu',
-  'The Smuggler',
-  'Thrawn',
-  'Tiaan Jerjerrod',
-  'Tion Medon',
-  'Tobias Beckett',
-  'Tulon Voidgazer',
-  'Tup',
-  'U9-C4',
-  'Unkar Plutt',
-  'Val Beckett',
-  'Vanden Willard',
-  'Vice Admiral Amilyn Holdo',
-  'Vober Dand',
-  'WAC-47',
-  'Wag Too',
-  'Wald',
-  'Walrus Man',
-  'Warok',
-  'Wat Tambor',
-  'Watto',
-  'Wedge Antilles',
-  'Wes Janson',
-  'Wicket W. Warrick',
-  'Wilhuff Tarkin',
-  'Wollivan',
-  'Wuher',
-  'Wullf Yularen',
-  'Xamuel Lennox',
-  'Yaddle',
-  'Yarael Poof',
-  'Yoda',
-  'Zam Wesell',
-  'Zev Senesca',
-  'Ziro the Hutt',
-  'Zuckuss',
-];
+const withMentions = (editor: Editor) => {
+  const { isInline, isVoid } = editor;
+
+  editor.isInline = (element: any) => {
+    return element.type === 'mention' ? true : isInline(element);
+  };
+
+  editor.isVoid = (element: any) => {
+    return element.type === 'mention' ? true : isVoid(element);
+  };
+
+  return editor;
+};
+
+const insertMention = (editor: Editor, character: any) => {
+  const mention = { type: 'mention', character, children: [{ text: ' ' }] };
+  Transforms.insertNodes(editor, mention);
+  Transforms.move(editor);
+  Transforms.insertText(editor, ' ');
+};
+
+const Element = (props: RenderElementProps) => {
+  const { attributes, children, element } = props;
+
+  const sharedStyles = {
+    fontSize: '16px',
+    verticalAlign: 'middle',
+  };
+
+  switch (element.type) {
+    case 'mention':
+      return <MentionElement {...props} {...sharedStyles} />;
+    default:
+      return (
+        <Text {...attributes} {...sharedStyles}>
+          {children}
+        </Text>
+      );
+  }
+};
+
+const MentionElement = ({ attributes, children, element }: any) => {
+  const selected = useSelected();
+  const focused = useFocused();
+  return (
+    <Box
+      {...attributes}
+      contentEditable={false}
+      padding="4px"
+      marginRight="2px"
+      verticalAlign="baseline"
+      display="inline-block"
+      borderRadius="4px"
+      backgroundColor="#eee"
+      boxShadow={selected && focused ? '0 0 0 2px #B4D5FF' : 'none'}
+    >
+      <Text>{element.character}</Text>
+      {children}
+    </Box>
+  );
+};
 
 export default MentionExample;
