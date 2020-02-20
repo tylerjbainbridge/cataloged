@@ -65,7 +65,7 @@ export const Dashboard = () => {
         // transitions={false}
         defaultSidebarWidth={250}
       >
-        {isViewingItem && !isViewingSettings && <FeedDrawerItemView />}
+        {/* {isViewingItem && !isViewingSettings && <FeedDrawerItemView />} */}
         {isViewingSettings && <Settings />}
         <CreateLink />
         <CreateFiles />
