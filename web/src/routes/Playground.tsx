@@ -61,7 +61,7 @@ export const Playground = () => {
         padding={20}
         size={600}
         width={800}
-        bg="lightgray"
+        // bg="lightgray"
         // borderStyle="solid"
         // borderColor="lightgray"
         // borderWidth={2}
