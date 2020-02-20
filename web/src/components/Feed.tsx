@@ -40,6 +40,8 @@ import { Filter } from './Filter';
 import { useMedia } from 'react-use';
 import { usePrevious } from '../hooks/usePrevious';
 import { TopNavBar } from './TopNavBar';
+import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
+import { Spotlight } from './Spotlight';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $after: String, $filters: [FilterInput!]) {
@@ -92,6 +94,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   const history = useHistory();
 
   const isViewingItem = !!qs.parse(location.search)?.itemId;
+  const isViewingSettings = useRouteMatch('*/settings');
 
   const INITIAL_PAGINATION_VARIABLES = {
     first: mode === 'grid' ? 30 : 50,
@@ -216,6 +219,8 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
       <UploadProgress />
       <FeedModals />
       <SelectContainer>
+        <Spotlight />
+        {isViewingItem && !isViewingSettings && <FeedDrawerItemView />}
         <Box d="flex" justifyContent="center" flex="1">
           {/* <Switch> */}
           <TopNavBar

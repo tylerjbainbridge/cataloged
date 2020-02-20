@@ -134,6 +134,8 @@ export const FilterInput = ({
   // @ts-ignore
   const filterConfig = FILTER_CONFIGS[filter.name];
 
+  const inputRef = useRef(null);
+
   const updateFilter = (updatedFilter: any) =>
     _onChange({
       ...filter,
@@ -160,6 +162,11 @@ export const FilterInput = ({
   };
 
   const commonProps = {};
+
+  useEffect(() => {
+    // @ts-ignore
+    if (inputRef.current) inputRef.current.focus();
+  }, [filterConfig.type]);
 
   switch (filterConfig.type) {
     case 'select': {
@@ -330,7 +337,7 @@ export const FilterInput = ({
             ))}
         </Select>
       )}
-      {valueNode}
+      {valueNode && React.cloneElement(valueNode, { ref: inputRef })}
       {isMobile && (
         <Box width="100%">
           <Button width="100%" onClick={remove} variantColor="red">
