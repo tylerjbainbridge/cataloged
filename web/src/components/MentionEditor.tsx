@@ -18,7 +18,9 @@ import {
   RenderElementProps,
 } from 'slate-react';
 import Downshift from 'downshift';
-import { Text, Box } from '@chakra-ui/core';
+import { Text, Box, Button } from '@chakra-ui/core';
+import { FILTER_CONFIGS } from './Filter';
+import { useAuth } from '../hooks/useAuth';
 
 export const Portal = ({ children }: any) => {
   return ReactDOM.createPortal(children, document.body);
@@ -26,7 +28,7 @@ export const Portal = ({ children }: any) => {
 
 const initialValue = [
   {
-    children: [{ text: 'type:', marks: [] }],
+    children: [{ text: '', marks: [] }],
   },
 ] || [
   {
@@ -41,14 +43,18 @@ const initialValue = [
   },
 ];
 
-const CHARACTERS = ['files', 'notes', 'links'];
-
 const initialSearchState = {
   search: '',
   targetRange: null,
   index: 0,
-  trigger: '',
+  filterBy: '',
 };
+
+const filterNames = [
+  { value: 'type', name: 'type:' },
+  { value: 'label', name: 'label:' },
+  { value: 'is', name: 'is:' },
+];
 
 const MentionExample = () => {
   const ref = useRef();
@@ -62,52 +68,116 @@ const MentionExample = () => {
     [],
   );
 
-  const chars = CHARACTERS.filter(c =>
-    c.toLowerCase().startsWith(searchState.search.toLowerCase()),
-  ).slice(0, 10);
+  const { user } = useAuth();
+
+  const inputRef = useRef(null);
+
+  const filterValues: any = {
+    type: {
+      options: [
+        { value: 'file' },
+        { value: 'link' },
+        { value: 'note' },
+        { value: 'contact' },
+      ],
+    },
+    label: {
+      options: user.labels.map(({ name }) => ({ value: name })),
+    },
+    is: {
+      options: [{ name: 'favorited', value: true }],
+    },
+  };
+
+  let options = searchState.filterBy
+    ? // @ts-ignore
+      filterValues[searchState.filterBy]?.options || []
+    : filterNames;
+
+  console.log('searchState.filterBy', searchState.filterBy, options);
+
+  options = options
+    .filter(({ name, value }: any) =>
+      (name || value).toLowerCase().includes(searchState.search.toLowerCase()),
+    )
+    .slice(0, 10);
 
   useEffect(() => {
     // @ts-ignore
     ReactEditor.focus(editor);
   }, []);
 
-  console.log(searchState, chars);
+  const getCurrentNodeRange = (editor: Editor) => {
+    // @ts-ignore
+    const [start] = Range.edges(editor.selection);
+    // @ts-ignore
+    const [node, path] = Editor.node(editor, editor.selection);
+
+    const range = Editor.range(editor, path, start);
+
+    return { node, range, start, path };
+  };
 
   const onKeyDown = useCallback(
-    event => {
+    (
+      getInputProps,
+      { selectedItem, setHighlightedIndex, highlightedIndex }: any,
+    ) => (event: any) => {
+      const { onKeyDown } = getInputProps();
+      const { search, filterBy, targetRange } = searchState;
+      console.log({ highlightedIndex });
+
       switch (event.key) {
         case 'ArrowDown':
-          if (searchState.targetRange) {
-            event.preventDefault();
-            const prevIndex =
-              searchState.index >= chars.length - 1 ? 0 : searchState.index + 1;
-            setState({ ...searchState, index: prevIndex });
-          }
+          event.preventDefault();
+          setHighlightedIndex(
+            highlightedIndex !== null
+              ? highlightedIndex >= options.length - 1
+                ? 0
+                : highlightedIndex + 1
+              : 0,
+          );
 
           break;
         case 'ArrowUp':
-          if (searchState.targetRange) {
-            event.preventDefault();
-            const nextIndex =
-              searchState.index <= 0 ? chars.length - 1 : searchState.index - 1;
-            setState({ ...searchState, index: nextIndex });
-          }
+          event.preventDefault();
+
+          setHighlightedIndex(
+            highlightedIndex <= 0 ? null : highlightedIndex - 1,
+          );
           break;
         case 'Tab':
         case 'Enter':
           event.preventDefault();
-          if (searchState.trigger) {
-            // @ts-ignore
-            Transforms.select(editor, searchState.targetRange);
 
-            insertMention(editor, `type:${chars[searchState.index]}`);
-          } else {
-            // @ts-ignore
-            Transforms.select(editor, searchState.targetRange);
-
-            // Editor.before(editor, start);
-            insertMention(editor, searchState.search);
+          // @ts-ignore
+          if (!targetRange) {
+            Transforms.insertNodes(editor, {
+              children: [{ text: '' }],
+            });
           }
+
+          // @ts-ignore
+          Transforms.select(
+            editor,
+            targetRange || getCurrentNodeRange(editor)?.range,
+          );
+
+          if (highlightedIndex === null || !options.length) {
+            insertMention(editor, { search });
+          } else if (filterBy && options[highlightedIndex]) {
+            const option = options[highlightedIndex];
+            insertMention(editor, {
+              search: option.name || option.value,
+              filterBy,
+            });
+          } else if (options[highlightedIndex]) {
+            const option = options[highlightedIndex];
+            Transforms.insertText(editor, option.name || option.value);
+          }
+
+          console.log({ highlightedIndex });
+
           setState(initialSearchState);
           break;
         case 'Escape':
@@ -121,162 +191,127 @@ const MentionExample = () => {
     [searchState.search, searchState.targetRange, searchState.index],
   );
 
-  // useEffect(() => {
-  //   if (searchState.targetRange && searchState.trigger && chars.length > 0) {
-  //     const el = ref.current;
-  //     // @ts-ignore
-  //     const domRange = ReactEditor.toDOMRange(editor, searchState.targetRange);
-  //     const rect = domRange.getBoundingClientRect();
-  //     // @ts-ignore
-  //     el.style.top = `${rect.top + window.pageYOffset + 24}px`;
-  //     // @ts-ignore
-  //     el.style.left = `${rect.left + window.pageXOffset}px`;
-  //   }
-  // }, [
-  //   chars.length,
-  //   editor,
-  //   searchState.search,
-  //   searchState.targetRange,
-  //   searchState.index,
-  // ]);
+  const onChange = (value: Node[]) => {
+    // @ts-ignore
+    setValue(value);
+    const { selection } = editor;
+
+    if (selection && Range.isCollapsed(selection)) {
+      const { node, range } = getCurrentNodeRange(editor);
+
+      const nodeString = Node.string(node).trim();
+
+      const filterBy = filterNames.find(({ value }) =>
+        nodeString.includes(`${value}:`),
+      );
+
+      console.log({ filterBy, nodeString });
+
+      const search = filterBy
+        ? nodeString.replace(filterBy.name, '').trim()
+        : nodeString;
+
+      // @ts-ignore
+      setState({
+        search,
+        filterBy: filterBy?.value,
+        targetRange: range,
+        index: 0,
+      });
+    }
+  };
 
   return (
-    <Slate
-      // @ts-ignore
-      editor={editor}
-      value={value}
-      onChange={value => {
-        // @ts-ignore
-        setValue(value);
-        const { selection } = editor;
-
-        if (selection && Range.isCollapsed(selection)) {
-          const [start] = Range.edges(selection);
-
-          const [node, path] = Editor.node(editor, selection);
-
-          const nodeString = Node.string(node).trim();
-
-          const beforeRange = Editor.range(editor, path, start);
-          console.log({ node, path, beforeRange });
-
-          const targetRange = nodeString.match(/^type:/g);
-
-          // @ts-ignore
-          const range = Editor.range(editor, path[0], start);
-
-          const search = targetRange
-            ? nodeString.replace('type:', '').trim()
-            : nodeString;
-
-          // @ts-ignore
-          setState({
-            search,
-            targetRange: beforeRange,
-            trigger: targetRange ? 'type' : '',
-            index: 0,
-          });
-        }
-      }}
+    <Downshift
+      // defaultHighlightedIndex={0}
+      selectedItem={''}
+      isOpen={!!searchState.search}
+      inputValue={searchState.search}
     >
-      <Downshift
-        isOpen={!!searchState.search}
-        inputValue={searchState.search}
-        onChange={selection =>
-          alert(selection ? `You selected ${selection}` : 'Selection Cleared')
-        }
-      >
-        {({
-          getInputProps,
-          getItemProps,
-          getLabelProps,
-          getMenuProps,
-          isOpen,
-          inputValue,
-          highlightedIndex,
-          selectedItem,
-          getRootProps,
-        }) => {
-          return (
-            <Box>
-              <Box {...getRootProps()}>
+      {({
+        getInputProps,
+        getItemProps,
+        getMenuProps,
+        highlightedIndex,
+        selectedItem,
+        getRootProps,
+        setHighlightedIndex,
+      }) => {
+        return (
+          <Slate
+            // @ts-ignore
+            editor={editor}
+            value={value}
+            onChange={onChange}
+          >
+            <Box {...getRootProps({ refKey: 'ref' })}>
+              <Box>
                 <Box
                   p="3px"
                   pb="5px"
-                  height="15px"
+                  width="100%"
+                  ref={ref => {
+                    inputRef.current = ref;
+                  }}
                   borderBottom="2px solid black"
+                  borderBottomColor="gray.100"
                 >
-                  <Editable
-                    renderElement={renderElement}
-                    onKeyDown={onKeyDown}
-                    placeholder="Enter some text..."
-                  />
+                  <Box d="flex" minHeight="40px" alignItems="flex-end">
+                    <Box width="100%" pb="3px">
+                      <Editable
+                        renderElement={renderElement}
+                        // @ts-ignore
+                        onKeyDown={onKeyDown(getInputProps, {
+                          selectedItem,
+                          highlightedIndex,
+                          setHighlightedIndex,
+                        })}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                        placeholder="Enter some text..."
+                      />
+                    </Box>
+                  </Box>
                 </Box>
-                <Box {...getMenuProps()}>
-                  {isOpen
-                    ? chars.map((item, index) => (
-                        <li
-                          {...getItemProps({
-                            key: item,
-                            index,
-                            item,
-                            style: {
-                              backgroundColor:
-                                highlightedIndex === index
-                                  ? 'lightgray'
-                                  : 'white',
-                              fontWeight:
-                                selectedItem === item ? 'bold' : 'normal',
-                            },
-                          })}
-                        >
-                          {item}
-                        </li>
-                      ))
-                    : null}
-                </Box>
+                {(searchState.filterBy || searchState.search) && (
+                  <Box
+                    {...getMenuProps()}
+                    // @ts-ignore
+                    width={inputRef?.current?.offsetWidth}
+                    position="absolute"
+                    zIndex={100}
+                    backgroundColor="white"
+                    rounded="lg"
+                  >
+                    {options.map((item: any, index: number) => (
+                      <Box
+                        d="flex"
+                        alignItems="center"
+                        height="35px"
+                        pl="10px"
+                        {...getItemProps({
+                          key: item.name + item.value + index,
+                          index,
+                          item,
+                          // @ts-ignore
+                          backgroundColor:
+                            highlightedIndex === index ? 'gray.100' : 'white',
+                          fontWeight: selectedItem === item ? 'bold' : 'normal',
+                        })}
+                      >
+                        {item.name || item.value}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
               </Box>
             </Box>
-          );
-        }}
-      </Downshift>
-
-      {false &&
-        searchState.targetRange &&
-        searchState.trigger &&
-        chars.length > 0 && (
-          <Portal>
-            <div
-              // @ts-ignore
-              ref={ref}
-              style={{
-                top: '-9999px',
-                left: '-9999px',
-                position: 'absolute',
-                zIndex: 1,
-                padding: '3px',
-                background: 'white',
-                borderRadius: '4px',
-                boxShadow: '0 1px 5px rgba(0,0,0,.2)',
-              }}
-            >
-              {chars.map((char, i) => (
-                <div
-                  key={char}
-                  style={{
-                    padding: '1px 3px',
-                    borderRadius: '3px',
-                    background:
-                      i === searchState.index ? '#B4D5FF' : 'transparent',
-                  }}
-                >
-                  {char}
-                </div>
-              ))}
-            </div>
-          </Portal>
-        )}
-    </Slate>
+          </Slate>
+        );
+      }}
+    </Downshift>
   );
 };
 
@@ -294,11 +329,10 @@ const withMentions = (editor: Editor) => {
   return editor;
 };
 
-const insertMention = (editor: Editor, character: any) => {
-  const mention = { type: 'mention', character, children: [{ text: ' ' }] };
+const insertMention = (editor: Editor, filter: any) => {
+  const mention = { type: 'mention', filter, children: [{ text: '' }] };
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
-  Transforms.insertText(editor, ' ');
 };
 
 const Element = (props: RenderElementProps) => {
@@ -306,7 +340,10 @@ const Element = (props: RenderElementProps) => {
 
   const sharedStyles = {
     fontSize: '16px',
+    height: '20px',
     verticalAlign: 'middle',
+    d: 'flex',
+    alignItems: 'center',
   };
 
   switch (element.type) {
@@ -314,7 +351,7 @@ const Element = (props: RenderElementProps) => {
       return <MentionElement {...props} {...sharedStyles} />;
     default:
       return (
-        <Text {...attributes} {...sharedStyles}>
+        <Text {...attributes} lineHeight="18px" {...sharedStyles}>
           {children}
         </Text>
       );
@@ -326,18 +363,27 @@ const MentionElement = ({ attributes, children, element }: any) => {
   const focused = useFocused();
   return (
     <Box
+      d="flex"
+      alignItems="center"
       {...attributes}
       contentEditable={false}
-      padding="4px"
-      marginRight="2px"
-      verticalAlign="baseline"
+      cursor="pointer"
+      variant="outline"
+      bg="brand.purple.light"
+      color="brand.purple.main"
+      padding="1px 2px"
+      margin="2px"
+      mb="0px"
+      verticalAlign="middle"
       display="inline-block"
-      borderRadius="4px"
-      backgroundColor="#eee"
+      rounded="lg"
       boxShadow={selected && focused ? '0 0 0 2px #B4D5FF' : 'none'}
     >
-      <Text>{element.character}</Text>
-      {children}
+      <Text>
+        {element.filter.filterBy ? `${element.filter.filterBy}:` : ''}
+        {element.filter.search}
+      </Text>
+      <Text>{children}</Text>
     </Box>
   );
 };
