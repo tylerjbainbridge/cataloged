@@ -160,7 +160,7 @@ export const Labels = ({
     user.labels.filter(({ name }: { name: string }) => {
       return (
         // @ts-ignore
-        name.toLowerCase().includes(search.toLowerCase())
+        name.toLowerCase().includes(search || ''.toLowerCase())
       );
     }),
     'name',

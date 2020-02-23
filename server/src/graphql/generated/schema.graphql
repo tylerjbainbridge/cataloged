@@ -177,14 +177,12 @@ input FileWhereUniqueInput {
 
 type Filter {
   name: String!
-  operator: String!
   value: FilterValue
   values: [FilterValue!]
 }
 
 input FilterInput {
   name: String!
-  operator: String!
   value: FilterValue
   values: [FilterValue!]
 }

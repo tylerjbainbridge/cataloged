@@ -168,7 +168,6 @@ export interface NexusGenInputs {
   }
   FilterInput: { // input type
     name: string; // String!
-    operator: string; // String!
     value?: any | null; // FilterValue
     values?: any[] | null; // [FilterValue!]
   }
@@ -1248,7 +1247,6 @@ export interface NexusGenRootTypes {
   File: PrismaClient.File;
   Filter: { // root type
     name: string; // String!
-    operator: string; // String!
     value?: any | null; // FilterValue
     values?: any[] | null; // [FilterValue!]
   }
@@ -1456,7 +1454,6 @@ export interface NexusGenFieldTypes {
   }
   Filter: { // field return type
     name: string; // String!
-    operator: string; // String!
     value: any | null; // FilterValue
     values: any[] | null; // [FilterValue!]
   }
