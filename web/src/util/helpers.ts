@@ -38,8 +38,10 @@ export const getQueryStringFromFilters = (filters: any[], search = '') => {
   filters.forEach(filter => {
     (filter.values ? filter.values : [filter.value]).forEach(
       (value: string) => {
+        const setName = filter.name || 'search';
         // @ts-ignore
-        sets[filter.name || 'search'].add(value);
+
+        if (sets[setName]) sets[filter.name || 'search'].add(value);
       },
     );
   });
