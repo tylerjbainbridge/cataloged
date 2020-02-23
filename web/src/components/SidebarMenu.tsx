@@ -41,7 +41,6 @@ export const GET_SAVED_SEARCHES_QUERY = gql`
 
       filters {
         name
-        operator
         value
         values
       }
@@ -83,7 +82,7 @@ const LinkListItem = ({
         // @ts-ignore
         to={{
           pathname: pathname || '/',
-          search: getQueryStringFromFilters(filters, location),
+          search: getQueryStringFromFilters(filters, location.search),
         }}
         {...props}
       >
@@ -225,33 +224,19 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
                 </Tooltip>
               </Text>
               <LinkListItem filters={[]}>All</LinkListItem>
-              <LinkListItem
-                filters={[
-                  { name: 'isFavorited', operator: 'equals', value: true },
-                ]}
-              >
+              <LinkListItem filters={[{ name: 'is', value: 'favorited' }]}>
                 Favorites
               </LinkListItem>
-              <LinkListItem
-                filters={[{ name: 'type', operator: 'equals', value: 'file' }]}
-              >
+              <LinkListItem filters={[{ name: 'type', value: 'file' }]}>
                 Files
               </LinkListItem>
-              <LinkListItem
-                filters={[{ name: 'type', operator: 'equals', value: 'note' }]}
-              >
+              <LinkListItem filters={[{ name: 'type', value: 'note' }]}>
                 Notes
               </LinkListItem>
-              <LinkListItem
-                filters={[{ name: 'type', operator: 'equals', value: 'link' }]}
-              >
+              <LinkListItem filters={[{ name: 'type', value: 'link' }]}>
                 Links
               </LinkListItem>
-              <LinkListItem
-                filters={[
-                  { name: 'type', operator: 'equals', value: 'googleContact' },
-                ]}
-              >
+              <LinkListItem filters={[{ name: 'type', value: 'contact' }]}>
                 Contacts
               </LinkListItem>
             </Stack>

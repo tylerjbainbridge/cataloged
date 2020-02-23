@@ -28,7 +28,7 @@ import { GridFeed } from './GridFeed';
 import { FeedBottomToolbar } from './FeedBottomToolbar';
 import {
   getNodesFromConnection,
-  getFeedVariablesFromQueryString,
+  getFiltersFromQueryString,
   getQueryStringFromFilters,
 } from '../util/helpers';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
@@ -40,6 +40,7 @@ import { Filter } from './Filter';
 import { useMedia } from 'react-use';
 import { usePrevious } from '../hooks/usePrevious';
 import { TopNavBar } from './TopNavBar';
+import FilterSearchInput from './FilterSearchInput';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $after: String, $filters: [FilterInput!]) {
@@ -102,10 +103,12 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     localStorage.setItem('grid-mode', mode);
   }, [mode]);
 
+  const queryStringFilters = getFiltersFromQueryString(location.search);
+
   const query = useQuery<feed>(FEED_QUERY, {
     variables: {
       ...INITIAL_PAGINATION_VARIABLES,
-      ...getFeedVariablesFromQueryString(location.search),
+      ...(queryStringFilters ? { filters: queryStringFilters } : {}),
     },
     fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true,
@@ -147,7 +150,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   useEffect(() => {
     if (prevLocation && prevLocation.search !== location.search) {
-      // refetch(getFeedVariablesFromQueryString(location.search));
+      // refetch(getFiltersFromQueryString(location.search));
     }
   }, [location.search]);
 
@@ -156,7 +159,6 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   const lastEdge = _.last(data?.itemsConnection?.edges || []);
 
   const nextPage = () => {
-    console.log({ lastEdge });
     return fetchMore({
       variables: {
         ...variables,
@@ -193,7 +195,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   const onDebouncedFilterChange = (newFilters: any[]) => {
     history.replace({
       pathname: window.location.pathname,
-      search: getQueryStringFromFilters(newFilters, window.location),
+      search: getQueryStringFromFilters(newFilters, window.location.search),
     });
   };
 
@@ -220,11 +222,17 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
           {/* <Switch> */}
           <TopNavBar
             middleNode={
-              <Filter
-                variables={variables}
-                loading={networkStatus !== 6 && loading}
-                onDebouncedFilterChange={onDebouncedFilterChange}
-              />
+              <Box width="500px">
+                <FilterSearchInput
+                  filters={queryStringFilters}
+                  onChange={onDebouncedFilterChange}
+                />
+              </Box>
+              // <Filter
+              //   variables={variables}
+              //   loading={networkStatus !== 6 && loading}
+              //   onDebouncedFilterChange={onDebouncedFilterChange}
+              // />
             }
             rightNode={
               <Box>

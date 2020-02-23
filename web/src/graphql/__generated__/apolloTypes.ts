@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 //==============================================================
@@ -14,7 +15,6 @@ export enum ItemStatus {
 
 export interface FilterInput {
   name: string;
-  operator: string;
   value?: any | null;
   values?: any[] | null;
 }

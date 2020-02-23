@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+// @generated
 // This file was automatically generated and should not be edited.
 
 // ====================================================
@@ -9,7 +10,6 @@
 export interface getSavedSearches_savedSearches_filters {
   __typename: "Filter";
   name: string;
-  operator: string;
   value: any | null;
   values: any[] | null;
 }

@@ -13,12 +13,14 @@
     "prisma:lift:save": "npx prisma2 lift save",
     "postinstall": "npx prisma2 generate",
     "generate:imports": "node src/generateImports.js",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts",
+    "test": "jest"
   },
   "resolutions": {
     "agent-base": "^5.0.0"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.8.4",
     "@prisma/client": "2.0.0-preview021",
     "@sentry/node": "^5.12.3",
     "apollo-server-express": "^2.9.0",
@@ -59,7 +61,7 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.3.3",
+    "@babel/preset-typescript": "^7.8.3",
     "@types/aws-lambda": "^8.10.31",
     "@types/bluebird": "^3.5.27",
     "@types/graphql-upload": "^8.0.1",
@@ -70,6 +72,7 @@
     "@types/morgan": "^1.7.37",
     "@types/node": "^12.7.2",
     "@types/sharp": "^0.22.2",
+    "jest": "^25.1.0",
     "prettier": "^1.18.2",
     "ts-node": "^8.3.0",
     "ts-node-dev": "1.0.0-pre.40"

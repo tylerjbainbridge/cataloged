@@ -1,0 +1,375 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FilterQueryBuilder works 1`] = `
+Object {
+  "-label": Set {
+    "label 4",
+  },
+  "-status": Set {
+    "DONE",
+  },
+  "-type": Set {
+    "file",
+  },
+  "label": Set {
+    "label 1",
+    "label 2",
+    "label 3",
+  },
+  "search": Set {
+    "test string",
+    "another string",
+  },
+  "status": Set {},
+  "type": Set {
+    "note",
+    "link",
+    "googleContact",
+    "file",
+  },
+}
+`;
+
+exports[`FilterQueryBuilder works 2`] = `
+Object {
+  "where": Object {
+    "AND": Array [
+      Object {
+        "OR": Array [
+          Object {
+            "note": Object {
+              "OR": Array [
+                Object {
+                  "text": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "text": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "text": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "text": Object {
+                    "contains": "string",
+                  },
+                },
+              ],
+            },
+            "type": "note",
+          },
+          Object {
+            "link": Object {
+              "OR": Array [
+                Object {
+                  "href": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "title": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "description": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "href": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "title": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "description": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "href": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "title": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "description": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "href": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "title": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "description": Object {
+                    "contains": "string",
+                  },
+                },
+              ],
+            },
+            "type": "link",
+          },
+          Object {
+            "googleContact": Object {
+              "OR": Array [
+                Object {
+                  "name": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "email": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "companyName": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "companyTitle": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "phoneNumber": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "name": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "email": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "companyName": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "companyTitle": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "phoneNumber": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "name": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "email": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "companyName": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "companyTitle": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "phoneNumber": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "name": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "email": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "companyName": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "companyTitle": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "phoneNumber": Object {
+                    "contains": "string",
+                  },
+                },
+              ],
+            },
+            "type": "googleContact",
+          },
+          Object {
+            "file": Object {
+              "OR": Array [
+                Object {
+                  "name": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "extension": Object {
+                    "contains": "test",
+                  },
+                },
+                Object {
+                  "name": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "extension": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "name": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "extension": Object {
+                    "contains": "another",
+                  },
+                },
+                Object {
+                  "name": Object {
+                    "contains": "string",
+                  },
+                },
+                Object {
+                  "extension": Object {
+                    "contains": "string",
+                  },
+                },
+              ],
+              "hasStartedUploading": true,
+              "isUploaded": true,
+            },
+            "type": "file",
+          },
+        ],
+      },
+      Object {
+        "AND": Array [
+          Object {
+            "type": Object {
+              "in": Array [
+                "note",
+                "link",
+                "googleContact",
+                "file",
+              ],
+            },
+          },
+          Object {
+            "type": Object {
+              "not": Object {
+                "in": Array [
+                  "file",
+                ],
+              },
+            },
+          },
+        ],
+      },
+      Object {
+        "AND": Array [
+          Object {
+            "labels": Object {
+              "some": Array [
+                Object {
+                  "name": Object {
+                    "equals": "label 1",
+                  },
+                },
+                Object {
+                  "name": Object {
+                    "equals": "label 2",
+                  },
+                },
+                Object {
+                  "name": Object {
+                    "equals": "label 3",
+                  },
+                },
+              ],
+            },
+          },
+          Object {
+            "labels": Object {
+              "none": Array [
+                Object {
+                  "name": Object {
+                    "equals": "label 4",
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+      Object {
+        "AND": Array [
+          Object {
+            "status": Object {
+              "not": Object {
+                "in": Array [
+                  "DONE",
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+    "deletedAt": null,
+    "isFavorited": Object {
+      "equals": Object {
+        "equals": true,
+      },
+    },
+    "user": Object {
+      "id": "123",
+    },
+  },
+}
+`;
