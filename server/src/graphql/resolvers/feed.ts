@@ -31,7 +31,7 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
     user: ctx.user,
   }).getFindManyArgs();
 
-  console.log(JSON.stringify(findManyArgs, null, 4));
+  // console.log(JSON.stringify(findManyArgs, null, 4));
 
   // console.log('args', JSON.stringify(args, null, 4));
   // console.log('filter', JSON.stringify(filter, null, 4));
