@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { Main } from './routes/Main';
-// import { Playground } from './routes/Playground';
+import { Playground } from './routes/Playground';
 import { GoogleCallback } from './routes/GoogleCallback';
 import { ForceSignIn } from './routes/ForceSignIn';
 
@@ -20,11 +20,11 @@ export const Router = () => {
         <Note />
       </Route> */}
 
-      {/* {process.env.NODE_ENV === 'development' && (
+      {process.env.NODE_ENV === 'development' && (
         <Route path="/playground" exact>
           <Playground />
         </Route>
-      )} */}
+      )}
       {/* 
       {auth.user && auth.user.role === 'admin' && (
         <Route path="/graphql" exact>

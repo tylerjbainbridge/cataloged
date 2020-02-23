@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getFiltersFromQueryString 1`] = `
+Object {
+  "filters": Array [
+    Object {
+      "name": "-is",
+      "value": "not started",
+    },
+    Object {
+      "name": "-label",
+      "value": "label 4",
+    },
+    Object {
+      "name": "-type",
+      "value": "file",
+    },
+    Object {
+      "name": "is",
+      "value": "favorited",
+    },
+    Object {
+      "name": "label",
+      "values": Array [
+        "label 1",
+        "label 2",
+        "label 3",
+      ],
+    },
+    Object {
+      "name": "search",
+      "values": Array [
+        "random string",
+        "test string",
+        "another string",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`getQueryStringFromFilters 1`] = `"-is=not%20started&-label=label%204&-type=file&is=favorited&itemId=123&label[]=label%201&label[]=label%202&label[]=label%203&search[]=random%20string&search[]=test%20string&search[]=another%20string"`;
+
+exports[`getQueryStringFromFilters 2`] = `
+Object {
+  "-is": "not started",
+  "-label": "label 4",
+  "-type": "file",
+  "is": "favorited",
+  "itemId": "123",
+  "label": Array [
+    "label 1",
+    "label 2",
+    "label 3",
+  ],
+  "search": Array [
+    "random string",
+    "test string",
+    "another string",
+  ],
+}
+`;

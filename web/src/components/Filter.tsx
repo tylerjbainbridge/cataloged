@@ -28,7 +28,7 @@ import {
   getFilterVariablesFromFormValues,
   randomString,
   getQueryStringFromFilters,
-  getFeedVariablesFromQueryString,
+  getFiltersFromQueryString,
 } from '../util/helpers';
 import { useDeepCompareEffect, useMedia } from 'react-use';
 import { useHotKey } from '../hooks/useHotKey';
@@ -57,20 +57,16 @@ export const FILTER_CONFIGS = {
   search: {
     type: 'text',
     displayName: 'any',
-    operators: ['contains', 'equals'],
     defaults: {
       value: '',
-      operator: 'contains',
     },
   },
   // Type
   type: {
     type: 'select',
     displayName: 'type',
-    operators: ['equals', 'not'],
     defaults: {
       value: undefined,
-      operator: 'equals',
     },
     options: [
       [undefined, 'all'],
@@ -81,42 +77,27 @@ export const FILTER_CONFIGS = {
     ],
   },
   // Status
-  status: {
+  is: {
     type: 'select',
-    displayName: 'status',
-    operators: ['equals', 'not'],
+    displayName: 'is',
     defaults: {
-      value: 'NOT_STARTED',
-      operator: 'equals',
+      value: 'favorited',
     },
-    options: [
-      ['NOT_STARTED', 'not started'],
-      ['IN_PROGRESS', 'in progress'],
-      ['DONE', 'done'],
-    ],
-  },
-  // Is favorited
-  isFavorited: {
-    type: 'switch',
-    displayName: 'is favorited',
-    operators: [],
-    defaults: {
-      value: true,
-      operator: 'equals',
-    },
+    options: ['favorited', 'not started', 'in progress', 'done'],
   },
   // Labels
-  labels: {
+  label: {
     type: 'labels',
     displayName: 'labels',
-    operators: [
-      // 'every', 'some', 'none'
-      ['some', 'all'],
-      'none',
-    ],
     defaults: {
       values: [],
-      operator: 'some',
+    },
+  },
+  '-label': {
+    type: 'labels',
+    displayName: 'without labels',
+    defaults: {
+      values: [],
     },
   },
 };
@@ -283,7 +264,7 @@ export const FilterInput = ({
             }
           : {
               mr: '10px',
-              width: '100px',
+              width: '150px',
             })}
         value={filter.name}
         onChange={(e: any) => {
@@ -307,7 +288,7 @@ export const FilterInput = ({
           ),
         )}
       </Select>
-      {!!filterConfig.operators.length && (
+      {false && !!filterConfig.operators.length && (
         <Select
           cursor="pointer"
           variant="flushed"
@@ -417,8 +398,7 @@ export const Filter = ({
   useEffect(() => {
     if (!isOpen && prevLocation && prevLocation.search !== location.search) {
       filterForm.reset({
-        [FORM_NAME]:
-          getFeedVariablesFromQueryString(location.search)?.filters || [],
+        [FORM_NAME]: getFiltersFromQueryString(location.search),
       });
     }
   }, [location.search, isOpen]);
@@ -511,7 +491,6 @@ export const Filter = ({
                       // @ts-ignore
                       value || {
                         name: 'search',
-                        operator: 'contains',
                         value: '',
                       }
                     }

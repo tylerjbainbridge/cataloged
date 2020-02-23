@@ -12,10 +12,12 @@
     "eject:app": "react-scripts eject",
     "refresh:types": "yarn run remove:types && yarn run generate:types",
     "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"src/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=src/graphql/__generated__/apolloTypes.ts --outputFlat=src/graphql/__generated__",
-    "remove:types": "find . | grep -E \"(__generated__)\" | xargs rm -rf"
+    "remove:types": "find . | grep -E \"(__generated__)\" | xargs rm -rf",
+    "test": "jest"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
+    "@babel/preset-env": "^7.8.4",
     "@chakra-ui/core": "^0.5.2",
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.23",
@@ -45,8 +47,10 @@
     "clean-deep": "^3.2.0",
     "color": "^3.1.2",
     "date-fns": "^2.8.1",
+    "downshift": "^5.0.3",
     "emotion": "^10.0.27",
     "emotion-theming": "^10.0.19",
+    "fast-deep-equal": "^3.1.1",
     "graphql": "^14.5.8",
     "history": "^4.10.1",
     "immutable": "^4.0.0-rc.12",
@@ -82,10 +86,13 @@
     "yup": "^0.27.0"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.3.3",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/preset-typescript": "^7.8.3",
     "@types/graphql": "^14.2.3",
+    "@types/jest": "^25.1.3",
     "@types/yup": "^0.26.23",
     "prettier": "^1.18.2",
+    "react-test-renderer": "^16.12.0",
     "typescript": "^3.7.2"
   },
   "browserslist": {
