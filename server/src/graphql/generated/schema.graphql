@@ -177,14 +177,12 @@ input FileWhereUniqueInput {
 
 type Filter {
   name: String!
-  operator: String!
   value: FilterValue
   values: [FilterValue!]
 }
 
 input FilterInput {
   name: String!
-  operator: String!
   value: FilterValue
   values: [FilterValue!]
 }
@@ -479,11 +477,6 @@ type ItemConnection {
   pageInfo: PageInfo!
 }
 
-input ItemCreateManyWithoutItemInput {
-  connect: [ItemWhereUniqueInput!]
-  create: [ItemCreateWithoutItemInput!]
-}
-
 input ItemCreateManyWithoutLabelsInput {
   connect: [ItemWhereUniqueInput!]
   create: [ItemCreateWithoutLabelsInput!]
@@ -504,11 +497,6 @@ input ItemCreateOneWithoutGoogleContactInput {
   create: ItemCreateWithoutGoogleContactInput
 }
 
-input ItemCreateOneWithoutItemsInput {
-  connect: ItemWhereUniqueInput
-  create: ItemCreateWithoutItemsInput
-}
-
 input ItemCreateOneWithoutLinkInput {
   connect: ItemWhereUniqueInput
   create: ItemCreateWithoutLinkInput
@@ -526,8 +514,6 @@ input ItemCreateWithoutFileInput {
   googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
-  item: ItemCreateOneWithoutItemsInput
-  items: ItemCreateManyWithoutItemInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
@@ -544,44 +530,6 @@ input ItemCreateWithoutGoogleContactInput {
   file: FileCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
-  item: ItemCreateOneWithoutItemsInput
-  items: ItemCreateManyWithoutItemInput
-  labels: LabelCreateManyWithoutItemsInput
-  link: LinkCreateOneWithoutItemInput
-  note: NoteCreateOneWithoutItemInput
-  status: String
-  type: String
-  updatedAt: DateTime
-  user: UserCreateOneWithoutItemsInput
-}
-
-input ItemCreateWithoutItemInput {
-  createdAt: DateTime
-  date: DateTime
-  deletedAt: DateTime
-  file: FileCreateOneWithoutItemInput
-  googleContact: GoogleContactCreateOneWithoutItemInput
-  id: String
-  isFavorited: Boolean
-  items: ItemCreateManyWithoutItemInput
-  labels: LabelCreateManyWithoutItemsInput
-  link: LinkCreateOneWithoutItemInput
-  note: NoteCreateOneWithoutItemInput
-  status: String
-  type: String
-  updatedAt: DateTime
-  user: UserCreateOneWithoutItemsInput
-}
-
-input ItemCreateWithoutItemsInput {
-  createdAt: DateTime
-  date: DateTime
-  deletedAt: DateTime
-  file: FileCreateOneWithoutItemInput
-  googleContact: GoogleContactCreateOneWithoutItemInput
-  id: String
-  isFavorited: Boolean
-  item: ItemCreateOneWithoutItemsInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
@@ -599,8 +547,6 @@ input ItemCreateWithoutLabelsInput {
   googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
-  item: ItemCreateOneWithoutItemsInput
-  items: ItemCreateManyWithoutItemInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
   status: String
@@ -617,8 +563,6 @@ input ItemCreateWithoutLinkInput {
   googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
-  item: ItemCreateOneWithoutItemsInput
-  items: ItemCreateManyWithoutItemInput
   labels: LabelCreateManyWithoutItemsInput
   note: NoteCreateOneWithoutItemInput
   status: String
@@ -635,8 +579,6 @@ input ItemCreateWithoutNoteInput {
   googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
-  item: ItemCreateOneWithoutItemsInput
-  items: ItemCreateManyWithoutItemInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   status: String
@@ -653,8 +595,6 @@ input ItemCreateWithoutUserInput {
   googleContact: GoogleContactCreateOneWithoutItemInput
   id: String
   isFavorited: Boolean
-  item: ItemCreateOneWithoutItemsInput
-  items: ItemCreateManyWithoutItemInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
@@ -707,8 +647,6 @@ input ItemWhereInput {
   googleContact: GoogleContactWhereInput
   id: StringFilter
   isFavorited: BooleanFilter
-  item: ItemWhereInput
-  items: ItemFilter
   labels: LabelFilter
   link: LinkWhereInput
   NOT: [ItemWhereInput!]
