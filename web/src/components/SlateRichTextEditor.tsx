@@ -28,7 +28,11 @@ import {
   FaList,
 } from 'react-icons/fa';
 
-const DEFAULT_VALUE: any = [];
+const DEFAULT_VALUE: any = [
+  {
+    children: [{ text: '', marks: [] }],
+  },
+];
 
 const HOTKEYS = {
   'mod+b': 'bold',
