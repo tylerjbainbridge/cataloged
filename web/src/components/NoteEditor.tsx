@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Node } from 'slate';
-import { useMutation } from '@apollo/react-hooks';
+import deepEqual from 'fast-deep-equal';
+
 import _ from 'lodash';
 import removeMarkdown from 'remove-markdown';
 
@@ -15,7 +16,7 @@ import SlateRichTextEditor from './SlateRichTextEditor';
 import { Input } from '@chakra-ui/core';
 import { ReactEditor } from 'slate-react';
 
-export const serializeToPlainText = (nodes: any[]) => {
+export const serializeToPlainText = (nodes: any[] = []) => {
   return nodes.map(n => Node.string(n)).join('\n');
 };
 
@@ -67,6 +68,11 @@ export const NoteEditor = ({
   watch();
 
   useEffect(() => {
+    register({ name: 'value' });
+    register({ name: 'title' });
+    setValue('title', note.title);
+    setValue('value', JSON.parse(note.raw));
+
     if (!note.title) {
       // @ts-ignore
       titleInputRef?.current?.focus();
@@ -76,14 +82,8 @@ export const NoteEditor = ({
     }
   }, []);
 
-  // Listen for form changes.
   useEffect(() => {
-    register({ name: 'value' });
-    register({ name: 'title' });
-  }, [register]);
-
-  useEffect(() => {
-    if (!_.isEqual(valuesRef.current, values)) {
+    if (!deepEqual(valuesRef.current, values)) {
       //@ts-ignore
       debouncedUpdateNote({
         noteId: note.id,
@@ -96,11 +96,14 @@ export const NoteEditor = ({
     valuesRef.current = values;
   }, [values]);
 
+  console.log({ values });
+
   // Clean up and delete if needed.
   useEffect(
     () => () => {
       debouncedUpdateNote.cancel();
-      if (!serializeToPlainText(values.value) && !values.title) deleteItem();
+      console.log(values);
+      if (!note.text && !note.title) deleteItem();
     },
     [],
   );

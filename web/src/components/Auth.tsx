@@ -73,9 +73,9 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
     <ErrorBoundary
       FallbackComponent={() => (
         <Stack spacing="15px">
-          <Alert status="error">
+          <Alert>
             <AlertIcon />
-            <AlertTitle mr={2}>Authentication failed!</AlertTitle>
+            <AlertTitle mr={2}>Something went wrong!</AlertTitle>
           </Alert>
           <Button size="sm" onClick={() => window.location.replace('/')}>
             Try again

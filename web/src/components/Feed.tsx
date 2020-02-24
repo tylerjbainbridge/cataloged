@@ -237,13 +237,14 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                   justifyContent="space-between"
                   width="550px"
                   maxWidth={isMobile ? '100%' : '550px'}
-                  overflowX="auto"
                 >
-                  <Box width="490px">
-                    <FilterSearchInput
-                      filters={queryStringFilters}
-                      onChange={onDebouncedFilterChange}
-                    />
+                  <Box>
+                    <Box width="490px" rounded="lg" p="10px">
+                      <FilterSearchInput
+                        filters={queryStringFilters}
+                        onChange={onDebouncedFilterChange}
+                      />
+                    </Box>
                     {/* {true && (
                       <Spinner
                         position="absolute"
@@ -264,6 +265,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                         }
                       >
                         <Button
+                          m="10px"
                           cursor="pointer"
                           aria-label="add filter"
                           type="button"

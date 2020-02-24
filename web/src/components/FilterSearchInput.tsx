@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import ReactDOM from 'react-dom';
 import { Editor, Transforms, Range, createEditor, Node, Point } from 'slate';
-import { withHistory } from 'slate-history';
 import deepEqual from 'fast-deep-equal';
 import _ from 'lodash';
 import {
@@ -99,14 +98,14 @@ const getValueFromFilter = (filters: Filter[] = []) => {
               ],
               [],
             ),
-            { text: ' ', marks: [] },
+            { text: ' ', type: 'spacer', marks: [] },
           ],
         },
       ]
     : initialValue;
 };
 
-const FilterSearchInput = ({ onChange, filters }: any) => {
+const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
   const [value, setValue] = useState(getValueFromFilter(filters));
   const [isFocused, setIsFocused] = useState(false);
 
@@ -177,20 +176,22 @@ const FilterSearchInput = ({ onChange, filters }: any) => {
   useEffect(() => {
     // @ts-ignore
     requestAnimationFrame(() => {
-      // @ts-ignore
+      // Transforms.setSelection(editor, {
+      //   anchor: Editor.start(editor, []),
+      //   focus: Editor.end(editor, []),
+      // });
+      // // @ts-ignore
       // ReactEditor.focus(editor);
       // Transforms.select(editor, Editor.end(editor, []));
+
+      if (shouldFocusOnMount) {
+        // @ts-ignore
+        ReactEditor.focus(editor);
+        Transforms.insertText(editor, ' ');
+        Transforms.select(editor, Editor.end(editor, []));
+      }
     });
   }, []);
-
-  useEffect(() => {
-    if (isFocused) {
-      // @ts-ignore
-      ReactEditor.focus(editor);
-      // @ts-ignore
-      // console.log(Node.string(Node.get(editor, editor.selection.anchor.path)));
-    }
-  }, [isFocused]);
 
   useEffect(() => {
     if (isFocused && onChange) onChange(getFiltersFromValue(value));
@@ -366,9 +367,16 @@ const FilterSearchInput = ({ onChange, filters }: any) => {
                   borderBottom="2px solid black"
                   borderBottomColor="gray.100"
                 >
-                  <Box d="flex" minHeight="40px" alignItems="flex-end">
+                  <Box
+                    d="flex"
+                    width="100%"
+                    minHeight="40px"
+                    alignItems="flex-end"
+                  >
                     <Box
+                      d="inline-flex"
                       width="100%"
+                      height="24px"
                       pb="3px"
                       id="inputContainer"
                       zIndex={100}
@@ -470,8 +478,12 @@ const withFilters = (editor: Editor) => {
 };
 
 const insertFilter = (editor: Editor, filter: any) => {
-  const node = { type: 'filter', filter, children: [{ text: '' }] };
-  Transforms.insertNodes(editor, node);
+  Transforms.insertNodes(editor, {
+    type: 'filter',
+    filter,
+    children: [{ text: ' ' }],
+  });
+  Transforms.insertNodes(editor, { type: 'space', text: ' ' });
   Transforms.move(editor);
 };
 
@@ -489,6 +501,12 @@ const Element = (props: RenderElementProps) => {
   switch (element.type) {
     case 'filter':
       return <FilterElement {...props} {...sharedStyles} />;
+    case 'spacer':
+      return (
+        <Box width="3px" {...props} {...attributes} {...sharedStyles}>
+          {children}
+        </Box>
+      );
     default:
       return (
         <Text {...attributes} lineHeight="18px" {...sharedStyles}>
@@ -501,12 +519,12 @@ const Element = (props: RenderElementProps) => {
 const FilterElement = ({ attributes, children, element }: any) => {
   const selected = useSelected();
   const focused = useFocused();
+
   return (
     <Box
       d="flex"
       alignItems="center"
       {...attributes}
-      contentEditable={false}
       cursor="pointer"
       variant="outline"
       bg="brand.purple.light"
@@ -518,14 +536,15 @@ const FilterElement = ({ attributes, children, element }: any) => {
       display="inline-block"
       rounded="lg"
       boxShadow={selected && focused ? '0 0 0 2px #B4D5FF' : 'none'}
+      contentEditable="false"
     >
-      <Text>
+      <Text contentEditable={false}>
         {element.filter.name && element.filter.name !== 'search'
           ? `${element.filter.name}:`
           : ''}
         {element.filter.value}
       </Text>
-      <Text>{children}</Text>
+      <Text contentEditable={false}>{children}</Text>
     </Box>
   );
 };
