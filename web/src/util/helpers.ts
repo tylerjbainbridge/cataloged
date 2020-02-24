@@ -26,7 +26,12 @@ const isFilterQueryArg = (...args: any[]) =>
   });
 
 export const getRealName = (name: string) => {
-  return name === 'labels' ? 'label' : name;
+  return (
+    // @ts-ignore
+    {
+      labels: 'label',
+    }[name] || name
+  );
 };
 
 export const getQueryStringFromFilters = (filters: any[], search = '') => {
