@@ -7,6 +7,7 @@ import { filterNames } from '../components/FilterSearchInput';
 
 export const FILTER_NAMES = [
   ...filterNames.map(({ value }: any) => value),
+  'labels',
   'search',
 ];
 
@@ -24,12 +25,16 @@ const isFilterQueryArg = (...args: any[]) =>
     return key.includes(name);
   });
 
+export const getRealName = (name: string) => {
+  return name === 'labels' ? 'label' : name;
+};
+
 export const getQueryStringFromFilters = (filters: any[], search = '') => {
   const sets: { [k: string]: Set<any> } = {
     ...FILTER_NAMES.reduce(
       (p, c) => ({
         ...p,
-        [c]: new Set(),
+        [getRealName(c)]: new Set(),
       }),
       {},
     ),
@@ -38,10 +43,10 @@ export const getQueryStringFromFilters = (filters: any[], search = '') => {
   filters.forEach(filter => {
     (filter.values ? filter.values : [filter.value]).forEach(
       (value: string) => {
-        const setName = filter.name || 'search';
+        const setName = getRealName(filter.name || 'search');
         // @ts-ignore
 
-        if (sets[setName]) sets[filter.name || 'search'].add(value);
+        if (sets[setName]) sets[setName].add(value);
       },
     );
   });
