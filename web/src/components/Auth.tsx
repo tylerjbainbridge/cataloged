@@ -1,9 +1,10 @@
 import React, { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-
+import ErrorBoundary from 'react-error-boundary';
 import { getAuthUser_me } from '../graphql/__generated__/getAuthUser';
 import { googleAuth_googleAuth } from '../graphql/__generated__/googleAuth';
+import { Stack, Alert, AlertIcon, AlertTitle, Button } from '@chakra-ui/core';
 
 const GET_AUTH_USER = gql`
   query getAuthUser {
@@ -69,16 +70,30 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
   }, [token]);
 
   return (
-    <AuthContext.Provider
-      value={{
-        user: data ? data.me : null,
-        token,
-        setToken,
-        refetchUser: refetch,
-        signOut,
-      }}
+    <ErrorBoundary
+      FallbackComponent={() => (
+        <Stack spacing="15px">
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle mr={2}>Authentication failed!</AlertTitle>
+          </Alert>
+          <Button size="sm" onClick={() => window.location.replace('/')}>
+            Try again
+          </Button>
+        </Stack>
+      )}
     >
-      {children}
-    </AuthContext.Provider>
+      <AuthContext.Provider
+        value={{
+          user: data ? data.me : null,
+          token,
+          setToken,
+          refetchUser: refetch,
+          signOut,
+        }}
+      >
+        {children}
+      </AuthContext.Provider>
+    </ErrorBoundary>
   );
 };

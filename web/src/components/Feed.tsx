@@ -14,7 +14,7 @@ import {
 import { Waypoint } from 'react-waypoint';
 import qs from 'query-string';
 import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
-import { FaThLarge, FaList } from 'react-icons/fa';
+import { FaThLarge, FaList, FaSave } from 'react-icons/fa';
 
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
@@ -43,6 +43,7 @@ import { TopNavBar } from './TopNavBar';
 import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
 import { Spotlight } from './Spotlight';
 import FilterSearchInput from './FilterSearchInput';
+import { AddOrUpdateSavedSearch } from './AddOrUpdateSavedSearch';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $after: String, $filters: [FilterInput!]) {
@@ -107,6 +108,8 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   }, [mode]);
 
   const queryStringFilters = getFiltersFromQueryString(location.search);
+
+  console.log({ queryStringFilters });
 
   const query = useQuery<feed>(FEED_QUERY, {
     variables: {
@@ -227,17 +230,61 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
           {/* <Switch> */}
           <TopNavBar
             middleNode={
-              <Box width="500px">
-                <FilterSearchInput
-                  filters={queryStringFilters}
-                  onChange={onDebouncedFilterChange}
+              !isMobile ? (
+                <Box
+                  d="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  width="550px"
+                  maxWidth={isMobile ? '100%' : '550px'}
+                  overflowX="auto"
+                >
+                  <Box width="490px">
+                    <FilterSearchInput
+                      filters={queryStringFilters}
+                      onChange={onDebouncedFilterChange}
+                    />
+                    {/* {true && (
+                      <Spinner
+                        position="absolute"
+                        fontSize="10px"
+                        size="sm"
+                        color="lightgray"
+                      />
+                    )} */}
+                  </Box>
+                  <AddOrUpdateSavedSearch filters={queryStringFilters}>
+                    {({ onOpen, match }: any) => (
+                      <Tooltip
+                        aria-label="add filter"
+                        zIndex={10}
+                        hasArrow
+                        label={
+                          match ? 'Update or create new' : 'Save this search'
+                        }
+                      >
+                        <Button
+                          cursor="pointer"
+                          aria-label="add filter"
+                          type="button"
+                          alignSelf="flex-end"
+                          variant="outline"
+                          onClick={onOpen}
+                          // isDisabled={!queryStringFilters.length}
+                        >
+                          <FaSave />
+                        </Button>
+                      </Tooltip>
+                    )}
+                  </AddOrUpdateSavedSearch>
+                </Box>
+              ) : (
+                <Filter
+                  variables={variables}
+                  loading={networkStatus !== 6 && loading}
+                  onDebouncedFilterChange={onDebouncedFilterChange}
                 />
-              </Box>
-              // <Filter
-              //   variables={variables}
-              //   loading={networkStatus !== 6 && loading}
-              //   onDebouncedFilterChange={onDebouncedFilterChange}
-              // />
+              )
             }
             rightNode={
               <Box>
@@ -263,6 +310,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
               </Box>
             }
           />
+
           <Box d="flex" justifyContent="center" mt="100px" width="100%">
             <Box
               width={isMobile ? '100%' : mode === 'grid' ? '95%' : '90%'}

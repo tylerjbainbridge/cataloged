@@ -116,7 +116,7 @@ export class FilterQueryBuilder {
               case 'favorited':
                 _.set(
                   this.query,
-                  `isFavorited.equals.${shouldNegate ? 'not' : 'equals'}`,
+                  `isFavorited.${shouldNegate ? 'not' : 'equals'}`,
                   true,
                 );
                 break;
@@ -147,7 +147,7 @@ export class FilterQueryBuilder {
               // @ts-ignore
               {
                 contact: 'googleContact',
-              }[filter.value] || filter.value,
+              }[value] || value,
             );
           });
       }

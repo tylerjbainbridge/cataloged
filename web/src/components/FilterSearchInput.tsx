@@ -24,6 +24,7 @@ import { Text, Box, Button } from '@chakra-ui/core';
 import { useAuth } from '../hooks/useAuth';
 import { usePrevious } from '../hooks/usePrevious';
 import { useLocation } from 'react-router-dom';
+import { useHotKey } from '../hooks/useHotKey';
 
 export const Portal = ({ children }: any) => {
   return ReactDOM.createPortal(children, document.body);
@@ -50,6 +51,7 @@ const initialValue = [
 export interface Filter {
   name?: string;
   value?: string;
+  values?: string[];
 }
 
 export interface FilterInputState {
@@ -74,16 +76,29 @@ export const filterNames = [
   { value: '-is', name: '-is:' },
 ];
 
+export const toFilterNode = (filter: Filter) => ({
+  type: 'filter',
+  filter,
+  children: [{ text: '', marks: [] }],
+});
+
 const getValueFromFilter = (filters: Filter[] = []) => {
   return filters.length
     ? [
         {
           children: [
-            ...filters.map(filter => ({
-              type: 'filter',
-              filter,
-              children: [{ text: '' }],
-            })),
+            ...filters.reduce(
+              // @ts-ignore
+              (p, filter) => [
+                ...p,
+                ...(filter.values
+                  ? filter.values.map(value =>
+                      toFilterNode({ name: filter.name, value }),
+                    )
+                  : [toFilterNode(filter)]),
+              ],
+              [],
+            ),
             { text: ' ', marks: [] },
           ],
         },
@@ -100,10 +115,7 @@ const FilterSearchInput = ({ onChange, filters }: any) => {
   );
 
   const renderElement = useCallback(props => <Element {...props} />, []);
-  const editor = useMemo(
-    () => withFilters(withReact(withHistory(createEditor()))),
-    [],
-  );
+  const editor = useMemo(() => withFilters(withReact(createEditor())), []);
 
   const { user } = useAuth();
 
@@ -111,7 +123,16 @@ const FilterSearchInput = ({ onChange, filters }: any) => {
 
   const inputRef = useRef(null);
 
-  console.log({ isFocused });
+  useHotKey(
+    'mod+p',
+    () => {
+      // @ts-ignore
+      ReactEditor.focus(editor);
+    },
+    {
+      isGlobal: true,
+    },
+  );
 
   const filterValues: any = {
     type: {
@@ -161,6 +182,15 @@ const FilterSearchInput = ({ onChange, filters }: any) => {
       // Transforms.select(editor, Editor.end(editor, []));
     });
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      // @ts-ignore
+      ReactEditor.focus(editor);
+      // @ts-ignore
+      // console.log(Node.string(Node.get(editor, editor.selection.anchor.path)));
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (isFocused && onChange) onChange(getFiltersFromValue(value));
@@ -367,6 +397,9 @@ const FilterSearchInput = ({ onChange, filters }: any) => {
                         style={{
                           display: 'flex',
                           alignItems: 'center',
+                          width: '100%',
+                          height: '100%',
+                          maxHeight: '50px',
                         }}
                         placeholder='Try typing "type:"'
                       />
