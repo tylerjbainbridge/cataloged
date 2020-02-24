@@ -268,12 +268,7 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
                         // @ts-ignore
                         isActive={match?.params?.id === id}
                         pathname={`/search/${id}`}
-                        filters={filters.map(
-                          ({ values, value, ...rest }: any) => ({
-                            ...rest,
-                            value: values || value,
-                          }),
-                        )}
+                        filters={filters}
                         rightNode={
                           <IconButton
                             variant="ghost"
