@@ -118,7 +118,7 @@ export const AddOrUpdateSavedSearch = ({ filters, children }: any) => {
             <Box d="flex" width="100%" justifyContent="space-between">
               {activeSearch ? (
                 <Button
-                  isDisabled={isWorking}
+                  isDisabled={isWorking || !filters.length}
                   onClick={() => {
                     addOrUpdateSavedSearch({
                       variables: {
@@ -135,7 +135,7 @@ export const AddOrUpdateSavedSearch = ({ filters, children }: any) => {
                 <Box />
               )}
               <Button
-                isDisabled={isWorking}
+                isDisabled={isWorking || !filters.length}
                 onClick={() => {
                   addOrUpdateSavedSearch({
                     variables: {
