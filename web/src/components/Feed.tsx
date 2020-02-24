@@ -109,8 +109,6 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   const queryStringFilters = getFiltersFromQueryString(location.search);
 
-  console.log({ queryStringFilters });
-
   const query = useQuery<feed>(FEED_QUERY, {
     variables: {
       ...INITIAL_PAGINATION_VARIABLES,
@@ -238,14 +236,13 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                   width="550px"
                   maxWidth={isMobile ? '100%' : '550px'}
                 >
-                  <Box>
-                    <Box width="490px" rounded="lg" p="10px">
-                      <FilterSearchInput
-                        filters={queryStringFilters}
-                        onChange={onDebouncedFilterChange}
-                      />
-                    </Box>
-                    {/* {true && (
+                  <Box d="flex" width="490px" rounded="lg" p="10px">
+                    <FilterSearchInput
+                      filters={queryStringFilters}
+                      onChange={onDebouncedFilterChange}
+                    />
+                  </Box>
+                  {/* {true && (
                       <Spinner
                         position="absolute"
                         fontSize="10px"
@@ -253,7 +250,6 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                         color="lightgray"
                       />
                     )} */}
-                  </Box>
                   <AddOrUpdateSavedSearch filters={queryStringFilters}>
                     {({ onOpen, match }: any) => (
                       <Tooltip

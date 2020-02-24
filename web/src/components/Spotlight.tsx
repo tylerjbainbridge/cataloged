@@ -65,21 +65,14 @@ export const Spotlight = () => {
         <ModalCloseButton />
 
         <Downshift
-          onChange={selection =>
-            alert(
-              selection
-                ? `You selected ${selection.value}`
-                : 'Selection Cleared',
-            )
-          }
-          itemToString={item => (item ? item.value : '')}
+          selectedItem=""
+          onSelect={() => {}}
+          onChange={selection => console.log(selection)}
         >
           {({
             getInputProps,
             getItemProps,
-            getLabelProps,
             getMenuProps,
-            isOpen,
             inputValue,
             highlightedIndex,
             selectedItem,

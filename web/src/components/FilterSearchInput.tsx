@@ -355,8 +355,8 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
               setHighlightedIndex,
             })}
           >
-            <div {...getRootProps()}>
-              <Box>
+            <Box {...getRootProps()} width="100%">
+              <Box width="100%">
                 <Box
                   p="3px"
                   pb="5px"
@@ -455,7 +455,7 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
                   </Box>
                 )}
               </Box>
-            </div>
+            </Box>
           </Slate>
         );
       }}
