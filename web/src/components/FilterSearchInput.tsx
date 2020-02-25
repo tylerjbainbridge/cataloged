@@ -536,7 +536,7 @@ const FilterElement = ({ attributes, children, element }: any) => {
       display="inline-block"
       rounded="lg"
       boxShadow={selected && focused ? '0 0 0 2px #B4D5FF' : 'none'}
-      contentEditable="false"
+      contentEditable={false}
     >
       <Text contentEditable={false}>
         {element.filter.name && element.filter.name !== 'search'

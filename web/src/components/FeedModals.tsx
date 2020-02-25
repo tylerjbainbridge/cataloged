@@ -5,9 +5,9 @@ import { LinkModal } from './LinkModal';
 import { FeedContext } from './Feed';
 
 export const FeedModals = () => {
-  const { activeItemId, setActiveItemId, items } = useContext(FeedContext);
+  const { cursorItemId, setCursorItemId, items } = useContext(FeedContext);
 
-  const activeItem = items.find(({ id }) => id === activeItemId);
+  const activeItem = items.find(({ id }) => id === cursorItemId);
 
   // useEffect(() => {
   //   if (activeItem) {
@@ -35,7 +35,7 @@ export const FeedModals = () => {
   // }, [activeItem?.id]);
 
   const disclosure = {
-    onClose: () => setActiveItemId(null),
+    onClose: () => setCursorItemId(null),
     // Dummy placeholders- onClose is all that matters
     onOpen: () => {},
     isOpen: true,
