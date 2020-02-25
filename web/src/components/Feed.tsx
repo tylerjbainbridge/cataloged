@@ -66,9 +66,10 @@ export const FEED_PAGE_LENGTH = 30;
 
 type FeedContext = {
   mode: 'grid' | 'list';
+  setMode: (mode: 'grid' | 'list') => any;
   nextPage: () => any;
-  activeItemId: ItemFull['id'] | null;
-  setActiveItemId: (id: ItemFull['id'] | null) => any;
+  cursorItemId: ItemFull['id'] | null;
+  setCursorItemId: (id: ItemFull['id'] | null) => any;
   // viewNextItem: (item: ItemFull) => any;
   isLastItem: (item: ItemFull) => any;
   items: ItemFull[];
@@ -89,7 +90,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   const isMobile = useMedia('(max-width: 768px)');
 
-  const [activeItemId, setActiveItemId] = useState<ItemFull['id'] | null>(null);
+  const [cursorItemId, setCursorItemId] = useState<ItemFull['id'] | null>(null);
 
   const feedContainerRef = useRef(null);
   const location = useLocation();
@@ -190,7 +191,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     return lastEdge?.node?.id === id;
   };
 
-  const openItemModal = (item: ItemFull) => setActiveItemId(item.id);
+  const openItemModal = (item: ItemFull) => setCursorItemId(item.id);
 
   const currentSidebarWidth =
     // @ts-ignore
@@ -207,10 +208,11 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     <FeedContext.Provider
       value={{
         mode,
+        setMode,
         nextPage,
         isLastItem,
-        activeItemId,
-        setActiveItemId,
+        cursorItemId,
+        setCursorItemId,
         openItemModal,
         items,
         filter,

@@ -28,6 +28,7 @@ import { Labels } from './Labels';
 import { useMedia } from 'react-use';
 import { useGoToItem } from '../hooks/useGoTo';
 import { ItemActionMenu } from './ItemActionMenu';
+import { FeedContext } from './Feed';
 
 export const GenericListItem = ({ item }: { item: ItemFull }) => {
   const isMobile = useMedia('(max-width: 768px)');
@@ -53,6 +54,8 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
     selectedMap,
     selectRange,
   } = useContext(SelectContext);
+
+  const { setCursorItemId } = useContext(FeedContext);
 
   const baseHoverState = useDisclosure();
 
@@ -129,8 +132,14 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
               height="50px"
               rounded="lg"
               ref={itemRef}
-              onMouseEnter={baseHoverState.onOpen}
-              onMouseLeave={baseHoverState.onClose}
+              onMouseEnter={() => {
+                baseHoverState.onOpen();
+                setCursorItemId(item.id);
+              }}
+              onMouseLeave={() => {
+                baseHoverState.onClose();
+                setCursorItemId(null);
+              }}
               userSelect={selectedMap.size ? 'none' : undefined}
               {...(isItemSelected(item)
                 ? {
