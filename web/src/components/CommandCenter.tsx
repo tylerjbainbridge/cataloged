@@ -6,6 +6,9 @@ import React, {
   useCallback,
 } from 'react';
 
+import hotkeys from 'hotkeys-js';
+import qs from 'query-string';
+
 import {
   Modal,
   ModalOverlay,
@@ -26,58 +29,125 @@ import { FeedContext } from './Feed';
 import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
 import { SelectContext } from './SelectContainer';
 import { useOptimisticDeleteManyItems } from '../hooks/useOptimisticDeleteManyItems';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
+import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
+import { useGoToItem, useReturnToFeedFromItem } from '../hooks/useGoTo';
 
-const SINGLE_ITEM_OPTIONS = [
-  {
-    value: 'OPEN_ITEM',
-    display: 'Open item in Cataloged',
-  },
-  {
-    value: 'DELETE_ITEM',
-    display: 'Delete item',
-  },
-];
+export enum Action {
+  OPEN_ITEM,
+  GO_TO_SETTINGS,
+  GO_TO_ITEM,
+  VISIT_LINK,
+  TOGGLE_FEED_VIEW_MODE,
+  DELETE_ITEM,
+  BULK_DELETE_ITEMS,
+  BULK_LABEL_ITEMS,
+  BULK_FAVORITE_ITEMS,
+}
 
-const BULK_ITEM_ACTIONS = [
-  {
-    value: 'BULK_DELETE_ITEMS',
-    display: 'Delete items',
-  },
-  {
-    value: 'BULK_LABEL_ITEMS',
-    display: 'Label items',
-  },
-];
+export enum Priority {
+  MAX = 11,
+  SELECTED_ITEMS = 10,
+  DEFAULT = 1,
+}
 
-const GENERIC_ACTIONS = [
+export interface OptionArgs {
+  relevantItems: ItemFull[];
+  isViewingItem: boolean;
+}
+
+const getOptions = ({ relevantItems, isViewingItem }: OptionArgs) => [
   {
-    value: 'TOGGLE_FEED_VIEW_MODE',
+    value: Action.TOGGLE_FEED_VIEW_MODE,
     display: 'Toggle view grid mode',
+    keybind: null,
   },
   {
-    value: 'GO_TO_SETTINGS',
+    value: Action.GO_TO_SETTINGS,
     display: 'Go to settings',
+    keybind: null,
+  },
+  {
+    value: Action.GO_TO_ITEM,
+    display: 'Go to item',
+    priority: Priority.MAX,
+    disabled: relevantItems.length !== 1 || isViewingItem,
+    keybind: '#',
+  },
+  {
+    value: Action.BULK_DELETE_ITEMS,
+    display: `Delete item${relevantItems.length > 1 ? 's' : ''}`,
+    priority: Priority.SELECTED_ITEMS,
+    keybind: '#',
+    disabled: !relevantItems.length,
+  },
+  {
+    value: Action.BULK_FAVORITE_ITEMS,
+    display: `Favorite item${relevantItems.length > 1 ? 's' : ''}`,
+    priority: Priority.SELECTED_ITEMS,
+    keybind: 'f',
+    disabled: !relevantItems.length,
+  },
+  // {
+  //   value: Action.BULK_LABEL_ITEMS,
+  //   getDisplay: () => ({ relevantItems }: OptionArgs) =>
+  //     `Label item${relevantItems.length > 1 ? 's' : ''}`,
+  //   getPriority: () => Priority.SELECTED_ITEMS,
+  //   keybind: 'l',
+  // },
+  {
+    value: Action.VISIT_LINK,
+    display: 'Visit link',
+    disabled: relevantItems.length !== 1 || relevantItems[0]?.type !== 'link',
   },
 ];
-
-const OPTIONS = [...GENERIC_ACTIONS];
 
 export const useActionHandler = ({
-  selectedOption,
   updateSelectedOption,
   formState,
   modalState,
   feedContext,
   selectContext,
+  relevantItems,
+  isViewingItem,
 }: any) => {
   const match = useRouteMatch('*');
 
   const history = useHistory();
   const location = useLocation();
 
-  const [deleteItems, { loading: isDeleting }] = useOptimisticDeleteManyItems(
-    selectContext.selectedItems.length ? selectContext.selectedItems : [],
+  const [deleteItems] = useOptimisticDeleteManyItems(relevantItems, {
+    onCompleted: () => {
+      selectContext.deselectAllItems();
+      if (isViewingItem) goToFeed();
+    },
+  });
+
+  const isEveryItemSelected = relevantItems.every(
+    ({ isFavorited }: ItemFull) => isFavorited,
   );
+
+  const isFavorited = !isEveryItemSelected;
+
+  const [favoriteItems] = useOptimisticUpdateFavoriteManyItems(
+    relevantItems,
+    isFavorited,
+    {
+      onCompleted: selectContext.deselectAllItems,
+    },
+  );
+
+  const [updateStatus] = useOptimisticUpdateStatusManyItems(
+    relevantItems,
+    'done',
+    {
+      onCompleted: selectContext.deselectAllItems,
+    },
+  );
+
+  const [goToItem] = useGoToItem();
+  const [goToFeed] = useReturnToFeedFromItem();
 
   const cleanup = () => {
     updateSelectedOption(null);
@@ -85,9 +155,18 @@ export const useActionHandler = ({
     modalState.closeModal();
   };
 
-  useEffect(() => {
+  const runAction = async (selectedOption: Action) => {
+    const option = getOptions({ relevantItems, isViewingItem }).find(
+      ({ value }) => value === selectedOption,
+    );
+
+    if (!option || option.disabled) {
+      cleanup();
+      return;
+    }
+
     switch (selectedOption) {
-      case 'GO_TO_SETTINGS': {
+      case Action.GO_TO_SETTINGS: {
         cleanup();
         history.push({
           // @ts-ignore
@@ -97,25 +176,42 @@ export const useActionHandler = ({
         break;
       }
 
-      case 'TOGGLE_FEED_VIEW_MODE': {
+      case Action.GO_TO_ITEM: {
+        cleanup();
+        goToItem(relevantItems[0]);
+        break;
+      }
+
+      case Action.BULK_FAVORITE_ITEMS: {
+        cleanup();
+        await favoriteItems();
+        break;
+      }
+
+      case Action.BULK_DELETE_ITEMS: {
+        cleanup();
+        deleteItems();
+        break;
+      }
+
+      case Action.TOGGLE_FEED_VIEW_MODE: {
         cleanup();
         feedContext.setMode(feedContext.mode === 'grid' ? 'list' : 'grid');
         break;
       }
 
-      case 'DELETE_ITEM': {
-        if (selectContext.selectedItems.length) {
-          deleteItems();
-        } else if (feedContext.cursorItemId) {
-          deleteItems();
-        }
-      }
+      default:
+        cleanup();
     }
-  }, [selectedOption]);
+  };
+
+  return runAction;
 };
 
-export const Spotlight = () => {
-  const [selectedOption, updateSelectedOption] = useState<string | null>(null);
+export const CommandCenter = () => {
+  const [selectedOption, updateSelectedOption] = useState<Action | null>(null);
+
+  const location = useLocation();
 
   const formState = useForm<{ search: string }>({
     defaultValues: {
@@ -129,35 +225,60 @@ export const Spotlight = () => {
   const values = getValues();
 
   const feedContext = useContext(FeedContext);
-  const { mode, setMode, cursorItemId } = feedContext;
 
   const selectContext = useContext(SelectContext);
-  const { selectedItems, deselectAllItems } = selectContext;
 
-  const modalState = useGlobalModal(ModalName.SPOTLIGHT_MODAL);
+  const itemId = qs.parse(location.search)?.itemId;
+
+  let relevantItems = [];
+
+  if (itemId) {
+    relevantItems = [{ id: itemId }];
+  } else if (selectContext.selectedItems.length) {
+    relevantItems = selectContext.selectedItems;
+  } else if (feedContext.cursorItem) {
+    relevantItems = [feedContext.cursorItem];
+  }
+
+  const modalState = useGlobalModal(ModalName.COMMAND_CENTER_MODAL);
 
   const { isModalOpen, toggleModal, closeModal } = modalState;
 
   const inputRef = useRef(null);
 
-  useHotKey('mod+k', toggleModal, { isGlobal: true });
-  useHotKey('esc', closeModal, { isGlobal: true, shouldBind: isModalOpen });
-
-  useEffect(() => {}, [selectedOption]);
-
-  useActionHandler({
+  const runAction = useActionHandler({
     selectedOption,
     updateSelectedOption,
     modalState,
     formState,
     feedContext,
     selectContext,
+    relevantItems,
+    isViewingItem: !!itemId,
   });
 
-  const options = OPTIONS.filter(
-    item =>
-      !values.search ||
-      item.display.toLowerCase().includes(values.search.toLowerCase()),
+  const runActionThunk = (action: Action) => () => runAction(action);
+
+  useHotKey('cmd+k', toggleModal);
+  useHotKey('esc', closeModal, { shouldBind: isModalOpen });
+
+  useHotKey('enter', runActionThunk(Action.GO_TO_ITEM), {
+    shouldBind: relevantItems.length === 1,
+  });
+
+  useEffect(() => {
+    if (selectedOption) runAction(selectedOption);
+  }, [selectedOption]);
+
+  const options = getOptions({ relevantItems, isViewingItem: !!itemId }).filter(
+    item => {
+      return (
+        !item.disabled &&
+        (!values.search ||
+          //@ts-ignore
+          item.display.toLowerCase().includes(values.search.toLowerCase()))
+      );
+    },
   );
 
   const onKeyDown = useCallback(
@@ -201,7 +322,7 @@ export const Spotlight = () => {
           break;
       }
     },
-    [values.search],
+    [values.search, options],
   );
 
   return (
@@ -224,6 +345,7 @@ export const Spotlight = () => {
             defaultHighlightedIndex={0}
             selectedItem=""
             onSelect={() => {}}
+            // @ts-ignore
             onChange={selection => updateSelectedOption(selection)}
             inputValue={values.search}
           >
@@ -252,6 +374,7 @@ export const Spotlight = () => {
                       placeholder="search commands"
                       borderBottom="2px solid #5718FF"
                       pl="20px"
+                      rounded="none"
                       value={values.search}
                       ref={(ref: any) => {
                         register(ref);
@@ -279,9 +402,16 @@ export const Spotlight = () => {
                         alignItems="center"
                         height="50px"
                         width="100%"
+                        {...(index === options.length - 1
+                          ? {
+                              roundedBottomLeft: 'lg',
+                              roundedBottomRight: 'lg',
+                            }
+                          : {})}
                         {...getItemProps({
                           key: item.value,
                           index,
+                          // @ts-ignore
                           item: item.value,
                           // @ts-ignore
                           backgroundColor:
@@ -289,6 +419,7 @@ export const Spotlight = () => {
                               ? 'rgba(87,24,255, 0.1)'
                               : 'white',
                           fontWeight:
+                            // @ts-ignore
                             selectedItem === item.value ? 'bold' : 'normal',
                         })}
                         pl="20px"

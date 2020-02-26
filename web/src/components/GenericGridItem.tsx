@@ -72,7 +72,6 @@ export const GenericGridItem = ({
 }: GenericGridItemProps) => {
   const isMobile = useMedia('(max-width: 768px)');
 
-  const baseHoverState = useDisclosure();
   const menuHoverState = useDisclosure();
 
   const {
@@ -95,7 +94,7 @@ export const GenericGridItem = ({
 
   const [goToItem] = useGoToItem();
 
-  const { openItemModal } = useContext(FeedContext);
+  const { setCursorItemId, isItemCursor } = useContext(FeedContext);
 
   const isSelected = isItemSelected(item);
 
@@ -108,26 +107,11 @@ export const GenericGridItem = ({
     !item.isFavorited,
   );
 
+  const isCursorItem = isItemCursor(item);
+
   const deleteHandler = () => {
-    if (baseHoverState.isOpen) deleteItem();
+    if (isCursorItem) deleteItem();
   };
-
-  useHotKey('f', favoriteItem, {
-    ref: itemRef.current,
-    shouldBind: baseHoverState.isOpen,
-  });
-
-  useHotKey('d', deleteHandler, {
-    ref: itemRef.current,
-    shouldBind: baseHoverState.isOpen,
-  });
-
-  useHotKey('s', onToggleThunk(item), {
-    ref: itemRef.current,
-    shouldBind: baseHoverState.isOpen,
-  });
-
-  const onOpen = () => openItemModal(item);
 
   const clickHandlers = (handleAction = true) => ({
     onDoubleClick: (debouncedSingleClick: any) => {
@@ -152,6 +136,7 @@ export const GenericGridItem = ({
   return (
     <>
       <Box
+        id={`item-${item.id}`}
         d="flex"
         justifyContent="center"
         margin={0}
@@ -169,19 +154,19 @@ export const GenericGridItem = ({
               aria-label="Open"
               placement="top"
               maxWidth={200}
-              isOpen={baseHoverState.isOpen && !menuHoverState.isOpen}
-              onOpen={baseHoverState.onOpen}
+              isOpen={isCursorItem}
+              onOpen={() => setCursorItemId(item.id)}
             >
               <Box
                 d="flex"
                 justifyContent="center"
                 alignContent="center"
                 ref={itemRef}
-                onMouseEnter={baseHoverState.onOpen}
-                onMouseLeave={baseHoverState.onClose}
+                onMouseEnter={() => setCursorItemId(item.id)}
+                // onMouseLeave={() => setCursorItemId(null)}
                 position="relative"
               >
-                {(baseHoverState.isOpen || !!selectedMap.size || isMobile) && (
+                {(isCursorItem || !!selectedMap.size || isMobile) && (
                   <Box
                     d="flex"
                     justifyContent="space-between"
@@ -197,8 +182,8 @@ export const GenericGridItem = ({
                     backgroundColor="lightgrey"
                     background="rgb(211,211,211, 0.8);"
                     opacity={9}
-                    onMouseOver={menuHoverState.onOpen}
-                    onMouseLeave={menuHoverState.onClose}
+                    // onMouseOver={menuHoverState.onOpen}
+                    // onMouseLeave={menuHoverState.onClose}
                   >
                     <SelectOnClick {...clickHandlers(false)}>
                       {clickProps => (
@@ -382,7 +367,7 @@ export const GenericGridItem = ({
                 </Box>
               </Box>
             </Tooltip>
-            <ItemHeader createdAt={createdAt} onSingleClick={action || onOpen}>
+            <ItemHeader createdAt={createdAt} onSingleClick={action}>
               {item.type === 'link' && <Icon name="link" fontSize="s" mr={2} />}
               {title}
             </ItemHeader>

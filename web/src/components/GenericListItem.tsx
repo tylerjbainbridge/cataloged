@@ -55,9 +55,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
     selectRange,
   } = useContext(SelectContext);
 
-  const { setCursorItemId } = useContext(FeedContext);
-
-  const baseHoverState = useDisclosure();
+  const { setCursorItemId, isItemCursor } = useContext(FeedContext);
 
   const itemRef = React.useRef(null);
 
@@ -68,63 +66,58 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
     !item.isFavorited,
   );
 
+  const isCursorItem = isItemCursor(item);
+
   const deleteHandler = () => {
-    if (baseHoverState.isOpen) deleteItem();
+    if (isCursorItem) deleteItem();
   };
-
-  useHotKey('f', favoriteItem, {
-    ref: itemRef.current,
-    shouldBind: baseHoverState.isOpen,
-  });
-
-  useHotKey('d', deleteHandler, {
-    ref: itemRef.current,
-    shouldBind: baseHoverState.isOpen,
-  });
-
-  useHotKey('s', onToggleThunk(item), {
-    ref: itemRef.current,
-    shouldBind: baseHoverState.isOpen,
-  });
 
   // List view
   return (
-    <Box
-      d="flex"
-      width="100%"
-      userSelect={selectedMap.size ? 'none' : undefined}
-    >
-      <LazyLoad
-        height="60px"
-        width="100%"
-        offsetBottom={1000}
-        key={`${item.id}-${isItemSelected(item)}`}
-      >
-        <Click
-          onDoubleClick={(debouncedSingleClick: any) => {
-            debouncedSingleClick.cancel();
+    <Click
+      onDoubleClick={(debouncedSingleClick: any) => {
+        debouncedSingleClick.cancel();
 
-            if (selectedMap.size) {
-              goToItem(item);
-            }
+        if (selectedMap.size) {
+          goToItem(item);
+        }
+      }}
+      onSingleClick={() => {
+        if (selectedMap.size) {
+          toggleItem(item);
+        } else {
+          goToItem(item);
+        }
+      }}
+      onMetaClick={() => {
+        if (selectedMap.size) {
+          toggleItem(item);
+        } else if (action) {
+          action();
+        }
+      }}
+      onShiftClick={onSelectRangeThunk(item)}
+    >
+      {clickProps => (
+        <Box
+          id={`item-${item.id}`}
+          d="flex"
+          width="100%"
+          userSelect={selectedMap.size ? 'none' : undefined}
+          {...clickProps}
+          onMouseEnter={() => {
+            setCursorItemId(item.id);
           }}
-          onSingleClick={() => {
-            if (selectedMap.size) {
-              toggleItem(item);
-            } else {
-              goToItem(item);
-            }
+          onMouseLeave={() => {
+            // setCursorItemId(null);
           }}
-          onMetaClick={() => {
-            if (selectedMap.size) {
-              toggleItem(item);
-            } else if (action) {
-              action();
-            }
-          }}
-          onShiftClick={onSelectRangeThunk(item)}
         >
-          {clickProps => (
+          <LazyLoad
+            height="60px"
+            width="100%"
+            offsetBottom={1000}
+            // key={item.id}
+          >
             <PseudoBox
               d="flex"
               // flexWrap="wrap"
@@ -132,14 +125,6 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
               height="50px"
               rounded="lg"
               ref={itemRef}
-              onMouseEnter={() => {
-                baseHoverState.onOpen();
-                setCursorItemId(item.id);
-              }}
-              onMouseLeave={() => {
-                baseHoverState.onClose();
-                setCursorItemId(null);
-              }}
               userSelect={selectedMap.size ? 'none' : undefined}
               {...(isItemSelected(item)
                 ? {
@@ -154,18 +139,19 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
               justifyContent="space-between"
               alignItems="center"
               cursor="pointer"
-              _hover={{
-                backgroundColor: 'rgba(87,24,255, 0.1);',
-                ...(isItemSelected(item)
-                  ? {
-                      border: `2px solid #5718FF`,
-                    }
-                  : {
-                      p: '6px',
-                      border: 'none',
-                    }),
-              }}
-              {...clickProps}
+              {...(isCursorItem
+                ? {
+                    backgroundColor: 'rgba(87,24,255, 0.1);',
+                    ...(isItemSelected(item)
+                      ? {
+                          border: `2px solid #5718FF`,
+                        }
+                      : {
+                          p: '6px',
+                          border: 'none',
+                        }),
+                  }
+                : {})}
             >
               <Box
                 d="flex"
@@ -175,7 +161,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 position="absolute"
                 marginLeft="-40px"
               >
-                {(baseHoverState.isOpen ||
+                {(isCursorItem ||
                   isItemSelected(item) ||
                   !!selectedMap.size) && (
                   <Box
@@ -354,9 +340,9 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                 </ItemActionMenu>
               </Box>
             </PseudoBox>
-          )}
-        </Click>
-      </LazyLoad>
-    </Box>
+          </LazyLoad>
+        </Box>
+      )}
+    </Click>
   );
 };
