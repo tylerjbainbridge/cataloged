@@ -13,6 +13,8 @@ export const useHotKey = (keybind, handler, { shouldBind = true } = {}) => {
 
   const bind = () => {
     hotkeys(keybind, e => {
+      if (e.stopPropagation) e.stopPropagation();
+
       if (e.preventDefault) {
         e.preventDefault();
       } else {
