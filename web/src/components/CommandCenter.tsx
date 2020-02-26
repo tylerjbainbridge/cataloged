@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-
+import _ from 'lodash';
 import hotkeys from 'hotkeys-js';
 import qs from 'query-string';
 
@@ -44,6 +44,7 @@ export enum Action {
   BULK_DELETE_ITEMS,
   BULK_LABEL_ITEMS,
   BULK_FAVORITE_ITEMS,
+  TOGGLE_SELECT_ITEM,
 }
 
 export enum Priority {
@@ -57,51 +58,61 @@ export interface OptionArgs {
   isViewingItem: boolean;
 }
 
-const getOptions = ({ relevantItems, isViewingItem }: OptionArgs) => [
-  {
-    value: Action.TOGGLE_FEED_VIEW_MODE,
-    display: 'Toggle view grid mode',
-    keybind: null,
-  },
-  {
-    value: Action.GO_TO_SETTINGS,
-    display: 'Go to settings',
-    keybind: null,
-  },
-  {
-    value: Action.GO_TO_ITEM,
-    display: 'Go to item',
-    priority: Priority.MAX,
-    disabled: relevantItems.length !== 1 || isViewingItem,
-    keybind: '#',
-  },
-  {
-    value: Action.BULK_DELETE_ITEMS,
-    display: `Delete item${relevantItems.length > 1 ? 's' : ''}`,
-    priority: Priority.SELECTED_ITEMS,
-    keybind: '#',
-    disabled: !relevantItems.length,
-  },
-  {
-    value: Action.BULK_FAVORITE_ITEMS,
-    display: `Favorite item${relevantItems.length > 1 ? 's' : ''}`,
-    priority: Priority.SELECTED_ITEMS,
-    keybind: 'f',
-    disabled: !relevantItems.length,
-  },
-  // {
-  //   value: Action.BULK_LABEL_ITEMS,
-  //   getDisplay: () => ({ relevantItems }: OptionArgs) =>
-  //     `Label item${relevantItems.length > 1 ? 's' : ''}`,
-  //   getPriority: () => Priority.SELECTED_ITEMS,
-  //   keybind: 'l',
-  // },
-  {
-    value: Action.VISIT_LINK,
-    display: 'Visit link',
-    disabled: relevantItems.length !== 1 || relevantItems[0]?.type !== 'link',
-  },
-];
+const getOptions = ({ relevantItems, isViewingItem }: OptionArgs) =>
+  _.orderBy(
+    [
+      {
+        value: Action.TOGGLE_FEED_VIEW_MODE,
+        display: 'Toggle view grid mode',
+        keybind: null,
+      },
+      {
+        value: Action.GO_TO_SETTINGS,
+        display: 'Go to settings',
+        keybind: null,
+      },
+      {
+        value: Action.GO_TO_ITEM,
+        display: 'Go to item',
+        priority: Priority.MAX,
+        disabled: relevantItems.length !== 1 || isViewingItem,
+        keybind: '#',
+      },
+      {
+        value: Action.BULK_DELETE_ITEMS,
+        display: `Delete item${relevantItems.length > 1 ? 's' : ''}`,
+        priority: Priority.SELECTED_ITEMS,
+        keybind: '#',
+        disabled: !relevantItems.length,
+      },
+      {
+        value: Action.BULK_FAVORITE_ITEMS,
+        display: `Favorite item${relevantItems.length > 1 ? 's' : ''}`,
+        priority: Priority.SELECTED_ITEMS,
+        keybind: 'f',
+        disabled: !relevantItems.length,
+      },
+      // {
+      //   value: Action.BULK_LABEL_ITEMS,
+      //   getDisplay: () => ({ relevantItems }: OptionArgs) =>
+      //     `Label item${relevantItems.length > 1 ? 's' : ''}`,
+      //   getPriority: () => Priority.SELECTED_ITEMS,
+      //   keybind: 'l',
+      // },
+      {
+        value: Action.VISIT_LINK,
+        display: 'Visit link',
+        priority: Priority.MAX,
+        disabled:
+          relevantItems.length !== 1 || relevantItems[0]?.type !== 'link',
+      },
+    ].map(({ priority, ...rest }) => ({
+      priority: priority || Priority.DEFAULT,
+      ...rest,
+    })),
+    ({ priority }) => priority,
+    'desc',
+  );
 
 export const useActionHandler = ({
   updateSelectedOption,
@@ -200,6 +211,20 @@ export const useActionHandler = ({
         break;
       }
 
+      case Action.TOGGLE_SELECT_ITEM: {
+        cleanup();
+        selectContext.selectItem(feedContext.cursorItem);
+        break;
+      }
+
+      case Action.VISIT_LINK: {
+        cleanup();
+        if (relevantItems[0]) {
+          window.open(relevantItems[0]?.link?.href, '_blank');
+        }
+        break;
+      }
+
       default:
         cleanup();
     }
@@ -264,6 +289,14 @@ export const CommandCenter = () => {
 
   useHotKey('enter', runActionThunk(Action.GO_TO_ITEM), {
     shouldBind: relevantItems.length === 1,
+  });
+
+  useHotKey('s', runActionThunk(Action.TOGGLE_SELECT_ITEM), {
+    shouldBind: relevantItems.length === 1,
+  });
+
+  useHotKey('#', runActionThunk(Action.BULK_DELETE_ITEMS), {
+    shouldBind: relevantItems.length > 0,
   });
 
   useEffect(() => {
