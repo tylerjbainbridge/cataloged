@@ -41,9 +41,10 @@ import { useMedia } from 'react-use';
 import { usePrevious } from '../hooks/usePrevious';
 import { TopNavBar } from './TopNavBar';
 import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
-import { Spotlight } from './Spotlight';
+import { CommandCenter } from './CommandCenter';
 import FilterSearchInput from './FilterSearchInput';
 import { AddOrUpdateSavedSearch } from './AddOrUpdateSavedSearch';
+import { useHotKey } from '../hooks/useHotKey';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $after: String, $filters: [FilterInput!]) {
@@ -70,6 +71,10 @@ type FeedContext = {
   nextPage: () => any;
   cursorItemId: ItemFull['id'] | null;
   setCursorItemId: (id: ItemFull['id'] | null) => any;
+  isItemCursor: (item: ItemFull) => boolean;
+  moveCursorToNextItem: (item: ItemFull) => any;
+  moveCursorToPrevItem: (item: ItemFull) => any;
+  cursorItem?: ItemFull | null;
   // viewNextItem: (item: ItemFull) => any;
   isLastItem: (item: ItemFull) => any;
   items: ItemFull[];
@@ -193,6 +198,8 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   const openItemModal = (item: ItemFull) => setCursorItemId(item.id);
 
+  const isItemCursor = (item: ItemFull) => item.id === cursorItemId;
+
   const currentSidebarWidth =
     // @ts-ignore
     document.querySelector('#sidebar-container')?.offsetWidth;
@@ -204,6 +211,38 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     });
   };
 
+  const cursorItem = cursorItemId
+    ? items.find(({ id }) => cursorItemId === id)
+    : null;
+
+  const moveCursorToNextItem = () => {
+    const currentCursorIndex = items.findIndex(
+      (item: ItemFull) => item.id === cursorItemId,
+    );
+
+    if (currentCursorIndex !== -1 && currentCursorIndex !== items.length - 1) {
+      setCursorItemId(items[currentCursorIndex + 1]?.id);
+    } else if (items.length) {
+      setCursorItemId(items[0]?.id);
+    }
+  };
+
+  useHotKey('down', moveCursorToNextItem);
+
+  const moveCursorToPrevItem = () => {
+    const currentCursorIndex = items.findIndex(
+      (item: ItemFull) => item.id === cursorItem?.id,
+    );
+
+    if (currentCursorIndex !== -1 && currentCursorIndex !== items.length - 1) {
+      setCursorItemId(items[currentCursorIndex - 1]?.id);
+    }
+  };
+
+  useHotKey('up', moveCursorToPrevItem);
+
+  // highlightedIndex <= 0 ? null : highlightedIndex - 1,
+
   return (
     <FeedContext.Provider
       value={{
@@ -213,6 +252,10 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
         isLastItem,
         cursorItemId,
         setCursorItemId,
+        cursorItem,
+        moveCursorToNextItem,
+        moveCursorToPrevItem,
+        isItemCursor,
         openItemModal,
         items,
         filter,
@@ -222,9 +265,9 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
       }}
     >
       <UploadProgress />
-      <FeedModals />
+      {/* <FeedModals /> */}
       <SelectContainer>
-        <Spotlight />
+        <CommandCenter />
         {isViewingItem && !isViewingSettings && <FeedDrawerItemView />}
         <Box d="flex" justifyContent="center" flex="1">
           {/* <Switch> */}

@@ -6,7 +6,16 @@ import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { ThemeProvider, CSSReset } from '@chakra-ui/core';
+import {
+  ThemeProvider,
+  CSSReset,
+  Stack,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  Button,
+  Box,
+} from '@chakra-ui/core';
 import { BrowserRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
 
@@ -16,6 +25,7 @@ import { Router } from './Router';
 import { Auth } from './components/Auth';
 import { theme } from './ui/theme';
 import { GlobalModalProvider } from './components/GlobalModal';
+import ErrorBoundary from 'react-error-boundary';
 
 Sentry.init({
   dsn: 'https://3cbc91c3ee1e456db2c87d85b24f197c@sentry.io/1553570',
@@ -58,8 +68,33 @@ const cache = new InMemoryCache({
         <Auth>
           <GlobalModalProvider>
             <ThemeProvider theme={theme}>
-              <CSSReset />
-              <Router />
+              <ErrorBoundary
+                FallbackComponent={() => (
+                  <Box
+                    d="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    width="100vw"
+                    height="100vh"
+                  >
+                    <Stack spacing="15px">
+                      <Alert>
+                        <AlertIcon />
+                        <AlertTitle mr={2}>Something went wrong!</AlertTitle>
+                      </Alert>
+                      <Button
+                        size="sm"
+                        onClick={() => window.location.replace('/')}
+                      >
+                        Try again
+                      </Button>
+                    </Stack>
+                  </Box>
+                )}
+              >
+                <CSSReset />
+                <Router />
+              </ErrorBoundary>
             </ThemeProvider>
           </GlobalModalProvider>
         </Auth>

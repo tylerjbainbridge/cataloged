@@ -70,30 +70,16 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
   }, [token]);
 
   return (
-    <ErrorBoundary
-      FallbackComponent={() => (
-        <Stack spacing="15px">
-          <Alert>
-            <AlertIcon />
-            <AlertTitle mr={2}>Something went wrong!</AlertTitle>
-          </Alert>
-          <Button size="sm" onClick={() => window.location.replace('/')}>
-            Try again
-          </Button>
-        </Stack>
-      )}
+    <AuthContext.Provider
+      value={{
+        user: data ? data.me : null,
+        token,
+        setToken,
+        refetchUser: refetch,
+        signOut,
+      }}
     >
-      <AuthContext.Provider
-        value={{
-          user: data ? data.me : null,
-          token,
-          setToken,
-          refetchUser: refetch,
-          signOut,
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    </ErrorBoundary>
+      {children}
+    </AuthContext.Provider>
   );
 };

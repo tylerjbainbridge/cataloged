@@ -122,16 +122,10 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
 
   const inputRef = useRef(null);
 
-  useHotKey(
-    'mod+p',
-    () => {
-      // @ts-ignore
-      ReactEditor.focus(editor);
-    },
-    {
-      isGlobal: true,
-    },
-  );
+  useHotKey('/', () => {
+    // @ts-ignore
+    ReactEditor.focus(editor);
+  });
 
   const filterValues: any = {
     type: {
@@ -225,6 +219,8 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
       switch (event.key) {
         case 'ArrowDown':
           event.preventDefault();
+          event.stopPropagation();
+
           setHighlightedIndex(
             highlightedIndex !== null
               ? highlightedIndex >= options.length - 1
@@ -236,6 +232,7 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
           break;
         case 'ArrowUp':
           event.preventDefault();
+          event.stopPropagation();
 
           setHighlightedIndex(
             highlightedIndex <= 0 ? null : highlightedIndex - 1,
@@ -244,6 +241,7 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
         case 'Tab':
         case 'Enter':
           event.preventDefault();
+          event.stopPropagation();
 
           // @ts-ignore
           if (!targetRange) {
@@ -282,10 +280,12 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
           break;
         case 'Escape':
           event.preventDefault();
+          event.stopPropagation();
+
           setState(initialSearchState);
           break;
         case 'Backspace':
-          console.log(getCurrentNodeRange(editor));
+          // console.log(getCurrentNodeRange(editor));
           break;
         default:
           break;
@@ -331,6 +331,7 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
   return (
     <Downshift
       // defaultHighlightedIndex={0}
+      suppressRefError
       selectedItem={''}
       isOpen={!!searchState.filter?.value}
       inputValue={searchState.filter?.value || ''}

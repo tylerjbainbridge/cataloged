@@ -388,8 +388,7 @@ export const Filter = ({
     debouncedFilter(values);
   }, [values, fields.length]);
 
-  useHotKey('mod+p', onToggle, {
-    isGlobal: true,
+  useHotKey('cmd+p', onToggle, {
     shouldBind: !isAnyModalOpen,
   });
 

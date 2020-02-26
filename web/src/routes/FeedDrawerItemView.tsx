@@ -50,9 +50,7 @@ export const FeedDrawerItemView = () => {
 
   useEffect(() => {
     if (!isOpen && previousIsOpen) {
-      setTimeout(() => {
-        returnToFeed();
-      }, 500);
+      returnToFeed();
     }
   }, [isOpen]);
 
