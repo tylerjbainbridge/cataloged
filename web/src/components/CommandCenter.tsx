@@ -51,8 +51,9 @@ export enum Action {
 }
 
 export enum Priority {
-  MAX = 11,
-  SELECTED_ITEMS = 10,
+  MAX = 10,
+  SELECTED_ITEMS = 7,
+  FREQUENT = 5,
   DEFAULT = 1,
 }
 
@@ -112,10 +113,12 @@ const getOptions = ({ relevantItems, isViewingItem }: OptionArgs) =>
       {
         value: Action.CREATE_LINK,
         display: 'Catalog link',
+        priority: Priority.FREQUENT,
       },
       {
         value: Action.CREATE_FILE,
         display: 'Catalog file',
+        priority: Priority.FREQUENT,
       },
       // {
       //   value: Action.CREATE_NOTE,

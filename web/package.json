@@ -80,6 +80,7 @@
     "react-waypoint": "^9.0.2",
     "remove-markdown": "^0.3.0",
     "resolve-url": "^0.2.1",
+    "scroll-into-view-if-needed": "^2.2.24",
     "slate": "^0.57.1",
     "slate-history": "^0.57.1",
     "slate-react": "^0.57.1",
