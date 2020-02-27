@@ -45,6 +45,9 @@ export enum Action {
   BULK_LABEL_ITEMS,
   BULK_FAVORITE_ITEMS,
   TOGGLE_SELECT_ITEM,
+  CREATE_LINK,
+  CREATE_NOTE,
+  CREATE_FILE,
 }
 
 export enum Priority {
@@ -106,6 +109,18 @@ const getOptions = ({ relevantItems, isViewingItem }: OptionArgs) =>
         disabled:
           relevantItems.length !== 1 || relevantItems[0]?.type !== 'link',
       },
+      {
+        value: Action.CREATE_LINK,
+        display: 'Catalog link',
+      },
+      {
+        value: Action.CREATE_FILE,
+        display: 'Catalog file',
+      },
+      // {
+      //   value: Action.CREATE_NOTE,
+      //   display: 'Catalog note',
+      // },
     ].map(({ priority, ...rest }) => ({
       priority: priority || Priority.DEFAULT,
       ...rest,
@@ -127,6 +142,10 @@ export const useActionHandler = ({
 
   const history = useHistory();
   const location = useLocation();
+
+  const linkModalState = useGlobalModal(ModalName.CREATE_LINK_MODAL);
+  const noteModalState = useGlobalModal(ModalName.CREATE_NOTE_MODAL);
+  const fileModalState = useGlobalModal(ModalName.CREATE_FILES_MODAL);
 
   const [deleteItems] = useOptimisticDeleteManyItems(relevantItems, {
     onCompleted: () => {
@@ -224,6 +243,19 @@ export const useActionHandler = ({
         }
         break;
       }
+
+      case Action.CREATE_LINK:
+        cleanup();
+        linkModalState.openModal();
+        break;
+      case Action.CREATE_NOTE:
+        cleanup();
+        noteModalState.openModal();
+        break;
+      case Action.CREATE_FILE:
+        cleanup();
+        fileModalState.openModal();
+        break;
 
       default:
         cleanup();
