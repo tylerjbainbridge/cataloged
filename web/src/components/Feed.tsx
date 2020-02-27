@@ -30,6 +30,7 @@ import {
   getNodesFromConnection,
   getFiltersFromQueryString,
   getQueryStringFromFilters,
+  scrollToItemIfOutOfView,
 } from '../util/helpers';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { feed, feedVariables } from '../graphql/__generated__/feed';
@@ -220,10 +221,17 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
       (item: ItemFull) => item.id === cursorItemId,
     );
 
+    let newCursor: ItemFull['id'] | null = null;
+
     if (currentCursorIndex !== -1 && currentCursorIndex !== items.length - 1) {
-      setCursorItemId(items[currentCursorIndex + 1]?.id);
+      newCursor = items[currentCursorIndex + 1]?.id;
     } else if (items.length) {
-      setCursorItemId(items[0]?.id);
+      newCursor = items[0]?.id;
+    }
+
+    if (newCursor) {
+      setCursorItemId(newCursor);
+      scrollToItemIfOutOfView(newCursor);
     }
   };
 
@@ -235,7 +243,10 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     );
 
     if (currentCursorIndex !== -1 && currentCursorIndex !== items.length - 1) {
-      setCursorItemId(items[currentCursorIndex - 1]?.id);
+      let newCursor: ItemFull['id'] | null = items[currentCursorIndex - 1]?.id;
+      setCursorItemId(newCursor);
+      if (newCursor) scrollToItemIfOutOfView(newCursor);
+      else window.scrollTo(0, 0);
     }
   };
 

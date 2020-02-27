@@ -1,9 +1,12 @@
 import _ from 'lodash';
+import scrollIntoView from 'scroll-into-view-if-needed';
+
 // @ts-ignore
 import cleanDeep from 'clean-deep';
 import queryString from 'query-string';
 import { FILTER_CONFIGS } from '../components/Filter';
 import { filterNames } from '../components/FilterSearchInput';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
 
 export const FILTER_NAMES = [
   ...filterNames.map(({ value }: any) => value),
@@ -111,3 +114,14 @@ export const confirmMutation = ([mutateFunc, ...rest]: any, message: any) => [
   },
   ...(rest as any),
 ];
+
+export const scrollToItemIfOutOfView = (id: ItemFull['id']) => {
+  const node = document.getElementById(`item-${id}`);
+
+  if (node)
+    scrollIntoView(node, {
+      scrollMode: 'if-needed',
+      block: 'center',
+      inline: 'center',
+    });
+};
