@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import hotkeys from 'hotkeys-js';
+import Mousetrap from 'mousetrap';
+
 import { usePrevious } from './usePrevious';
 
 export const useHotKey = (keybind, handler, { shouldBind = true } = {}) => {
@@ -12,7 +13,7 @@ export const useHotKey = (keybind, handler, { shouldBind = true } = {}) => {
   const prevShouldBind = usePrevious(shouldBind);
 
   const bind = () => {
-    hotkeys(keybind, e => {
+    Mousetrap.bind(keybind, e => {
       if (e.stopPropagation) e.stopPropagation();
 
       if (e.preventDefault) {
@@ -29,7 +30,7 @@ export const useHotKey = (keybind, handler, { shouldBind = true } = {}) => {
   };
 
   const unbind = () => {
-    hotkeys.unbind(keybind);
+    Mousetrap.unbind(keybind);
   };
 
   useEffect(() => {

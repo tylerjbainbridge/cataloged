@@ -82,7 +82,7 @@ export const CreateLink = () => {
     ModalName.CREATE_LINK_MODAL,
   );
 
-  useHotKey('c l', toggleModal);
+  // useHotKey('c l', toggleModal);
 
   const [createLink, { loading }] = useMutation(CREATE_LINK_MUTATION, {
     variables: { href },
@@ -135,6 +135,7 @@ export const CreateLink = () => {
             await createLink();
           })}
           height="250px"
+          rounded="lg"
         >
           <ModalHeader>Save link</ModalHeader>
           <ModalCloseButton />

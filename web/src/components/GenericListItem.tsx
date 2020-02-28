@@ -8,6 +8,7 @@ import {
   MenuItem,
   ControlBox,
   VisuallyHidden,
+  Input,
 } from '@chakra-ui/core';
 import _ from 'lodash';
 
@@ -177,10 +178,11 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                     }}
                   >
                     <label>
-                      <VisuallyHidden
-                        as="input"
-                        // @ts-ignore
+                      <input
+                        style={{ display: 'none' }}
                         type="checkbox"
+                        checked={isItemSelected(item)}
+                        value={isItemSelected(item)}
                         defaultChecked={isItemSelected(item)}
                       />
                       <ControlBox

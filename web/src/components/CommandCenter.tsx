@@ -6,9 +6,8 @@ import React, {
   useCallback,
 } from 'react';
 import _ from 'lodash';
-import hotkeys from 'hotkeys-js';
 import qs from 'query-string';
-
+import Mousetrap from 'mousetrap';
 import {
   Modal,
   ModalOverlay,
@@ -18,6 +17,10 @@ import {
   ModalBody,
   Input,
   Box,
+  Text,
+  Flex,
+  Stack,
+  Tag,
 } from '@chakra-ui/core';
 
 import { useForm } from 'react-hook-form';
@@ -33,21 +36,43 @@ import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
 import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
 import { useGoToItem, useReturnToFeedFromItem } from '../hooks/useGoTo';
+import { scrollToNodeIfOutOfView, getKeybindAsArray } from '../util/helpers';
+import {
+  FaCogs,
+  FaList,
+  FaThLarge,
+  FaArrowRight,
+  FaTrash,
+  FaStar,
+  FaCheckSquare,
+  FaExternalLinkAlt,
+  FaFile,
+  FaTh,
+} from 'react-icons/fa';
+import { useAuth } from '../hooks/useAuth';
+import { getAuthUser_me } from '../graphql/__generated__/getAuthUser';
 
 export enum Action {
-  OPEN_ITEM,
-  GO_TO_SETTINGS,
-  GO_TO_ITEM,
-  VISIT_LINK,
-  TOGGLE_FEED_VIEW_MODE,
-  DELETE_ITEM,
-  BULK_DELETE_ITEMS,
-  BULK_LABEL_ITEMS,
-  BULK_FAVORITE_ITEMS,
-  TOGGLE_SELECT_ITEM,
-  CREATE_LINK,
-  CREATE_NOTE,
-  CREATE_FILE,
+  OPEN_ITEM = 'OPEN_ITEM',
+  GO_TO_SETTINGS = 'GO_TO_SETTINGS',
+  GO_TO_ITEM = 'GO_TO_ITEM',
+  VISIT_LINK = 'VISIT_LINK',
+  TOGGLE_FEED_VIEW_MODE = 'TOGGLE_FEED_VIEW_MODE',
+  DELETE_ITEM = 'DELETE_ITEM',
+  BULK_DELETE_ITEMS = 'BULK_DELETE_ITEMS',
+  BULK_UPDATE_LABEL_ITEMS = 'BULK_UPDATE_LABEL_ITEMS',
+  BULK_FAVORITE_ITEMS = 'BULK_FAVORITE_ITEMS',
+  TOGGLE_SELECT_ITEM = 'TOGGLE_SELECT_ITEM',
+  CREATE_LINK = 'CREATE_LINK',
+  CREATE_NOTE = 'CREATE_NOTE',
+  CREATE_FILE = 'CREATE_FILE',
+  BULK_UPDATE_STATUS_ITEMS = 'BULK_UPDATE_STATUS_ITEMS',
+}
+
+export enum SecondaryAction {
+  SELECT_FROM_ALL_LABELS = 'SELECT_FROM_ALL_LABELS',
+  SELECT_FROM_ITEMS_LABELS = 'SELECT_FROM_ITEMS_LABELS',
+  SELECT_STATUS = 'SELECT_STATUS',
 }
 
 export enum Priority {
@@ -60,34 +85,42 @@ export enum Priority {
 export interface OptionArgs {
   relevantItems: ItemFull[];
   isViewingItem: boolean;
+  feedContext: FeedContext;
 }
 
-const getOptions = ({ relevantItems, isViewingItem }: OptionArgs) =>
+const getOptions = ({
+  relevantItems,
+  isViewingItem,
+  feedContext,
+}: OptionArgs) =>
   _.orderBy(
     [
       {
         value: Action.TOGGLE_FEED_VIEW_MODE,
         display: 'Toggle view grid mode',
-        keybind: null,
+        keybind: 'shift+v',
+        icon: feedContext.mode === 'grid' ? <FaList /> : <FaTh />,
       },
       {
         value: Action.GO_TO_SETTINGS,
         display: 'Go to settings',
-        keybind: null,
+        icon: <FaCogs />,
       },
       {
         value: Action.GO_TO_ITEM,
         display: 'Go to item',
         priority: Priority.MAX,
         disabled: relevantItems.length !== 1 || isViewingItem,
-        keybind: '#',
+        keybind: 'enter',
+        icon: <FaArrowRight />,
       },
       {
         value: Action.BULK_DELETE_ITEMS,
         display: `Delete item${relevantItems.length > 1 ? 's' : ''}`,
         priority: Priority.SELECTED_ITEMS,
-        keybind: '#',
+        keybind: 'd d',
         disabled: !relevantItems.length,
+        icon: <FaTrash />,
       },
       {
         value: Action.BULK_FAVORITE_ITEMS,
@@ -95,30 +128,56 @@ const getOptions = ({ relevantItems, isViewingItem }: OptionArgs) =>
         priority: Priority.SELECTED_ITEMS,
         keybind: 'f',
         disabled: !relevantItems.length,
+        icon: <FaStar />,
       },
-      // {
-      //   value: Action.BULK_LABEL_ITEMS,
-      //   getDisplay: () => ({ relevantItems }: OptionArgs) =>
-      //     `Label item${relevantItems.length > 1 ? 's' : ''}`,
-      //   getPriority: () => Priority.SELECTED_ITEMS,
-      //   keybind: 'l',
-      // },
+      {
+        value: Action.TOGGLE_SELECT_ITEM,
+        display: 'Select item',
+        priority: Priority.SELECTED_ITEMS,
+        keybind: 's',
+        disabled: !relevantItems.length,
+        icon: <FaCheckSquare />,
+      },
+      {
+        value: Action.BULK_UPDATE_LABEL_ITEMS,
+        display: `Label item${relevantItems.length > 1 ? 's' : ''}`,
+        priority: Priority.SELECTED_ITEMS,
+        keybind: 'l',
+        disabled: !relevantItems.length || true,
+        secondary: SecondaryAction.SELECT_FROM_ALL_LABELS,
+        // options: user.labels.map(({ name }) => ({ value: name })),
+      },
+      {
+        value: Action.BULK_UPDATE_STATUS_ITEMS,
+        display: 'Update status',
+        priority: Priority.SELECTED_ITEMS,
+        keybind: 'j',
+        disabled: !relevantItems.length || true,
+        secondary: SecondaryAction.SELECT_STATUS,
+        // options: user.labels.map(({ name }) => ({ value: name })),
+      },
       {
         value: Action.VISIT_LINK,
         display: 'Visit link',
         priority: Priority.MAX,
+        keybind: 'mod+enter',
         disabled:
           relevantItems.length !== 1 || relevantItems[0]?.type !== 'link',
+        icon: <FaExternalLinkAlt />,
       },
       {
         value: Action.CREATE_LINK,
         display: 'Catalog link',
         priority: Priority.FREQUENT,
+        keybind: 'c l',
+        icon: <FaExternalLinkAlt />,
       },
       {
         value: Action.CREATE_FILE,
         display: 'Catalog file',
         priority: Priority.FREQUENT,
+        keybind: 'c f',
+        icon: <FaFile />,
       },
       // {
       //   value: Action.CREATE_NOTE,
@@ -133,7 +192,7 @@ const getOptions = ({ relevantItems, isViewingItem }: OptionArgs) =>
   );
 
 export const useActionHandler = ({
-  updateSelectedOption,
+  updatePrimaryAction,
   formState,
   modalState,
   feedContext,
@@ -183,22 +242,24 @@ export const useActionHandler = ({
   const [goToFeed] = useReturnToFeedFromItem();
 
   const cleanup = () => {
-    updateSelectedOption(null);
-    formState.reset();
+    updatePrimaryAction(null);
+    // formState.reset();
     modalState.closeModal();
   };
 
-  const runAction = async (selectedOption: Action) => {
-    const option = getOptions({ relevantItems, isViewingItem }).find(
-      ({ value }) => value === selectedOption,
-    );
+  const runAction = async (primaryAction: Action, value?: any) => {
+    const option = getOptions({
+      relevantItems,
+      isViewingItem,
+      feedContext,
+    }).find(({ value }) => value === primaryAction);
 
     if (!option || option.disabled) {
       cleanup();
       return;
     }
 
-    switch (selectedOption) {
+    switch (primaryAction) {
       case Action.GO_TO_SETTINGS: {
         cleanup();
         history.push({
@@ -227,6 +288,15 @@ export const useActionHandler = ({
         break;
       }
 
+      case Action.BULK_UPDATE_LABEL_ITEMS: {
+        if (!value) {
+          updatePrimaryAction(Action.BULK_UPDATE_LABEL_ITEMS);
+          modalState.openModal();
+        }
+
+        break;
+      }
+
       case Action.TOGGLE_FEED_VIEW_MODE: {
         cleanup();
         feedContext.setMode(feedContext.mode === 'grid' ? 'list' : 'grid');
@@ -235,7 +305,7 @@ export const useActionHandler = ({
 
       case Action.TOGGLE_SELECT_ITEM: {
         cleanup();
-        selectContext.selectItem(feedContext.cursorItem);
+        selectContext.toggleItem(feedContext.cursorItem);
         break;
       }
 
@@ -268,21 +338,389 @@ export const useActionHandler = ({
   return runAction;
 };
 
-export const CommandCenter = () => {
-  const [selectedOption, updateSelectedOption] = useState<Action | null>(null);
+const useKeyDown = (options: any[], onSelect: any) => {
+  const handler = useCallback(
+    ({ setHighlightedIndex, highlightedIndex }: any) => (event: any) => {
+      switch (event.key) {
+        case 'ArrowDown': {
+          event.preventDefault();
 
-  const location = useLocation();
+          const newIndex =
+            highlightedIndex !== null
+              ? highlightedIndex >= options.length - 1
+                ? 0
+                : highlightedIndex + 1
+              : 0;
+          setHighlightedIndex(newIndex);
+          scrollToNodeIfOutOfView(
+            document.getElementById(`downshift-1-item-${newIndex}`),
+          );
 
+          break;
+        }
+        case 'ArrowUp': {
+          event.preventDefault();
+
+          const newIndex =
+            highlightedIndex <= 0 ? options.length - 1 : highlightedIndex - 1;
+
+          setHighlightedIndex(newIndex);
+
+          scrollToNodeIfOutOfView(
+            document.getElementById(`downshift-1-item-${newIndex}`),
+          );
+          break;
+        }
+        case 'Tab':
+        case 'Enter':
+          event.preventDefault();
+
+          const option = options[highlightedIndex];
+
+          if (option) onSelect(option.value);
+
+          setHighlightedIndex(null);
+          break;
+        case 'Escape':
+          break;
+        case 'Backspace':
+          break;
+        default:
+          break;
+      }
+    },
+    [options],
+  );
+
+  return [handler];
+};
+
+export const SelectFromAllLabels = ({
+  user,
+  activeOptions,
+  updatePrimaryAction,
+}: any) => {
   const formState = useForm<{ search: string }>({
     defaultValues: {
       search: '',
     },
   });
 
+  const inputRef = useRef(null);
+
   const { getValues, watch, register } = formState;
+
+  useEffect(() => {
+    // @ts-ignore
+    if (inputRef?.current) inputRef.current.focus();
+  }, []);
 
   watch();
   const values = getValues();
+
+  const options = user.labels.filter(
+    (label: any) =>
+      !values.search ||
+      //@ts-ignore
+      label.name.toLowerCase().includes(values.search.toLowerCase()),
+  );
+
+  const [onKeyDownHandler] = useKeyDown(options, (selection: Action) => {
+    updatePrimaryAction(selection);
+  });
+
+  return (
+    <ModalContent
+      as="form"
+      height="300px"
+      maxHeight="300px"
+      width="550px"
+      rounded="lg"
+    >
+      <ModalHeader>Select label</ModalHeader>
+      <ModalCloseButton />
+
+      <Downshift
+        defaultHighlightedIndex={0}
+        selectedItem=""
+        onSelect={() => {}}
+        // @ts-ignore
+        onChange={selection => updatePrimaryAction(selection)}
+        inputValue={values.search}
+      >
+        {({
+          getItemProps,
+          getMenuProps,
+          highlightedIndex,
+          selectedItem,
+          getRootProps,
+          setHighlightedIndex,
+        }) => {
+          return (
+            <ModalBody p="0px" height="300px">
+              <Box
+                // @ts-ignore
+                {...getRootProps({}, { suppressRefError: true })}
+              >
+                <Input
+                  size="lg"
+                  name="search"
+                  id="search"
+                  width="100%"
+                  variant="unstyled"
+                  placeholder="search commands"
+                  borderBottom="2px solid #5718FF"
+                  pl="20px"
+                  rounded="none"
+                  value={values.search}
+                  ref={(ref: any) => {
+                    register(ref);
+                    inputRef.current = ref;
+                  }}
+                  onKeyDown={onKeyDownHandler({
+                    selectedItem,
+                    highlightedIndex,
+                    setHighlightedIndex,
+                  })}
+                />
+              </Box>
+              <Box
+                {...getMenuProps()}
+                // @ts-ignore
+                width={inputRef?.current?.offsetWidth || '100%'}
+                // zIndex={100}
+                maxHeight="100%"
+                backgroundColor="white"
+                rounded="lg"
+                overflowY="scroll"
+              >
+                {options.map((item: any, index: number) => (
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    height="60px"
+                    width="100%"
+                    cursor="pointer"
+                    {...(index === 0
+                      ? {
+                          roundedTopLeft: '0px',
+                          roundedTopRight: '0px',
+                        }
+                      : {})}
+                    {...(index === options.length - 1
+                      ? {
+                          roundedBottomLeft: 'lg',
+                          roundedBottomRight: 'lg',
+                        }
+                      : {})}
+                    {...getItemProps({
+                      key: item.name,
+                      index,
+                      // @ts-ignore
+                      item: item.name,
+                      // @ts-ignore
+                      backgroundColor:
+                        highlightedIndex === index
+                          ? 'rgba(87,24,255, 0.1)'
+                          : 'white',
+                    })}
+                    pl="20px"
+                  >
+                    <Tag size="lg">{item.name}</Tag>
+                  </Flex>
+                ))}
+              </Box>
+            </ModalBody>
+          );
+        }}
+      </Downshift>
+    </ModalContent>
+  );
+};
+
+export const SelectPrimaryAction = ({
+  activeOptions,
+  updatePrimaryAction,
+}: any) => {
+  const formState = useForm<{ search: string }>({
+    defaultValues: {
+      search: '',
+    },
+  });
+
+  const inputRef = useRef(null);
+
+  const { getValues, watch, register } = formState;
+
+  useEffect(() => {
+    // @ts-ignore
+    if (inputRef?.current) inputRef.current.focus();
+  }, []);
+
+  watch();
+  const values = getValues();
+
+  const options = activeOptions.filter(
+    (option: any) =>
+      !values.search ||
+      //@ts-ignore
+      option.display.toLowerCase().includes(values.search.toLowerCase()),
+  );
+
+  const [onKeyDownHandler] = useKeyDown(options, (selection: Action) => {
+    updatePrimaryAction(selection);
+  });
+
+  return (
+    <ModalContent
+      as="form"
+      height="300px"
+      maxHeight="300px"
+      width="550px"
+      rounded="lg"
+    >
+      <ModalHeader>Command Center</ModalHeader>
+      <ModalCloseButton />
+
+      <Downshift
+        defaultHighlightedIndex={0}
+        selectedItem=""
+        onSelect={() => {}}
+        // @ts-ignore
+        onChange={selection => updatePrimaryAction(selection)}
+        inputValue={values.search}
+      >
+        {({
+          getInputProps,
+          getItemProps,
+          getMenuProps,
+          inputValue,
+          highlightedIndex,
+          selectedItem,
+          getRootProps,
+          setHighlightedIndex,
+        }) => {
+          return (
+            <ModalBody p="0px" height="300px">
+              <Box
+                // @ts-ignore
+                {...getRootProps({}, { suppressRefError: true })}
+              >
+                <Input
+                  size="lg"
+                  name="search"
+                  id="search"
+                  width="100%"
+                  variant="unstyled"
+                  placeholder="search commands"
+                  borderBottom="2px solid #5718FF"
+                  pl="20px"
+                  rounded="none"
+                  value={values.search}
+                  ref={(ref: any) => {
+                    register(ref);
+                    inputRef.current = ref;
+                  }}
+                  onKeyDown={onKeyDownHandler({
+                    selectedItem,
+                    highlightedIndex,
+                    setHighlightedIndex,
+                  })}
+                />
+              </Box>
+              <Box
+                {...getMenuProps()}
+                // @ts-ignore
+                width={inputRef?.current?.offsetWidth || '100%'}
+                // zIndex={100}
+                maxHeight="100%"
+                backgroundColor="white"
+                rounded="lg"
+                overflowY="scroll"
+              >
+                {options.map((item: any, index: number) => (
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    height="60px"
+                    width="100%"
+                    cursor="pointer"
+                    {...(index === 0
+                      ? {
+                          roundedTopLeft: '0px',
+                          roundedTopRight: '0px',
+                        }
+                      : {})}
+                    {...(index === options.length - 1
+                      ? {
+                          roundedBottomLeft: 'lg',
+                          roundedBottomRight: 'lg',
+                        }
+                      : {})}
+                    {...getItemProps({
+                      key: item.value,
+                      index,
+                      // @ts-ignore
+                      item: item.value,
+                      // @ts-ignore
+                      backgroundColor:
+                        highlightedIndex === index
+                          ? 'rgba(87,24,255, 0.1)'
+                          : 'white',
+                      fontWeight:
+                        // @ts-ignore
+                        selectedItem === item.value ? 'bold' : 'normal',
+                    })}
+                    pl="20px"
+                  >
+                    <Flex alignItems="center">
+                      {item.icon && (
+                        <Box mr="10px">
+                          {React.cloneElement(item.icon, { size: '16px' })}
+                        </Box>
+                      )}{' '}
+                      <Text fontSize="xl">{item.display}</Text>
+                    </Flex>
+                    {!!item.keybind && (
+                      <Stack
+                        d="flex"
+                        alignItems="center"
+                        pr="20px"
+                        spacing={2}
+                        isInline
+                      >
+                        {getKeybindAsArray(item.keybind).map((key, idx) =>
+                          key === 'then' ? (
+                            <Text>then</Text>
+                          ) : (
+                            <Tag
+                              size="sm"
+                              key={idx + key}
+                              variantColor="gray"
+                              textAlign="center"
+                            >
+                              {key}
+                            </Tag>
+                          ),
+                        )}
+                      </Stack>
+                    )}
+                  </Flex>
+                ))}
+              </Box>
+            </ModalBody>
+          );
+        }}
+      </Downshift>
+    </ModalContent>
+  );
+};
+
+export const CommandCenter = () => {
+  const [primaryAction, updatePrimaryAction] = useState<Action | null>(null);
+
+  const location = useLocation();
+  const { user } = useAuth();
 
   const feedContext = useContext(FeedContext);
 
@@ -306,202 +744,84 @@ export const CommandCenter = () => {
 
   const inputRef = useRef(null);
 
-  const runAction = useActionHandler({
-    selectedOption,
-    updateSelectedOption,
+  const activeOptions = getOptions({
+    relevantItems,
+    isViewingItem: !!itemId,
+    feedContext,
+  }).filter(item => !item.disabled);
+
+  const params = {
+    primaryAction,
+    updatePrimaryAction,
     modalState,
-    formState,
     feedContext,
     selectContext,
     relevantItems,
     isViewingItem: !!itemId,
-  });
+    user,
+    activeOptions,
+  };
+
+  const runAction = useActionHandler(params);
 
   const runActionThunk = (action: Action) => () => runAction(action);
 
-  useHotKey('cmd+k', toggleModal);
+  useHotKey('mod+k', toggleModal);
   useHotKey('esc', closeModal, { shouldBind: isModalOpen });
 
-  useHotKey('enter', runActionThunk(Action.GO_TO_ITEM), {
-    shouldBind: relevantItems.length === 1,
-  });
-
-  useHotKey('s', runActionThunk(Action.TOGGLE_SELECT_ITEM), {
-    shouldBind: relevantItems.length === 1,
-  });
-
-  useHotKey('#', runActionThunk(Action.BULK_DELETE_ITEMS), {
-    shouldBind: relevantItems.length > 0,
-  });
+  const secondayOption = activeOptions.find(
+    option => option.value === primaryAction,
+  )?.secondary;
 
   useEffect(() => {
-    if (selectedOption) runAction(selectedOption);
-  }, [selectedOption]);
+    if (primaryAction && !secondayOption) runAction(primaryAction);
+  }, [primaryAction]);
 
-  const options = getOptions({ relevantItems, isViewingItem: !!itemId }).filter(
-    item => {
-      return (
-        !item.disabled &&
-        (!values.search ||
-          //@ts-ignore
-          item.display.toLowerCase().includes(values.search.toLowerCase()))
-      );
-    },
-  );
+  useEffect(() => {
+    updatePrimaryAction(null);
+  }, [!isModalOpen]);
 
-  const onKeyDown = useCallback(
-    (getInputProps, { setHighlightedIndex, highlightedIndex }: any) => (
-      event: any,
-    ) => {
-      switch (event.key) {
-        case 'ArrowDown':
-          event.preventDefault();
-          setHighlightedIndex(
-            highlightedIndex !== null
-              ? highlightedIndex >= options.length - 1
-                ? 0
-                : highlightedIndex + 1
-              : 0,
-          );
+  useEffect(() => {
+    activeOptions.forEach(({ keybind, value, disabled }) => {
+      if (keybind && !disabled) {
+        Mousetrap.unbind(keybind);
+        Mousetrap.bind(keybind, e => {
+          e.stopPropagation();
+          e.preventDefault();
 
-          break;
-        case 'ArrowUp':
-          event.preventDefault();
+          runAction(value);
 
-          setHighlightedIndex(
-            highlightedIndex <= 0 ? options.length - 1 : highlightedIndex - 1,
-          );
-          break;
-        case 'Tab':
-        case 'Enter':
-          event.preventDefault();
-
-          const option = options[highlightedIndex];
-
-          if (option) updateSelectedOption(option.value);
-
-          setHighlightedIndex(null);
-          break;
-        case 'Escape':
-          break;
-        case 'Backspace':
-          break;
-        default:
-          break;
+          return false;
+        });
       }
-    },
-    [values.search, options],
-  );
+    });
+  }, [activeOptions]);
+
+  let node = null;
+
+  if (!primaryAction && !secondayOption) {
+    node = <SelectPrimaryAction {...params} />;
+  } else if (secondayOption) {
+    // @ts-ignore
+    const Component = {
+      [SecondaryAction.SELECT_FROM_ALL_LABELS]: SelectFromAllLabels,
+      // @ts-ignore
+    }[secondayOption];
+
+    node = <Component {...params} />;
+  }
 
   return (
     <Modal
       onClose={closeModal}
-      scrollBehavior="inside"
+      // scrollBehavior="inside"
       isOpen={isModalOpen}
       initialFocusRef={inputRef}
       size="full"
       isCentered
     >
       <ModalOverlay />
-
-      <ModalContent as="form" height="300px" width="500px" rounded="lg">
-        <ModalHeader>Cataloged</ModalHeader>
-        <ModalCloseButton />
-
-        {isModalOpen && (
-          <Downshift
-            defaultHighlightedIndex={0}
-            selectedItem=""
-            onSelect={() => {}}
-            // @ts-ignore
-            onChange={selection => updateSelectedOption(selection)}
-            inputValue={values.search}
-          >
-            {({
-              getInputProps,
-              getItemProps,
-              getMenuProps,
-              inputValue,
-              highlightedIndex,
-              selectedItem,
-              getRootProps,
-              setHighlightedIndex,
-            }) => {
-              return (
-                <ModalBody p="0px">
-                  <Box
-                    // @ts-ignore
-                    {...getRootProps({}, { suppressRefError: true })}
-                  >
-                    <Input
-                      size="lg"
-                      name="search"
-                      id="search"
-                      width="100%"
-                      variant="unstyled"
-                      placeholder="search commands"
-                      borderBottom="2px solid #5718FF"
-                      pl="20px"
-                      rounded="none"
-                      value={values.search}
-                      ref={(ref: any) => {
-                        register(ref);
-                        inputRef.current = ref;
-                      }}
-                      onKeyDown={onKeyDown(getInputProps, {
-                        selectedItem,
-                        highlightedIndex,
-                        setHighlightedIndex,
-                      })}
-                    />
-                  </Box>
-                  <Box
-                    {...getMenuProps()}
-                    // @ts-ignore
-                    width={inputRef?.current?.offsetWidth || '100%'}
-                    position="absolute"
-                    zIndex={100}
-                    backgroundColor="white"
-                    rounded="lg"
-                  >
-                    {options.map((item, index) => (
-                      <Box
-                        d="flex"
-                        alignItems="center"
-                        height="50px"
-                        width="100%"
-                        {...(index === options.length - 1
-                          ? {
-                              roundedBottomLeft: 'lg',
-                              roundedBottomRight: 'lg',
-                            }
-                          : {})}
-                        {...getItemProps({
-                          key: item.value,
-                          index,
-                          // @ts-ignore
-                          item: item.value,
-                          // @ts-ignore
-                          backgroundColor:
-                            highlightedIndex === index
-                              ? 'rgba(87,24,255, 0.1)'
-                              : 'white',
-                          fontWeight:
-                            // @ts-ignore
-                            selectedItem === item.value ? 'bold' : 'normal',
-                        })}
-                        pl="20px"
-                      >
-                        {item.display}
-                      </Box>
-                    ))}
-                  </Box>
-                </ModalBody>
-              );
-            }}
-          </Downshift>
-        )}
-      </ModalContent>
+      {isModalOpen && node}
     </Modal>
   );
 };

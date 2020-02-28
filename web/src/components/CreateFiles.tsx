@@ -57,7 +57,7 @@ export const CreateFiles = () => {
     ModalName.CREATE_FILES_MODAL,
   );
 
-  useHotKey('c f', toggleModal);
+  // useHotKey('c f', toggleModal);
 
   const toast = useToast();
 

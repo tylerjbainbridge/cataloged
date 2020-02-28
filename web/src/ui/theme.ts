@@ -1,7 +1,16 @@
 import { theme as t } from '@chakra-ui/core';
 
+const system = `-apple-system, system-ui, BlinkMacSystemFont, 
+'Segoe UI', Roboto, 'Helvetica Neue', 
+Ubuntu, Arial, sans-serif;`;
+
 export const theme = {
   ...t,
+  fonts: {
+    body: system,
+    heading: system,
+    mono: system,
+  },
   colors: {
     ...t.colors,
     brand: {

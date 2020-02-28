@@ -66,7 +66,7 @@ export const FEED_QUERY = gql`
 
 export const FEED_PAGE_LENGTH = 30;
 
-type FeedContext = {
+export type FeedContext = {
   mode: 'grid' | 'list';
   setMode: (mode: 'grid' | 'list') => any;
   nextPage: () => any;
