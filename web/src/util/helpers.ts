@@ -120,8 +120,45 @@ export const scrollToItemIfOutOfView = (id: ItemFull['id']) => {
 
   if (node)
     scrollIntoView(node, {
+      behavior: 'smooth',
       scrollMode: 'if-needed',
       block: 'center',
       inline: 'center',
     });
+};
+
+export const scrollToNodeIfOutOfView = (node: any) => {
+  if (node)
+    scrollIntoView(node, {
+      behavior: 'smooth',
+      scrollMode: 'if-needed',
+      block: 'nearest',
+      inline: 'center',
+    });
+};
+
+export const getKeybindAsArray = (keybind: string) => {
+  const mappings = {
+    mod: '⌘',
+  };
+
+  if (keybind.includes('+')) {
+    return (
+      keybind
+        .split('+')
+        .map(str => str.trim())
+        // @ts-ignore
+        .map(str => mappings[str] || str)
+    );
+  }
+
+  return (
+    keybind
+      .split(' ')
+      .map(str => str.trim())
+      // @ts-ignore
+      .map(str => mappings[str] || str)
+      .join(' then ')
+      .split(' ')
+  );
 };

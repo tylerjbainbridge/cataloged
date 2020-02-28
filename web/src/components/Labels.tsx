@@ -32,7 +32,7 @@ import color from 'color';
 import { useAuth } from '../hooks/useAuth';
 import { theme } from '../ui/theme';
 
-const ITEM_LABEL_RESPONSE_FRAGMENT = gql`
+export const ITEM_LABEL_RESPONSE_FRAGMENT = gql`
   fragment ItemLabelResponseFragment on Item {
     id
 
@@ -43,7 +43,7 @@ const ITEM_LABEL_RESPONSE_FRAGMENT = gql`
   }
 `;
 
-const CONNECT_LABEL_TO_ITEM_MUTATION = gql`
+export const CONNECT_LABEL_TO_ITEM_MUTATION = gql`
   mutation connectLabelToItem($name: String!, $itemId: String!) {
     connectLabelToItem(name: $name, itemId: $itemId) {
       ...ItemLabelResponseFragment
@@ -53,7 +53,7 @@ const CONNECT_LABEL_TO_ITEM_MUTATION = gql`
   ${ITEM_LABEL_RESPONSE_FRAGMENT}
 `;
 
-const DISCONNECT_LABEL_FROM_ITEM_MUTATION = gql`
+export const DISCONNECT_LABEL_FROM_ITEM_MUTATION = gql`
   mutation disconnectLabelFromItem($labelId: String!, $itemId: String!) {
     disconnectLabelFromItem(labelId: $labelId, itemId: $itemId) {
       ...ItemLabelResponseFragment

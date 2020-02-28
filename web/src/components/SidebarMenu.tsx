@@ -149,7 +149,7 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
       p="20px"
       height="100%"
       borderRight="1px solid lightgray"
-      bg="gray.50"
+      bg="#fcfeff"
       id="sidebar-container"
       zIndex={3}
     >
