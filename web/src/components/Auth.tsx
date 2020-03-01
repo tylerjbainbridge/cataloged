@@ -1,5 +1,5 @@
 import React, { useState, useEffect, SetStateAction, Dispatch } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 import ErrorBoundary from 'react-error-boundary';
 import { getAuthUser_me } from '../graphql/__generated__/getAuthUser';

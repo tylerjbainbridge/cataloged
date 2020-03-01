@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useMutation, useApolloClient } from '@apollo/client';
 import {
   Box,
   Icon,

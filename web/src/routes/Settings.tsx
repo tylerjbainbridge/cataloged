@@ -21,7 +21,7 @@ import { usePrevious } from '../hooks/usePrevious';
 import { useRemoveFromQueryString } from '../hooks/useGoTo';
 import { useAuth } from '../hooks/useAuth';
 import { useMedia } from 'react-use';
-import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
+import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
 import { gql } from 'apollo-boost';
 
 export interface ItemDrawerProps {

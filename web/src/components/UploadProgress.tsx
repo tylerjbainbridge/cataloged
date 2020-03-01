@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery, useApolloClient } from '@apollo/react-hooks';
+import { useQuery, useApolloClient } from '@apollo/client';
 import gql from 'graphql-tag';
 import _ from 'lodash';
 import { Box, Icon, Text } from '@chakra-ui/core';

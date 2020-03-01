@@ -25,7 +25,7 @@ import {
   Tooltip,
 } from '@chakra-ui/core';
 import * as yup from 'yup';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import { Labels } from './Labels';
 import { useForm } from 'react-hook-form';
 import { LazyImage } from './LazyImage';

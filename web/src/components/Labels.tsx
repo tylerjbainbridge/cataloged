@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import FocusLock from 'react-focus-lock';
 import _ from 'lodash';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 
 import {
@@ -30,7 +30,7 @@ import {
 import color from 'color';
 
 import { useAuth } from '../hooks/useAuth';
-import { theme } from '../ui/theme';
+import { theme } from '../styles/theme';
 
 export const ITEM_LABEL_RESPONSE_FRAGMENT = gql`
   fragment ItemLabelResponseFragment on Item {
@@ -63,7 +63,7 @@ export const DISCONNECT_LABEL_FROM_ITEM_MUTATION = gql`
   ${ITEM_LABEL_RESPONSE_FRAGMENT}
 `;
 
-const CREATE_LABEL_MUTATION = gql`
+export const CREATE_LABEL_MUTATION = gql`
   mutation createLabel($name: String!) {
     createLabel(name: $name) {
       # user

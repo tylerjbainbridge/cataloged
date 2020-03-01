@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import * as yup from 'yup';
 import { usePaste } from '../hooks/usePaste';

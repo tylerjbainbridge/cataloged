@@ -12,7 +12,7 @@ import {
   Text,
   Image,
 } from '@chakra-ui/core';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 import { gql } from 'apollo-boost';
 import { useMedia } from 'react-use';
 
@@ -50,7 +50,13 @@ const IndexPage = () => {
       >
         <Box position="relative" top="-100px" width="800px">
           <Box d="flex" justifyContent="center">
-            <Box d="flex" alignItems="center" justifyContent="center" height="250px" flexWrap="wrap">
+            <Box
+              d="flex"
+              alignItems="center"
+              justifyContent="center"
+              height="250px"
+              flexWrap="wrap"
+            >
               <Box
                 d="flex"
                 {...(isMobile

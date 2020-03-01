@@ -287,6 +287,7 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
         case 'Backspace':
           // console.log(getCurrentNodeRange(editor));
           break;
+
         default:
           break;
       }

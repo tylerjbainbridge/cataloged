@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/client';
 
 import { UPDATE_STATUS_MANY_ITEMS_MUTATION } from '../graphql/item';
 import { FEED_QUERY } from '../components/Feed';

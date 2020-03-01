@@ -1,11 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ApolloClient } from 'apollo-client';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { setContext } from 'apollo-link-context';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
-import { ApolloProvider } from '@apollo/react-hooks';
 import {
   ThemeProvider,
   CSSReset,
@@ -23,7 +21,7 @@ import * as serviceWorker from './serviceWorker';
 import { GRAPHQL_ENDPOINT } from './config';
 import { Router } from './Router';
 import { Auth } from './components/Auth';
-import { theme } from './ui/theme';
+import { theme } from './styles/theme';
 import { GlobalModalProvider } from './components/GlobalModal';
 import ErrorBoundary from 'react-error-boundary';
 
@@ -42,13 +40,22 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const cache = new InMemoryCache({
-  dataIdFromObject: o => o.id,
+export const cache = new InMemoryCache({
+  // dataIdFromObject: o => o.id,
+  // @ts-ignore
+  cacheRedirects: {
+    Query: {
+      // @ts-ignore
+      book: (_, args, { getCacheKey }) =>
+        getCacheKey({ __typename: 'Item', id: args.id }),
+    },
+  },
 });
 
 (async () => {
   // @ts-ignore
   await persistCache({
+    //@ts-ignore
     cache,
     key: 'cataloged-cache',
     // @ts-ignore
@@ -58,6 +65,7 @@ const cache = new InMemoryCache({
   const link = authLink.concat(createUploadLink({ uri: GRAPHQL_ENDPOINT }));
 
   const client = new ApolloClient({
+    //@ts-ignore
     link,
     cache,
   });
