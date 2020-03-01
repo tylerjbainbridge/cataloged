@@ -21,6 +21,7 @@ import {
   Flex,
   Stack,
   Tag,
+  Spinner,
 } from '@chakra-ui/core';
 import { useMutation } from '@apollo/client';
 
@@ -49,12 +50,15 @@ import {
   FaExternalLinkAlt,
   FaFile,
   FaTh,
+  FaCheck,
+  FaTags,
 } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
 import { getAuthUser_me } from '../graphql/__generated__/getAuthUser';
 import { usePrevious } from '../hooks/usePrevious';
 
 import { CREATE_LABEL_MUTATION } from './Labels';
+import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchUpdateItemLabels';
 
 export enum Action {
   OPEN_ITEM = 'OPEN_ITEM',
@@ -147,9 +151,10 @@ const getOptions = ({
         display: `Label item${relevantItems.length > 1 ? 's' : ''}`,
         priority: Priority.SELECTED_ITEMS,
         keybind: 'l',
-        disabled: true,
-        // disabled: !relevantItems.length,
+        // disabled: true,
+        disabled: !relevantItems.length,
         secondary: SecondaryAction.SELECT_FROM_ALL_LABELS,
+        icon: <FaTags />,
         // options: user.labels.map(({ name }) => ({ value: name })),
       },
       {
@@ -350,7 +355,9 @@ export const useActionHandler = ({
 
 const useKeyDown = (options: any[], onSelect: any) => {
   const handler = useCallback(
-    ({ setHighlightedIndex, highlightedIndex }: any) => (event: any) => {
+    ({ setHighlightedIndex, highlightedIndex, clearOnSelect = true }: any) => (
+      event: any,
+    ) => {
       switch (event.key) {
         case 'ArrowDown': {
           event.preventDefault();
@@ -387,9 +394,9 @@ const useKeyDown = (options: any[], onSelect: any) => {
 
           const option = options[highlightedIndex];
 
-          if (option) onSelect(option.value);
+          if (option) onSelect(option);
 
-          setHighlightedIndex(null);
+          if (clearOnSelect) setHighlightedIndex(null);
           break;
         case 'Escape':
           break;
@@ -439,8 +446,6 @@ export const SelectFromAllLabels = ({
     'id',
   );
 
-  const [selectedLabels, setSelectedLabels] = useState<any[]>(commonLabels);
-
   const formState = useForm<{ search: string }>({
     defaultValues: {
       search: '',
@@ -449,27 +454,42 @@ export const SelectFromAllLabels = ({
 
   const { getValues, watch, setValue, register } = formState;
 
-  const [createLabel] = useMutation(CREATE_LABEL_MUTATION);
+  const isLabelSelected = (item: any) =>
+    !!commonLabels.find(({ id }: any) => id === item.id);
 
-  const addAction = async (name: string) => {
-    let label = user.labels.find((l: any) => l.name === name);
+  const [createLabel, { loading: isCreatingNewLabel }] = useMutation(
+    CREATE_LABEL_MUTATION,
+  );
+  const [batchUpdateLabels] = useOptimisticBatchUpdateItemLabels(relevantItems);
 
-    if (!label) {
-      const { data } = await createLabel({ variables: { name } });
-      label = data.createLabel.labels.find((l: any) => l.name === name);
+  const handleSelection = async (item: any) => {
+    if (item.isPlaceholder) {
+      const { data } = await createLabel({
+        variables: { name: values.search },
+      });
+
+      const label = data.createLabel.labels.find(
+        (l: any) => l.name === item.name,
+      );
+
+      batchUpdateLabels({
+        labelIdsToAdd: [label.id],
+      });
+    } else {
+      batchUpdateLabels(
+        isLabelSelected(item)
+          ? {
+              // @ts-ignore
+              labelIdsToRemove: [item.id],
+              // @ts-ignore
+            }
+          : {
+              labelIdsToAdd: [item.id],
+            },
+      );
     }
 
-    setSelectedLabels([...selectedLabels, label]);
     setValue('search', '');
-  };
-
-  const removeAction = ({ id, name }: { id: string; name: string }) => {
-    const labelIdx = selectedLabels.findIndex(label => label.name === name);
-
-    setSelectedLabels([
-      ...selectedLabels.slice(0, labelIdx),
-      ...selectedLabels.slice(labelIdx + 1),
-    ]);
   };
 
   const inputRef = useRef(null);
@@ -482,15 +502,25 @@ export const SelectFromAllLabels = ({
   watch();
   const values = getValues();
 
-  const options = user.labels.filter(
+  let options = user.labels.filter(
     (label: any) =>
       !values.search ||
       //@ts-ignore
       label.name.toLowerCase().includes(values.search.toLowerCase()),
   );
 
-  const [onKeyDownHandler] = useKeyDown(options, (selection: Action) => {
-    updatePrimaryAction(selection);
+  if (
+    values.search &&
+    !options.find(({ name }: any) => name !== values.search)
+  ) {
+    options = [
+      { name: values.search, id: 123, isPlaceholder: true },
+      ...options,
+    ];
+  }
+
+  const [onKeyDownHandler] = useKeyDown(options, (item: any) => {
+    handleSelection(item);
   });
 
   return (
@@ -501,7 +531,10 @@ export const SelectFromAllLabels = ({
       width="550px"
       rounded="lg"
     >
-      <ModalHeader>Select label</ModalHeader>
+      <ModalHeader>
+        Select labels{commonLabels.length ? ` (${commonLabels.length})` : ''}
+        {isCreatingNewLabel && <Spinner size="sm" />}
+      </ModalHeader>
       <ModalCloseButton />
 
       <Downshift
@@ -545,6 +578,7 @@ export const SelectFromAllLabels = ({
                     selectedItem,
                     highlightedIndex,
                     setHighlightedIndex,
+                    clearOnSelect: false,
                   })}
                 />
               </Box>
@@ -558,42 +592,55 @@ export const SelectFromAllLabels = ({
                 rounded="lg"
                 overflowY="scroll"
               >
-                {options.map((item: any, index: number) => (
-                  <Flex
-                    justifyContent="space-between"
-                    alignItems="center"
-                    height="60px"
-                    width="100%"
-                    cursor="pointer"
-                    {...(index === 0
-                      ? {
-                          roundedTopLeft: '0px',
-                          roundedTopRight: '0px',
-                        }
-                      : {})}
-                    {...(index === options.length - 1
-                      ? {
-                          roundedBottomLeft: 'lg',
-                          roundedBottomRight: 'lg',
-                        }
-                      : {})}
-                    {...getItemProps({
-                      key: item.name,
-                      index,
-                      // @ts-ignore
-                      item: item.name,
-                      onClick: () => updatePrimaryAction(item.value),
-                      // @ts-ignore
-                      backgroundColor:
-                        highlightedIndex === index
-                          ? 'rgba(87,24,255, 0.1)'
-                          : 'white',
-                    })}
-                    pl="20px"
-                  >
-                    <Tag size="lg">{item.name}</Tag>
-                  </Flex>
-                ))}
+                {options.map((item: any, index: number) => {
+                  const isSelected = isLabelSelected(item);
+
+                  return (
+                    <Flex
+                      justifyContent="space-between"
+                      alignItems="center"
+                      height="60px"
+                      width="100%"
+                      cursor="pointer"
+                      {...(index === 0
+                        ? {
+                            roundedTopLeft: '0px',
+                            roundedTopRight: '0px',
+                          }
+                        : {})}
+                      {...(index === options.length - 1
+                        ? {
+                            roundedBottomLeft: 'lg',
+                            roundedBottomRight: 'lg',
+                          }
+                        : {})}
+                      {...getItemProps({
+                        key: item.name + item.id + index,
+                        index,
+                        // @ts-ignore
+                        item: item.name,
+                        onClick: () => {},
+                        // @ts-ignore
+                        backgroundColor:
+                          highlightedIndex === index
+                            ? 'rgba(87,24,255, 0.1)'
+                            : 'white',
+                      })}
+                      pl="20px"
+                    >
+                      <Box>
+                        {item.isPlaceholder && 'Create label '}
+                        <Tag size="lg">{item.name}</Tag>
+                      </Box>
+
+                      {isSelected && (
+                        <Box pr="20px">
+                          <FaCheck />
+                        </Box>
+                      )}
+                    </Flex>
+                  );
+                })}
               </Box>
             </ModalBody>
           );
@@ -632,8 +679,8 @@ export const SelectPrimaryAction = ({
       option.display.toLowerCase().includes(values.search.toLowerCase()),
   );
 
-  const [onKeyDownHandler] = useKeyDown(options, (selection: Action) => {
-    updatePrimaryAction(selection);
+  const [onKeyDownHandler] = useKeyDown(options, (option: any) => {
+    updatePrimaryAction(option.value);
   });
 
   return (
@@ -754,7 +801,7 @@ export const SelectPrimaryAction = ({
                       >
                         {getKeybindAsArray(item.keybind).map((key, idx) =>
                           key === 'then' ? (
-                            <Text>then</Text>
+                            <Text key={idx + key}>then</Text>
                           ) : (
                             <Tag
                               size="sm"

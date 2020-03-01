@@ -18,6 +18,13 @@ const ITEM_WITH_LABELS_FRAGMENT = gql`
   }
 `;
 
+const LABEL_FRAGMENT = gql`
+  fragment BasicLabel on Label {
+    id
+    name
+  }
+`;
+
 export const useOptimisticBatchUpdateItemLabels = (
   items: ItemFull[],
   options = {},
@@ -27,13 +34,10 @@ export const useOptimisticBatchUpdateItemLabels = (
 
   const itemIds = items.map(({ id }) => id);
 
-  // labelIdsToRemove
-  // labelIdsToAdd
-
   const [mutate, ...rest] = useMutation(BATCH_UPDATE_ITEMS_LABELS_MUTATION, {
     variables: { itemIds },
     ...options,
-    refetchQueries: ['feed'],
+    // refetchQueries: ['feed'],
     onCompleted: (...args) => {
       // @ts-ignore
       if (options.onCompleted) return options.onCompleted(...args);
@@ -47,8 +51,7 @@ export const useOptimisticBatchUpdateItemLabels = (
           ...p,
           [id]: client.readFragment({
             id: `Label:${id}`,
-            fragment: LABEL_FULL_FRAGMENT,
-            fragmentName: 'LabelFull',
+            fragment: LABEL_FRAGMENT,
           }),
         }),
         {},

@@ -12,6 +12,7 @@ export const batchUpdateItemLabels = extendType({
       type: Item,
       args: {
         itemIds: stringArg({ required: true, list: true }),
+        labelsToCreate: stringArg({ required: false, list: true }),
         labelIdsToAdd: stringArg({ required: true, list: true }),
         labelIdsToRemove: stringArg({ required: true, list: true }),
       },
@@ -22,6 +23,8 @@ export const batchUpdateItemLabels = extendType({
             labels: true,
           },
         });
+
+        // const labelIdsToConnect = [...args.labelIdsToAdd];
 
         await Bluebird.map(items, async (item: any) => {
           // Add if applicable
