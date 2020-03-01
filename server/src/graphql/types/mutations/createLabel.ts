@@ -9,11 +9,15 @@ export const createLabel = extendType({
     t.field('createLabel', {
       type: User,
       args: {
+        // Used for optimistic creation
+        labelId: stringArg(),
         name: stringArg({ required: true }),
         itemId: stringArg(),
       },
       resolve: async (root, args, ctx) => {
         const data = { name: args.name };
+
+        if (args.labelId) data.id = labelId;
 
         if (args.itemId) _.set(data, 'item.connect.id', args.itemId);
         _.set(data, 'user.connect.id', ctx.user.id);
@@ -22,14 +26,9 @@ export const createLabel = extendType({
           where: { name: args.name },
         });
 
-        if (existingLabel) {
-          await ctx.prisma.label.update({
-            where: { id: existingLabel.id },
-            data,
-          });
+        if (!existingLabel) {
+          await ctx.prisma.label.create({ data });
         }
-
-        await ctx.prisma.label.create({ data });
 
         return ctx.user;
       },

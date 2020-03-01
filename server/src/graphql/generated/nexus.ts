@@ -1670,6 +1670,7 @@ export interface NexusGenArgTypes {
       itemIds: string[]; // [String!]!
       labelIdsToAdd: string[]; // [String!]!
       labelIdsToRemove: string[]; // [String!]!
+      labelsToCreate?: string[] | null; // [String!]
     }
     connectLabelToItem: { // args
       itemId: string; // String!
@@ -1677,6 +1678,7 @@ export interface NexusGenArgTypes {
     }
     createLabel: { // args
       itemId?: string | null; // String
+      labelId?: string | null; // String
       name: string; // String!
     }
     createLink: { // args

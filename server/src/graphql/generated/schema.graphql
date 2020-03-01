@@ -872,9 +872,9 @@ type Mutation {
   addInviteCode(code: String!): InviteCode!
   addOrUpdateSavedSearch(filters: [FilterInput!]!, name: String!, savedSearchId: String): SavedSearch!
   addToWaitlist(email: String!): InterestedUser!
-  batchUpdateItemLabels(itemIds: [String!]!, labelIdsToAdd: [String!]!, labelIdsToRemove: [String!]!): [Item!]!
+  batchUpdateItemLabels(itemIds: [String!]!, labelIdsToAdd: [String!]!, labelIdsToRemove: [String!]!, labelsToCreate: [String!]): [Item!]!
   connectLabelToItem(itemId: String!, name: String!): Item!
-  createLabel(itemId: String, name: String!): User!
+  createLabel(itemId: String, labelId: String, name: String!): User!
   createLink(href: String!): Link!
   createNote(raw: String!, text: String!): Note!
   createOneFile(data: FileCreateInput!): File!
