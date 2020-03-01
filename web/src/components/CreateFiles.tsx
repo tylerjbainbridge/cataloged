@@ -16,7 +16,7 @@ import {
   Tooltip,
   useToast,
 } from '@chakra-ui/core';
-import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useMutation, useApolloClient } from '@apollo/client';
 import gql from 'graphql-tag';
 import { usePaste } from '../hooks/usePaste';
 import { randomString } from '../util/helpers';

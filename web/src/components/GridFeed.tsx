@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import { SimpleGrid, Flex, Box } from '@chakra-ui/core';
-import { QueryResult } from 'react-apollo';
+import { QueryResult } from '@apollo/client';
 
 import { ITEM_WIDTH, Item } from './Item';
 import { feed } from '../graphql/__generated__/feed';
 import { FeedContext } from './Feed';
 
 export interface GridFeedProps {
-  query: QueryResult<feed, Record<string, any>>;
+  query: any;
+  //  QueryResult<feed, Record<string, any>>;
 }
 
 export const GridFeed = (_: GridFeedProps) => {

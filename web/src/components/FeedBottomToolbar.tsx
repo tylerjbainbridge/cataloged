@@ -160,11 +160,9 @@ export const FeedBottomToolbar = ({ width }: any) => {
 
               if (!_.isEmpty(_.flatten([labelIdsToRemove, labelIdsToAdd]))) {
                 batchUpdate({
-                  variables: {
-                    // @ts-ignore
-                    labelIdsToRemove,
-                    labelIdsToAdd,
-                  },
+                  // @ts-ignore
+                  labelIdsToRemove,
+                  labelIdsToAdd,
                 });
               }
             }}

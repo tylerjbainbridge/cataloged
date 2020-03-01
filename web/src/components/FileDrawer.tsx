@@ -24,7 +24,7 @@ import { ItemDrawerProps } from '../routes/FeedDrawerItemView';
 import { Labels } from './Labels';
 import { ItemActionMenu } from './ItemActionMenu';
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-apollo';
+import { useMutation } from '@apollo/client';
 import { UPDATE_FILE_MUTATION } from '../graphql/file';
 import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';

@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 import { Box } from '@chakra-ui/core';
 
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 import { FilterInputPlayground } from '../components/FilterInputPlayground';
 
 const GET_MOST_RECENT_ITEM = gql`

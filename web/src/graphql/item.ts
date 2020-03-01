@@ -3,6 +3,7 @@ import { NOTE_FULL_FRAGMENT } from './note';
 import { LINK_FULL_FRAGMENT } from './link';
 import { FILE_FULL_FRAGMENT } from './file';
 import { GOOGLE_CONTACT_FULL_FRAGMENT } from './googleContact';
+import { LABEL_FULL_FRAGMENT } from './label';
 
 export const ITEM_FULL_FRAGMENT = gql`
   fragment ItemFull on Item {
@@ -17,8 +18,7 @@ export const ITEM_FULL_FRAGMENT = gql`
     status
 
     labels {
-      id
-      name
+      ...LabelFull
     }
 
     link {
@@ -38,6 +38,7 @@ export const ITEM_FULL_FRAGMENT = gql`
     }
   }
 
+  ${LABEL_FULL_FRAGMENT}
   ${LINK_FULL_FRAGMENT}
   ${NOTE_FULL_FRAGMENT}
   ${FILE_FULL_FRAGMENT}

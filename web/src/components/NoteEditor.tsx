@@ -5,12 +5,9 @@ import deepEqual from 'fast-deep-equal';
 import _ from 'lodash';
 import removeMarkdown from 'remove-markdown';
 
-import { MarkdownEditor } from './MarkdownEditor';
-
 import { useForm } from 'react-hook-form';
 import { useOptimisticDeleteItem } from '../hooks/useOptimisticDeleteItem';
 
-import { UPDATE_NOTE_MUTATION } from '../graphql/note';
 import { useDebounce } from '../hooks/useDebounce';
 import SlateRichTextEditor from './SlateRichTextEditor';
 import { Input } from '@chakra-ui/core';
@@ -96,13 +93,10 @@ export const NoteEditor = ({
     valuesRef.current = values;
   }, [values]);
 
-  console.log({ values });
-
   // Clean up and delete if needed.
   useEffect(
     () => () => {
       debouncedUpdateNote.cancel();
-      console.log(values);
       if (!note.text && !note.title) deleteItem();
     },
     [],

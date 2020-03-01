@@ -23,7 +23,7 @@ import {
 import gql from 'graphql-tag';
 
 import { FaSave } from 'react-icons/fa';
-import { useMutation, useQuery } from 'react-apollo';
+import { useMutation, useQuery } from '@apollo/client';
 import { useRouteMatch } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { GET_SAVED_SEARCHES_QUERY } from './SidebarMenu';

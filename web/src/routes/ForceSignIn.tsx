@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useQuery, useApolloClient } from '@apollo/react-hooks';
+import { useQuery, useApolloClient } from '@apollo/client';
 
 import {
   Box,

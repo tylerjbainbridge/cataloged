@@ -1,4 +1,4 @@
-import { useQuery, useApolloClient } from '@apollo/react-hooks';
+import { useQuery, useApolloClient } from '@apollo/client';
 
 import { ITEM_FULL_FRAGMENT, GET_ITEM } from '../graphql/item';
 

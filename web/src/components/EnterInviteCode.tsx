@@ -9,7 +9,7 @@ import {
   FormControl,
   useToast,
 } from '@chakra-ui/core';
-import { useMutation } from 'react-apollo';
+import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import { gql } from 'apollo-boost';
 import { SignOut } from './SignOut';

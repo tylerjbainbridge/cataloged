@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Stack } from '@chakra-ui/core';
-import { QueryResult } from 'react-apollo';
+import { QueryResult } from '@apollo/client';
 
 import { Item } from './Item';
 import { feed } from '../graphql/__generated__/feed';
@@ -8,7 +8,8 @@ import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { FeedContext } from './Feed';
 
 export interface ListFeedProps {
-  query: QueryResult<feed, Record<string, any>>;
+  query: any;
+  // QueryResult<feed, Record<string, any>>;
 }
 
 export const ListFeed = (_: ListFeedProps) => {

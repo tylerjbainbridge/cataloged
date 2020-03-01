@@ -22,6 +22,7 @@ import {
   Stack,
   Tag,
 } from '@chakra-ui/core';
+import { useMutation } from '@apollo/client';
 
 import { useForm } from 'react-hook-form';
 import Downshift, { useSelect } from 'downshift';
@@ -51,6 +52,9 @@ import {
 } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
 import { getAuthUser_me } from '../graphql/__generated__/getAuthUser';
+import { usePrevious } from '../hooks/usePrevious';
+
+import { CREATE_LABEL_MUTATION } from './Labels';
 
 export enum Action {
   OPEN_ITEM = 'OPEN_ITEM',
@@ -143,7 +147,8 @@ const getOptions = ({
         display: `Label item${relevantItems.length > 1 ? 's' : ''}`,
         priority: Priority.SELECTED_ITEMS,
         keybind: 'l',
-        disabled: !relevantItems.length || true,
+        disabled: true,
+        // disabled: !relevantItems.length,
         secondary: SecondaryAction.SELECT_FROM_ALL_LABELS,
         // options: user.labels.map(({ name }) => ({ value: name })),
       },
@@ -152,7 +157,8 @@ const getOptions = ({
         display: 'Update status',
         priority: Priority.SELECTED_ITEMS,
         keybind: 'j',
-        disabled: !relevantItems.length || true,
+        disabled: true,
+        // disabled: !relevantItems.length,
         secondary: SecondaryAction.SELECT_STATUS,
         // options: user.labels.map(({ name }) => ({ value: name })),
       },
@@ -195,15 +201,17 @@ export const useActionHandler = ({
   updatePrimaryAction,
   formState,
   modalState,
-  feedContext,
-  selectContext,
-  relevantItems,
   isViewingItem,
 }: any) => {
   const match = useRouteMatch('*');
 
   const history = useHistory();
   const location = useLocation();
+
+  const feedContext = useContext(FeedContext);
+  const selectContext = useContext(SelectContext);
+
+  const relevantItems = useRelevantItems();
 
   const linkModalState = useGlobalModal(ModalName.CREATE_LINK_MODAL);
   const noteModalState = useGlobalModal(ModalName.CREATE_NOTE_MODAL);
@@ -290,6 +298,8 @@ export const useActionHandler = ({
 
       case Action.BULK_UPDATE_LABEL_ITEMS: {
         if (!value) {
+          console.log('update value');
+
           updatePrimaryAction(Action.BULK_UPDATE_LABEL_ITEMS);
           modalState.openModal();
         }
@@ -395,20 +405,74 @@ const useKeyDown = (options: any[], onSelect: any) => {
   return [handler];
 };
 
+export const useRelevantItems = () => {
+  const location = useLocation();
+  const feedContext = useContext(FeedContext);
+  const selectContext = useContext(SelectContext);
+  const itemId = qs.parse(location.search)?.itemId;
+
+  let relevantItems = [];
+
+  if (itemId) {
+    // console.log('Using open item');
+    relevantItems = [{ id: itemId }];
+  } else if (selectContext.selectedItems.length) {
+    // console.log('Using selected items');
+    relevantItems = selectContext.selectedItems;
+  } else if (feedContext.cursorItem) {
+    // console.log('Using cursor item', feedContext.cursorItem);
+    relevantItems = [feedContext.cursorItem];
+  }
+
+  return relevantItems;
+};
+
 export const SelectFromAllLabels = ({
   user,
   activeOptions,
   updatePrimaryAction,
 }: any) => {
+  const relevantItems = useRelevantItems();
+
+  const commonLabels = _.intersectionBy(
+    ...relevantItems.map(({ labels }: any) => labels),
+    'id',
+  );
+
+  const [selectedLabels, setSelectedLabels] = useState<any[]>(commonLabels);
+
   const formState = useForm<{ search: string }>({
     defaultValues: {
       search: '',
     },
   });
 
-  const inputRef = useRef(null);
+  const { getValues, watch, setValue, register } = formState;
 
-  const { getValues, watch, register } = formState;
+  const [createLabel] = useMutation(CREATE_LABEL_MUTATION);
+
+  const addAction = async (name: string) => {
+    let label = user.labels.find((l: any) => l.name === name);
+
+    if (!label) {
+      const { data } = await createLabel({ variables: { name } });
+      label = data.createLabel.labels.find((l: any) => l.name === name);
+    }
+
+    setSelectedLabels([...selectedLabels, label]);
+    setValue('search', '');
+  };
+
+  const removeAction = ({ id, name }: { id: string; name: string }) => {
+    const labelIdx = selectedLabels.findIndex(label => label.name === name);
+
+    setSelectedLabels([
+      ...selectedLabels.slice(0, labelIdx),
+      ...selectedLabels.slice(labelIdx + 1),
+    ]);
+  };
+
+  const inputRef = useRef(null);
 
   useEffect(() => {
     // @ts-ignore
@@ -445,7 +509,7 @@ export const SelectFromAllLabels = ({
         selectedItem=""
         onSelect={() => {}}
         // @ts-ignore
-        onChange={selection => updatePrimaryAction(selection)}
+        // onChange={selection => updatePrimaryAction(selection)}
         inputValue={values.search}
       >
         {({
@@ -518,6 +582,7 @@ export const SelectFromAllLabels = ({
                       index,
                       // @ts-ignore
                       item: item.name,
+                      onClick: () => updatePrimaryAction(item.value),
                       // @ts-ignore
                       backgroundColor:
                         highlightedIndex === index
@@ -587,7 +652,7 @@ export const SelectPrimaryAction = ({
         selectedItem=""
         onSelect={() => {}}
         // @ts-ignore
-        onChange={selection => updatePrimaryAction(selection)}
+        // onChange={selection => updatePrimaryAction(selection)}
         inputValue={values.search}
       >
         {({
@@ -667,9 +732,7 @@ export const SelectPrimaryAction = ({
                         highlightedIndex === index
                           ? 'rgba(87,24,255, 0.1)'
                           : 'white',
-                      fontWeight:
-                        // @ts-ignore
-                        selectedItem === item.value ? 'bold' : 'normal',
+                      onClick: () => updatePrimaryAction(item.value),
                     })}
                     pl="20px"
                   >
@@ -719,24 +782,14 @@ export const SelectPrimaryAction = ({
 export const CommandCenter = () => {
   const [primaryAction, updatePrimaryAction] = useState<Action | null>(null);
 
-  const location = useLocation();
   const { user } = useAuth();
 
+  const location = useLocation();
   const feedContext = useContext(FeedContext);
-
   const selectContext = useContext(SelectContext);
-
   const itemId = qs.parse(location.search)?.itemId;
 
-  let relevantItems = [];
-
-  if (itemId) {
-    relevantItems = [{ id: itemId }];
-  } else if (selectContext.selectedItems.length) {
-    relevantItems = selectContext.selectedItems;
-  } else if (feedContext.cursorItem) {
-    relevantItems = [feedContext.cursorItem];
-  }
+  const relevantItems = useRelevantItems();
 
   const modalState = useGlobalModal(ModalName.COMMAND_CENTER_MODAL);
 
@@ -769,44 +822,53 @@ export const CommandCenter = () => {
   useHotKey('mod+k', toggleModal);
   useHotKey('esc', closeModal, { shouldBind: isModalOpen });
 
-  const secondayOption = activeOptions.find(
+  const secondaryAction = activeOptions.find(
     option => option.value === primaryAction,
   )?.secondary;
 
   useEffect(() => {
-    if (primaryAction && !secondayOption) runAction(primaryAction);
+    if (primaryAction && !secondaryAction) runAction(primaryAction);
   }, [primaryAction]);
 
+  const prevIsModalOpen = usePrevious(primaryAction);
+
   useEffect(() => {
-    updatePrimaryAction(null);
+    if (prevIsModalOpen && !isModalOpen) {
+      updatePrimaryAction(null);
+    }
   }, [!isModalOpen]);
 
   useEffect(() => {
+    // const body = document.querySelector('body');
+    // const mousetrap = body ? new Mousetrap(body) : new Mousetrap();
+
     activeOptions.forEach(({ keybind, value, disabled }) => {
-      if (keybind && !disabled) {
+      if (keybind) {
         Mousetrap.unbind(keybind);
-        Mousetrap.bind(keybind, e => {
-          e.stopPropagation();
-          e.preventDefault();
+        if (!disabled) {
+          Mousetrap.bind(keybind, e => {
+            e.stopPropagation();
+            e.preventDefault();
 
-          runAction(value);
+            runAction(value);
 
-          return false;
-        });
+            return false;
+          });
+        }
       }
     });
-  }, [activeOptions]);
+  }, [activeOptions, relevantItems]);
 
   let node = null;
 
-  if (!primaryAction && !secondayOption) {
+  if (!primaryAction && !secondaryAction) {
     node = <SelectPrimaryAction {...params} />;
-  } else if (secondayOption) {
+  } else if (secondaryAction) {
     // @ts-ignore
     const Component = {
       [SecondaryAction.SELECT_FROM_ALL_LABELS]: SelectFromAllLabels,
       // @ts-ignore
-    }[secondayOption];
+    }[secondaryAction];
 
     node = <Component {...params} />;
   }

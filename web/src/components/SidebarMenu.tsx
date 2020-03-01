@@ -18,7 +18,7 @@ import {
   Icon,
 } from '@chakra-ui/core';
 import { Link, useLocation, useRouteMatch, useHistory } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 // @ts-ignore
 import resolveUrl from 'resolve-url';
