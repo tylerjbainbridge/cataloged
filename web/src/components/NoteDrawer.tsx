@@ -32,7 +32,11 @@ export interface NoteDrawerProps extends ItemDrawerProps {
   item: ItemWithNote;
 }
 
-export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
+export const NoteDrawer = ({
+  item,
+  onClose,
+  drawerContentProps,
+}: NoteDrawerProps) => {
   const isMobile = useMedia('(max-width: 768px)');
 
   const { note } = item;
@@ -41,7 +45,12 @@ export const NoteDrawer = ({ item, onClose }: NoteDrawerProps) => {
 
   return (
     <>
-      <DrawerContent d="flex" width={isMobile ? '100%' : '80%'} flexWrap="wrap">
+      <DrawerContent
+        d="flex"
+        width={isMobile ? '100%' : '65%'}
+        flexWrap="wrap"
+        {...drawerContentProps}
+      >
         {!isMobile && (
           <Box
             d="flex"

@@ -94,7 +94,7 @@ export const CreateLink = () => {
         title: 'Success',
         status: 'success',
         duration: 2000,
-        position: 'top',
+        position: 'bottom-left',
       });
 
       goToItem(data?.createLink?.item);

@@ -25,7 +25,7 @@ export const useOptimisticUpdateFavoriteManyItems = (
         title: 'Updated',
         status: 'success',
         duration: 2000,
-        position: 'top',
+        position: 'bottom-left',
       });
 
       // @ts-ignore

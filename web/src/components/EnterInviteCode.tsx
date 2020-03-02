@@ -42,7 +42,7 @@ export const EnterInviteCode = () => {
         title: 'Invalid code',
         status: 'error',
         duration: 2000,
-        position: 'top',
+        position: 'bottom-left',
       });
     },
   });

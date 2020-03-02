@@ -19,6 +19,7 @@ export interface LazeImageProps {
   shrinkAndCenterThreshold?: number | null;
   hasBorder?: boolean;
   clickProps?: any;
+  containerProps?: any;
 }
 
 export const LazyImage = ({
@@ -33,6 +34,7 @@ export const LazyImage = ({
   shrinkAndCenterThreshold = null,
   failureNode,
   clickProps,
+  containerProps = {},
   ...props
 }: LazeImageProps) => {
   const img = React.useMemo(() => {
@@ -99,8 +101,8 @@ export const LazyImage = ({
         rounded="lg"
         width={props.width}
         height={props.height}
-        border={hasBorder ? '1px solid lightgray' : undefined}
         {...clickProps}
+        {...containerProps}
       >
         <ChackraImage
           src={src}
@@ -116,9 +118,10 @@ export const LazyImage = ({
     return (
       <ChackraImage
         src={src}
-        border={hasBorder ? '1px solid lightgray' : undefined}
+        // border={hasBorder ? '1px solid lightgray' : undefined}
         {...clickProps}
         {...newProps}
+        {...containerProps}
       />
     );
   }
@@ -131,9 +134,9 @@ export const LazyImage = ({
       rounded="lg"
       width={props.width}
       height={props.height}
-      border={hasBorder ? '1px solid lightgray' : undefined}
       {...newProps}
       {...loadingContainerProps}
+      {...containerProps}
     >
       {isBroken ? (
         <Icon size="16px" name="warning" />

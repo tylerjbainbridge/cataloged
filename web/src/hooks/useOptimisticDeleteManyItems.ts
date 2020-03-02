@@ -23,7 +23,7 @@ export const useOptimisticDeleteManyItems = (
         title: 'Deleted',
         status: 'success',
         duration: 2000,
-        position: 'top',
+        position: 'bottom-left',
       });
 
       // @ts-ignore

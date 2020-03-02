@@ -86,7 +86,7 @@ export const ConnectButton = ({
           title: `Sync complete (${data.syncGoogleContacts})`,
           status: 'success',
           duration: 2000,
-          position: 'top',
+          position: 'bottom-left',
         });
       },
     },

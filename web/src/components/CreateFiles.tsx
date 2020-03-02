@@ -74,7 +74,7 @@ export const CreateFiles = () => {
         title: 'Success',
         status: 'success',
         duration: 2000,
-        position: 'top',
+        position: 'bottom-left',
       });
     },
   });

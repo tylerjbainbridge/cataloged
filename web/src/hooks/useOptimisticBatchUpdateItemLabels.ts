@@ -91,7 +91,7 @@ export const useOptimisticBatchUpdateItemLabels = (
         title: 'Updated labels',
         status: 'success',
         duration: 2000,
-        position: 'top',
+        position: 'bottom-left',
       });
 
       await mutate({

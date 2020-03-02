@@ -19,6 +19,7 @@ export const useGetItem = (itemId: ItemFull['id']) => {
 
   const { data, loading } = useQuery(GET_ITEM, {
     variables: { id: itemId },
+    skip: !itemId,
   });
 
   return {

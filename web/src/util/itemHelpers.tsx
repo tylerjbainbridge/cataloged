@@ -25,6 +25,7 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
         return {
           type: item.type,
           title: item.file.title || `${item.file.name}.${item.file.extension}`,
+          subTitle: item.file.description,
           createdAt: item.date,
           image: item.file.fullUrl,
           compressedImage: item.file.squareUrl,
@@ -57,7 +58,8 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
                 subTitle: item.link.href,
               }
             : {
-                title: item.link.href,
+                title: 'Untitled',
+                subTitle: item.link.href,
               }),
           createdAt: item.date,
           image: item.link.image,

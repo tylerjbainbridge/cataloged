@@ -43,7 +43,11 @@ export interface UpdateFileFormValues {
   description: string | null;
 }
 
-export const FileDrawer = ({ item, onClose }: FileDrawerProps) => {
+export const FileDrawer = ({
+  item,
+  onClose,
+  drawerContentProps,
+}: FileDrawerProps) => {
   const isMobile = useMedia('(max-width: 768px)');
 
   const infoMenuState = useDisclosure();
@@ -78,7 +82,12 @@ export const FileDrawer = ({ item, onClose }: FileDrawerProps) => {
   );
 
   return (
-    <DrawerContent height="100%" width="100vw" bg="black">
+    <DrawerContent
+      height="100%"
+      width="100vw"
+      bg="black"
+      {...drawerContentProps}
+    >
       <Box d="flex" maxWidth="100%" height="100%" bg="black" p="0px">
         {(!isMobile || !infoMenuState.isOpen) && (
           <Box

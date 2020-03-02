@@ -56,7 +56,11 @@ export interface UpdateLinkFormValues {
   description: string | null;
 }
 
-export const LinkDrawer = ({ item, onClose }: LinkDrawerProps) => {
+export const LinkDrawer = ({
+  item,
+  onClose,
+  drawerContentProps,
+}: LinkDrawerProps) => {
   const isMobile = useMedia('(max-width: 768px)');
 
   const { link } = item;
@@ -115,7 +119,10 @@ export const LinkDrawer = ({ item, onClose }: LinkDrawerProps) => {
 
   return (
     <>
-      <DrawerContent width={isMobile ? '100%' : '500px'}>
+      <DrawerContent
+        width={isMobile ? '100%' : '500px'}
+        {...drawerContentProps}
+      >
         <Flex
           width="100%"
           float="right"
