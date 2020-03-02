@@ -45,7 +45,11 @@ export const TopNavBar = ({
         width="100%"
       >
         {isMobile || true ? (
-          <Button cursor="pointer" onClick={sidebarState.onToggle}>
+          <Button
+            cursor="pointer"
+            variant="ghost"
+            onClick={sidebarState.onToggle}
+          >
             <Icon
               name={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
               aria-label={

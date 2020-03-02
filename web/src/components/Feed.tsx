@@ -14,7 +14,13 @@ import {
 import { Waypoint } from 'react-waypoint';
 import qs from 'query-string';
 import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
-import { FaThLarge, FaList, FaSave } from 'react-icons/fa';
+import {
+  FaThLarge,
+  FaList,
+  FaSave,
+  FaEdit,
+  FaTimesCircle,
+} from 'react-icons/fa';
 
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
@@ -104,6 +110,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   const isViewingItem = !!qs.parse(location.search)?.itemId;
   const isViewingSettings = useRouteMatch('*/settings');
+  const isViewingSearch = useRouteMatch('/search/:id');
 
   const INITIAL_PAGINATION_VARIABLES = {
     first: mode === 'grid' ? 30 : 50,
@@ -157,11 +164,12 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     }
   }, [isViewingItem]);
 
-  const prevLocation = usePrevious(location);
+  const prevFilters = usePrevious(queryStringFilters);
 
   useEffect(() => {
-    if (prevLocation && prevLocation.search !== location.search) {
+    if (prevFilters && prevFilters.length !== queryStringFilters.length) {
       // refetch(getFiltersFromQueryString(location.search));
+      refetch();
     }
   }, [location.search]);
 
@@ -205,11 +213,15 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     // @ts-ignore
     document.querySelector('#sidebar-container')?.offsetWidth;
 
-  const onDebouncedFilterChange = (newFilters: any[]) => {
-    history.replace({
-      pathname: window.location.pathname,
-      search: getQueryStringFromFilters(newFilters, window.location.search),
-    });
+  const updateFilters = (newFilters: any[]) => {
+    if (prevFilters?.length !== newFilters.length) {
+      history.replace({
+        pathname: window.location.pathname,
+        search: getQueryStringFromFilters(newFilters, window.location.search),
+      });
+
+      refetch();
+    }
   };
 
   const cursorItem = cursorItemId
@@ -296,55 +308,91 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                 <Box
                   d="flex"
                   alignItems="center"
-                  justifyContent="space-between"
-                  width="550px"
-                  maxWidth={isMobile ? '100%' : '550px'}
+                  height="30px"
+                  width="600px"
+                  maxWidth={isMobile ? '100%' : '600px'}
                 >
+                  <Box
+                    d="flex"
+                    alignItems="center"
+                    mb="-20px"
+                    color="lightgray"
+                    height="30px"
+                    width="20px"
+                  >
+                    {loading ? <Spinner size="sm" /> : <Box />}
+                  </Box>
+
                   <Box d="flex" width="490px" rounded="lg" p="10px">
                     <FilterSearchInput
                       filters={queryStringFilters}
-                      onChange={onDebouncedFilterChange}
+                      onChange={updateFilters}
                     />
                   </Box>
-                  {/* {true && (
-                      <Spinner
-                        position="absolute"
-                        fontSize="10px"
-                        size="sm"
-                        color="lightgray"
-                      />
-                    )} */}
+
                   <AddOrUpdateSavedSearch filters={queryStringFilters}>
-                    {({ onOpen, match }: any) => (
-                      <Tooltip
-                        aria-label="add filter"
-                        zIndex={10}
-                        hasArrow
-                        label={
-                          match ? 'Update or create new' : 'Save this search'
-                        }
-                      >
-                        <Button
-                          m="10px"
-                          cursor="pointer"
+                    {({ onOpen, match }: any) =>
+                      !!queryStringFilters?.length && (
+                        <Tooltip
                           aria-label="add filter"
-                          type="button"
-                          alignSelf="flex-end"
-                          variant="outline"
-                          onClick={onOpen}
-                          // isDisabled={!queryStringFilters.length}
+                          zIndex={10}
+                          hasArrow
+                          label={
+                            queryStringFilters?.length
+                              ? 'Update (or create) search'
+                              : 'Save this search'
+                          }
                         >
-                          <FaSave />
-                        </Button>
-                      </Tooltip>
-                    )}
+                          <Button
+                            cursor="pointer"
+                            aria-label="add filter"
+                            type="button"
+                            alignSelf="flex-end"
+                            variant="ghost"
+                            height="30px"
+                            onClick={onOpen}
+                            mb="-10px"
+                            // isDisabled={!queryStringFilters.length}
+                          >
+                            {isViewingSearch ? (
+                              <FaEdit size={15} />
+                            ) : (
+                              <FaSave size={15} />
+                            )}
+                          </Button>
+                        </Tooltip>
+                      )
+                    }
                   </AddOrUpdateSavedSearch>
+                  {!!queryStringFilters?.length && (
+                    <Tooltip
+                      hasArrow
+                      label="clear filters"
+                      aria-label="clear filters"
+                      zIndex={10}
+                    >
+                      <Button
+                        mb="-10px"
+                        height="30px"
+                        cursor="pointer"
+                        aria-label="clear filter"
+                        type="button"
+                        alignSelf="flex-end"
+                        variant="ghost"
+                        onClick={() => {
+                          updateFilters([]);
+                        }}
+                      >
+                        <FaTimesCircle size={15} />
+                      </Button>
+                    </Tooltip>
+                  )}
                 </Box>
               ) : (
                 <Filter
                   variables={variables}
                   loading={networkStatus !== 6 && loading}
-                  onDebouncedFilterChange={onDebouncedFilterChange}
+                  onDebouncedFilterChange={updateFilters}
                 />
               )
             }
@@ -358,6 +406,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                 >
                   <Button
                     cursor="pointer"
+                    variant="ghost"
                     onClick={() =>
                       mode === 'grid' ? setMode('list') : setMode('grid')
                     }

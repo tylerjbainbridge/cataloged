@@ -75,7 +75,7 @@ export const AddOrUpdateSavedSearch = ({ filters, children }: any) => {
           title: 'Success',
           status: 'success',
           duration: 2000,
-          position: 'top',
+          position: 'bottom-left',
         });
       },
     },

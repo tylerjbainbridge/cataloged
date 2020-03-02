@@ -42,6 +42,7 @@ export interface UpdateGoogleContactFormValues {
 export const GoogleContactDrawer = ({
   item,
   onClose,
+  drawerContentProps,
 }: GoogleContactDrawerProps) => {
   const isMobile = useMedia('(max-width: 768px)');
 
@@ -56,7 +57,10 @@ export const GoogleContactDrawer = ({
 
   return (
     <>
-      <DrawerContent width={isMobile ? '100%' : '500px'}>
+      <DrawerContent
+        width={isMobile ? '100%' : '500px'}
+        {...drawerContentProps}
+      >
         <Flex
           width="100%"
           float="right"

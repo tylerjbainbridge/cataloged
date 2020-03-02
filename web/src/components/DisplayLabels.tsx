@@ -110,7 +110,7 @@ export const DisplayLabels = ({
   };
 
   const labelNodes = labelSet.map(
-    ({ id, name }: { id: string; name: string }) => (
+    ({ id, name }: { id: string; name: string }, idx) => (
       <Tag
         d="flex"
         alignItems="center"
@@ -119,6 +119,8 @@ export const DisplayLabels = ({
         size="sm"
         key={name}
         m={1}
+        {...(idx === 0 ? { ml: 0 } : {})}
+        {...(idx === labelSet.length - 1 ? { mr: 0 } : {})}
       >
         <TagLabel>{name}</TagLabel>
         <FaTimes

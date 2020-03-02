@@ -63,6 +63,7 @@ import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchU
 import { CREATE_NOTE_MUTATION } from '../graphql/note';
 import { EMPTY_NOTE_VALUE, serializeToPlainText } from './NoteEditor';
 import { SidebarContext } from './Dashboard';
+import { useGetItem } from '../hooks/useGetItem';
 
 export enum Action {
   OPEN_ITEM = 'OPEN_ITEM',
@@ -113,13 +114,13 @@ const getOptions = ({
       {
         value: Action.TOGGLE_FEED_VIEW_MODE,
         display: 'Toggle feed view mode',
-        keybind: 'shift+v',
+        keybind: 'mod+2',
         icon: feedContext.mode === 'grid' ? <FaList /> : <FaTh />,
       },
       {
         value: Action.TOGGLE_SIDEBAR_OPEN,
         display: 'Toggle side bar menu',
-        keybind: 'shift+s',
+        keybind: 'mod+1',
         icon: (
           <Icon
             name={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
@@ -459,9 +460,12 @@ export const useRelevantItems = () => {
 
   let relevantItems = [];
 
+  // @ts-ignore
+  const { item: drawerItem } = useGetItem(itemId);
+
   if (itemId) {
     // console.log('Using open item');
-    relevantItems = [{ id: itemId }];
+    relevantItems = drawerItem ? [drawerItem] : [{ id: itemId }];
   } else if (selectContext.selectedItems.length) {
     // console.log('Using selected items');
     relevantItems = selectContext.selectedItems;
@@ -573,7 +577,7 @@ export const SelectFromAllLabels = ({
       >
         <ModalHeader>
           Select labels{commonLabels.length ? ` (${commonLabels.length})` : ''}
-          {isCreatingNewLabel && <Spinner size="sm" />}
+          {isCreatingNewLabel && <Spinner ml="3px" size="sm" />}
         </ModalHeader>
         <ModalCloseButton />
 
@@ -607,7 +611,7 @@ export const SelectFromAllLabels = ({
                     variant="unstyled"
                     placeholder="search commands"
                     borderBottom="2px solid #5718FF"
-                    pl="20px"
+                    p="10px 10px 10px 23px"
                     rounded="none"
                     value={values.search}
                     ref={(ref: any) => {
@@ -772,7 +776,7 @@ export const SelectPrimaryAction = ({
                   variant="unstyled"
                   placeholder="search commands"
                   borderBottom="2px solid #5718FF"
-                  pl="20px"
+                  p="10px 10px 10px 23px"
                   rounded="none"
                   value={values.search}
                   ref={(ref: any) => {

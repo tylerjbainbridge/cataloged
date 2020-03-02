@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { SimpleGrid, Flex, Box } from '@chakra-ui/core';
 import { QueryResult } from '@apollo/client';
 
-import { ITEM_WIDTH, Item } from './Item';
+import { GRID_ITEM_WIDTH, Item } from './Item';
 import { feed } from '../graphql/__generated__/feed';
 import { FeedContext } from './Feed';
 

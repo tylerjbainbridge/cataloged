@@ -18,7 +18,7 @@ import {
   Icon,
 } from '@chakra-ui/core';
 import { Link, useLocation, useRouteMatch, useHistory } from 'react-router-dom';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useApolloClient } from '@apollo/client';
 import gql from 'graphql-tag';
 // @ts-ignore
 import resolveUrl from 'resolve-url';
@@ -73,6 +73,8 @@ const LinkListItem = ({
   ...props
 }: LinkListItemProps) => {
   const location = useLocation();
+
+  // const client = useApolloClient();
 
   return (
     <Flex width="100%">
@@ -148,7 +150,9 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
     <Box
       p="20px"
       height="100%"
-      borderRight="1px solid lightgray"
+      // borderRight="1px solid lightgray"
+      boxShadow="rgba(0, 0, 0, 0.08) 5px 0px 5px -5px"
+      mr="5px"
       bg="#fcfeff"
       id="sidebar-container"
       zIndex={3}
@@ -180,6 +184,7 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
                 variant="outline"
                 // @ts-ignore
                 variantColor="white"
+                borderColor="gray.200"
                 bg="white"
                 width="100%"
                 onClick={(e: any) => {

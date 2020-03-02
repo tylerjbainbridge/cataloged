@@ -189,7 +189,7 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
 
   useEffect(() => {
     if (isFocused && onChange) onChange(getFiltersFromValue(value));
-  }, [value]);
+  }, [getFiltersFromValue(value)?.length]);
 
   useEffect(() => {
     if (!isFocused && deepEqual(prevFilters, filters)) {
@@ -372,14 +372,16 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
                   <Box
                     d="flex"
                     width="100%"
-                    minHeight="40px"
+                    minHeight="50px"
                     alignItems="flex-end"
                   >
                     <Box
                       d="inline-flex"
                       width="100%"
-                      height="24px"
+                      height="30px"
                       pb="3px"
+                      p="5px"
+                      rounded="lg"
                       id="inputContainer"
                       zIndex={100}
                       bg="white"

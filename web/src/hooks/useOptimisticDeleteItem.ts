@@ -18,7 +18,7 @@ export const useOptimisticDeleteItem = (item: any, options = {}) => {
           title: 'Deleted',
           status: 'success',
           duration: 2000,
-          position: 'top',
+          position: 'bottom-left',
         });
       }
 
