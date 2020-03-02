@@ -8,6 +8,7 @@ import {
   DrawerBody,
   useDisclosure,
   Spinner,
+  Box,
 } from '@chakra-ui/core';
 import qs from 'query-string';
 import { useLocation, useHistory } from 'react-router-dom';
@@ -89,29 +90,39 @@ export const FeedDrawerItemView = () => {
       isOpen={isOpen}
       onClose={onClose}
     >
-      <DrawerOverlay />
-      {!loading && item ? (
-        drawerNode
-      ) : (
-        <DrawerContent
-          maxHeight={fullScreen.isOpen ? '100vw' : undefined}
-          width={fullScreen.isOpen ? '100vw' : '70%'}
-        >
-          <DrawerCloseButton bg="white" />
-
-          <DrawerHeader
-            borderBottomWidth="1px"
-            display="flex"
-            alignItems="center"
+      <Box
+        onKeyDown={e => {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose();
+          }
+        }}
+      >
+        {/* <DrawerOverlay /> */}
+        {!loading && item ? (
+          drawerNode
+        ) : (
+          <DrawerContent
+            maxHeight={fullScreen.isOpen ? '100vw' : undefined}
+            width={fullScreen.isOpen ? '100vw' : '70%'}
           >
-            Loading..
-          </DrawerHeader>
+            <DrawerCloseButton bg="white" />
 
-          <DrawerBody d="flex" justifyContent="center" p="5px">
-            <Spinner size="xl" />
-          </DrawerBody>
-        </DrawerContent>
-      )}
+            <DrawerHeader
+              borderBottomWidth="1px"
+              display="flex"
+              alignItems="center"
+            >
+              Loading..
+            </DrawerHeader>
+
+            <DrawerBody d="flex" justifyContent="center" p="5px">
+              <Spinner size="xl" />
+            </DrawerBody>
+          </DrawerContent>
+        )}
+      </Box>
     </Drawer>
   );
 };

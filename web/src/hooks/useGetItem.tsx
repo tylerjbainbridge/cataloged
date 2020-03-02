@@ -11,7 +11,7 @@ export const useGetItem = (itemId: ItemFull['id']) => {
 
   try {
     cachedItem = client.readFragment({
-      id: itemId,
+      id: `Item:${itemId}`,
       fragment: ITEM_FULL_FRAGMENT,
       fragmentName: 'ItemFull',
     });

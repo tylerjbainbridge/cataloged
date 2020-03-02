@@ -42,9 +42,9 @@ export const TopNavBar = ({
         d="flex"
         justifyContent="space-between"
         alignItems="center"
-        width={isMobile ? '100%' : '80%'}
+        width="100%"
       >
-        {isMobile ? (
+        {isMobile || true ? (
           <Button cursor="pointer" onClick={sidebarState.onToggle}>
             <Icon
               name={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}

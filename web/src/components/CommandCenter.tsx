@@ -22,6 +22,8 @@ import {
   Stack,
   Tag,
   Spinner,
+  Icon,
+  Button,
 } from '@chakra-ui/core';
 import { useMutation } from '@apollo/client';
 
@@ -42,7 +44,6 @@ import { scrollToNodeIfOutOfView, getKeybindAsArray } from '../util/helpers';
 import {
   FaCogs,
   FaList,
-  FaThLarge,
   FaArrowRight,
   FaTrash,
   FaStar,
@@ -52,13 +53,16 @@ import {
   FaTh,
   FaCheck,
   FaTags,
+  FaPenSquare,
 } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
-import { getAuthUser_me } from '../graphql/__generated__/getAuthUser';
 import { usePrevious } from '../hooks/usePrevious';
 
 import { CREATE_LABEL_MUTATION } from './Labels';
 import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchUpdateItemLabels';
+import { CREATE_NOTE_MUTATION } from '../graphql/note';
+import { EMPTY_NOTE_VALUE, serializeToPlainText } from './NoteEditor';
+import { SidebarContext } from './Dashboard';
 
 export enum Action {
   OPEN_ITEM = 'OPEN_ITEM',
@@ -66,6 +70,7 @@ export enum Action {
   GO_TO_ITEM = 'GO_TO_ITEM',
   VISIT_LINK = 'VISIT_LINK',
   TOGGLE_FEED_VIEW_MODE = 'TOGGLE_FEED_VIEW_MODE',
+  TOGGLE_SIDEBAR_OPEN = 'TOGGLE_SIDEBAR_OPEN',
   DELETE_ITEM = 'DELETE_ITEM',
   BULK_DELETE_ITEMS = 'BULK_DELETE_ITEMS',
   BULK_UPDATE_LABEL_ITEMS = 'BULK_UPDATE_LABEL_ITEMS',
@@ -94,20 +99,34 @@ export interface OptionArgs {
   relevantItems: ItemFull[];
   isViewingItem: boolean;
   feedContext: FeedContext;
+  sidebarState: any;
 }
 
 const getOptions = ({
   relevantItems,
   isViewingItem,
   feedContext,
+  sidebarState,
 }: OptionArgs) =>
   _.orderBy(
     [
       {
         value: Action.TOGGLE_FEED_VIEW_MODE,
-        display: 'Toggle view grid mode',
+        display: 'Toggle feed view mode',
         keybind: 'shift+v',
         icon: feedContext.mode === 'grid' ? <FaList /> : <FaTh />,
+      },
+      {
+        value: Action.TOGGLE_SIDEBAR_OPEN,
+        display: 'Toggle side bar menu',
+        keybind: 'shift+s',
+        icon: (
+          <Icon
+            name={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
+            aria-label={sidebarState.isOpen ? 'close sidebar' : 'open sidebar'}
+            width="15px"
+          />
+        ),
       },
       {
         value: Action.GO_TO_SETTINGS,
@@ -121,6 +140,17 @@ const getOptions = ({
         disabled: relevantItems.length !== 1 || isViewingItem,
         keybind: 'enter',
         icon: <FaArrowRight />,
+      },
+      {
+        value: Action.BULK_UPDATE_LABEL_ITEMS,
+        display: `Label item${relevantItems.length > 1 ? 's' : ''}`,
+        priority: Priority.SELECTED_ITEMS,
+        keybind: 'l',
+        // disabled: true,
+        disabled: !relevantItems.length,
+        secondary: SecondaryAction.SELECT_FROM_ALL_LABELS,
+        icon: <FaTags />,
+        // options: user.labels.map(({ name }) => ({ value: name })),
       },
       {
         value: Action.BULK_DELETE_ITEMS,
@@ -145,17 +175,6 @@ const getOptions = ({
         keybind: 's',
         disabled: !relevantItems.length,
         icon: <FaCheckSquare />,
-      },
-      {
-        value: Action.BULK_UPDATE_LABEL_ITEMS,
-        display: `Label item${relevantItems.length > 1 ? 's' : ''}`,
-        priority: Priority.SELECTED_ITEMS,
-        keybind: 'l',
-        // disabled: true,
-        disabled: !relevantItems.length,
-        secondary: SecondaryAction.SELECT_FROM_ALL_LABELS,
-        icon: <FaTags />,
-        // options: user.labels.map(({ name }) => ({ value: name })),
       },
       {
         value: Action.BULK_UPDATE_STATUS_ITEMS,
@@ -190,10 +209,13 @@ const getOptions = ({
         keybind: 'c f',
         icon: <FaFile />,
       },
-      // {
-      //   value: Action.CREATE_NOTE,
-      //   display: 'Catalog note',
-      // },
+      {
+        value: Action.CREATE_NOTE,
+        display: 'Catalog note',
+        priority: Priority.FREQUENT,
+        keybind: 'c n',
+        icon: <FaPenSquare />,
+      },
     ].map(({ priority, ...rest }) => ({
       priority: priority || Priority.DEFAULT,
       ...rest,
@@ -215,6 +237,7 @@ export const useActionHandler = ({
 
   const feedContext = useContext(FeedContext);
   const selectContext = useContext(SelectContext);
+  const sidebarState = useContext(SidebarContext);
 
   const relevantItems = useRelevantItems();
 
@@ -251,6 +274,17 @@ export const useActionHandler = ({
     },
   );
 
+  const [createNote] = useMutation(CREATE_NOTE_MUTATION, {
+    variables: {
+      raw: JSON.stringify(EMPTY_NOTE_VALUE),
+      text: serializeToPlainText(EMPTY_NOTE_VALUE),
+    },
+    refetchQueries: ['feed'],
+    onCompleted: data => {
+      goToItem(data?.createNote?.item);
+    },
+  });
+
   const [goToItem] = useGoToItem();
   const [goToFeed] = useReturnToFeedFromItem();
 
@@ -260,11 +294,12 @@ export const useActionHandler = ({
     modalState.closeModal();
   };
 
-  const runAction = async (primaryAction: Action, value?: any) => {
+  const runAction = async (primaryAction: Action) => {
     const option = getOptions({
       relevantItems,
       isViewingItem,
       feedContext,
+      sidebarState,
     }).find(({ value }) => value === primaryAction);
 
     if (!option || option.disabled) {
@@ -302,12 +337,8 @@ export const useActionHandler = ({
       }
 
       case Action.BULK_UPDATE_LABEL_ITEMS: {
-        if (!value) {
-          console.log('update value');
-
-          updatePrimaryAction(Action.BULK_UPDATE_LABEL_ITEMS);
-          modalState.openModal();
-        }
+        updatePrimaryAction(Action.BULK_UPDATE_LABEL_ITEMS);
+        modalState.openModal();
 
         break;
       }
@@ -315,6 +346,12 @@ export const useActionHandler = ({
       case Action.TOGGLE_FEED_VIEW_MODE: {
         cleanup();
         feedContext.setMode(feedContext.mode === 'grid' ? 'list' : 'grid');
+        break;
+      }
+
+      case Action.TOGGLE_SIDEBAR_OPEN: {
+        cleanup();
+        sidebarState.onToggle();
         break;
       }
 
@@ -336,13 +373,15 @@ export const useActionHandler = ({
         cleanup();
         linkModalState.openModal();
         break;
-      case Action.CREATE_NOTE:
-        cleanup();
-        noteModalState.openModal();
-        break;
+
       case Action.CREATE_FILE:
         cleanup();
         fileModalState.openModal();
+        break;
+
+      case Action.CREATE_NOTE:
+        cleanup();
+        await createNote();
         break;
 
       default:
@@ -524,129 +563,131 @@ export const SelectFromAllLabels = ({
   });
 
   return (
-    <ModalContent
-      as="form"
-      height="300px"
-      maxHeight="300px"
-      width="550px"
-      rounded="lg"
-    >
-      <ModalHeader>
-        Select labels{commonLabels.length ? ` (${commonLabels.length})` : ''}
-        {isCreatingNewLabel && <Spinner size="sm" />}
-      </ModalHeader>
-      <ModalCloseButton />
-
-      <Downshift
-        defaultHighlightedIndex={0}
-        selectedItem=""
-        onSelect={() => {}}
-        // @ts-ignore
-        // onChange={selection => updatePrimaryAction(selection)}
-        inputValue={values.search}
+    <>
+      <ModalContent
+        as="form"
+        height="300px"
+        maxHeight="300px"
+        width="550px"
+        rounded="lg"
       >
-        {({
-          getItemProps,
-          getMenuProps,
-          highlightedIndex,
-          selectedItem,
-          getRootProps,
-          setHighlightedIndex,
-        }) => {
-          return (
-            <ModalBody p="0px" height="300px">
-              <Box
-                // @ts-ignore
-                {...getRootProps({}, { suppressRefError: true })}
-              >
-                <Input
-                  size="lg"
-                  name="search"
-                  id="search"
-                  width="100%"
-                  variant="unstyled"
-                  placeholder="search commands"
-                  borderBottom="2px solid #5718FF"
-                  pl="20px"
-                  rounded="none"
-                  value={values.search}
-                  ref={(ref: any) => {
-                    register(ref);
-                    inputRef.current = ref;
-                  }}
-                  onKeyDown={onKeyDownHandler({
-                    selectedItem,
-                    highlightedIndex,
-                    setHighlightedIndex,
-                    clearOnSelect: false,
-                  })}
-                />
-              </Box>
-              <Box
-                {...getMenuProps()}
-                // @ts-ignore
-                width={inputRef?.current?.offsetWidth || '100%'}
-                // zIndex={100}
-                maxHeight="100%"
-                backgroundColor="white"
-                rounded="lg"
-                overflowY="scroll"
-              >
-                {options.map((item: any, index: number) => {
-                  const isSelected = isLabelSelected(item);
+        <ModalHeader>
+          Select labels{commonLabels.length ? ` (${commonLabels.length})` : ''}
+          {isCreatingNewLabel && <Spinner size="sm" />}
+        </ModalHeader>
+        <ModalCloseButton />
 
-                  return (
-                    <Flex
-                      justifyContent="space-between"
-                      alignItems="center"
-                      height="60px"
-                      width="100%"
-                      cursor="pointer"
-                      {...(index === 0
-                        ? {
-                            roundedTopLeft: '0px',
-                            roundedTopRight: '0px',
-                          }
-                        : {})}
-                      {...(index === options.length - 1
-                        ? {
-                            roundedBottomLeft: 'lg',
-                            roundedBottomRight: 'lg',
-                          }
-                        : {})}
-                      {...getItemProps({
-                        key: item.name + item.id + index,
-                        index,
-                        // @ts-ignore
-                        item: item.name,
-                        onClick: () => {},
-                        // @ts-ignore
-                        backgroundColor:
-                          highlightedIndex === index
-                            ? 'rgba(87,24,255, 0.1)'
-                            : 'white',
-                      })}
-                      pl="20px"
-                    >
-                      <Box>
-                        {item.isPlaceholder && 'Create label '}
-                        <Tag size="lg">{item.name}</Tag>
-                      </Box>
+        <Downshift
+          defaultHighlightedIndex={0}
+          selectedItem=""
+          onSelect={() => {}}
+          // @ts-ignore
+          // onChange={selection => updatePrimaryAction(selection)}
+          inputValue={values.search}
+        >
+          {({
+            getItemProps,
+            getMenuProps,
+            highlightedIndex,
+            selectedItem,
+            getRootProps,
+            setHighlightedIndex,
+          }) => {
+            return (
+              <ModalBody p="0px" height="300px">
+                <Box
+                  // @ts-ignore
+                  {...getRootProps({}, { suppressRefError: true })}
+                >
+                  <Input
+                    size="lg"
+                    name="search"
+                    id="search"
+                    width="100%"
+                    variant="unstyled"
+                    placeholder="search commands"
+                    borderBottom="2px solid #5718FF"
+                    pl="20px"
+                    rounded="none"
+                    value={values.search}
+                    ref={(ref: any) => {
+                      register(ref);
+                      inputRef.current = ref;
+                    }}
+                    onKeyDown={onKeyDownHandler({
+                      selectedItem,
+                      highlightedIndex,
+                      setHighlightedIndex,
+                      clearOnSelect: false,
+                    })}
+                  />
+                </Box>
+                <Box
+                  {...getMenuProps()}
+                  // @ts-ignore
+                  width={inputRef?.current?.offsetWidth || '100%'}
+                  // zIndex={100}
+                  maxHeight="100%"
+                  backgroundColor="white"
+                  rounded="lg"
+                  overflowY="scroll"
+                >
+                  {options.map((item: any, index: number) => {
+                    const isSelected = isLabelSelected(item);
 
-                      {isSelected && (
-                        <Box pr="20px">
-                          <FaCheck />
+                    return (
+                      <Flex
+                        justifyContent="space-between"
+                        alignItems="center"
+                        height="60px"
+                        width="100%"
+                        cursor="pointer"
+                        {...(index === 0
+                          ? {
+                              roundedTopLeft: '0px',
+                              roundedTopRight: '0px',
+                            }
+                          : {})}
+                        {...(index === options.length - 1
+                          ? {
+                              roundedBottomLeft: 'lg',
+                              roundedBottomRight: 'lg',
+                            }
+                          : {})}
+                        {...getItemProps({
+                          key: item.name + item.id + index,
+                          index,
+                          // @ts-ignore
+                          item: item.name,
+                          onClick: () => {},
+                          // @ts-ignore
+                          backgroundColor:
+                            highlightedIndex === index
+                              ? 'rgba(87,24,255, 0.1)'
+                              : 'white',
+                        })}
+                        pl="20px"
+                      >
+                        <Box>
+                          {item.isPlaceholder && 'Create label '}
+                          <Tag size="lg">{item.name}</Tag>
                         </Box>
-                      )}
-                    </Flex>
-                  );
-                })}
-              </Box>
-            </ModalBody>
-          );
-        }}
-      </Downshift>
-    </ModalContent>
+
+                        {isSelected && (
+                          <Box pr="20px">
+                            <FaCheck />
+                          </Box>
+                        )}
+                      </Flex>
+                    );
+                  })}
+                </Box>
+              </ModalBody>
+            );
+          }}
+        </Downshift>
+      </ModalContent>
+    </>
   );
 };
 
@@ -683,6 +724,8 @@ export const SelectPrimaryAction = ({
     updatePrimaryAction(option.value);
   });
 
+  const relevantItems = useRelevantItems();
+
   return (
     <ModalContent
       as="form"
@@ -691,7 +734,10 @@ export const SelectPrimaryAction = ({
       width="550px"
       rounded="lg"
     >
-      <ModalHeader>Command Center</ModalHeader>
+      <ModalHeader>
+        Command Center{' '}
+        {relevantItems.length ? ` (${relevantItems.length})` : ''}
+      </ModalHeader>
       <ModalCloseButton />
 
       <Downshift
@@ -834,6 +880,8 @@ export const CommandCenter = () => {
   const location = useLocation();
   const feedContext = useContext(FeedContext);
   const selectContext = useContext(SelectContext);
+  const sidebarState = useContext(SidebarContext);
+
   const itemId = qs.parse(location.search)?.itemId;
 
   const relevantItems = useRelevantItems();
@@ -848,6 +896,7 @@ export const CommandCenter = () => {
     relevantItems,
     isViewingItem: !!itemId,
     feedContext,
+    sidebarState,
   }).filter(item => !item.disabled);
 
   const params = {

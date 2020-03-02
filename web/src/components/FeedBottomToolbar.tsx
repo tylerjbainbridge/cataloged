@@ -7,6 +7,8 @@ import {
   IconButton,
   Tooltip,
   Select,
+  Stack,
+  Tag,
 } from '@chakra-ui/core';
 import { useMedia } from 'react-use';
 
@@ -18,6 +20,7 @@ import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchU
 import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
+import { getKeybindAsArray } from '../util/helpers';
 
 export const FeedBottomToolbar = ({ width }: any) => {
   const isMobile = useMedia('(max-width: 768px)');
@@ -108,7 +111,7 @@ export const FeedBottomToolbar = ({ width }: any) => {
         padding={isMobile ? '10px' : undefined}
         flexWrap="wrap"
       >
-        <Box d="flex" width="200px" alignItems="center" height="100%">
+        <Box d="flex" alignItems="center" height="100%">
           <Tooltip
             hasArrow
             aria-label="deselect all items"
@@ -126,15 +129,40 @@ export const FeedBottomToolbar = ({ width }: any) => {
           <Text ml={5} fontSize="xl" fontWeight="semibold">
             {selectedItems.length} selected
           </Text>
+          <Stack
+            d="flex"
+            alignItems="center"
+            pl="20px"
+            spacing={2}
+            isInline
+            fontSize="xl"
+          >
+            <Text>Hint: press</Text>
+            {getKeybindAsArray('mod k').map((key, idx) =>
+              key === 'then' ? (
+                <Text key={idx + key}>then</Text>
+              ) : (
+                <Tag
+                  size="sm"
+                  key={idx + key}
+                  variantColor="gray"
+                  textAlign="center"
+                >
+                  {key}
+                </Tag>
+              ),
+            )}
+            <Text>to open the command center</Text>
+          </Stack>
         </Box>
-        <Box
+        {/* <Box
           d="flex"
           height={!isMobile ? '100%' : undefined}
           width="400px"
           flexWrap="wrap"
           alignItems="center"
-        >
-          <Button
+        > */}
+        {/* <Button
             mr={isMobile ? 1 : 3}
             p={isMobile ? 1 : undefined}
             cursor="pointer"
@@ -206,8 +234,8 @@ export const FeedBottomToolbar = ({ width }: any) => {
                 {text}
               </option>
             ))}
-          </Select>
-        </Box>
+          </Select> */}
+        {/* </Box> */}
       </Box>
     </Box>
   );

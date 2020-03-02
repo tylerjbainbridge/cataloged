@@ -14,7 +14,7 @@ import _ from 'lodash';
 
 // @ts-ignore
 import LazyLoad from 'react-lazy-load';
-import { format } from 'date-fns';
+import { format, formatRelative } from 'date-fns';
 import { FaExpandArrowsAlt } from 'react-icons/fa';
 
 import { ItemFull } from '../graphql/__generated__/ItemFull';
@@ -30,6 +30,7 @@ import { useMedia } from 'react-use';
 import { useGoToItem } from '../hooks/useGoTo';
 import { ItemActionMenu } from './ItemActionMenu';
 import { FeedContext } from './Feed';
+import { DisplayLabels } from './DisplayLabels';
 
 export const GenericListItem = ({ item }: { item: ItemFull }) => {
   const isMobile = useMedia('(max-width: 768px)');
@@ -114,7 +115,6 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
           }}
         >
           <LazyLoad
-            height="60px"
             width="100%"
             offsetBottom={1000}
             // key={item.id}
@@ -123,7 +123,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
               d="flex"
               // flexWrap="wrap"
               width="100%"
-              height="50px"
+              height="70px"
               rounded="lg"
               ref={itemRef}
               userSelect={selectedMap.size ? 'none' : undefined}
@@ -133,13 +133,14 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                     backgroundColor: 'rgba(87,24,255, 0.1);',
                   }
                 : {
-                    border: '2px solid lightgray',
+                    border: '2px solid rgb(240, 237, 237);',
                   })}
-              p="4px"
+              p="10px"
               mb="10px"
               justifyContent="space-between"
               alignItems="center"
               cursor="pointer"
+              boxShadow="rgba(0, 0, 0, 0.08) 0px 1px 4px -2px;"
               {...(isCursorItem
                 ? {
                     backgroundColor: 'rgba(87,24,255, 0.1);',
@@ -148,7 +149,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                           border: `2px solid #5718FF`,
                         }
                       : {
-                          p: '6px',
+                          p: '12px',
                           border: 'none',
                         }),
                   }
@@ -168,7 +169,6 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                   <Box
                     onClick={e => {
                       e.stopPropagation();
-                      console.log('click', item.id, selectedMap.size);
 
                       if (e.shiftKey) {
                         selectRange(item);
@@ -209,13 +209,19 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                   </Box>
                 )}
               </Box>
-              <Box d="flex" height="100%" alignItems="center">
+
+              <Box
+                d="flex"
+                height="100%"
+                width={isMobile ? '70%' : '50%'}
+                alignItems="center"
+              >
                 <Box d="flex" height="100%" alignItems="center">
                   {image || compressedImage ? (
                     <LazyImage
                       hasBorder
                       src={compressedImage || image}
-                      width={isMobile ? '50px' : '90px'}
+                      width="50px"
                       height="100%"
                       objectFit="cover"
                       rounded="lg"
@@ -225,7 +231,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                   ) : (
                     <Box
                       d="flex"
-                      width={isMobile ? '50px' : '90px'}
+                      width="50px"
                       height="100%"
                       rounded="lg"
                       alignItems="center"
@@ -257,89 +263,81 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
                     </Text>
                   </Box>
                 </Box>
-                {!isMobile && (
-                  <>
-                    <Box d="flex" height="100%" mr="100px" alignItems="center">
-                      <Text color="gray.400">
-                        {format(new Date(item.createdAt), 'MMM dd, yyyy')}
-                      </Text>
-                    </Box>
-                    <Box
-                      d="flex"
-                      height="100%"
-                      width="100px"
-                      mr="100px"
-                      alignItems="center"
-                    >
-                      <Text>{displayType || type}</Text>
-                    </Box>
-                    <Box
-                      d="flex"
-                      height="100%"
-                      maxWidth="200px"
-                      minWidth="100px"
-                      alignItems="center"
-                    >
-                      <Labels item={item} />
-                    </Box>
-                  </>
-                )}
               </Box>
-              <Box>
-                {/* {item.link && (
-                        <Button
-                          cursor="pointer"
-                          onClick={e => {
-                            e.stopPropagation();
-                            // @ts-ignore
-                            window.open(item.link?.href, '_blank');
-                          }}
-                          leftIcon="external-link"
-                        >
-                          Visit
-                        </Button>
-                      )} */}
-
-                <ItemActionMenu item={item}>
-                  {menuNodes => (
-                    <>
-                      <MenuItem
-                        onClick={(e: any) => {
-                          e.stopPropagation();
-                          toggleItem(item);
-                        }}
-                      >
-                        {isItemSelected(item) ? 'Deselect' : 'Select'}
-                      </MenuItem>
-                      <MenuItem
-                        onClick={(e: any) => {
-                          goToItem(item);
-                        }}
-                      >
-                        <FaExpandArrowsAlt
-                          size="13px"
-                          style={{ marginRight: '5px' }}
-                        />{' '}
-                        Open
-                      </MenuItem>
-                      {item.link && (
+              <Box
+                d="flex"
+                height="100%"
+                width={isMobile ? '30%' : '50%'}
+                alignItems="center"
+                justifyContent="space-between"
+                flexWrap="wrap"
+              >
+                {!isMobile ? (
+                  <Box ml="10px">
+                    <DisplayLabels item={item} />
+                  </Box>
+                ) : (
+                  <Box />
+                )}
+                <Box
+                  d="flex"
+                  height="100%"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  flexWrap="wrap"
+                >
+                  <Box mr="10px">
+                    {!isMobile && (
+                      <Text fontSize="md" color="gray.400">
+                        {format(new Date(item.createdAt), 'MM/dd/yyyy')}
+                      </Text>
+                    )}
+                  </Box>
+                  <ItemActionMenu item={item}>
+                    {menuNodes => (
+                      <>
                         <MenuItem
-                          d="flex"
-                          alignItems="center"
                           onClick={(e: any) => {
                             e.stopPropagation();
-                            // @ts-ignore
-                            window.open(item.link?.href, '_blank');
+                            toggleItem(item);
                           }}
                         >
-                          <Icon name="external-link" fontSize="11px" mr="5px" />{' '}
-                          Visit
+                          {isItemSelected(item) ? 'Deselect' : 'Select'}
                         </MenuItem>
-                      )}
-                      {Object.values(menuNodes)}
-                    </>
-                  )}
-                </ItemActionMenu>
+                        <MenuItem
+                          onClick={(e: any) => {
+                            goToItem(item);
+                          }}
+                        >
+                          <FaExpandArrowsAlt
+                            size="13px"
+                            style={{ marginRight: '5px' }}
+                          />{' '}
+                          Open
+                        </MenuItem>
+                        {item.link && (
+                          <MenuItem
+                            d="flex"
+                            alignItems="center"
+                            onClick={(e: any) => {
+                              e.stopPropagation();
+                              // @ts-ignore
+                              window.open(item.link?.href, '_blank');
+                            }}
+                          >
+                            <Icon
+                              name="external-link"
+                              fontSize="11px"
+                              mr="5px"
+                            />{' '}
+                            Visit
+                          </MenuItem>
+                        )}
+                        {Object.values(menuNodes)}
+                      </>
+                    )}
+                  </ItemActionMenu>
+                </Box>
               </Box>
             </PseudoBox>
           </LazyLoad>
