@@ -113,7 +113,8 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   const isViewingSearch = useRouteMatch('/search/:id');
 
   const INITIAL_PAGINATION_VARIABLES = {
-    first: mode === 'grid' ? 30 : 50,
+    first: 40,
+    // first: mode === 'grid' ? 30 : 50,
     after: null,
   };
 
@@ -264,13 +265,13 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   useHotKey('up', moveCursorToPrevItem);
 
-  // useHotKey(
-  //   'esc',
-  //   () => {
-  //     setCursorItemId(null);
-  //   },
-  //   { shouldBind: !!cursorItem },
-  // );
+  useHotKey(
+    'esc',
+    () => {
+      setCursorItemId(null);
+    },
+    { shouldBind: !!cursorItem },
+  );
 
   // highlightedIndex <= 0 ? null : highlightedIndex - 1,
 
