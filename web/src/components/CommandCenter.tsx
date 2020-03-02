@@ -981,8 +981,7 @@ export const CommandCenter = () => {
       // scrollBehavior="inside"
       isOpen={isModalOpen}
       initialFocusRef={inputRef}
-      size="full"
-      isCentered
+      size="xl"
     >
       <ModalOverlay />
       {isModalOpen && node}

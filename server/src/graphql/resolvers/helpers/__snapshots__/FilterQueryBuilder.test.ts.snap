@@ -22,10 +22,7 @@ Object {
   },
   "status": Set {},
   "type": Set {
-    "note",
-    "link",
     "googleContact",
-    "file",
   },
 }
 `;
@@ -293,10 +290,7 @@ Object {
           Object {
             "type": Object {
               "in": Array [
-                "note",
-                "link",
                 "googleContact",
-                "file",
               ],
             },
           },
@@ -315,34 +309,26 @@ Object {
         "AND": Array [
           Object {
             "labels": Object {
-              "some": Array [
-                Object {
-                  "name": Object {
-                    "equals": "label 1",
-                  },
+              "some": Object {
+                "name": Object {
+                  "in": Array [
+                    "label 1",
+                    "label 2",
+                    "label 3",
+                  ],
                 },
-                Object {
-                  "name": Object {
-                    "equals": "label 2",
-                  },
-                },
-                Object {
-                  "name": Object {
-                    "equals": "label 3",
-                  },
-                },
-              ],
+              },
             },
           },
           Object {
             "labels": Object {
-              "none": Array [
-                Object {
-                  "name": Object {
-                    "equals": "label 4",
-                  },
+              "every": Object {
+                "name": Object {
+                  "notIn": Array [
+                    "label 4",
+                  ],
                 },
-              ],
+              },
             },
           },
         ],
@@ -363,9 +349,7 @@ Object {
     ],
     "deletedAt": null,
     "isFavorited": Object {
-      "equals": Object {
-        "equals": true,
-      },
+      "equals": true,
     },
     "user": Object {
       "id": "123",

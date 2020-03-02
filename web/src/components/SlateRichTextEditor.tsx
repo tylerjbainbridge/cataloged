@@ -287,7 +287,7 @@ const isMarkActive = (editor: Editor, format: any) => {
 };
 
 const Element = ({ attributes, children, element }: RenderElementProps) => {
-  const textProps = { fontSize: '18px ' };
+  const textProps = { fontSize: '20px ' };
 
   switch (element.type) {
     case 'block-quote':

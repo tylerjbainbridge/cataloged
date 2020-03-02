@@ -7,6 +7,7 @@ test('FilterQueryBuilder works', () => {
 
   const filters = [
     { name: '-type', values: ['file'] },
+    { name: 'type', values: ['contact'] },
     { name: 'search', values: ['test string', 'another string'] },
     { name: 'includesContacts', value: true },
     { name: 'label', value: 'label 1' },
