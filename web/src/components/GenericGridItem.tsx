@@ -161,7 +161,7 @@ export const GenericGridItem = ({
                       border: `2px solid #5718FF`,
                     }
                   : {
-                      p: '12px',
+                      // p: '12px',
                       border: 'none',
                     }),
               }
