@@ -152,18 +152,16 @@ export const GenericGridItem = ({
         boxShadow="rgba(0, 0, 0, 0.08) 0px 1px 4px -2px"
       >
         <Box
-          {...(isCursorItem
+          {...(isCursorItem || isItemSelected(item)
             ? {
                 backgroundColor: 'rgba(87,24,255, 0.1);',
                 rounded: 'lg',
-                ...(isItemSelected(item)
-                  ? {
-                      border: `2px solid #5718FF`,
-                    }
-                  : {
-                      // p: '12px',
-                      border: 'none',
-                    }),
+              }
+            : {})}
+          {...(isItemSelected(item)
+            ? {
+                border: `2px solid #5718FF`,
+                rounded: 'lg',
               }
             : {})}
         >

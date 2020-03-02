@@ -652,7 +652,7 @@ export const SelectFromAllLabels = ({
                               roundedTopRight: '0px',
                             }
                           : {})}
-                        {...(index === options.length - 1
+                        {...(index === options.length - 1 && options.length > 4
                           ? {
                               roundedBottomLeft: 'lg',
                               roundedBottomRight: 'lg',
@@ -813,7 +813,7 @@ export const SelectPrimaryAction = ({
                           roundedTopRight: '0px',
                         }
                       : {})}
-                    {...(index === options.length - 1
+                    {...(index === options.length - 1 && options.length > 4
                       ? {
                           roundedBottomLeft: 'lg',
                           roundedBottomRight: 'lg',
@@ -833,13 +833,15 @@ export const SelectPrimaryAction = ({
                     })}
                     pl="20px"
                   >
-                    <Flex alignItems="center">
+                    <Flex alignItems="center" color="gray.700">
                       {item.icon && (
                         <Box mr="10px">
-                          {React.cloneElement(item.icon, { size: '16px' })}
+                          {React.cloneElement(item.icon, { size: '12px' })}
                         </Box>
                       )}{' '}
-                      <Text fontSize="xl">{item.display}</Text>
+                      <Text fontSize="lg" fontWeight="semibold">
+                        {item.display}
+                      </Text>
                     </Flex>
                     {!!item.keybind && (
                       <Stack
