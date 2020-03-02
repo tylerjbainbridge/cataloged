@@ -98,6 +98,7 @@ export const ItemActionMenu = ({
           cursor="pointer"
           // @ts-ignore
           variant="outline"
+          bg="white"
           onClick={(e: any) => {
             e.stopPropagation();
           }}
