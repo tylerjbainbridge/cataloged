@@ -213,7 +213,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
               <Box
                 d="flex"
                 height="100%"
-                width={isMobile ? '70%' : '50%'}
+                width={isMobile ? '70%' : '60%'}
                 alignItems="center"
               >
                 <Box d="flex" height="100%" alignItems="center">
@@ -267,7 +267,7 @@ export const GenericListItem = ({ item }: { item: ItemFull }) => {
               <Box
                 d="flex"
                 height="100%"
-                width={isMobile ? '30%' : '50%'}
+                width={isMobile ? '30%' : '40%'}
                 alignItems="center"
                 justifyContent="space-between"
                 flexWrap="wrap"

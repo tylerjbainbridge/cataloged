@@ -366,8 +366,9 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
                   ref={ref => {
                     inputRef.current = ref;
                   }}
-                  borderBottom="2px solid black"
-                  borderBottomColor="gray.100"
+                  // borderBottom="2px solid"
+                  // borderBottomColor="rgba(0, 0, 0, 0.08)"
+                  boxShadow="rgba(0, 0, 0, 0.08) 0 5px 5px -5px"
                 >
                   <Box
                     d="flex"
@@ -426,7 +427,7 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
                     position="absolute"
                     zIndex={100}
                     backgroundColor="white"
-                    boxShadow="-19px 58px 100px 0px hsla(0, 0%, 0%, 0.18)"
+                    boxShadow="-19px 58px 100px 0px rgba(0, 0, 0, 0.08)"
                     roundedBottomRight="lg"
                     roundedBottomLeft="lg"
                   >
