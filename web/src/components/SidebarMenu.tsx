@@ -276,6 +276,7 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
                         filters={filters}
                         rightNode={
                           <IconButton
+                            fontSize="10px"
                             variant="ghost"
                             icon="delete"
                             aria-label="delete"
