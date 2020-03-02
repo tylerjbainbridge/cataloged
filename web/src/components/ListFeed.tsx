@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Stack } from '@chakra-ui/core';
+import { Stack, Flex } from '@chakra-ui/core';
 import { QueryResult } from '@apollo/client';
 
 import { Item } from './Item';
@@ -16,15 +16,17 @@ export const ListFeed = (_: ListFeedProps) => {
   const { items } = useContext(FeedContext);
 
   return (
-    <Stack d="flex" alignItems="center" width="100%">
-      {items.map(item => (
-        <Item item={item} key={item.id} />
-      ))}
-      {/* <Box w="100%" h="10" bg="blue.500" />
+    <Flex justifyContent="center">
+      <Stack d="flex" alignItems="center" maxWidth="850px" width="100%">
+        {items.map(item => (
+          <Item item={item} key={item.id} />
+        ))}
+        {/* <Box w="100%" h="10" bg="blue.500" />
       <Box w="100%" h="10" bg="blue.500" />
       <Box w="100%" h="10" bg="blue.500" />
       <Box w="100%" h="10" bg="blue.500" />
       <Box w="100%" h="10" bg="blue.500" /> */}
-    </Stack>
+      </Stack>
+    </Flex>
   );
 };

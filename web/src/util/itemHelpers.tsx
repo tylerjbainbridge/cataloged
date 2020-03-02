@@ -38,7 +38,8 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
         return {
           type: item.type,
           // @ts-ignore
-          title: item.note.title || item.note.text.split('\n').pop(),
+          title: item.note.title || 'Untitled',
+          subTitle: item.note.text.split('\n').pop(),
           createdAt: item.date,
           image: null,
           icon: 'chat',
@@ -50,7 +51,14 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
       if (item.link) {
         return {
           type: item.type,
-          title: item.link.title || item.link.href,
+          ...(item.link.title
+            ? {
+                title: item.link.title,
+                subTitle: item.link.href,
+              }
+            : {
+                title: item.link.href,
+              }),
           createdAt: item.date,
           image: item.link.image,
           icon: 'external-link',

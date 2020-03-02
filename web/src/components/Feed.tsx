@@ -252,6 +252,14 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   useHotKey('up', moveCursorToPrevItem);
 
+  // useHotKey(
+  //   'esc',
+  //   () => {
+  //     setCursorItemId(null);
+  //   },
+  //   { shouldBind: !!cursorItem },
+  // );
+
   // highlightedIndex <= 0 ? null : highlightedIndex - 1,
 
   return (
@@ -421,9 +429,12 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
           {/* </Switch> */}
         </Box>
+        {/* <Box pr="100px" d="flex" position="fixed" bottom={0} right={0} zIndex={2}>
+          <Button>test</Button>
+        </Box> */}
         <FeedBottomToolbar
           width={
-            sidebarState.isOpen || !isMobile
+            sidebarState.isOpen
               ? `calc(100% - ${currentSidebarWidth || 0}px)`
               : '100%'
           }

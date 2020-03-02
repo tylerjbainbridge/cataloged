@@ -60,8 +60,8 @@ export const Dashboard = () => {
       <Sidebar
         sidebar={<SidebarMenu sidebarState={sidebarState} />}
         shadow={false}
-        docked={sidebarState.isOpen || !isMobile}
-        open={sidebarState.isOpen || !isMobile}
+        docked={sidebarState.isOpen}
+        open={sidebarState.isOpen}
         // transitions={false}
         defaultSidebarWidth={250}
       >

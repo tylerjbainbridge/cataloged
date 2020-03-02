@@ -93,11 +93,21 @@ export const NoteEditor = ({
     valuesRef.current = values;
   }, [values]);
 
+  const cleanupRef = useRef(null);
+
+  useEffect(() => {
+    // @ts-ignore
+    cleanupRef.current = () => {
+      debouncedUpdateNote.cancel();
+      if (!note.text && !note.title) deleteItem();
+    };
+  }, [note]);
+
   // Clean up and delete if needed.
   useEffect(
     () => () => {
-      debouncedUpdateNote.cancel();
-      if (!note.text && !note.title) deleteItem();
+      // @ts-ignore
+      cleanupRef.current();
     },
     [],
   );
@@ -117,7 +127,7 @@ export const NoteEditor = ({
       fontSize="44px"
       fontWeight="bold"
       height="70px"
-      p="15px"
+      pl="50px"
       bg="white"
       placeholder="Untitled"
     />
