@@ -80,6 +80,24 @@ export const Query = objectType({
       },
     });
 
+    t.field('collection', {
+      type: 'Collection',
+      args: {
+        id: stringArg({ required: true }),
+      },
+      resolve: async (_, args, ctx) => {
+        const [collection] = await ctx.prisma.collection.findMany({
+          where: {
+            id: args.id,
+            user: { id: ctx.user.id },
+          },
+          first: 1,
+        });
+
+        return collection;
+      },
+    });
+
     t.field('itemsConnection', {
       type: 'ItemConnection',
       args: feedArgs,
@@ -91,6 +109,17 @@ export const Query = objectType({
       type: 'SavedSearch',
       resolve: (_, args, ctx) => {
         return ctx.prisma.savedSearch.findMany({
+          where: {
+            user: { id: ctx.user.id },
+          },
+        });
+      },
+    });
+
+    t.list.field('collections', {
+      type: 'Collection',
+      resolve: (_, args, ctx) => {
+        return ctx.prisma.collection.findMany({
           where: {
             user: { id: ctx.user.id },
           },
@@ -124,6 +153,12 @@ export const Query = objectType({
 
     t.crud.users({
       alias: '_users',
+      filtering: true,
+      ordering: true,
+    });
+
+    t.crud.collections({
+      alias: '_collections',
       filtering: true,
       ordering: true,
     });

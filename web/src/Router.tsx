@@ -8,6 +8,7 @@ import { ForceSignIn } from './routes/ForceSignIn';
 
 import { useAuth } from './hooks/useAuth';
 import { GRAPHQL_ENDPOINT } from './config';
+import { Collection, CollectionPage } from './routes/CollectionPage';
 
 export const Router = () => {
   const auth = useAuth();

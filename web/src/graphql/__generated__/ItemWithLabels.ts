@@ -16,6 +16,5 @@ export interface ItemWithLabels_labels {
 export interface ItemWithLabels {
   __typename: "Item";
   id: string;
-  type: string;
   labels: ItemWithLabels_labels[];
 }

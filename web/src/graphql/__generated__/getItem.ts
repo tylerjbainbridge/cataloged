@@ -15,6 +15,13 @@ export interface getItem_item_labels {
   name: string;
 }
 
+export interface getItem_item_collections {
+  __typename: "Collection";
+  id: string;
+  name: string;
+  description: string | null;
+}
+
 export interface getItem_item_link_item_labels {
   __typename: "Label";
   id: string;
@@ -145,6 +152,7 @@ export interface getItem_item {
   isFavorited: boolean;
   status: ItemStatus;
   labels: getItem_item_labels[];
+  collections: getItem_item_collections[];
   link: getItem_item_link | null;
   file: getItem_item_file | null;
   note: getItem_item_note | null;

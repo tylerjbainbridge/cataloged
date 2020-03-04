@@ -21,6 +21,12 @@ export const ITEM_FULL_FRAGMENT = gql`
       ...LabelFull
     }
 
+    collections {
+      id
+      name
+      description
+    }
+
     link {
       ...LinkFull
     }
@@ -107,10 +113,32 @@ export const BATCH_UPDATE_ITEMS_LABELS_MUTATION = gql`
     ) {
       id
 
-      labels {
-        id
-        name
-      }
+      # labels {
+      #   id
+      #   name
+      # }
+    }
+  }
+`;
+
+export const BATCH_UPDATE_ITEMS_COLLECTIONS_MUTATION = gql`
+  mutation batchUpdateItemCollections(
+    $itemIds: [String!]!
+    $collectionIdsToAdd: [String!]!
+    $collectionIdsToRemove: [String!]!
+  ) {
+    batchUpdateItemCollections(
+      itemIds: $itemIds
+      collectionIdsToAdd: $collectionIdsToAdd
+      collectionIdsToRemove: $collectionIdsToRemove
+    ) {
+      id
+
+      # collections {
+      #   id
+      #   name
+      #   description
+      # }
     }
   }
 `;

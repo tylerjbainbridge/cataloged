@@ -12,6 +12,7 @@ import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
 import { useLocation, Switch, Route, useRouteMatch } from 'react-router-dom';
 import { useMedia } from 'react-use';
 import { Settings } from '../routes/Settings';
+import { CollectionPage } from '../routes/CollectionPage';
 
 const SIDEBAR_KEY = 'isSidebarOpen';
 
@@ -54,6 +55,9 @@ export const Dashboard = () => {
 
   const isViewingItem = qs.parse(location.search)?.itemId;
   const isViewingSettings = useRouteMatch('*/settings');
+  const isViewingCollection = useRouteMatch('/collection/:collectionId');
+
+  const isShowingFeed = !isViewingCollection;
 
   return (
     <SidebarContext.Provider value={sidebarState}>
@@ -65,11 +69,12 @@ export const Dashboard = () => {
         // transitions={false}
         defaultSidebarWidth={250}
       >
-        {/* {isViewingItem && !isViewingSettings && <FeedDrawerItemView />} */}
+        {isViewingItem && !isViewingSettings && <FeedDrawerItemView />}
         {isViewingSettings && <Settings />}
         <CreateLink />
         <CreateFiles />
-        <Feed sidebarState={sidebarState} />
+        {isShowingFeed && <Feed sidebarState={sidebarState} />}
+        {isViewingCollection && <CollectionPage />}
       </Sidebar>
     </SidebarContext.Provider>
   );

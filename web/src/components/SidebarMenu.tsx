@@ -29,6 +29,7 @@ import { useGlobalModal, ModalName } from './GlobalModal';
 import { NoteModal } from './NoteModal';
 import { getQueryStringFromFilters } from '../util/helpers';
 import { FaEllipsisH } from 'react-icons/fa';
+import { DELETE_COLLECTION } from '../graphql/collection';
 
 export const SIDEBAR_WIDTH = '250px';
 
@@ -58,7 +59,7 @@ const DELETE_SAVED_SEARCH = gql`
 `;
 
 export interface LinkListItemProps extends BoxProps {
-  filters: any[];
+  filters?: any[];
   pathname?: string;
   isActive?: boolean;
   rightNode?: any;
@@ -67,7 +68,7 @@ export interface LinkListItemProps extends BoxProps {
 const LinkListItem = ({
   children,
   pathname,
-  filters,
+  filters = [],
   isActive,
   rightNode,
   ...props
@@ -114,6 +115,8 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
   });
 
   const searchMatch = useRouteMatch('/search/:id');
+  const collectionMatch = useRouteMatch('/collection/:id');
+
   const match = useRouteMatch('*');
 
   const history = useHistory();
@@ -125,8 +128,21 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
       refetchQueries: ['getSavedSearches'],
       onCompleted: data => {
         // @ts-ignore
-        if (data?.deleteSavedSearch?.id === match?.params?.id) {
-          history.push('/');
+        if (data?.deleteSavedSearch?.id === searchMatch?.params?.id) {
+          history.replace('/');
+        }
+      },
+    },
+  );
+
+  const [deleteCollection, { loading: isDeletingCollection }] = useMutation(
+    DELETE_COLLECTION,
+    {
+      refetchQueries: ['getAuthUser'],
+      onCompleted: data => {
+        // @ts-ignore
+        if (data?.deleteCollection?.id === collectionMatch?.params?.id) {
+          history.replace('/');
         }
       },
     },
@@ -295,6 +311,55 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
                       </LinkListItem>
                     ),
                   )}
+              </Box>
+            </Stack>
+          </Box>
+          <Box>
+            <Stack spacing="5px">
+              <Text color="gray.500">
+                COLLECTIONS ({user?.collections?.length || 0})
+                <Tooltip
+                  zIndex={10}
+                  aria-label="help"
+                  label={
+                    'To create a collection, select items and press cmd + k'
+                  }
+                >
+                  <Icon
+                    cursor="pointer"
+                    ml="5px"
+                    name="info"
+                    aria-label="info"
+                  />
+                </Tooltip>
+              </Text>
+              <Box maxHeight="500px" overflowY="auto">
+                {!!user?.collections?.length &&
+                  (user?.collections || []).map(({ id, name }: any) => (
+                    <LinkListItem
+                      // @ts-ignore
+                      isActive={collectionMatch?.params?.id === id}
+                      pathname={`/collection/${id}`}
+                      rightNode={
+                        <IconButton
+                          fontSize="10px"
+                          variant="ghost"
+                          icon="delete"
+                          aria-label="delete"
+                          isDisabled={isDeleting}
+                          onClick={() => {
+                            deleteCollection({
+                              variables: {
+                                collectionId: id,
+                              },
+                            });
+                          }}
+                        />
+                      }
+                    >
+                      {name || 'Untitled'}
+                    </LinkListItem>
+                  ))}
               </Box>
             </Stack>
           </Box>
