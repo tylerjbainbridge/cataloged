@@ -97,8 +97,9 @@ const LinkListItem = ({
           textAlign="left"
           bg="none"
           color={isActive ? 'brand.purple.main' : undefined}
+          maxWidth="200px"
         >
-          {children}
+          <Text isTruncated>{children}</Text>
         </Button>
       </Box>
 
