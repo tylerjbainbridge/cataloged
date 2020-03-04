@@ -18,7 +18,7 @@ import { useGetItem } from '../hooks/useGetItem';
 import { usePrevious } from '../hooks/usePrevious';
 import { NoteDrawer } from '../components/NoteDrawer';
 import { LinkDrawer } from '../components/LinkDrawer';
-import { useReturnToFeedFromItem } from '../hooks/useGoTo';
+import { useReturnFromItem } from '../hooks/useGoTo';
 import { GoogleContactDrawer } from '../components/GoogleContactDrawer';
 
 export interface ItemDrawerProps {
@@ -37,7 +37,7 @@ export const FeedDrawerItemView = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure(false);
 
-  const [returnToFeed] = useReturnToFeedFromItem();
+  const [returnToFeed] = useReturnFromItem();
 
   // @ts-ignore
   const { item, loading } = useGetItem(itemId);

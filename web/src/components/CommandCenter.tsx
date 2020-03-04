@@ -39,7 +39,7 @@ import { useOptimisticDeleteManyItems } from '../hooks/useOptimisticDeleteManyIt
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
 import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
-import { useGoToItem, useReturnToFeedFromItem } from '../hooks/useGoTo';
+import { useGoToItem, useReturnFromItem } from '../hooks/useGoTo';
 import { scrollToNodeIfOutOfView, getKeybindAsArray } from '../util/helpers';
 import {
   FaCogs,
@@ -317,7 +317,7 @@ export const useActionHandler = ({
   });
 
   const [goToItem] = useGoToItem();
-  const [goToFeed] = useReturnToFeedFromItem();
+  const [goToFeed] = useReturnFromItem();
 
   const cleanup = () => {
     updatePrimaryAction(null);
