@@ -43,7 +43,7 @@ export const useRemoveFromQueryString = () => {
   return [removeFromQueryString];
 };
 
-export const useReturnToFeedFromItem = () => {
+export const useReturnFromItem = () => {
   const [goTo] = useGoToPath();
 
   return [() => goTo(null, { remove: ['itemId'] })];
