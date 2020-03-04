@@ -31,7 +31,7 @@ import { getQueryStringFromFilters } from '../util/helpers';
 import { FaEllipsisH } from 'react-icons/fa';
 import { DELETE_COLLECTION } from '../graphql/collection';
 
-export const SIDEBAR_WIDTH = '250px';
+export const SIDEBAR_WIDTH = 280;
 
 export const GET_SAVED_SEARCHES_QUERY = gql`
   query getSavedSearches {
@@ -172,6 +172,8 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
       bg="#fcfeff"
       id="sidebar-container"
       zIndex={3}
+      width={`${SIDEBAR_WIDTH}px`}
+      maxWidth={`${SIDEBAR_WIDTH}px`}
     >
       <Flex height="100%" justifyContent="space-between" flexDirection="column">
         <Stack spacing="25px">
