@@ -34,50 +34,7 @@ import { theme } from '../styles/theme';
 import { FaTimesCircle, FaRegTimesCircle, FaTimes } from 'react-icons/fa';
 import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchUpdateItemLabels';
 
-export const ITEM_LABEL_RESPONSE_FRAGMENT = gql`
-  fragment ItemLabelResponseFragment on Item {
-    id
-
-    labels {
-      id
-      name
-    }
-  }
-`;
-
-export const CONNECT_LABEL_TO_ITEM_MUTATION = gql`
-  mutation connectLabelToItem($name: String!, $itemId: String!) {
-    connectLabelToItem(name: $name, itemId: $itemId) {
-      ...ItemLabelResponseFragment
-    }
-  }
-
-  ${ITEM_LABEL_RESPONSE_FRAGMENT}
-`;
-
-export const DISCONNECT_LABEL_FROM_ITEM_MUTATION = gql`
-  mutation disconnectLabelFromItem($labelId: String!, $itemId: String!) {
-    disconnectLabelFromItem(labelId: $labelId, itemId: $itemId) {
-      ...ItemLabelResponseFragment
-    }
-  }
-
-  ${ITEM_LABEL_RESPONSE_FRAGMENT}
-`;
-
-export const CREATE_LABEL_MUTATION = gql`
-  mutation createLabel($name: String!) {
-    createLabel(name: $name) {
-      # user
-      id
-
-      labels {
-        id
-        name
-      }
-    }
-  }
-`;
+import { DISCONNECT_LABEL_FROM_ITEM_MUTATION } from './Labels';
 
 export const DisplayLabels = ({
   item = null,

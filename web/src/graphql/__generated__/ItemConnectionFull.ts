@@ -23,6 +23,13 @@ export interface ItemConnectionFull_edges_node_labels {
   name: string;
 }
 
+export interface ItemConnectionFull_edges_node_collections {
+  __typename: "Collection";
+  id: string;
+  name: string;
+  description: string | null;
+}
+
 export interface ItemConnectionFull_edges_node_link_item_labels {
   __typename: "Label";
   id: string;
@@ -153,6 +160,7 @@ export interface ItemConnectionFull_edges_node {
   isFavorited: boolean;
   status: ItemStatus;
   labels: ItemConnectionFull_edges_node_labels[];
+  collections: ItemConnectionFull_edges_node_collections[];
   link: ItemConnectionFull_edges_node_link | null;
   file: ItemConnectionFull_edges_node_file | null;
   note: ItemConnectionFull_edges_node_note | null;

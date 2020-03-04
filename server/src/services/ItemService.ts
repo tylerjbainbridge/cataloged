@@ -1,6 +1,9 @@
 import Bluebird from 'bluebird';
+import _ from 'lodash';
 
 import { prisma } from '../data/photon';
+import { CollectionEntry } from '@prisma/client';
+import { CollectionService } from './CollectionService';
 
 export class ItemService {
   static deleteMany = async (itemIds: string[]) => {
@@ -12,6 +15,8 @@ export class ItemService {
         link: true,
         googleContact: true,
         labels: true,
+        collectionEntries: true,
+        collections: true,
       },
     });
 
@@ -41,6 +46,27 @@ export class ItemService {
             data: {
               items: { disconnect: { id: item.id } },
             },
+          }),
+        { concurrency: 1 },
+      );
+
+      await Bluebird.map(
+        item.collections,
+        (collection: any) =>
+          prisma.collection.update({
+            where: { id: collection.id },
+            data: {
+              items: { disconnect: { id: item.id } },
+            },
+          }),
+        { concurrency: 1 },
+      );
+
+      await Bluebird.map(
+        item.collectionEntries,
+        (collectionEntry: any) =>
+          prisma.collectionEntry.delete({
+            where: { id: collectionEntry.id },
           }),
         { concurrency: 1 },
       );
@@ -110,5 +136,44 @@ export class ItemService {
         },
       },
     });
+  };
+
+  static addToCollection = async (
+    userId: string,
+    itemId: string,
+    collectionId: string,
+  ) => {
+    const entry = {} as CollectionEntry;
+
+    _.set(entry, 'item.connect.id', itemId);
+    _.set(entry, 'position', 0);
+    _.set(entry, 'collection.connect.id', collectionId);
+
+    await prisma.collection.update({
+      where: { id: collectionId },
+      data: {
+        items: { connect: { id: itemId } },
+      },
+    });
+
+    await CollectionService.insertAtPosition(collectionId, userId, entry);
+  };
+
+  static removeFromCollection = async (
+    userId: string,
+    itemId: string,
+    collectionId: string,
+  ) => {
+    const [entry] = await prisma.collectionEntry.findMany({
+      where: {
+        item: { id: itemId },
+        collection: { id: collectionId },
+      },
+      first: 1,
+    });
+
+    if (!entry) throw new Error('Entry doesnt exist');
+
+    await CollectionService.removeEntry(collectionId, userId, entry.id);
   };
 }

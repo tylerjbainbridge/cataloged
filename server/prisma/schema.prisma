@@ -131,6 +131,49 @@ model SavedSearchFilter {
   savedSearch SavedSearch?
 }
 
+model Collection {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  description String?
+
+  entries CollectionEntry[]
+  items   Item[]
+
+  user User?
+}
+
+model CollectionBlock {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type    String
+  content String
+
+  collection Collection
+
+  user User?
+}
+
+model CollectionEntry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  item  Item?
+  block CollectionBlock?
+
+  collection Collection
+
+  position Int?
+
+  user User?
+}
+
+
 model Item {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -153,7 +196,8 @@ model Item {
 
   items Item[]
 
-  labels Label[]
+  labels      Label[]
+  collections Collection[]
 
   @@index([type])
 }
@@ -218,20 +262,6 @@ model UploadGroup {
   user       User
   files      File[]
 }
-
-// model Collection {
-//   id        String   @id @default(cuid())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   type String @default(now())
-
-//   person Person
-
-//   user User
-
-//   items Item[]
-// }
 
 
 model User {

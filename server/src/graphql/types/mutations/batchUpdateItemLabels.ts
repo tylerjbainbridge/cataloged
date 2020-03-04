@@ -12,7 +12,6 @@ export const batchUpdateItemLabels = extendType({
       type: Item,
       args: {
         itemIds: stringArg({ required: true, list: true }),
-        labelsToCreate: stringArg({ required: false, list: true }),
         labelIdsToAdd: stringArg({ required: true, list: true }),
         labelIdsToRemove: stringArg({ required: true, list: true }),
       },
