@@ -85,6 +85,39 @@ export class FilterQueryBuilder {
     this.findManyArgs = {};
   }
 
+  generateStringFilter = (name: string, search: string) => {
+    return [
+      { [name]: { contains: search } },
+      { [name]: { contains: _.toLower(search) } },
+      { [name]: { contains: _.toUpper(search) } },
+      { [name]: { contains: _.upperFirst(search) } },
+      {
+        [name]: {
+          contains: search
+            .split(' ')
+            .map(_.upperFirst)
+            .join(' '),
+        },
+      },
+      {
+        [name]: {
+          contains: search
+            .split(' ')
+            .map(_.toLower)
+            .join(' '),
+        },
+      },
+      {
+        [name]: {
+          contains: search
+            .split(' ')
+            .map(_.toUpper)
+            .join(' '),
+        },
+      },
+    ];
+  };
+
   getTrueValue = (value: string) => {
     try {
       return JSON.parse(value);
@@ -237,9 +270,14 @@ export class FilterQueryBuilder {
             (p, word) => [
               ...p,
               // @ts-ignore
-              ...STRING_FILTERS[type].map(field => ({
-                [field]: { contains: word },
-              })),
+              ...STRING_FILTERS[type].reduce(
+                (p: any[], name: string) => [
+                  // { [name]: { contains: word } },
+                  ...p,
+                  ...this.generateStringFilter(name, word),
+                ],
+                [],
+              ),
             ],
             [],
           ),
