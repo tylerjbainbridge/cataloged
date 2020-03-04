@@ -23,6 +23,13 @@ export interface feed_itemsConnection_edges_node_labels {
   name: string;
 }
 
+export interface feed_itemsConnection_edges_node_collections {
+  __typename: "Collection";
+  id: string;
+  name: string;
+  description: string | null;
+}
+
 export interface feed_itemsConnection_edges_node_link_item_labels {
   __typename: "Label";
   id: string;
@@ -153,6 +160,7 @@ export interface feed_itemsConnection_edges_node {
   isFavorited: boolean;
   status: ItemStatus;
   labels: feed_itemsConnection_edges_node_labels[];
+  collections: feed_itemsConnection_edges_node_collections[];
   link: feed_itemsConnection_edges_node_link | null;
   file: feed_itemsConnection_edges_node_file | null;
   note: feed_itemsConnection_edges_node_note | null;

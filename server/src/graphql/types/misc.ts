@@ -92,3 +92,26 @@ export const FilterInput = inputObjectType({
     t.list.field('values', { type: 'FilterValue' });
   },
 });
+
+export const NewCollectionEntryInput = inputObjectType({
+  name: 'NewCollectionEntryInput',
+  definition(t) {
+    t.string('entryId');
+
+    t.string('blockId');
+    t.string('blockType');
+    t.string('blockContent');
+
+    t.int('position');
+
+    t.string('itemId');
+  },
+});
+
+export const CollectionEntryPositionInput = inputObjectType({
+  name: 'CollectionEntryPositionInput',
+  definition(t) {
+    t.string('id');
+    t.int('position');
+  },
+});

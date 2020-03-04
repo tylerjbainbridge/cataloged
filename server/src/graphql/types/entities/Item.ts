@@ -25,6 +25,7 @@ export const Item = objectType({
     t.model.googleContact();
 
     t.model.labels({ ordering: true });
+    t.model.collections({ ordering: true });
 
     t.model.type();
   },

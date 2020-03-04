@@ -6,6 +6,7 @@ import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { FeedContext } from './Feed';
 import { GenericListItem } from './GenericListItem';
 import { GenericGridItem } from './GenericGridItem';
+import { FeedListItem } from './FeedListItem';
 
 export const GRID_ITEM_INNER_PADDING = 0;
 export const GRID_ITEM_ACTUAL_WIDTH = 250;
@@ -20,6 +21,6 @@ export const Item = ({ item }: { item: ItemFull }) => {
   return mode === 'grid' ? (
     <GenericGridItem item={item} />
   ) : (
-    <GenericListItem item={item} />
+    <FeedListItem item={item} />
   );
 };

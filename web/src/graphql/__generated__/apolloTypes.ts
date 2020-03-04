@@ -13,10 +13,24 @@ export enum ItemStatus {
   NOT_STARTED = "NOT_STARTED",
 }
 
+export interface CollectionEntryPositionInput {
+  id?: string | null;
+  position?: number | null;
+}
+
 export interface FilterInput {
   name: string;
   value?: any | null;
   values?: any[] | null;
+}
+
+export interface NewCollectionEntryInput {
+  entryId?: string | null;
+  blockId?: string | null;
+  blockType?: string | null;
+  blockContent?: string | null;
+  position?: number | null;
+  itemId?: string | null;
 }
 
 export interface SignedURLArgs {

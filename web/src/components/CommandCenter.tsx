@@ -54,16 +54,19 @@ import {
   FaCheck,
   FaTags,
   FaPenSquare,
+  FaLayerGroup,
 } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
 import { usePrevious } from '../hooks/usePrevious';
 
-import { CREATE_LABEL_MUTATION } from './Labels';
-import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchUpdateItemLabels';
 import { CREATE_NOTE_MUTATION } from '../graphql/note';
 import { EMPTY_NOTE_VALUE, serializeToPlainText } from './NoteEditor';
 import { SidebarContext } from './Dashboard';
 import { useGetItem } from '../hooks/useGetItem';
+import cuid from 'cuid';
+import { ADD_COLLECTION } from '../graphql/collection';
+import { CommandCenterSelectLabels } from './CommandCenterSelectLabels';
+import { CommandCenterSelectCollections } from './CommandCenterSelectCollections';
 
 export enum Action {
   OPEN_ITEM = 'OPEN_ITEM',
@@ -80,12 +83,14 @@ export enum Action {
   CREATE_LINK = 'CREATE_LINK',
   CREATE_NOTE = 'CREATE_NOTE',
   CREATE_FILE = 'CREATE_FILE',
+  CREATE_COLLECTION = 'CREATE_COLLECTION',
   BULK_UPDATE_STATUS_ITEMS = 'BULK_UPDATE_STATUS_ITEMS',
+  BULK_UPDATE_COLLECTION_ITEMS = 'BULK_UPDATE_COLLECTION_ITEMS',
 }
 
 export enum SecondaryAction {
-  SELECT_FROM_ALL_LABELS = 'SELECT_FROM_ALL_LABELS',
-  SELECT_FROM_ITEMS_LABELS = 'SELECT_FROM_ITEMS_LABELS',
+  SELECT_LABELS = 'SELECT_LABELS',
+  SELECT_COLLECTION = 'SELECT_COLLECTION',
   SELECT_STATUS = 'SELECT_STATUS',
 }
 
@@ -115,7 +120,14 @@ const getOptions = ({
         value: Action.TOGGLE_FEED_VIEW_MODE,
         display: 'Toggle feed view mode',
         keybind: 'mod+2',
-        icon: feedContext.mode === 'grid' ? <FaList /> : <FaTh />,
+        disabled: !feedContext.mode,
+        icon: feedContext ? (
+          feedContext.mode === 'grid' ? (
+            <FaList />
+          ) : (
+            <FaTh />
+          )
+        ) : null,
       },
       {
         value: Action.TOGGLE_SIDEBAR_OPEN,
@@ -144,13 +156,24 @@ const getOptions = ({
       },
       {
         value: Action.BULK_UPDATE_LABEL_ITEMS,
-        display: `Label item${relevantItems.length > 1 ? 's' : ''}`,
+        display: `Add item${relevantItems.length > 1 ? 's' : ''} to Label`,
         priority: Priority.SELECTED_ITEMS,
         keybind: 'l',
         // disabled: true,
         disabled: !relevantItems.length,
-        secondary: SecondaryAction.SELECT_FROM_ALL_LABELS,
+        secondary: SecondaryAction.SELECT_LABELS,
         icon: <FaTags />,
+        // options: user.labels.map(({ name }) => ({ value: name })),
+      },
+      {
+        value: Action.BULK_UPDATE_COLLECTION_ITEMS,
+        display: `Add item${relevantItems.length > 1 ? 's' : ''} to Collection`,
+        priority: Priority.SELECTED_ITEMS,
+        keybind: 'c c c',
+        // disabled: true,
+        disabled: !relevantItems.length,
+        secondary: SecondaryAction.SELECT_COLLECTION,
+        icon: <FaLayerGroup />,
         // options: user.labels.map(({ name }) => ({ value: name })),
       },
       {
@@ -196,6 +219,13 @@ const getOptions = ({
           relevantItems.length !== 1 || relevantItems[0]?.type !== 'link',
         icon: <FaExternalLinkAlt />,
       },
+      // {
+      //   value: Action.CREATE_COLLECTION,
+      //   display: 'Create collection',
+      //   priority: Priority.FREQUENT,
+      //   keybind: 'c c c',
+      //   icon: <FaLayerGroup />,
+      // },
       {
         value: Action.CREATE_LINK,
         display: 'Catalog link',
@@ -248,7 +278,7 @@ export const useActionHandler = ({
 
   const [deleteItems] = useOptimisticDeleteManyItems(relevantItems, {
     onCompleted: () => {
-      selectContext.deselectAllItems();
+      if (selectContext) selectContext.deselectAllItems();
       if (isViewingItem) goToFeed();
     },
   });
@@ -263,7 +293,7 @@ export const useActionHandler = ({
     relevantItems,
     isFavorited,
     {
-      onCompleted: selectContext.deselectAllItems,
+      onCompleted: () => !!selectContext && selectContext.deselectAllItems(),
     },
   );
 
@@ -271,7 +301,7 @@ export const useActionHandler = ({
     relevantItems,
     'done',
     {
-      onCompleted: selectContext.deselectAllItems,
+      onCompleted: () => !!selectContext && selectContext.deselectAllItems(),
     },
   );
 
@@ -346,7 +376,9 @@ export const useActionHandler = ({
 
       case Action.TOGGLE_FEED_VIEW_MODE: {
         cleanup();
-        feedContext.setMode(feedContext.mode === 'grid' ? 'list' : 'grid');
+        if (feedContext) {
+          feedContext.setMode(feedContext.mode === 'grid' ? 'list' : 'grid');
+        }
         break;
       }
 
@@ -358,7 +390,9 @@ export const useActionHandler = ({
 
       case Action.TOGGLE_SELECT_ITEM: {
         cleanup();
-        selectContext.toggleItem(feedContext.cursorItem);
+        if (selectContext && selectContext) {
+          selectContext.toggleItem(feedContext.cursorItem);
+        }
         break;
       }
 
@@ -466,10 +500,10 @@ export const useRelevantItems = () => {
   if (itemId) {
     // console.log('Using open item');
     relevantItems = drawerItem ? [drawerItem] : [{ id: itemId }];
-  } else if (selectContext.selectedItems.length) {
+  } else if (selectContext?.selectedItems?.length) {
     // console.log('Using selected items');
     relevantItems = selectContext.selectedItems;
-  } else if (feedContext.cursorItem) {
+  } else if (feedContext?.cursorItem) {
     // console.log('Using cursor item', feedContext.cursorItem);
     relevantItems = [feedContext.cursorItem];
   }
@@ -477,18 +511,13 @@ export const useRelevantItems = () => {
   return relevantItems;
 };
 
-export const SelectFromAllLabels = ({
-  user,
-  activeOptions,
-  updatePrimaryAction,
+export const ModalSelect = ({
+  handleSelection,
+  header,
+  getOptions,
+  getItemNode,
+  placeholder = 'Start typing...',
 }: any) => {
-  const relevantItems = useRelevantItems();
-
-  const commonLabels = _.intersectionBy(
-    ...relevantItems.map(({ labels }: any) => labels),
-    'id',
-  );
-
   const formState = useForm<{ search: string }>({
     defaultValues: {
       search: '',
@@ -496,44 +525,6 @@ export const SelectFromAllLabels = ({
   });
 
   const { getValues, watch, setValue, register } = formState;
-
-  const isLabelSelected = (item: any) =>
-    !!commonLabels.find(({ id }: any) => id === item.id);
-
-  const [createLabel, { loading: isCreatingNewLabel }] = useMutation(
-    CREATE_LABEL_MUTATION,
-  );
-  const [batchUpdateLabels] = useOptimisticBatchUpdateItemLabels(relevantItems);
-
-  const handleSelection = async (item: any) => {
-    if (item.isPlaceholder) {
-      const { data } = await createLabel({
-        variables: { name: values.search },
-      });
-
-      const label = data.createLabel.labels.find(
-        (l: any) => l.name === item.name,
-      );
-
-      batchUpdateLabels({
-        labelIdsToAdd: [label.id],
-      });
-    } else {
-      batchUpdateLabels(
-        isLabelSelected(item)
-          ? {
-              // @ts-ignore
-              labelIdsToRemove: [item.id],
-              // @ts-ignore
-            }
-          : {
-              labelIdsToAdd: [item.id],
-            },
-      );
-    }
-
-    setValue('search', '');
-  };
 
   const inputRef = useRef(null);
 
@@ -543,27 +534,16 @@ export const SelectFromAllLabels = ({
   }, []);
 
   watch();
+
   const values = getValues();
 
-  let options = user.labels.filter(
-    (label: any) =>
-      !values.search ||
-      //@ts-ignore
-      label.name.toLowerCase().includes(values.search.toLowerCase()),
-  );
+  const filteredOptions = getOptions(values.search, {
+    setValue,
+    search: values.search,
+  });
 
-  if (
-    values.search &&
-    !options.find(({ name }: any) => name !== values.search)
-  ) {
-    options = [
-      { name: values.search, id: 123, isPlaceholder: true },
-      ...options,
-    ];
-  }
-
-  const [onKeyDownHandler] = useKeyDown(options, (item: any) => {
-    handleSelection(item);
+  const [onKeyDownHandler] = useKeyDown(filteredOptions, (item: any) => {
+    handleSelection(item, { setValue, search: values.search });
   });
 
   return (
@@ -575,10 +555,7 @@ export const SelectFromAllLabels = ({
         width="550px"
         rounded="lg"
       >
-        <ModalHeader>
-          Select labels{commonLabels.length ? ` (${commonLabels.length})` : ''}
-          {isCreatingNewLabel && <Spinner ml="3px" size="sm" />}
-        </ModalHeader>
+        <ModalHeader>{header}</ModalHeader>
         <ModalCloseButton />
 
         <Downshift
@@ -609,7 +586,7 @@ export const SelectFromAllLabels = ({
                     id="search"
                     width="100%"
                     variant="unstyled"
-                    placeholder="search commands"
+                    placeholder={placeholder}
                     borderBottom="2px solid #5718FF"
                     p="10px 10px 10px 23px"
                     rounded="none"
@@ -636,9 +613,7 @@ export const SelectFromAllLabels = ({
                   rounded="lg"
                   overflowY="scroll"
                 >
-                  {options.map((item: any, index: number) => {
-                    const isSelected = isLabelSelected(item);
-
+                  {filteredOptions.map((item: any, index: number) => {
                     return (
                       <Flex
                         justifyContent="space-between"
@@ -652,7 +627,8 @@ export const SelectFromAllLabels = ({
                               roundedTopRight: '0px',
                             }
                           : {})}
-                        {...(index === options.length - 1 && options.length > 4
+                        {...(index === filteredOptions.length - 1 &&
+                        filteredOptions.length > 4
                           ? {
                               roundedBottomLeft: 'lg',
                               roundedBottomRight: 'lg',
@@ -662,8 +638,8 @@ export const SelectFromAllLabels = ({
                           key: item.name + item.id + index,
                           index,
                           // @ts-ignore
-                          item: item.name,
-                          onClick: () => {},
+                          item,
+                          onClick: () => handleSelection(item),
                           // @ts-ignore
                           backgroundColor:
                             highlightedIndex === index
@@ -672,16 +648,7 @@ export const SelectFromAllLabels = ({
                         })}
                         pl="20px"
                       >
-                        <Box>
-                          {item.isPlaceholder && 'Create label '}
-                          <Tag size="lg">{item.name}</Tag>
-                        </Box>
-
-                        {isSelected && (
-                          <Box pr="20px">
-                            <FaCheck />
-                          </Box>
-                        )}
+                        {getItemNode(item, index)}
                       </Flex>
                     );
                   })}
@@ -699,182 +666,58 @@ export const SelectPrimaryAction = ({
   activeOptions,
   updatePrimaryAction,
 }: any) => {
-  const formState = useForm<{ search: string }>({
-    defaultValues: {
-      search: '',
-    },
-  });
-
-  const inputRef = useRef(null);
-
-  const { getValues, watch, register } = formState;
-
-  useEffect(() => {
-    // @ts-ignore
-    if (inputRef?.current) inputRef.current.focus();
-  }, []);
-
-  watch();
-  const values = getValues();
-
-  const options = activeOptions.filter(
-    (option: any) =>
-      !values.search ||
-      //@ts-ignore
-      option.display.toLowerCase().includes(values.search.toLowerCase()),
-  );
-
-  const [onKeyDownHandler] = useKeyDown(options, (option: any) => {
-    updatePrimaryAction(option.value);
-  });
-
   const relevantItems = useRelevantItems();
 
   return (
-    <ModalContent
-      as="form"
-      height="300px"
-      maxHeight="300px"
-      width="550px"
-      rounded="lg"
-    >
-      <ModalHeader>
-        Command Center{' '}
-        {relevantItems.length ? ` (${relevantItems.length})` : ''}
-      </ModalHeader>
-      <ModalCloseButton />
-
-      <Downshift
-        defaultHighlightedIndex={0}
-        selectedItem=""
-        onSelect={() => {}}
-        // @ts-ignore
-        // onChange={selection => updatePrimaryAction(selection)}
-        inputValue={values.search}
-      >
-        {({
-          getInputProps,
-          getItemProps,
-          getMenuProps,
-          inputValue,
-          highlightedIndex,
-          selectedItem,
-          getRootProps,
-          setHighlightedIndex,
-        }) => {
-          return (
-            <ModalBody p="0px" height="300px">
-              <Box
-                // @ts-ignore
-                {...getRootProps({}, { suppressRefError: true })}
-              >
-                <Input
-                  size="lg"
-                  name="search"
-                  id="search"
-                  width="100%"
-                  variant="unstyled"
-                  placeholder="search commands"
-                  borderBottom="2px solid #5718FF"
-                  p="10px 10px 10px 23px"
-                  rounded="none"
-                  value={values.search}
-                  ref={(ref: any) => {
-                    register(ref);
-                    inputRef.current = ref;
-                  }}
-                  onKeyDown={onKeyDownHandler({
-                    selectedItem,
-                    highlightedIndex,
-                    setHighlightedIndex,
-                  })}
-                />
+    <ModalSelect
+      handleSelection={(selection: any) => updatePrimaryAction(selection.value)}
+      header={
+        <>
+          Command Center{' '}
+          {relevantItems.length ? ` (${relevantItems.length})` : ''}
+        </>
+      }
+      getOptions={(search: string) =>
+        activeOptions.filter(
+          (option: any) =>
+            !search ||
+            //@ts-ignore
+            option.display.toLowerCase().includes(search.toLowerCase()),
+        )
+      }
+      getItemNode={(item: any) => (
+        <>
+          <Flex alignItems="center" color="gray.700">
+            {item.icon && (
+              <Box mr="10px">
+                {React.cloneElement(item.icon, { size: '12px' })}
               </Box>
-              <Box
-                {...getMenuProps()}
-                // @ts-ignore
-                width={inputRef?.current?.offsetWidth || '100%'}
-                // zIndex={100}
-                maxHeight="100%"
-                backgroundColor="white"
-                rounded="lg"
-                overflowY="scroll"
-              >
-                {options.map((item: any, index: number) => (
-                  <Flex
-                    justifyContent="space-between"
-                    alignItems="center"
-                    height="60px"
-                    width="100%"
-                    cursor="pointer"
-                    {...(index === 0
-                      ? {
-                          roundedTopLeft: '0px',
-                          roundedTopRight: '0px',
-                        }
-                      : {})}
-                    {...(index === options.length - 1 && options.length > 4
-                      ? {
-                          roundedBottomLeft: 'lg',
-                          roundedBottomRight: 'lg',
-                        }
-                      : {})}
-                    {...getItemProps({
-                      key: item.value,
-                      index,
-                      // @ts-ignore
-                      item: item.value,
-                      // @ts-ignore
-                      backgroundColor:
-                        highlightedIndex === index
-                          ? 'rgba(87,24,255, 0.1)'
-                          : 'white',
-                      onClick: () => updatePrimaryAction(item.value),
-                    })}
-                    pl="20px"
+            )}{' '}
+            <Text fontSize="lg" fontWeight="semibold">
+              {item.display}
+            </Text>
+          </Flex>
+          {!!item.keybind && (
+            <Stack d="flex" alignItems="center" pr="20px" spacing={2} isInline>
+              {getKeybindAsArray(item.keybind).map((key, idx) =>
+                key === 'then' ? (
+                  <Text key={idx + key}>then</Text>
+                ) : (
+                  <Tag
+                    size="sm"
+                    key={idx + key}
+                    variantColor="gray"
+                    textAlign="center"
                   >
-                    <Flex alignItems="center" color="gray.700">
-                      {item.icon && (
-                        <Box mr="10px">
-                          {React.cloneElement(item.icon, { size: '12px' })}
-                        </Box>
-                      )}{' '}
-                      <Text fontSize="lg" fontWeight="semibold">
-                        {item.display}
-                      </Text>
-                    </Flex>
-                    {!!item.keybind && (
-                      <Stack
-                        d="flex"
-                        alignItems="center"
-                        pr="20px"
-                        spacing={2}
-                        isInline
-                      >
-                        {getKeybindAsArray(item.keybind).map((key, idx) =>
-                          key === 'then' ? (
-                            <Text key={idx + key}>then</Text>
-                          ) : (
-                            <Tag
-                              size="sm"
-                              key={idx + key}
-                              variantColor="gray"
-                              textAlign="center"
-                            >
-                              {key}
-                            </Tag>
-                          ),
-                        )}
-                      </Stack>
-                    )}
-                  </Flex>
-                ))}
-              </Box>
-            </ModalBody>
-          );
-        }}
-      </Downshift>
-    </ModalContent>
+                    {key}
+                  </Tag>
+                ),
+              )}
+            </Stack>
+          )}
+        </>
+      )}
+    />
   );
 };
 
@@ -968,7 +811,8 @@ export const CommandCenter = () => {
   } else if (secondaryAction) {
     // @ts-ignore
     const Component = {
-      [SecondaryAction.SELECT_FROM_ALL_LABELS]: SelectFromAllLabels,
+      [SecondaryAction.SELECT_LABELS]: CommandCenterSelectLabels,
+      [SecondaryAction.SELECT_COLLECTION]: CommandCenterSelectCollections,
       // @ts-ignore
     }[secondaryAction];
 

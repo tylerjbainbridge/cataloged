@@ -24,6 +24,13 @@ export interface getAuthUser_me_labels {
   name: string;
 }
 
+export interface getAuthUser_me_collections {
+  __typename: "Collection";
+  id: string;
+  name: string;
+  description: string | null;
+}
+
 export interface getAuthUser_me {
   __typename: "User";
   id: string;
@@ -34,6 +41,7 @@ export interface getAuthUser_me {
   googleAccounts: getAuthUser_me_googleAccounts[];
   inviteCode: getAuthUser_me_inviteCode | null;
   labels: getAuthUser_me_labels[];
+  collections: getAuthUser_me_collections[];
 }
 
 export interface getAuthUser {
