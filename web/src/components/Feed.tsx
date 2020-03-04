@@ -265,13 +265,13 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   useHotKey('up', moveCursorToPrevItem);
 
-  useHotKey(
-    'esc',
-    () => {
-      setCursorItemId(null);
-    },
-    { shouldBind: !!cursorItem },
-  );
+  // useHotKey(
+  //   'esc',
+  //   () => {
+  //     setCursorItemId(null);
+  //   },
+  //   { shouldBind: !!cursorItem },
+  // );
 
   // highlightedIndex <= 0 ? null : highlightedIndex - 1,
 
@@ -300,7 +300,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
       {/* <FeedModals /> */}
       <SelectContainer>
         <CommandCenter />
-        {isViewingItem && !isViewingSettings && <FeedDrawerItemView />}
+        {/* {isViewingItem && !isViewingSettings && <FeedDrawerItemView />} */}
         <Box d="flex" justifyContent="center" flex="1">
           {/* <Switch> */}
           <TopNavBar

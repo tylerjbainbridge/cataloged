@@ -15,6 +15,13 @@ export interface ItemFull_labels {
   name: string;
 }
 
+export interface ItemFull_collections {
+  __typename: "Collection";
+  id: string;
+  name: string;
+  description: string | null;
+}
+
 export interface ItemFull_link_item_labels {
   __typename: "Label";
   id: string;
@@ -145,6 +152,7 @@ export interface ItemFull {
   isFavorited: boolean;
   status: ItemStatus;
   labels: ItemFull_labels[];
+  collections: ItemFull_collections[];
   link: ItemFull_link | null;
   file: ItemFull_file | null;
   note: ItemFull_note | null;

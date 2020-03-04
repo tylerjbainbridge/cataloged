@@ -31,5 +31,7 @@ export const User = objectType({
     });
 
     t.model.labels({ ordering: true });
+
+    t.model.collections({} as any);
   },
 });

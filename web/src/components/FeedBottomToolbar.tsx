@@ -21,19 +21,23 @@ import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpda
 import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
 import { getKeybindAsArray } from '../util/helpers';
+import { FeedContext } from './Feed';
 
 export const FeedBottomToolbar = ({ width }: any) => {
   const isMobile = useMedia('(max-width: 768px)');
 
   const { selectedItems, deselectAllItems } = useContext(SelectContext);
+  const { setCursorItemId } = useContext(FeedContext);
+
   const [selectedStatus, updatedSelectedStatus] = useState<string | null>(null);
 
   const toolbarRef = React.useRef(null);
 
   const isActive = !!selectedItems.length;
 
-  useHotKey('esc', deselectAllItems, {
-    shouldBind: isActive,
+  useHotKey('esc', () => {
+    deselectAllItems();
+    setCursorItemId(null);
   });
 
   const [deleteItems, { loading: isDeleting }] = useOptimisticDeleteManyItems(

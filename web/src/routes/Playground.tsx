@@ -6,6 +6,10 @@ import { Box } from '@chakra-ui/core';
 
 import { useQuery } from '@apollo/client';
 import { FilterInputPlayground } from '../components/FilterInputPlayground';
+import { FEED_QUERY } from '../components/Feed';
+import { CollectonPlayground } from '../components/CollectionPlayground';
+import { getNodesFromConnection } from '../util/helpers';
+import { ItemFull } from '../graphql/__generated__/ItemFull';
 
 const GET_MOST_RECENT_ITEM = gql`
   query mostRecentItem($type: String) {
@@ -50,8 +54,20 @@ const useMostRecentItem = () => {
   return { loading, data, item: !loading && data ? data.mostRecentItem : null };
 };
 
+const useSomeItems = () => {
+  const { loading, data } = useQuery(FEED_QUERY, {
+    variables: { first: 10 },
+    notifyOnNetworkStatusChange: true,
+  });
+
+  const items = getNodesFromConnection<ItemFull>(data?.itemsConnection);
+
+  return { loading, data, items };
+};
+
 export const Playground = () => {
-  const { item } = useMostRecentItem();
+  // const { item } = useMostRecentItem();
+  const { items } = useSomeItems();
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center">
@@ -60,14 +76,14 @@ export const Playground = () => {
         margin={20}
         padding={20}
         size={600}
-        width={800}
+        width={900}
         // bg="lightgray"
         // borderStyle="solid"
         // borderColor="lightgray"
         // borderWidth={2}
         rounded="lg"
       >
-        <FilterInputPlayground />
+        {items?.length && <CollectonPlayground items={items} />}
       </Box>
     </Box>
   );

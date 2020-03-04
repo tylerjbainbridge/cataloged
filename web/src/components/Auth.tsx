@@ -30,6 +30,12 @@ const GET_AUTH_USER = gql`
         id
         name
       }
+
+      collections {
+        id
+        name
+        description
+      }
     }
   }
 `;
