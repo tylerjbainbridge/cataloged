@@ -260,24 +260,17 @@ export class FilterQueryBuilder {
 
   addSearchFilter = (searchStrings: string[]) => {
     searchStrings.forEach(search => {
-      const words = search.split(' ').map((word: string) => word.trim());
+      // const words = search.split(' ').map((word: string) => word.trim());
 
       Object.keys(FilterQueryBuilder.itemSpecificFilters).forEach(type => {
         this.addToItemSpecificOr(
           type,
-          words.reduce(
-            // @ts-ignore
-            (p, word) => [
+          // @ts-ignore
+          STRING_FILTERS[type].reduce(
+            (p: any[], fieldName: string) => [
+              // { [name]: { contains: word } },
               ...p,
-              // @ts-ignore
-              ...STRING_FILTERS[type].reduce(
-                (p: any[], name: string) => [
-                  // { [name]: { contains: word } },
-                  ...p,
-                  ...this.generateStringFilter(name, word),
-                ],
-                [],
-              ),
+              ...this.generateStringFilter(fieldName, search),
             ],
             [],
           ),
