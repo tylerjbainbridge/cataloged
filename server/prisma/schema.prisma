@@ -103,6 +103,20 @@ model GoogleContact {
   @@index([name, email, companyName, companyTitle])
 }
 
+model ShareLink {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User
+
+  isEnabled Boolean @default(true)
+
+  // Types of data you can share
+  collection Collection?
+  item       Item[]
+}
+
 model SavedSearch {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
