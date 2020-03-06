@@ -4,7 +4,7 @@ generator prisma {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRESQL_URL")
+  url = "***"
 }
 
 model InviteCode {
@@ -36,12 +36,11 @@ model File {
   hasStartedUploading Boolean?
   height              Int?
 
-  isFailed   Boolean?
-  isUploaded Boolean?
-  item       Item
-  name       String   @default("")
-
-  size        Int?
+  isFailed    Boolean?
+  isUploaded  Boolean?
+  item        Item
+  name        String   @default("")
+  size        String?
   contentType String?
 
   title       String @default("")

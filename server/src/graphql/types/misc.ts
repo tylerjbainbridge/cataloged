@@ -43,8 +43,8 @@ export const SignedURLArgs = inputObjectType({
   name: 'SignedURLArgs',
   definition(t) {
     t.string('name', { required: true });
-    t.string('key', { required: true });
     t.string('type', { required: true });
+    t.int('size', { required: true });
   },
 });
 

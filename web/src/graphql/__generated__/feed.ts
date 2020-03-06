@@ -85,6 +85,8 @@ export interface feed_itemsConnection_edges_node_file {
   description: string;
   originalName: string;
   isUploaded: boolean | null;
+  contentType: string | null;
+  originalUrl: string;
   fullUrl: string;
   squareUrl: string;
   createdAt: any;

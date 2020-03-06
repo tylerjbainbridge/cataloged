@@ -12,6 +12,9 @@ export const FILE_FULL_FRAGMENT = gql`
     originalName
 
     isUploaded
+    contentType
+
+    originalUrl
     fullUrl
     squareUrl
 

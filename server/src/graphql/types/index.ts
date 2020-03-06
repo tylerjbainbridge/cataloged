@@ -40,6 +40,7 @@ export { refreshLinkMeta } from './mutations/refreshLinkMeta';
 export { removeEntryFromCollection } from './mutations/removeEntryFromCollection';
 export { syncGoogleContacts } from './mutations/syncGoogleContacts';
 export { syncGoogleDrive } from './mutations/syncGoogleDrive';
+export { taskAddFileMeta } from './mutations/taskAddFileMeta';
 export { taskFixItemDates } from './mutations/taskFixItemDates';
 export { taskFixLinks } from './mutations/taskFixLinks';
 export { updateBlockContent } from './mutations/updateBlockContent';

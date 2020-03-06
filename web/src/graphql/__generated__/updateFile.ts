@@ -32,6 +32,8 @@ export interface updateFile_updateFile {
   description: string;
   originalName: string;
   isUploaded: boolean | null;
+  contentType: string | null;
+  originalUrl: string;
   fullUrl: string;
   squareUrl: string;
   createdAt: any;
