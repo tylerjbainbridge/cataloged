@@ -19,20 +19,17 @@ export const generateSignedUrls = extendType({
 
         const signedUrls = Promise.all(
           args.signedURLArgs.map(
-            async ({
-              name,
-              type,
-            }: {
-              key: string;
-              name: string;
-              type: string;
-            }) => {
-              const [fileName, ...extension] = name.split('.');
+            async ({ name: rawFileName, type, size }: any) => {
+              const split = rawFileName.split('.');
+              const extension = split.pop();
+              const name = split.join('.');
 
               const file = await ctx.prisma.file.create({
                 data: {
-                  name: fileName,
-                  extension: extension.join(),
+                  name,
+                  size,
+                  contentType: type,
+                  extension,
                   user: { connect: { id: ctx.user.id } },
                   isUploaded: false,
                   hasStartedUploading: false,

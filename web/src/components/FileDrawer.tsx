@@ -15,6 +15,8 @@ import {
   Textarea,
   Icon,
   useDisclosure,
+  Divider,
+  Button,
 } from '@chakra-ui/core';
 import { useMedia } from 'react-use';
 import { LazyImage } from './LazyImage';
@@ -29,6 +31,7 @@ import { UPDATE_FILE_MUTATION } from '../graphql/file';
 import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
+import { isFileImage } from '../util/itemHelpers';
 
 export interface ItemWithFile extends ItemFull {
   file: ItemFull_file;
@@ -81,15 +84,17 @@ export const FileDrawer = ({
     },
   );
 
+  const width = isFileImage(file) ? '100vw' : '350px';
+
   return (
     <DrawerContent
       height="100%"
-      width="100vw"
+      width={width}
       bg="black"
       {...drawerContentProps}
     >
       <Box d="flex" maxWidth="100%" height="100%" bg="black" p="0px">
-        {(!isMobile || !infoMenuState.isOpen) && (
+        {isFileImage(file) && (!isMobile || !infoMenuState.isOpen) && (
           <Box
             d="flex"
             width={isMobile ? '100%' : 'calc(100% - 350px)'}
@@ -226,6 +231,16 @@ export const FileDrawer = ({
                     }
                   </FormErrorMessage>
                 </FormControl>
+                <Divider />
+                <Button
+                  color="white"
+                  bg="brand.purple.main"
+                  width="100%"
+                  mb="20px"
+                  onClick={() => window.open(file.originalUrl)}
+                >
+                  View file
+                </Button>
               </Stack>
             </Box>
             <ItemDrawerMeta item={item} />

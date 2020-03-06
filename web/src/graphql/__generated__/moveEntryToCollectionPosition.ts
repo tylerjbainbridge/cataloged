@@ -84,6 +84,8 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   description: string;
   originalName: string;
   isUploaded: boolean | null;
+  contentType: string | null;
+  originalUrl: string;
   fullUrl: string;
   squareUrl: string;
   createdAt: any;

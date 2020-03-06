@@ -115,6 +115,11 @@ input CollectionCreateOneWithoutEntriesInput {
   create: CollectionCreateWithoutEntriesInput
 }
 
+input CollectionCreateOneWithoutShareLinksInput {
+  connect: CollectionWhereUniqueInput
+  create: CollectionCreateWithoutShareLinksInput
+}
+
 input CollectionCreateWithoutCollectionBlocksInput {
   createdAt: DateTime
   description: String
@@ -122,6 +127,7 @@ input CollectionCreateWithoutCollectionBlocksInput {
   id: String
   items: ItemCreateManyWithoutCollectionsInput
   name: String!
+  shareLinks: ShareLinkCreateManyWithoutCollectionInput
   updatedAt: DateTime
   user: UserCreateOneWithoutCollectionsInput
 }
@@ -133,6 +139,7 @@ input CollectionCreateWithoutEntriesInput {
   id: String
   items: ItemCreateManyWithoutCollectionsInput
   name: String!
+  shareLinks: ShareLinkCreateManyWithoutCollectionInput
   updatedAt: DateTime
   user: UserCreateOneWithoutCollectionsInput
 }
@@ -143,6 +150,19 @@ input CollectionCreateWithoutItemsInput {
   description: String
   entries: CollectionEntryCreateManyWithoutCollectionInput
   id: String
+  name: String!
+  shareLinks: ShareLinkCreateManyWithoutCollectionInput
+  updatedAt: DateTime
+  user: UserCreateOneWithoutCollectionsInput
+}
+
+input CollectionCreateWithoutShareLinksInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutCollectionInput
+  createdAt: DateTime
+  description: String
+  entries: CollectionEntryCreateManyWithoutCollectionInput
+  id: String
+  items: ItemCreateManyWithoutCollectionsInput
   name: String!
   updatedAt: DateTime
   user: UserCreateOneWithoutCollectionsInput
@@ -156,6 +176,7 @@ input CollectionCreateWithoutUserInput {
   id: String
   items: ItemCreateManyWithoutCollectionsInput
   name: String!
+  shareLinks: ShareLinkCreateManyWithoutCollectionInput
   updatedAt: DateTime
 }
 
@@ -287,6 +308,7 @@ input CollectionWhereInput {
   name: StringFilter
   NOT: [CollectionWhereInput!]
   OR: [CollectionWhereInput!]
+  shareLinks: ShareLinkFilter
   updatedAt: DateTimeFilter
   user: UserWhereInput
 }
@@ -309,6 +331,7 @@ input DateTimeFilter {
 }
 
 type File {
+  contentType: String
   createdAt: DateTime!
   description: String!
   extension: String!
@@ -319,7 +342,8 @@ type File {
   item: Item!
   name: String!
   originalName: String!
-  size: String
+  originalUrl: String!
+  size: Int
   squareUrl: String!
   title: String!
   updatedAt: DateTime!
@@ -328,6 +352,7 @@ type File {
 }
 
 input FileCreateInput {
+  contentType: String
   createdAt: DateTime
   description: String
   extension: String
@@ -338,7 +363,7 @@ input FileCreateInput {
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput!
   name: String
-  size: String
+  size: Int
   title: String
   updatedAt: DateTime
   uploadGroup: UploadGroupCreateOneWithoutFilesInput!
@@ -362,6 +387,7 @@ input FileCreateOneWithoutItemInput {
 }
 
 input FileCreateWithoutItemInput {
+  contentType: String
   createdAt: DateTime
   description: String
   extension: String
@@ -371,7 +397,7 @@ input FileCreateWithoutItemInput {
   isFailed: Boolean
   isUploaded: Boolean
   name: String
-  size: String
+  size: Int
   title: String
   updatedAt: DateTime
   uploadGroup: UploadGroupCreateOneWithoutFilesInput!
@@ -380,6 +406,7 @@ input FileCreateWithoutItemInput {
 }
 
 input FileCreateWithoutUploadGroupInput {
+  contentType: String
   createdAt: DateTime
   description: String
   extension: String
@@ -390,7 +417,7 @@ input FileCreateWithoutUploadGroupInput {
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput!
   name: String
-  size: String
+  size: Int
   title: String
   updatedAt: DateTime
   user: UserCreateOneWithoutFilesInput!
@@ -398,6 +425,7 @@ input FileCreateWithoutUploadGroupInput {
 }
 
 input FileCreateWithoutUserInput {
+  contentType: String
   createdAt: DateTime
   description: String
   extension: String
@@ -408,7 +436,7 @@ input FileCreateWithoutUserInput {
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput!
   name: String
-  size: String
+  size: Int
   title: String
   updatedAt: DateTime
   uploadGroup: UploadGroupCreateOneWithoutFilesInput!
@@ -422,6 +450,7 @@ input FileFilter {
 }
 
 input FileOrderByInput {
+  contentType: OrderByArg
   createdAt: OrderByArg
   description: OrderByArg
   extension: OrderByArg
@@ -439,6 +468,7 @@ input FileOrderByInput {
 
 input FileWhereInput {
   AND: [FileWhereInput!]
+  contentType: NullableStringFilter
   createdAt: DateTimeFilter
   description: StringFilter
   extension: StringFilter
@@ -451,7 +481,7 @@ input FileWhereInput {
   name: StringFilter
   NOT: [FileWhereInput!]
   OR: [FileWhereInput!]
-  size: NullableStringFilter
+  size: NullableIntFilter
   title: StringFilter
   updatedAt: DateTimeFilter
   uploadGroup: UploadGroupWhereInput
@@ -781,6 +811,11 @@ input ItemCreateManyWithoutLabelsInput {
   create: [ItemCreateWithoutLabelsInput!]
 }
 
+input ItemCreateManyWithoutShareLinkInput {
+  connect: [ItemWhereUniqueInput!]
+  create: [ItemCreateWithoutShareLinkInput!]
+}
+
 input ItemCreateManyWithoutUserInput {
   connect: [ItemWhereUniqueInput!]
   create: [ItemCreateWithoutUserInput!]
@@ -830,6 +865,7 @@ input ItemCreateWithoutCollectionEntriesInput {
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -850,6 +886,7 @@ input ItemCreateWithoutCollectionsInput {
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -870,6 +907,7 @@ input ItemCreateWithoutFileInput {
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -890,6 +928,7 @@ input ItemCreateWithoutGoogleContactInput {
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -910,6 +949,7 @@ input ItemCreateWithoutItemInput {
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -930,6 +970,7 @@ input ItemCreateWithoutItemsInput {
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -950,6 +991,7 @@ input ItemCreateWithoutLabelsInput {
   items: ItemCreateManyWithoutItemInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -970,6 +1012,7 @@ input ItemCreateWithoutLinkInput {
   items: ItemCreateManyWithoutItemInput
   labels: LabelCreateManyWithoutItemsInput
   note: NoteCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -990,6 +1033,28 @@ input ItemCreateWithoutNoteInput {
   items: ItemCreateManyWithoutItemInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
+  status: String
+  type: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutItemsInput
+}
+
+input ItemCreateWithoutShareLinkInput {
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  collections: CollectionCreateManyWithoutItemsInput
+  createdAt: DateTime
+  date: DateTime
+  deletedAt: DateTime
+  file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
+  isFavorited: Boolean
+  item: ItemCreateOneWithoutItemsInput
+  items: ItemCreateManyWithoutItemInput
+  labels: LabelCreateManyWithoutItemsInput
+  link: LinkCreateOneWithoutItemInput
+  note: NoteCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -1011,6 +1076,7 @@ input ItemCreateWithoutUserInput {
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
+  shareLink: ShareLinkCreateOneWithoutItemInput
   status: String
   type: String
   updatedAt: DateTime
@@ -1069,6 +1135,7 @@ input ItemWhereInput {
   NOT: [ItemWhereInput!]
   note: NoteWhereInput
   OR: [ItemWhereInput!]
+  shareLink: ShareLinkWhereInput
   status: NullableStringFilter
   type: StringFilter
   updatedAt: DateTimeFilter
@@ -1255,6 +1322,7 @@ type Mutation {
   removeEntryFromCollection(collectionId: String!, entryId: String!): Collection!
   syncGoogleContacts(googleAccountId: String!): Int!
   syncGoogleDrive(googleAccountId: String!): String!
+  taskAddFileMeta: String!
   taskFixItemDates: String!
   taskFixLinks: String!
   updateBlockContent(blockId: String!, collectionId: String!, content: String): CollectionBlock!
@@ -1531,9 +1599,74 @@ input SavedSearchWhereUniqueInput {
   id: String
 }
 
+input ShareLinkCreateManyWithoutCollectionInput {
+  connect: [ShareLinkWhereUniqueInput!]
+  create: [ShareLinkCreateWithoutCollectionInput!]
+}
+
+input ShareLinkCreateManyWithoutUserInput {
+  connect: [ShareLinkWhereUniqueInput!]
+  create: [ShareLinkCreateWithoutUserInput!]
+}
+
+input ShareLinkCreateOneWithoutItemInput {
+  connect: ShareLinkWhereUniqueInput
+  create: ShareLinkCreateWithoutItemInput
+}
+
+input ShareLinkCreateWithoutCollectionInput {
+  createdAt: DateTime
+  id: String
+  isEnabled: Boolean
+  item: ItemCreateManyWithoutShareLinkInput
+  updatedAt: DateTime
+  user: UserCreateOneWithoutShareLinksInput!
+}
+
+input ShareLinkCreateWithoutItemInput {
+  collection: CollectionCreateOneWithoutShareLinksInput
+  createdAt: DateTime
+  id: String
+  isEnabled: Boolean
+  updatedAt: DateTime
+  user: UserCreateOneWithoutShareLinksInput!
+}
+
+input ShareLinkCreateWithoutUserInput {
+  collection: CollectionCreateOneWithoutShareLinksInput
+  createdAt: DateTime
+  id: String
+  isEnabled: Boolean
+  item: ItemCreateManyWithoutShareLinkInput
+  updatedAt: DateTime
+}
+
+input ShareLinkFilter {
+  every: ShareLinkWhereInput
+  none: ShareLinkWhereInput
+  some: ShareLinkWhereInput
+}
+
+input ShareLinkWhereInput {
+  AND: [ShareLinkWhereInput!]
+  collection: CollectionWhereInput
+  createdAt: DateTimeFilter
+  id: StringFilter
+  isEnabled: BooleanFilter
+  item: ItemFilter
+  NOT: [ShareLinkWhereInput!]
+  OR: [ShareLinkWhereInput!]
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+}
+
+input ShareLinkWhereUniqueInput {
+  id: String
+}
+
 input SignedURLArgs {
-  key: String!
   name: String!
+  size: Int!
   type: String!
 }
 
@@ -1658,6 +1791,7 @@ input UserCreateInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1722,6 +1856,11 @@ input UserCreateOneWithoutSavedSearchFiltersInput {
   create: UserCreateWithoutSavedSearchFiltersInput
 }
 
+input UserCreateOneWithoutShareLinksInput {
+  connect: UserWhereUniqueInput
+  create: UserCreateWithoutShareLinksInput
+}
+
 input UserCreateOneWithoutUploadGroupsInput {
   connect: UserWhereUniqueInput
   create: UserCreateWithoutUploadGroupsInput
@@ -1747,6 +1886,7 @@ input UserCreateWithoutCollectionBlocksInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1771,6 +1911,7 @@ input UserCreateWithoutCollectionEntriesInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1795,6 +1936,7 @@ input UserCreateWithoutCollectionsInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1819,6 +1961,7 @@ input UserCreateWithoutFilesInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1843,6 +1986,7 @@ input UserCreateWithoutGoogleAccountsInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1867,6 +2011,7 @@ input UserCreateWithoutGoogleContactsInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1891,6 +2036,7 @@ input UserCreateWithoutItemsInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1915,6 +2061,7 @@ input UserCreateWithoutLabelsInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1939,6 +2086,7 @@ input UserCreateWithoutLinksInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1963,6 +2111,7 @@ input UserCreateWithoutNotesInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -1987,6 +2136,7 @@ input UserCreateWithoutSavedSearchesInput {
   notes: NoteCreateManyWithoutUserInput
   role: String
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -2011,6 +2161,32 @@ input UserCreateWithoutSavedSearchFiltersInput {
   notes: NoteCreateManyWithoutUserInput
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
+  updatedAt: DateTime
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutShareLinksInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
+  createdAt: DateTime
+  email: String
+  files: FileCreateManyWithoutUserInput
+  firstName: String
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
+  isActive: Boolean
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
+  lastName: String
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
+  role: String
+  savedSearches: SavedSearchCreateManyWithoutUserInput
+  savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
   updatedAt: DateTime
   uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
@@ -2036,6 +2212,7 @@ input UserCreateWithoutUploadGroupsInput {
   role: String
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
+  shareLinks: ShareLinkCreateManyWithoutUserInput
   updatedAt: DateTime
 }
 
@@ -2080,6 +2257,7 @@ input UserWhereInput {
   role: StringFilter
   savedSearches: SavedSearchFilter
   savedSearchFilters: SavedSearchFilterFilter
+  shareLinks: ShareLinkFilter
   updatedAt: DateTimeFilter
   uploadGroups: UploadGroupFilter
 }

@@ -35,8 +35,8 @@ export interface NewCollectionEntryInput {
 
 export interface SignedURLArgs {
   name: string;
-  key: string;
   type: string;
+  size: number;
 }
 
 //==============================================================

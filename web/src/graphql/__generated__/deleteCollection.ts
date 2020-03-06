@@ -4,22 +4,18 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL mutation operation: addCollection
+// GraphQL mutation operation: deleteCollection
 // ====================================================
 
-export interface addCollection_collection {
+export interface deleteCollection_deleteCollection {
   __typename: "Collection";
   id: string;
-  name: string;
-  description: string | null;
 }
 
-export interface addCollection {
-  collection: addCollection_collection;
+export interface deleteCollection {
+  deleteCollection: deleteCollection_deleteCollection;
 }
 
-export interface addCollectionVariables {
+export interface deleteCollectionVariables {
   collectionId: string;
-  name: string;
-  description?: string | null;
 }

@@ -37,12 +37,17 @@ export const processFiles = extendType({
 
         const keyFiles = await Bluebird.map(
           upload.files,
-          async ({ id }: File) => {
-            let file;
-
+          async (file: File) => {
             try {
-              file = await ctx.prisma.file.update({
-                where: { id },
+              if (file.contentType.split('/').shift() !== 'image') {
+                return await ctx.prisma.file.update({
+                  where: { id: file.id },
+                  data: { hasStartedUploading: true, isUploaded: true },
+                });
+              }
+
+              await ctx.prisma.file.update({
+                where: { id: file.id },
                 data: { hasStartedUploading: true },
               });
 
@@ -64,6 +69,8 @@ export const processFiles = extendType({
 
               return file;
             } catch (e) {
+              console.log(e);
+
               if (file) {
                 await ctx.prisma.file.update({
                   where: { id: file.id },
@@ -87,9 +94,8 @@ export const processFiles = extendType({
         });
 
         const allFiles = [...keyFiles];
-        console.log('allFiles.length', allFiles.length);
 
-        return allFiles;
+        return allFiles.filter(Boolean);
       },
     });
   },

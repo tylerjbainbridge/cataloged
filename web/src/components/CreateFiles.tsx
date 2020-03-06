@@ -86,29 +86,28 @@ export const CreateFiles = () => {
   useEffect(() => {
     (async () => {
       if (isUploading) {
-        const s3Keys = fileVals.map(file => `temp/${file.id}-${file.name}`);
+        console.log({ fileVals });
 
         try {
+          const signedURLArgs = fileVals.map(({ type, name, size }) => ({
+            name,
+            type,
+            size,
+          }));
+
           const {
             data: {
               generateSignedUrls: { signedUrls, uploadGroup },
             },
           } = await generateSignedUrls({
             variables: {
-              signedURLArgs: fileVals.map(({ type, name }, idx) => ({
-                name,
-                key: s3Keys[idx],
-                type: type,
-              })),
+              signedURLArgs,
             },
           });
-
-          console.log('fetched urls');
 
           await Promise.all(
             signedUrls.map(async (s3PutUrl: any, idx: number) => {
               const file = fileVals[idx];
-              const key = s3Keys[idx];
 
               await fetch(s3PutUrl, {
                 method: 'PUT',
@@ -119,17 +118,13 @@ export const CreateFiles = () => {
                 },
               });
 
-              console.log(`finished uploading ${idx + 1}`);
-
-              return { tempKey: key, originalFilename: file.name };
+              return { originalFilename: file.name };
             }),
           );
 
           setIsUploading(false);
           closeModal();
           setFiles({});
-
-          console.log('started processing');
 
           await processFiles({ variables: { uploadGroupId: uploadGroup.id } });
         } catch (e) {
@@ -163,6 +158,7 @@ export const CreateFiles = () => {
         ...acceptedFiles.reduce(
           (p: { [key: string]: SpecialFile }, c: SpecialFile) => {
             const id = randomString();
+
             c.id = id;
 
             return {
@@ -213,7 +209,7 @@ export const CreateFiles = () => {
         }}
       >
         <ModalOverlay />
-        <ModalContent height="80%">
+        <ModalContent height="60%" rounded="lg">
           <ModalHeader>Upload files</ModalHeader>
           <ModalCloseButton />
           <ModalBody {...getRootProps()}>
@@ -229,17 +225,17 @@ export const CreateFiles = () => {
                     justifyContent="space-between"
                   >
                     <Box d="flex" alignItems="center" width="50%">
-                      <Image
-                        key={file.path}
-                        src={
-                          'https://react.semantic-ui.com/images/wireframe/image.png' ||
-                          URL.createObjectURL(file)
-                        }
-                        objectFit="cover"
-                        size="40px"
-                        mr="15px"
-                        rounded="lg"
-                      />
+                      {file.type.split('/').shift() === 'image' && (
+                        <Image
+                          key={file.path}
+                          src={URL.createObjectURL(file)}
+                          objectFit="cover"
+                          size="40px"
+                          mr="15px"
+                          rounded="lg"
+                        />
+                      )}
+
                       <Text>{file.name}</Text>
                     </Box>
                     <Box d="flex" verticalAlign="middle">
@@ -279,7 +275,7 @@ export const CreateFiles = () => {
             >
               <Box alignItems="center">
                 <Icon name="add" />{' '}
-                {!fileCount ? 'Waiting for images...' : 'Add'}
+                {!fileCount ? 'Waiting for files...' : 'Add'}
               </Box>
             </Button>
           </ModalFooter>

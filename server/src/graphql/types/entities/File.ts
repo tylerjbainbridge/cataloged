@@ -10,7 +10,10 @@ export const File = objectType({
     t.model.name();
     t.model.extension();
     t.model.isUploaded();
+
     t.model.size();
+    t.model.contentType();
+
     t.model.width();
     t.model.height();
 
@@ -25,6 +28,11 @@ export const File = objectType({
     t.model.uploadGroup();
 
     t.model.item();
+
+    t.string('originalUrl', {
+      resolve: (file, args, ctx) =>
+        getCloudFrontURL(ctx.user, file, KEY_TYPES.original),
+    });
 
     t.string('fullUrl', {
       resolve: (file, args, ctx) => getCloudFrontURL(ctx.user, file),

@@ -1,8 +1,9 @@
 import React from 'react';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaFile } from 'react-icons/fa';
 import { IconProps } from '@chakra-ui/core';
 
 import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { FileFull } from '../graphql/__generated__/FileFull';
 
 export interface ItemGenericData {
   type?: ItemFull['type'];
@@ -17,6 +18,25 @@ export interface ItemGenericData {
   icon: IconProps['name'] | any;
 }
 
+export const isFileImage = (file: FileFull) =>
+  file.contentType?.split('/').shift() === 'image';
+
+export const getFileIcon = (file: FileFull) => {
+  return <FaFile />;
+};
+
+export const getFileData = (file: FileFull) => {
+  if (!isFileImage(file)) {
+    return {
+      image: null,
+      compressedImage: null,
+      icon: getFileIcon(file),
+    };
+  }
+
+  return {};
+};
+
 export const getGenericItemData = (item: ItemFull): ItemGenericData => {
   switch (item.type) {
     case 'file':
@@ -30,6 +50,7 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
           image: item.file.fullUrl,
           compressedImage: item.file.squareUrl,
           icon: 'attachment',
+          ...getFileData(item.file),
         };
       }
 

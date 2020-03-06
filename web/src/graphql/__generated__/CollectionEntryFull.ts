@@ -84,6 +84,8 @@ export interface CollectionEntryFull_item_file {
   description: string;
   originalName: string;
   isUploaded: boolean | null;
+  contentType: string | null;
+  originalUrl: string;
   fullUrl: string;
   squareUrl: string;
   createdAt: any;
