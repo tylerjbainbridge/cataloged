@@ -266,117 +266,51 @@ export const GenericGridItem = ({
                     borderBottom: 'none',
                   };
 
-                  switch (item.type) {
-                    case 'file':
-                      //@ts-ignore
-                      if (item.file) {
-                        return (
-                          <LazyImage
-                            width="100%"
-                            height="100%"
-                            objectFit="cover"
-                            hasBorder
-                            isReady={item.file.isUploaded}
-                            src={
-                              !item.file.isUploaded ? null : item.file.squareUrl
-                            }
-                            {...clickProps}
-                            containerProps={{
-                              ...topItemProps,
-                            }}
-                          />
-                        );
-                      }
+                  const isReady = item.file ? item.file?.isUploaded : true;
+                  const src = item.file
+                    ? // @ts-ignore
+                      isReady && item.file?.squareUrl
+                    : image;
 
-                    case 'note':
-                      if (item.note) {
-                        return (
-                          <Box
-                            d="flex"
-                            width="100%"
-                            height="100%"
-                            alignItems="center"
-                            justifyContent="center"
-                            backgroundColor="gray.50"
-                            // border="1px solid lightgray"
-                            {...clickProps}
-                            {...topItemProps}
-                          >
-                            <Icon name="edit" size="50px" />
-                          </Box>
-                        );
-                      }
+                  const iconNode = (
+                    <Box
+                      d="flex"
+                      width="100%"
+                      height="100%"
+                      rounded="lg"
+                      alignItems="center"
+                      justifyContent="center"
+                      backgroundColor="gray.50"
+                      {...clickProps}
+                      {...topItemProps}
+                    >
+                      {typeof icon === 'string' ? (
+                        // @ts-ignore
+                        <Icon name={icon} size="56px" />
+                      ) : (
+                        React.cloneElement(icon, { size: '56px' })
+                      )}
+                    </Box>
+                  );
 
-                    case 'link':
-                      if (item.link) {
-                        const src = item.link.image || item.link.favicon;
-
-                        return src ? (
-                          <LazyImage
-                            src={src}
-                            width="100%"
-                            height="100%"
-                            objectFit="cover"
-                            shrinkAndCenterThreshold={200}
-                            placeholderIcon="external-link"
-                            clickProps={clickProps}
-                            containerProps={{ ...topItemProps }}
-                          />
-                        ) : (
-                          <Box
-                            d="flex"
-                            width="100%"
-                            height="100%"
-                            rounded="lg"
-                            alignItems="center"
-                            justifyContent="center"
-                            backgroundColor="gray.50"
-                            {...clickProps}
-                            {...topItemProps}
-                          >
-                            <Icon name="external-link" size="50px" />
-                          </Box>
-                        );
-                      }
-
-                    case 'googleContact':
-                      if (item.googleContact) {
-                        return image ? (
-                          <LazyImage
-                            src={image}
-                            width="100%"
-                            height="100%"
-                            objectFit="cover"
-                            shrinkAndCenterThreshold={200}
-                            placeholderIcon="external-link"
-                            clickProps={clickProps}
-                            topItemProps={{ ...topItemProps }}
-                          />
-                        ) : (
-                          <Box
-                            d="flex"
-                            width="100%"
-                            height="100%"
-                            rounded="lg"
-                            alignItems="center"
-                            justifyContent="center"
-                            backgroundColor="gray.50"
-                            {...clickProps}
-                            {...topItemProps}
-                          >
-                            {typeof icon === 'string' ? (
-                              // @ts-ignore
-                              <Icon name={icon} size="56px" />
-                            ) : (
-                              React.cloneElement(icon, { size: '56px' })
-                            )}
-                          </Box>
-                        );
-                      }
-
-                    default:
-                      return null;
-                  }
+                  //@ts-ignore
+                  return image ? (
+                    <LazyImage
+                      width="100%"
+                      height="100%"
+                      objectFit="cover"
+                      hasBorder
+                      failureNode={iconNode}
+                      isReady={isReady}
+                      src={src}
+                      {...clickProps}
+                      containerProps={{
+                        ...topItemProps,
+                      }}
+                    />
+                  ) : (
+                    iconNode
+                  );
                 }}
               </SelectOnClick>
             </Box>
