@@ -182,6 +182,10 @@ export class FilterQueryBuilder {
                 contact: 'googleContact',
               }[value] || value,
             );
+
+            if (filter.name === 'type' && value === 'contact') {
+              this.sets['-type'].delete('googleContact');
+            }
           });
       }
     });

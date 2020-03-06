@@ -41,6 +41,7 @@ export const LazyImage = ({
     const temp = new Image();
 
     // temp.crossOrigin = 'anonymous';
+    temp.referrerPolicy = 'origin';
     temp.src = src;
 
     return temp;

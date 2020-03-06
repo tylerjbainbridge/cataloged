@@ -1,11 +1,42 @@
 import Bluebird from 'bluebird';
 import _ from 'lodash';
 
-import { prisma } from '../data/photon';
+import { prisma, User, File } from '../data/photon';
 import { CollectionEntry } from '@prisma/client';
 import { CollectionService } from './CollectionService';
+import { s3 } from './AWSService';
+import { getS3Key, KEY_TYPES } from '../helpers/files';
+
+export const isFileImage = (file: File) =>
+  file.contentType?.split('/').shift() === 'image';
 
 export class ItemService {
+  static deleteFile = async (userId: User['id'], file: File) => {
+    const deleteFromS3 = async (key: string) => {
+      await s3
+        .deleteObject({
+          Bucket: process.env.AWS_S3_BUCKET,
+          Key: key,
+        })
+        .promise();
+    };
+
+    await Promise.all(
+      [
+        // @ts-ignore
+        getS3Key({ id: userId }, file, KEY_TYPES.original),
+        ...(isFileImage(file)
+          ? [
+              // @ts-ignore
+              getS3Key({ id: userId }, file, KEY_TYPES.full),
+              // @ts-ignore
+              getS3Key({ id: userId }, file, KEY_TYPES.square),
+            ]
+          : []),
+      ].map(deleteFromS3),
+    );
+  };
+
   static deleteMany = async (itemIds: string[]) => {
     const items = await prisma.item.findMany({
       where: { id: { in: itemIds } },
@@ -17,10 +48,11 @@ export class ItemService {
         labels: true,
         collectionEntries: true,
         collections: true,
+        user: true,
       },
     });
 
-    Bluebird.map(items, async item => {
+    await Bluebird.map(items, async item => {
       const relations: { [k: string]: any } = {
         note: item.note,
         file: item.file,
@@ -28,7 +60,16 @@ export class ItemService {
         googleContact: item.googleContact,
       };
 
-      await Bluebird.map(
+      if (item.file) {
+        try {
+          await ItemService.deleteFile(item.user.id, item.file);
+        } catch (e) {
+          console.log('Failed to delete file');
+          console.log(e);
+        }
+      }
+
+      await await Bluebird.map(
         Object.keys(relations).filter(key => relations[key]),
         (key: string) =>
           // @ts-ignore

@@ -17,6 +17,8 @@ export const syncGoogleDrive = extendType({
           where: { id: args.googleAccountId },
         });
 
+        console.log(googleAccount);
+
         await ctx.google.getGoogleDriveFiles(googleAccount);
 
         return '';

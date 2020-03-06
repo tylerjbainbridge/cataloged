@@ -71,6 +71,26 @@ export const GenericListItem = ({
 
   const itemRef = React.useRef(null);
 
+  const iconNode = (
+    <Box
+      d="flex"
+      width="50px"
+      height="100%"
+      rounded="lg"
+      alignItems="center"
+      justifyContent="center"
+      backgroundColor="gray.50"
+      border="1px solid lightgray"
+    >
+      {typeof icon === 'string' ? (
+        // @ts-ignore
+        <Icon name={icon} size="16px" />
+      ) : (
+        React.cloneElement(icon, { size: '16px' })
+      )}
+    </Box>
+  );
+
   // List view
   return (
     <Box
@@ -187,6 +207,7 @@ export const GenericListItem = ({
               {image || compressedImage ? (
                 <LazyImage
                   hasBorder
+                  failureNode={iconNode}
                   src={compressedImage || image}
                   width="50px"
                   height="100%"
@@ -196,23 +217,7 @@ export const GenericListItem = ({
                   spinnerSize="sm"
                 />
               ) : (
-                <Box
-                  d="flex"
-                  width="50px"
-                  height="100%"
-                  rounded="lg"
-                  alignItems="center"
-                  justifyContent="center"
-                  backgroundColor="gray.50"
-                  border="1px solid lightgray"
-                >
-                  {typeof icon === 'string' ? (
-                    // @ts-ignore
-                    <Icon name={icon} size="16px" />
-                  ) : (
-                    React.cloneElement(icon, { size: '16px' })
-                  )}
-                </Box>
+                iconNode
               )}
               <Box
                 ml={5}

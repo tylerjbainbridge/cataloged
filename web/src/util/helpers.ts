@@ -162,3 +162,20 @@ export const getKeybindAsArray = (keybind: string) => {
       .split(' ')
   );
 };
+
+export const downloadFile = (url: string, fileName: string, type: string) => {
+  // Create an invisible A element
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  document.body.appendChild(a);
+
+  a.href = url;
+
+  a.target = '_blank';
+  a.download = fileName;
+
+  a.click();
+
+  window.URL.revokeObjectURL(a.href);
+  document.body.removeChild(a);
+};

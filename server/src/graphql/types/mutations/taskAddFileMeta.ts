@@ -15,7 +15,14 @@ export const taskAddFileMeta = extendType({
     t.field('taskAddFileMeta', {
       type: 'String',
       resolve: async (root, args, ctx) => {
-        const files = await ctx.prisma.file.findMany();
+        const files = await ctx.prisma.file.findMany({
+          where: {
+            contentType: null,
+          },
+          include: {
+            user: true,
+          },
+        });
 
         await Bluebird.map(
           files,
@@ -23,7 +30,7 @@ export const taskAddFileMeta = extendType({
             try {
               const stream = s3
                 .getObject({
-                  Key: `production/users/${ctx.user.id}/${file.id}/${KEY_TYPES.original}.${file.extension}`,
+                  Key: `production/users/${file.user.id}/${file.id}/${KEY_TYPES.original}.${file.extension}`,
                   Bucket: process.env.AWS_S3_BUCKET,
                 })
                 .createReadStream();

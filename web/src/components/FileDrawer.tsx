@@ -32,6 +32,7 @@ import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
 import { isFileImage } from '../util/itemHelpers';
+import { downloadFile } from '../util/helpers';
 
 export interface ItemWithFile extends ItemFull {
   file: ItemFull_file;
@@ -233,13 +234,24 @@ export const FileDrawer = ({
                 </FormControl>
                 <Divider />
                 <Button
+                  as="a"
                   color="white"
                   bg="brand.purple.main"
                   width="100%"
                   mb="20px"
-                  onClick={() => window.open(file.originalUrl)}
+                  cursor="pointer"
+                  onClick={() => {
+                    // if (!file.contentType) window.open(file.originalUrl);
+
+                    downloadFile(
+                      file.originalUrl,
+                      file.originalName,
+                      // @ts-ignore
+                      file.contentType,
+                    );
+                  }}
                 >
-                  View file
+                  Download file
                 </Button>
               </Stack>
             </Box>
