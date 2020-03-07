@@ -169,7 +169,7 @@ const getOptions = ({
         value: Action.BULK_UPDATE_COLLECTION_ITEMS,
         display: `Add item${relevantItems.length > 1 ? 's' : ''} to Collection`,
         priority: Priority.SELECTED_ITEMS,
-        keybind: 'c c c',
+        keybind: 'c c',
         // disabled: true,
         disabled: !relevantItems.length,
         secondary: SecondaryAction.SELECT_COLLECTION,

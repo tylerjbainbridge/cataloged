@@ -303,6 +303,7 @@ export const GenericGridItem = ({
                       failureNode={iconNode}
                       isReady={isReady}
                       src={src}
+                      shrinkAndCenterThreshold={56}
                       {...clickProps}
                       containerProps={{
                         ...topItemProps,

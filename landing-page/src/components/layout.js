@@ -1,30 +1,57 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import { ThemeProvider, CSSReset, theme } from '@chakra-ui/core';
+import { ThemeProvider, CSSReset, theme as t } from '@chakra-ui/core';
 import { createGlobalStyle } from 'styled-components';
 
 import favicon from '../images/favicon.png';
 
 export const GlobalStyles = createGlobalStyle`
   body {
-    background-color: white;
+    background-color: rgba(249, 215, 77, 0.10);
   }
 `;
 
-export const customTheme = {
-  ...theme,
+const system = `-apple-system, system-ui, BlinkMacSystemFont, 
+'Segoe UI', Roboto, 'Helvetica Neue', 
+Ubuntu, Arial, sans-serif;`;
+
+export const theme = {
+  ...t,
+  fonts: {
+    body: system,
+    heading: system,
+    mono: system,
+  },
   colors: {
-    ...theme.colors,
+    ...t.colors,
     brand: {
-      pink: '#ED6C7F',
-      purple: '#5718FF',
-      yellow: '#F9D64D',
+      pink: {
+        main: '#ED6C7F',
+        light: '#faebed',
+        dark: '#eddfe1',
+      },
+      purple: {
+        main: '#5718FF',
+        light: '#F9F5FE',
+        dark: '#e8e4ed',
+      },
+      yellow: {
+        main: '#F9D64D',
+        // light: '#fffae8',
+        // light: '#f7f6f0'
+        light: 'rgba(249, 215, 77, 0.05)',
+      },
+      green: '#70F1B8',
+      blue: '#4FB1F6',
+    },
+    gray: {
+      50: '#f7fafc',
+      ...t.colors.gray,
     },
   },
 };
-
 const description = "Organize what's important to you";
-const title = 'Cataloged';
+const title = 'Cataloged | A personal knowledge base';
 const image =
   'https://collections-file-storage-1.s3.amazonaws.com/assets/logo.png';
 const url = 'https://cataloged.co/';
@@ -40,10 +67,8 @@ const keywords = [
 export default ({ children }) => (
   <>
     <Helmet
-      title="Cataloged"
       link={[{ rel: 'shortcut icon', type: 'image/png', href: `${favicon}` }]}
       title={title}
-      titleTemplate={`%s | ${title}`}
       meta={[
         {
           name: `description`,
@@ -99,7 +124,7 @@ export default ({ children }) => (
       )}
     />
     <GlobalStyles />
-    <ThemeProvider theme={customTheme}>
+    <ThemeProvider theme={theme}>
       <CSSReset />
       {children}
     </ThemeProvider>

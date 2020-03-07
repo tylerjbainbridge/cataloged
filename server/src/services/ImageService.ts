@@ -18,12 +18,12 @@ export class ImageService {
     const original = await getBufferFromStream(stream);
 
     const full = await sharp(original)
-      .jpeg({ quality: 80 })
+      .jpeg({ quality: 90 })
       .toBuffer();
 
     const square = await sharp(original)
       .resize(400, 400)
-      .jpeg({ quality: 50 })
+      .jpeg({ quality: 60 })
       .toBuffer();
 
     return {
