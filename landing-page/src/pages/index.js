@@ -15,7 +15,8 @@ import '../typography.css';
 import { JoinWaitlist } from '../components/JoinWaitlist';
 
 const IndexPage = () => {
-  const isMobile = useMedia('(max-width: 768px)');
+  let isMobile = useMedia('(max-width: 768px)');
+
   const logo = <Image src={favicon} size="150px" />;
 
   const contentWidth = isMobile ? '100%' : '1200px';
@@ -24,6 +25,10 @@ const IndexPage = () => {
 
   const screenShotWidth = screenshotRef?.offsetWidth;
   const screenShotHeight = screenshotRef?.offsetHeight;
+
+  useEffect(() => {
+    isMobile = window.matchMedia('(max-width: 768px)');
+  }, []);
 
   return (
     <Layout>
@@ -187,12 +192,8 @@ const IndexPage = () => {
               }}
               height="100%"
               zIndex="20"
-              {...(isMobile
-                ? {
-                    // maxHeight: '400px',
-                    objectFit: isMobile ? 'cover' : undefined,
-                  }
-                : {})}
+              objectFit="cover"
+              objectPosition="top"
               src={screenshot}
               width={contentWidth}
               rounded="lg"

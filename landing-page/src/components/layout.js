@@ -7,7 +7,7 @@ import favicon from '../images/favicon.png';
 
 export const GlobalStyles = createGlobalStyle`
   body {
-    background-color: rgba(249, 215, 77, 0.10);
+    background-color: rgba(249, 215, 77, 0.20);
   }
 `;
 
@@ -51,7 +51,7 @@ export const theme = {
   },
 };
 const description = "Organize what's important to you";
-const title = 'Cataloged | A personal knowledge base';
+const title = 'Cataloged';
 const image =
   'https://collections-file-storage-1.s3.amazonaws.com/assets/logo.png';
 const url = 'https://cataloged.co/';
