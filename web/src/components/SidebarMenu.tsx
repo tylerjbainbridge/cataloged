@@ -179,6 +179,7 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
       <Flex height="100%" justifyContent="space-between" flexDirection="column">
         <Stack spacing="25px">
           <Flex
+            pt="10px"
             cursor="pointer"
             as={Link}
             alignItems="center"
