@@ -29,11 +29,15 @@ const IndexPage = () => {
     typeof window !== `undefined` && (
       <Layout>
         <Flex
-          position="absolute"
-          top="0"
-          right="0"
-          left="0"
-          bottom="0"
+          {...(!isMobile
+            ? {
+                position: 'absolute',
+                top: '0',
+                right: '0',
+                left: '0',
+                bottom: '0',
+              }
+            : {})}
           overflow={!isMobile ? 'hidden' : undefined}
           height="100%"
           flexDirection="column"
@@ -158,7 +162,7 @@ const IndexPage = () => {
               </Flex>
             </Flex>
           </Flex>
-          <Flex justifyContent="center" height={isMobile ? '400px' : "'45%'"}>
+          <Flex justifyContent="center" height={isMobile ? '400px' : '45%'}>
             <Box
               position={!isMobile ? 'relative' : undefined}
               width={contentWidth}
