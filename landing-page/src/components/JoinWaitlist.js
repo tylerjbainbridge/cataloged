@@ -14,7 +14,7 @@ import {
 import { useMutation } from '@apollo/client';
 import { gql } from 'apollo-boost';
 
-import { client } from '../components/layout';
+import { client, useMedia } from '../components/layout';
 
 import '../typography.css';
 
@@ -27,6 +27,8 @@ const JOIN_WAITLIST = gql`
 `;
 
 export const JoinWaitlist = () => {
+  let isMobile = useMedia('(max-width: 768px)');
+
   const {
     register,
     handleSubmit,
@@ -55,18 +57,27 @@ export const JoinWaitlist = () => {
   });
 
   return (
-    <Box d="flex" flexWrap="wrap" justifyContent="center">
+    <Box
+      d="flex"
+      flexWrap="wrap"
+      justifyContent="center"
+      width={!isMobile ? undefined : '100%'}
+    >
       {!data ? (
         <Box
           as="form"
           d="flex"
-          flexWrap="wrap"
+          flexWrap={isMobile ? 'wrap' : 'nowrap'}
           justifyContent="center"
+          width={!isMobile ? undefined : '100%'}
           onSubmit={handleSubmit(data => {
             if (data.email) addToWaitlist({ variables: data });
           })}
         >
-          <FormControl isInvalid={errors.email}>
+          <FormControl
+            isInvalid={errors.email}
+            width={!isMobile ? '300px' : '100%'}
+          >
             <InputGroup>
               <InputLeftElement
                 children={<Icon name="email" color="gray.300" />}
@@ -75,16 +86,16 @@ export const JoinWaitlist = () => {
                 name="email"
                 type="email"
                 required
-                placeholder="Enter email"
+                placeholder="Enter your email..."
                 // focusBorderColor="brand.purple.main"
-                width="300px"
-                mr="10px"
+
+                mr={!isMobile ? '10px' : undefined}
                 ref={register}
                 onChange={e => {
                   setValue('email', e.target.value);
                 }}
                 _focus={{
-                  borderColor: 'brand.pink.main',
+                  borderColor: 'brand.green',
                 }}
               />
             </InputGroup>
@@ -94,7 +105,8 @@ export const JoinWaitlist = () => {
             // isLoading={loading}
             type="submit"
             size="md"
-            mt={['20px', '0px']}
+            mt={isMobile ? '10px' : '0px'}
+            width={isMobile ? '100%' : undefined}
             cursor="pointer"
             variant="outline"
             color="brand.pink.main"

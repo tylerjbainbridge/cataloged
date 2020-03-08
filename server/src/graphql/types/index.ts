@@ -43,6 +43,7 @@ export { syncGoogleDrive } from './mutations/syncGoogleDrive';
 export { taskAddFileMeta } from './mutations/taskAddFileMeta';
 export { taskFixItemDates } from './mutations/taskFixItemDates';
 export { taskFixLinks } from './mutations/taskFixLinks';
+export { testSendEmail } from './mutations/testSendEmail';
 export { updateBlockContent } from './mutations/updateBlockContent';
 export { updateCollection } from './mutations/updateCollection';
 export { updateEntryPositions } from './mutations/updateEntryPositions';

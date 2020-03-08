@@ -1325,6 +1325,7 @@ type Mutation {
   taskAddFileMeta: String!
   taskFixItemDates: String!
   taskFixLinks: String!
+  testSendEmail: String!
   updateBlockContent(blockId: String!, collectionId: String!, content: String): CollectionBlock!
   updateCollection(collectionId: String!, description: String, name: String!): Collection!
   updateEntryPositions(collectionId: String!, entries: [CollectionEntryPositionInput!]): Collection!

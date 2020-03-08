@@ -2,6 +2,7 @@ import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
 
 import { InterestedUser } from '../entities/InterestedUser';
+import { EmailService } from '../../../services/EmailService';
 
 export const addToWaitlist = extendType({
   type: 'Mutation',
@@ -18,7 +19,20 @@ export const addToWaitlist = extendType({
 
         if (existing) return existing;
 
-        return await ctx.prisma.interestedUser.create({ data: args });
+        const interestedUser = await ctx.prisma.interestedUser.create({
+          data: args,
+        });
+
+        const allInterestedUsers = await ctx.prisma.interestedUser.findMany();
+
+        await EmailService.sendWailistConfirm({ to: args.email });
+
+        await EmailService.sendEmail({
+          to: args.email,
+          text: `New user added to waitlist (${allInterestedUsers.length})! ${interestedUser.email}`,
+        });
+
+        return interestedUser;
       },
     });
   },

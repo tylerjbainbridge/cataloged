@@ -11,6 +11,7 @@
     "strictFunctionTypes": true,
     "moduleResolution": "Node",
     "esModuleInterop": true,
+    "jsx": "react",
     "skipLibCheck": true // `skipLibCheck` is enabled until this is issue is fixed: https://github.com/prisma/nexus-prisma/issues/82
   }
 }

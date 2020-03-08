@@ -1,9 +1,7 @@
-import React, { useRef } from 'react';
-
+import React, { useRef, useState, useEffect } from 'react';
 import { Flex, Box, Image, Heading, Button, Link, Text } from '@chakra-ui/core';
-import { useMedia } from 'react-use';
 
-import Layout, { client, theme } from '../components/layout';
+import Layout, { client, theme, useMedia } from '../components/layout';
 import favicon from '../images/favicon.png';
 import screenshot from '../images/image-with-command-center.jpg';
 
@@ -16,27 +14,29 @@ import { JoinWaitlist } from '../components/JoinWaitlist';
 
 const IndexPage = () => {
   let isMobile = useMedia('(max-width: 768px)');
+  const isNarrow = useMedia('(max-width: 1000px)');
 
   const logo = <Image src={favicon} size="150px" />;
 
-  const contentWidth = isMobile ? '100%' : '1200px';
+  const contentWidth = isMobile ? '100%' : '80%' || '1200px';
 
   const screenshotRef = useRef(null);
 
   const screenShotWidth = screenshotRef?.offsetWidth;
   const screenShotHeight = screenshotRef?.offsetHeight;
 
-  useEffect(() => {
-    isMobile = window.matchMedia('(max-width: 768px)');
-  }, []);
-
   return (
     <Layout>
       <Flex
+        position="absolute"
+        top="0"
+        right="0"
+        left="0"
+        bottom="0"
+        overflow="hidden"
+        height="100%"
         flexDirection="column"
         justifyContent="space-between"
-        width="100vw"
-        height="100vh"
       >
         <Flex justifyContent="center" padding={isMobile ? '20px' : undefined}>
           <Flex width={contentWidth}>
@@ -94,11 +94,13 @@ const IndexPage = () => {
             </Flex>
           </Flex>
         </Flex>
-        <Flex justifyContent="center" padding={isMobile ? '20px' : undefined}>
+        <Flex justifyContent="center" padding={isNarrow ? '40px' : '30px'}>
           <Flex
-            justifyContent="space-between"
+            width={contentWidth}
+            justifyContent="space-around"
             alignItems="center"
-            flexWrap="wrap"
+            flexWrap={isMobile || isNarrow ? 'wrap' : 'nowrap'}
+            mb="30px"
             {...(isMobile
               ? {
                   mb: '20px',
@@ -107,9 +109,8 @@ const IndexPage = () => {
               : {})}
           >
             <Box
-              width={isMobile ? '100%' : '450px'}
-              mr={isMobile ? undefined : '40px'}
-              mb={isMobile ? '20px' : '40px'}
+              maxWidth={isMobile ? '100%' : '500px'}
+              mb={isNarrow ? '20px' : '0px'}
               p="35px"
               bg="brand.purple.light"
               rounded="lg"
@@ -125,18 +126,28 @@ const IndexPage = () => {
                 Organize what's important to you.
               </Heading>
             </Box>
-            <Flex width={isMobile ? '100%' : '500px'} flexDirection="column">
+            <Flex
+              maxWidth={isMobile ? '100%' : '500px'}
+              alignItems={isNarrow ? 'center' : ''}
+              flexDirection="column"
+            >
               {!isMobile && (
                 <Box width="100%">
                   <Text
-                    color="brand.pink.main"
+                    color="brand.black"
                     fontWeight="600"
                     fontSize="25px"
+                    mb="10px"
                   >
-                    {/* Just think- you can finally organize all your links, notes,
-                  files, contacts, and more. */}
-                    Wouldn't it be nice to finally organize all your links,
-                    notes, files, and contacts?
+                    Build your second brain with Cataloged.
+                  </Text>
+                  <Text color="brand.gray" fontWeight="400" fontSize="18px">
+                    {/* Just think- you can finally organize & easily find your
+                    links, notes, files, contacts, and more. */}
+                    {/* Wouldn't it be nice to finally organize all your links,
+                    notes, files, and contacts? */}
+                    Your links, notes, files, contacts, and more — all in one
+                    tool.
                   </Text>
                 </Box>
               )}
@@ -146,8 +157,8 @@ const IndexPage = () => {
             </Flex>
           </Flex>
         </Flex>
-        <Flex justifyContent="center" height="40%">
-          <Box position="relative" width={screenShotWidth} height="100%">
+        <Flex justifyContent="center" height="45%">
+          <Box position="relative" width={contentWidth} height="100%">
             {!isMobile && (
               <>
                 <Image
@@ -171,7 +182,7 @@ const IndexPage = () => {
                   right="0"
                   transform="rotate(80deg)"
                   mr="-140px"
-                  mb="80px"
+                  mb="30px"
                 />
                 <Image
                   zIndex="-2"
@@ -187,6 +198,9 @@ const IndexPage = () => {
               </>
             )}
             <Image
+              border="2px solid"
+              borderColor="brand.gray"
+              borderBottom="none"
               ref={ref => {
                 screenshotRef.current = ref;
               }}
@@ -195,8 +209,10 @@ const IndexPage = () => {
               objectFit="cover"
               objectPosition="top"
               src={screenshot}
-              width={contentWidth}
+              width="100%"
               rounded="lg"
+              roundedBottomLeft="0"
+              roundedBottomRight="0"
             />
           </Box>
         </Flex>

@@ -22,7 +22,7 @@ const admin = rule({ cache: 'no_cache' })((parent, args, ctx, info) => {
 
 const allow = rule({ cache: 'no_cache' })(() => true);
 
-const bannedPatterns = ['_', 'task'];
+const bannedPatterns = ['_', 'task', 'test'];
 
 const noPrivateFields = rule({ cache: 'no_cache' })(
   (parent, args, ctx, info) => {

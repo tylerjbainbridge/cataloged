@@ -1,19 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Helmet from 'react-helmet';
+import { window } from 'browser-monads';
+
 import { ThemeProvider, CSSReset, theme as t } from '@chakra-ui/core';
 import { createGlobalStyle } from 'styled-components';
 
 import favicon from '../images/favicon.png';
 
 export const GlobalStyles = createGlobalStyle`
+  html {  min-height: 100%; }
   body {
-    background-color: rgba(249, 215, 77, 0.20);
+    min-height: 100%;
+    ${'' /* background-color: rgba(249, 215, 77, 0.03); */}
   }
 `;
 
 const system = `-apple-system, system-ui, BlinkMacSystemFont, 
 'Segoe UI', Roboto, 'Helvetica Neue', 
 Ubuntu, Arial, sans-serif;`;
+
+export const useMedia = query => {
+  const mediaMatch = window.matchMedia(query);
+  const [matches, setMatches] = useState(mediaMatch.matches);
+
+  useEffect(() => {
+    const handler = e => setMatches(e.matches);
+    mediaMatch.addListener(handler);
+    return () => mediaMatch.removeListener(handler);
+  });
+
+  return matches;
+};
 
 export const theme = {
   ...t,
@@ -25,6 +42,8 @@ export const theme = {
   colors: {
     ...t.colors,
     brand: {
+      black: '#241A1B',
+      gray: '#978d8e',
       pink: {
         main: '#ED6C7F',
         light: '#faebed',

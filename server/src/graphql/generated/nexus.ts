@@ -2238,6 +2238,7 @@ export interface NexusGenFieldTypes {
     taskAddFileMeta: string; // String!
     taskFixItemDates: string; // String!
     taskFixLinks: string; // String!
+    testSendEmail: string; // String!
     updateBlockContent: NexusGenRootTypes['CollectionBlock']; // CollectionBlock!
     updateCollection: NexusGenRootTypes['Collection']; // Collection!
     updateEntryPositions: NexusGenRootTypes['Collection']; // Collection!
