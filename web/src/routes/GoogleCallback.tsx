@@ -59,32 +59,31 @@ export const GoogleCallback = ({
   const location = useLocation();
   const history = useHistory();
 
-  const { setToken, user } = useAuth();
+  const { signIn, user } = useAuth();
   const values = queryString.parse(location.search);
 
   const state = getStateSafe(values);
-
-  console.log(state);
 
   const [googleAuth, { error, loading }] = useMutation<googleAuth>(
     GOOGLE_AUTH_MUTATION,
     {
       variables: { code: values.code, isAuthMethod: !!state?.isAuthMethod },
-      onCompleted: data => {
+      onCompleted: async data => {
         if (data?.googleAuth?.token) {
-          setToken(data.googleAuth.token);
+          await signIn(data.googleAuth.token);
+          // window.location.replace('/');
+        } else {
+          const newState: any = {};
+
+          if (state?.googleAccountId)
+            newState.googleAccountId = state?.googleAccountId;
+
+          if (state?.syncContent) newState.syncContent = state?.syncContent;
+
+          const query = queryString.stringify(newState);
+
+          history.push(`${state?.origin || '/'}${query ? `?${query}` : ''}`);
         }
-
-        const newState: any = {};
-
-        if (state?.googleAccountId)
-          newState.googleAccountId = state?.googleAccountId;
-
-        if (state?.syncContent) newState.syncContent = state?.syncContent;
-
-        const query = queryString.stringify(newState);
-
-        history.push(`${state?.origin || '/'}${query ? `?${query}` : ''}`);
       },
     },
   );

@@ -100,7 +100,7 @@ export const ConnectButton = ({
       parsed?.syncContent === 'contacts' &&
       parsed?.googleAccountId === googleAccountId
     ) {
-      syncGoogleContacts();
+      // syncGoogleContacts();
     }
   }, []);
 
