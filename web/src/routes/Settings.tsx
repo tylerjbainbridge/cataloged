@@ -23,6 +23,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useMedia } from 'react-use';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
 import { gql } from 'apollo-boost';
+import { downloadFile } from '../util/helpers';
 
 export interface ItemDrawerProps {
   toggleFullScreen: () => any;
@@ -171,7 +172,7 @@ export const Settings = () => {
           display="flex"
           alignItems="center"
         >
-          Settings
+          Your account
         </DrawerHeader>
 
         <DrawerBody d="flex" p="15px">
@@ -197,21 +198,43 @@ export const Settings = () => {
                   />
                 </Stack>
               ))}
+              <Divider />
+              <Heading size="sm">Downloads</Heading>
+              <Button
+                as="a"
+                d="flex"
+                alignItems="center"
+                cursor="pointer"
+                p="3px"
+                m={0}
+                maxWidth="50%"
+                onClick={() => {
+                  // @ts-ignore
+                  downloadFile(
+                    'https://collections-file-storage-1.s3.amazonaws.com/desktop/Cataloged-1.0.0.dmg',
+                  );
+                }}
+              >
+                Desktop app
+              </Button>
             </Stack>
-            <Button
-              d="flex"
-              alignItems="center"
-              cursor="pointer"
-              p="3px"
-              m={0}
-              maxWidth="50%"
-              onClick={() => {
-                window.localStorage.removeItem('cataloged-cache');
-                signOut();
-              }}
-            >
-              Sign out
-            </Button>
+
+            <Stack spacing="20px">
+              <Button
+                d="flex"
+                alignItems="center"
+                cursor="pointer"
+                p="3px"
+                m={0}
+                maxWidth="50%"
+                onClick={() => {
+                  window.localStorage.removeItem('cataloged-cache');
+                  signOut();
+                }}
+              >
+                Sign out
+              </Button>
+            </Stack>
           </Flex>
         </DrawerBody>
       </DrawerContent>
