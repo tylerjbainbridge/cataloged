@@ -199,7 +199,7 @@ export const Settings = () => {
                 </Stack>
               ))}
               <Divider />
-              <Heading size="sm">Downloads</Heading>
+              {/* <Heading size="sm">Downloads</Heading>
               <Button
                 as="a"
                 d="flex"
@@ -216,7 +216,7 @@ export const Settings = () => {
                 }}
               >
                 Desktop app
-              </Button>
+              </Button> */}
             </Stack>
 
             <Stack spacing="20px">

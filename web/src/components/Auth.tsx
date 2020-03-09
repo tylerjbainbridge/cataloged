@@ -89,16 +89,6 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
     }
   }, [token]);
 
-  const prevData = usePrevious(data);
-
-  useEffect(() => {
-    if (!prevData?.me && data?.me) {
-      if (window.location.pathname.includes('google')) {
-        history.push('/');
-      }
-    }
-  }, [data]);
-
   return (
     <AuthContext.Provider
       value={{

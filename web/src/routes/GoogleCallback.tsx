@@ -19,6 +19,7 @@ import {
   Button,
   Stack,
 } from '@chakra-ui/core';
+import { usePrevious } from '../hooks/usePrevious';
 
 const GOOGLE_AUTH_MUTATION = gql`
   mutation googleAuth($code: String!) {
@@ -91,6 +92,16 @@ export const GoogleCallback = ({
   useEffect(() => {
     googleAuth().catch(() => {});
   }, []);
+
+  const prevUser = usePrevious(user);
+
+  useEffect(() => {
+    if (!prevUser && user) {
+      if (window.location.pathname.includes('google')) {
+        history.push('/');
+      }
+    }
+  }, [user]);
 
   return (
     <Box
