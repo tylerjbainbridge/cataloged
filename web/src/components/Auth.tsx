@@ -93,7 +93,9 @@ export const Auth = ({ children }: { children: JSX.Element }) => {
 
   useEffect(() => {
     if (!prevData?.me && data?.me) {
-      history.push('/');
+      if (window.location.pathname.includes('google')) {
+        history.push('/');
+      }
     }
   }, [data]);
 
