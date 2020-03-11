@@ -37,6 +37,12 @@ export const getRealName = (name: string) => {
   );
 };
 
+export const getRealFilters = (filters: any[]) =>
+  filters.map(({ name, ...rest }) => ({
+    ...rest,
+    name: getRealName(name || 'search'),
+  }));
+
 export const getQueryStringFromFilters = (filters: any[], search = '') => {
   const sets: { [k: string]: Set<any> } = {
     ...FILTER_NAMES.reduce(

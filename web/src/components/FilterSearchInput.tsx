@@ -35,7 +35,7 @@ const getFiltersFromValue = (value: Node[]) => {
   try {
     return children
       .filter(({ type }: any) => type === 'filter')
-      .map(({ filter }: any) => filter);
+      .map(({ filter }: any) => ({ ...filter, name: filter.name || 'search' }));
   } catch (e) {
     return [];
   }
@@ -218,6 +218,10 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
 
       switch (event.key) {
         case 'ArrowDown':
+          if (!searchState.filter?.value && !searchState.filter?.name) {
+            return;
+          }
+
           event.preventDefault();
           event.stopPropagation();
 
@@ -231,6 +235,10 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
 
           break;
         case 'ArrowUp':
+          if (!searchState.filter?.value && !searchState.filter?.name) {
+            return;
+          }
+
           event.preventDefault();
           event.stopPropagation();
 
@@ -240,14 +248,19 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
           break;
         case 'Tab':
         case 'Enter':
+          if (!searchState.filter?.value && !searchState.filter?.name) {
+            return;
+          }
+
           event.preventDefault();
           event.stopPropagation();
 
           // @ts-ignore
           if (!targetRange) {
-            Transforms.insertNodes(editor, {
-              children: [{ text: '' }],
-            });
+            // Transforms.insertNodes(editor, {
+            //   children: [{ text: '' }],
+            // });
+            return;
           }
 
           // @ts-ignore
@@ -279,10 +292,15 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
 
           break;
         case 'Escape':
-          event.preventDefault();
-          event.stopPropagation();
+          if (!searchState.filter?.value && !searchState.filter?.name) {
+            setState(initialSearchState);
+          } else {
+            event.preventDefault();
+            event.stopPropagation();
 
-          setState(initialSearchState);
+            setState(initialSearchState);
+          }
+
           break;
         case 'Backspace':
           // console.log(getCurrentNodeRange(editor));
@@ -373,7 +391,7 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
                   <Box
                     d="flex"
                     width="100%"
-                    minHeight="50px"
+                    // minHeight="50px"
                     alignItems="flex-end"
                   >
                     <Box
@@ -412,7 +430,6 @@ const FilterSearchInput = ({ onChange, filters, shouldFocusOnMount }: any) => {
                           alignItems: 'center',
                           width: '100%',
                           height: '100%',
-                          maxHeight: '50px',
                         }}
                         placeholder='Try typing "type:"'
                       />
@@ -488,7 +505,7 @@ const insertFilter = (editor: Editor, filter: any) => {
     filter,
     children: [{ text: ' ' }],
   });
-  Transforms.insertNodes(editor, { type: 'space', text: ' ' });
+  Transforms.insertNodes(editor, { type: 'spacer', text: ' ' });
   Transforms.move(editor);
 };
 

@@ -324,7 +324,13 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                     {loading ? <Spinner size="sm" /> : <Box />}
                   </Box>
 
-                  <Box d="flex" width="490px" rounded="lg" p="10px">
+                  <Box
+                    d="flex"
+                    width="490px"
+                    height="40px"
+                    rounded="lg"
+                    p="10px"
+                  >
                     <FilterSearchInput
                       filters={queryStringFilters}
                       onChange={updateFilters}

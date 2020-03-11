@@ -79,6 +79,12 @@ export const LinkDrawer = ({
 
   const values = getValues();
 
+  // useEffect(() => {
+  //   fetch(link.href).catch(e => {
+  //     editState.onOpen();
+  //   });
+  // }, [link.href]);
+
   const [updateLink, { loading: isUpdating }] = useMutation(
     UPDATE_LINK_MUTATION,
     {
@@ -142,24 +148,39 @@ export const LinkDrawer = ({
           <Box height="100%">
             <Stack spacing="20px" height="100%">
               <Flex width="100%" justifyContent="flex-end">
-                <ItemActionMenu item={item}>
-                  {menuNodes => (
-                    <>
-                      <MenuItem d="flex" alignItems="center" onClick={onClose}>
-                        <Icon name="close" fontSize="12px" mr="5px" /> Close
-                      </MenuItem>
-                      <MenuItem
-                        d="flex"
-                        alignItems="center"
-                        onClick={editState.onToggle}
-                      >
-                        <Icon name="edit" fontSize="12px" mr="5px" />{' '}
-                        {editState.isOpen ? 'View link' : 'Edit'}
-                      </MenuItem>
-                      {Object.values(menuNodes)}
-                    </>
-                  )}
-                </ItemActionMenu>
+                <Stack isInline>
+                  <Button
+                    color="white"
+                    bg="brand.purple.main"
+                    // width="100%"
+                    mb="20px"
+                    onClick={() => window.open(link.href, '_blank')}
+                  >
+                    Visit site
+                  </Button>
+                  <ItemActionMenu item={item}>
+                    {menuNodes => (
+                      <>
+                        <MenuItem
+                          d="flex"
+                          alignItems="center"
+                          onClick={onClose}
+                        >
+                          <Icon name="close" fontSize="12px" mr="5px" /> Close
+                        </MenuItem>
+                        <MenuItem
+                          d="flex"
+                          alignItems="center"
+                          onClick={editState.onToggle}
+                        >
+                          <Icon name="edit" fontSize="12px" mr="5px" />{' '}
+                          {editState.isOpen ? 'View link' : 'Edit'}
+                        </MenuItem>
+                        {Object.values(menuNodes)}
+                      </>
+                    )}
+                  </ItemActionMenu>
+                </Stack>
               </Flex>
               <Stack
                 spacing={5}
@@ -243,19 +264,16 @@ export const LinkDrawer = ({
                   <FormLabel htmlFor="labels">Labels</FormLabel>
                   <Labels item={item} numDisplayLabels={10} />
                 </FormControl>
-                <Divider />
-                <Button
-                  color="white"
-                  bg="brand.purple.main"
-                  width="100%"
-                  mb="20px"
-                  onClick={() => window.open(link.href, '_blank')}
-                >
-                  Visit site
-                </Button>
               </Stack>
               {!editState.isOpen && (
-                <Iframe url={link.href} width="100%" height="100%" id="myId" />
+                <Iframe
+                  url={link.href}
+                  width="100%"
+                  height="100%"
+                  id="myId"
+                  // @ts-ignore
+                  onLoad={(e: any) => console.log(e)}
+                />
               )}
             </Stack>
           </Box>

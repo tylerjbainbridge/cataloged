@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
-import { setContext } from 'apollo-link-context';
+import { setContext } from '@apollo/link-context';
 import { persistCache } from 'apollo-cache-persist';
 import {
   ThemeProvider,
@@ -66,6 +66,7 @@ export const cache = new InMemoryCache({
     storage: window.localStorage,
   });
 
+  // @ts-ignore
   const link = authLink.concat(createUploadLink({ uri: GRAPHQL_ENDPOINT }));
 
   const client = new ApolloClient({

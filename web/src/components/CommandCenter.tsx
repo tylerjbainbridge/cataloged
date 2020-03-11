@@ -55,6 +55,7 @@ import {
   FaTags,
   FaPenSquare,
   FaLayerGroup,
+  FaSearch,
 } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
 import { usePrevious } from '../hooks/usePrevious';
@@ -67,11 +68,76 @@ import cuid from 'cuid';
 import { ADD_COLLECTION } from '../graphql/collection';
 import { CommandCenterSelectLabels } from './CommandCenterSelectLabels';
 import { CommandCenterSelectCollections } from './CommandCenterSelectCollections';
+import { CommandCenterSelectPrimaryAction } from './CommandCenterSelectPrimaryAction';
+import { CommandCenterSearchItems } from './CommandCenterSearchItems';
+import { CommandCenterFindItem } from './CommandCenterFindItem';
+
+(function(Mousetrap) {
+  if (!Mousetrap) {
+    return;
+  }
+  var _globalCallbacks = {};
+  var _originalStopCallback = Mousetrap.prototype.stopCallback;
+
+  // @ts-ignore
+  Mousetrap.prototype.stopCallback = function(e, element, combo, sequence) {
+    var self = this;
+
+    if (self.paused) {
+      return true;
+    }
+
+    // @ts-ignore
+    if (_globalCallbacks[combo] || _globalCallbacks[sequence]) {
+      return false;
+    }
+
+    return _originalStopCallback.call(self, e, element, combo);
+  };
+
+  // @ts-ignore
+  Mousetrap.prototype.bindGlobal = function(keys, callback, action) {
+    var self = this;
+    self.bind(keys, callback, action);
+
+    if (keys instanceof Array) {
+      for (var i = 0; i < keys.length; i++) {
+        // @ts-ignore
+        _globalCallbacks[keys[i]] = true;
+      }
+      return;
+    }
+
+    // @ts-ignore
+    _globalCallbacks[keys] = true;
+  };
+
+  // @ts-ignore
+  Mousetrap.prototype.unbindGlobal = function(keys, action) {
+    var self = this;
+    self.unbind(keys, action);
+
+    if (keys instanceof Array) {
+      for (var i = 0; i < keys.length; i++) {
+        // @ts-ignore
+        _globalCallbacks[keys[i]] = false;
+      }
+      return;
+    }
+
+    // @ts-ignore
+    _globalCallbacks[keys] = false;
+  };
+
+  // @ts-ignore
+  Mousetrap.init();
+})(typeof Mousetrap !== 'undefined' ? Mousetrap : undefined);
 
 export enum Action {
   OPEN_ITEM = 'OPEN_ITEM',
   GO_TO_SETTINGS = 'GO_TO_SETTINGS',
   GO_TO_ITEM = 'GO_TO_ITEM',
+  FIND_ITEM = 'FIND_ITEM',
   VISIT_LINK = 'VISIT_LINK',
   TOGGLE_FEED_VIEW_MODE = 'TOGGLE_FEED_VIEW_MODE',
   TOGGLE_SIDEBAR_OPEN = 'TOGGLE_SIDEBAR_OPEN',
@@ -92,6 +158,7 @@ export enum SecondaryAction {
   SELECT_LABELS = 'SELECT_LABELS',
   SELECT_COLLECTION = 'SELECT_COLLECTION',
   SELECT_STATUS = 'SELECT_STATUS',
+  FIND_ITEM = 'FIND_ITEM',
 }
 
 export enum Priority {
@@ -155,6 +222,14 @@ const getOptions = ({
         icon: <FaArrowRight />,
       },
       {
+        value: Action.FIND_ITEM,
+        display: 'Find item',
+        priority: Priority.MAX,
+        keybind: '/',
+        secondary: SecondaryAction.FIND_ITEM,
+        icon: <FaSearch />,
+      },
+      {
         value: Action.BULK_UPDATE_LABEL_ITEMS,
         display: `Add item${relevantItems.length > 1 ? 's' : ''} to Label`,
         priority: Priority.SELECTED_ITEMS,
@@ -169,7 +244,7 @@ const getOptions = ({
         value: Action.BULK_UPDATE_COLLECTION_ITEMS,
         display: `Add item${relevantItems.length > 1 ? 's' : ''} to Collection`,
         priority: Priority.SELECTED_ITEMS,
-        keybind: 'c c',
+        keybind: 'a',
         // disabled: true,
         disabled: !relevantItems.length,
         secondary: SecondaryAction.SELECT_COLLECTION,
@@ -367,12 +442,13 @@ export const useActionHandler = ({
         break;
       }
 
-      case Action.BULK_UPDATE_LABEL_ITEMS: {
-        updatePrimaryAction(Action.BULK_UPDATE_LABEL_ITEMS);
+      case Action.BULK_UPDATE_LABEL_ITEMS:
+      case Action.BULK_UPDATE_COLLECTION_ITEMS:
+      case Action.FIND_ITEM:
+        updatePrimaryAction(primaryAction);
         modalState.openModal();
 
         break;
-      }
 
       case Action.TOGGLE_FEED_VIEW_MODE: {
         cleanup();
@@ -427,7 +503,7 @@ export const useActionHandler = ({
   return runAction;
 };
 
-const useKeyDown = (options: any[], onSelect: any) => {
+export const useKeyDown = (options: any[], onSelect: any) => {
   const handler = useCallback(
     ({ setHighlightedIndex, highlightedIndex, clearOnSelect = true }: any) => (
       event: any,
@@ -579,6 +655,12 @@ export const ModalSelect = ({
                 <Box
                   // @ts-ignore
                   {...getRootProps({}, { suppressRefError: true })}
+                  onKeyDown={onKeyDownHandler({
+                    selectedItem,
+                    highlightedIndex,
+                    setHighlightedIndex,
+                    clearOnSelect: false,
+                  })}
                 >
                   <Input
                     size="lg"
@@ -595,12 +677,6 @@ export const ModalSelect = ({
                       register(ref);
                       inputRef.current = ref;
                     }}
-                    onKeyDown={onKeyDownHandler({
-                      selectedItem,
-                      highlightedIndex,
-                      setHighlightedIndex,
-                      clearOnSelect: false,
-                    })}
                   />
                 </Box>
                 <Box
@@ -639,7 +715,11 @@ export const ModalSelect = ({
                           index,
                           // @ts-ignore
                           item,
-                          onClick: () => handleSelection(item),
+                          onClick: () =>
+                            handleSelection(item, {
+                              setValue,
+                              search: values.search,
+                            }),
                           // @ts-ignore
                           backgroundColor:
                             highlightedIndex === index
@@ -659,65 +739,6 @@ export const ModalSelect = ({
         </Downshift>
       </ModalContent>
     </>
-  );
-};
-
-export const SelectPrimaryAction = ({
-  activeOptions,
-  updatePrimaryAction,
-}: any) => {
-  const relevantItems = useRelevantItems();
-
-  return (
-    <ModalSelect
-      handleSelection={(selection: any) => updatePrimaryAction(selection.value)}
-      header={
-        <>
-          Command Center{' '}
-          {relevantItems.length ? ` (${relevantItems.length})` : ''}
-        </>
-      }
-      getOptions={(search: string) =>
-        activeOptions.filter(
-          (option: any) =>
-            !search ||
-            //@ts-ignore
-            option.display.toLowerCase().includes(search.toLowerCase()),
-        )
-      }
-      getItemNode={(item: any) => (
-        <>
-          <Flex alignItems="center" color="gray.700">
-            {item.icon && (
-              <Box mr="10px">
-                {React.cloneElement(item.icon, { size: '12px' })}
-              </Box>
-            )}{' '}
-            <Text fontSize="lg" fontWeight="semibold">
-              {item.display}
-            </Text>
-          </Flex>
-          {!!item.keybind && (
-            <Stack d="flex" alignItems="center" pr="20px" spacing={2} isInline>
-              {getKeybindAsArray(item.keybind).map((key, idx) =>
-                key === 'then' ? (
-                  <Text key={idx + key}>then</Text>
-                ) : (
-                  <Tag
-                    size="sm"
-                    key={idx + key}
-                    variantColor="gray"
-                    textAlign="center"
-                  >
-                    {key}
-                  </Tag>
-                ),
-              )}
-            </Stack>
-          )}
-        </>
-      )}
-    />
   );
 };
 
@@ -786,19 +807,27 @@ export const CommandCenter = () => {
   useEffect(() => {
     // const body = document.querySelector('body');
     // const mousetrap = body ? new Mousetrap(body) : new Mousetrap();
-
+    // bindGlobal
+    // unbindGlobal
     activeOptions.forEach(({ keybind, value, disabled }) => {
       if (keybind) {
-        Mousetrap.unbind(keybind);
+        // @ts-ignore
+        Mousetrap.unbind(keybind, 'keydown');
         if (!disabled) {
-          Mousetrap.bind(keybind, e => {
-            e.stopPropagation();
-            e.preventDefault();
+          console.log('binding ', keybind);
+          Mousetrap.bind(
+            keybind,
+            e => {
+              e.stopPropagation();
+              e.preventDefault();
 
-            runAction(value);
+              // console.log({ keybind });
+              runAction(value);
 
-            return false;
-          });
+              return false;
+            },
+            'keydown',
+          );
         }
       }
     });
@@ -807,12 +836,13 @@ export const CommandCenter = () => {
   let node = null;
 
   if (!primaryAction && !secondaryAction) {
-    node = <SelectPrimaryAction {...params} />;
+    node = <CommandCenterSelectPrimaryAction {...params} />;
   } else if (secondaryAction) {
     // @ts-ignore
     const Component = {
       [SecondaryAction.SELECT_LABELS]: CommandCenterSelectLabels,
       [SecondaryAction.SELECT_COLLECTION]: CommandCenterSelectCollections,
+      [SecondaryAction.FIND_ITEM]: CommandCenterFindItem,
       // @ts-ignore
     }[secondaryAction];
 

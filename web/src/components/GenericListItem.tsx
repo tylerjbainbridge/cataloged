@@ -36,6 +36,7 @@ export const LIST_ITEM_HEIGHT = 70;
 
 export interface GenericListItemProps {
   item: ItemFull;
+  isSearchItem?: boolean;
   onDoubleClick?: any;
   onSingleClick?: any;
   onMetaClick?: any;
@@ -52,11 +53,12 @@ export interface GenericListItemProps {
 
 export const GenericListItem = ({
   item,
-  isItemSelected,
   isCursorItem,
   selectRange,
   toggleItem,
   isInSelectMode,
+  isItemSelected = false,
+  isSearchItem = false,
   withMarginBottom = true,
   menuNode = null,
   containerProps = {},
@@ -76,11 +78,17 @@ export const GenericListItem = ({
       d="flex"
       width="50px"
       height="100%"
-      rounded="lg"
       alignItems="center"
       justifyContent="center"
       backgroundColor="gray.50"
+      rounded="lg"
       border="1px solid lightgray"
+      {...(!isSearchItem
+        ? {
+            rounded: 'lg',
+            border: '1px solid lightgray',
+          }
+        : {})}
     >
       {typeof icon === 'string' ? (
         // @ts-ignore
@@ -90,6 +98,11 @@ export const GenericListItem = ({
       )}
     </Box>
   );
+
+  const selectedBorder = !isSearchItem ? '2px solid #5718FF' : undefined;
+  const defaultBorder = !isSearchItem
+    ? '2px solid rgb(240, 237, 237);'
+    : undefined;
 
   // List view
   return (
@@ -112,26 +125,30 @@ export const GenericListItem = ({
           // flexWrap="wrap"
           width="100%"
           height={`${LIST_ITEM_HEIGHT}px`}
-          rounded="lg"
           ref={itemRef}
-          bg="white"
+          // bg="white"
           {...(isItemSelected
             ? {
-                border: `2px solid #5718FF`,
+                border: selectedBorder,
                 backgroundColor: 'rgba(87,24,255, 0.1);',
               }
             : {
-                border: '2px solid rgb(240, 237, 237);',
+                border: defaultBorder,
               })}
           p="10px"
           justifyContent="space-between"
           alignItems="center"
           cursor="pointer"
-          boxShadow="rgba(0, 0, 0, 0.08) 0px 1px 4px -2px;"
+          {...(!isSearchItem
+            ? {
+                rounded: 'lg',
+                boxShadow: 'rgba(0, 0, 0, 0.08) 0px 1px 4px -2px;',
+              }
+            : {})}
           {...(isCursorItem
             ? {
                 backgroundColor: 'rgba(87,24,255, 0.1);',
-                ...(isItemSelected
+                ...(isItemSelected && !isSearchItem
                   ? {
                       border: `2px solid #5718FF`,
                     }
@@ -200,7 +217,7 @@ export const GenericListItem = ({
           <Box
             d="flex"
             height="100%"
-            width={isMobile ? '70%' : '60%'}
+            width={isSearchItem ? '70%' : isMobile ? '70%' : '60%'}
             alignItems="center"
           >
             <Box d="flex" height="100%" alignItems="center">
@@ -221,7 +238,13 @@ export const GenericListItem = ({
               )}
               <Box
                 ml={5}
-                width={isMobile ? '100px' : '350px'}
+                width={
+                  isSearchItem
+                    ? '250px'
+                    : isMobile || isSearchItem
+                    ? '100px'
+                    : '350px'
+                }
                 mr="15px"
                 isTruncated
               >
@@ -244,7 +267,7 @@ export const GenericListItem = ({
             justifyContent="space-between"
             flexWrap="wrap"
           >
-            {!isMobile ? (
+            {!isMobile && !isSearchItem ? (
               <Box ml="10px">
                 <DisplayLabels item={item} />
               </Box>
@@ -265,47 +288,55 @@ export const GenericListItem = ({
                   </Text>
                 )}
               </Box>
-              {menuNode || (
-                <ItemActionMenu item={item}>
-                  {menuNodes => (
-                    <>
-                      <MenuItem
-                        onClick={(e: any) => {
-                          e.stopPropagation();
-                          if (toggleItem) toggleItem(item);
-                        }}
-                      >
-                        {isItemSelected ? 'Deselect' : 'Select'}
-                      </MenuItem>
-                      <MenuItem
-                        onClick={(e: any) => {
-                          goToItem(item);
-                        }}
-                      >
-                        <FaExpandArrowsAlt
-                          size="13px"
-                          style={{ marginRight: '5px' }}
-                        />{' '}
-                        Open
-                      </MenuItem>
-                      {item.link && (
-                        <MenuItem
-                          d="flex"
-                          alignItems="center"
-                          onClick={(e: any) => {
-                            e.stopPropagation();
-                            // @ts-ignore
-                            window.open(item.link?.href, '_blank');
-                          }}
-                        >
-                          <Icon name="external-link" fontSize="11px" mr="5px" />{' '}
-                          Visit
-                        </MenuItem>
+              {!isSearchItem && (
+                <>
+                  {menuNode || (
+                    <ItemActionMenu item={item}>
+                      {menuNodes => (
+                        <>
+                          <MenuItem
+                            onClick={(e: any) => {
+                              e.stopPropagation();
+                              if (toggleItem) toggleItem(item);
+                            }}
+                          >
+                            {isItemSelected ? 'Deselect' : 'Select'}
+                          </MenuItem>
+                          <MenuItem
+                            onClick={(e: any) => {
+                              goToItem(item);
+                            }}
+                          >
+                            <FaExpandArrowsAlt
+                              size="13px"
+                              style={{ marginRight: '5px' }}
+                            />{' '}
+                            Open
+                          </MenuItem>
+                          {item.link && (
+                            <MenuItem
+                              d="flex"
+                              alignItems="center"
+                              onClick={(e: any) => {
+                                e.stopPropagation();
+                                // @ts-ignore
+                                window.open(item.link?.href, '_blank');
+                              }}
+                            >
+                              <Icon
+                                name="external-link"
+                                fontSize="11px"
+                                mr="5px"
+                              />{' '}
+                              Visit
+                            </MenuItem>
+                          )}
+                          {Object.values(menuNodes)}
+                        </>
                       )}
-                      {Object.values(menuNodes)}
-                    </>
+                    </ItemActionMenu>
                   )}
-                </ItemActionMenu>
+                </>
               )}
             </Box>
           </Box>

@@ -48,39 +48,45 @@ export const useOptimisticBatchUpdateItemCollections = (
 
   return [
     async ({ collectionIdsToRemove = [], collectionIdsToAdd = [] }) => {
-      const collectionsToAddMap = collectionIdsToAdd.reduce(
-        (p, id) => ({
-          ...p,
-          [id]: client.readFragment({
-            id: `Collection:${id}`,
-            fragment: COLLECTION_FRAGMENT,
-          }),
-        }),
-        {},
-      );
+      const collectionsToAddMap = collectionIdsToAdd.reduce((p, id) => {
+        try {
+          return {
+            ...p,
+            [id]: client.readFragment({
+              id: `Collection:${id}`,
+              fragment: COLLECTION_FULL_FRAGMENT,
+              fragmentName: 'CollectionFull',
+            }),
+          };
+        } catch (e) {
+          return p;
+        }
+      }, {});
 
       collectionIdsToRemove.forEach(collectionId => {
-        // @ts-ignore
-        const { entries } = client.readFragment({
-          id: `Collection:${collectionId}`,
-          fragment: COLLECTION_FULL_FRAGMENT,
-          fragmentName: 'CollectionFull',
-        });
+        try {
+          // @ts-ignore
+          const { entries } = client.readFragment({
+            id: `Collection:${collectionId}`,
+            fragment: COLLECTION_FULL_FRAGMENT,
+            fragmentName: 'CollectionFull',
+          });
 
-        client.writeFragment({
-          id: `Collection:${collectionId}`,
-          fragment: COLLECTION_FULL_FRAGMENT,
-          fragmentName: 'CollectionFull',
-          data: {
-            id: collectionId,
-            // @ts-ignore
-            entries: entries.filter(
-              (entry: CollectionEntryFull) =>
-                // @ts-ignore
-                !itemIds.includes(entry?.item?.id),
-            ),
-          },
-        });
+          client.writeFragment({
+            id: `Collection:${collectionId}`,
+            fragment: COLLECTION_FULL_FRAGMENT,
+            fragmentName: 'CollectionFull',
+            data: {
+              id: collectionId,
+              // @ts-ignore
+              entries: entries.filter(
+                (entry: CollectionEntryFull) =>
+                  // @ts-ignore
+                  !itemIds.includes(entry?.item?.id),
+              ),
+            },
+          });
+        } catch (e) {}
       });
 
       itemIds.forEach(itemId => {
