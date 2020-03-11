@@ -814,7 +814,7 @@ export const CommandCenter = () => {
         // @ts-ignore
         Mousetrap.unbind(keybind, 'keydown');
         if (!disabled) {
-          console.log('binding ', keybind);
+          // console.log('binding ', keybind);
           Mousetrap.bind(
             keybind,
             e => {

@@ -1,8 +1,9 @@
 // ==============
 // Main process
 // ==============
-const { app, BrowserWindow, nativeImage } = require('electron');
+const { app, shell, BrowserWindow, nativeImage } = require('electron');
 const path = require('path');
+const url = require('url');
 
 app.on('ready', () => {
   const iconPath = path.join(__dirname, 'build', 'icon.icns');
@@ -12,19 +13,62 @@ app.on('ready', () => {
     height: 900,
     icon: iconPath,
     titleBarStyle: 'hidden',
+    frame: false,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      webviewTag: true,
+      // zoomFactor: 1.0,
       // ...
     },
   });
 
+  // var windowTopBar = document.createElement('div');
+  // windowTopBar.style.width = '100%';
+  // windowTopBar.style.height = '32px';
+  // windowTopBar.style.backgroundColor = '#000';
+  // windowTopBar.style.position = 'absolute';
+  // windowTopBar.style.top = windowTopBar.style.left = 0;
+  // windowTopBar.style.webkitAppRegion = 'drag';
+  // document.body.appendChild(windowTopBar);
+
   // win.setIcon(iconPath);
 
-  win.loadURL('https://app.cataloged.co/', { userAgent: 'Chrome' });
+  // win.loadURL('https://app.cataloged.co/', { userAgent: 'Chrome' });
+
+  console.log(path.join(__dirname, './index.html'));
+
+  // win.loadURL(path.join(__dirname, './index.html'), {
+  //   userAgent: 'Chrome',
+  // });
+
+  win.loadURL(
+    url.format({
+      pathname: path.join(__dirname, 'index.html'),
+      protocol: 'file:',
+      slashes: true,
+    }),
+  );
+
+  // win.loadFile('index.html');
 
   app.userAgentFallback = app.userAgentFallback.replace(
     'Electron/' + process.versions.electron,
     '',
   );
+});
+
+// To open links
+app.on('web-contents-created', (e, contents) => {
+  contents.on('new-window', (e, url) => {
+    e.preventDefault();
+    // require('open')(url);
+    shell.openExternal(url);
+  });
+  contents.on('will-navigate', (e, url) => {
+    if (url !== contents.getURL()) {
+      e.preventDefault();
+      shell.openExternal(url);
+    }
+  });
 });
