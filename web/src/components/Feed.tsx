@@ -275,7 +275,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
   // highlightedIndex <= 0 ? null : highlightedIndex - 1,
 
-  return (
+  return isMobile && sidebarState.isOpen ? null : (
     <FeedContext.Provider
       value={{
         mode,
@@ -342,7 +342,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                       !!queryStringFilters?.length && (
                         <Tooltip
                           aria-label="add filter"
-                          zIndex={10}
+                          zIndex={22}
                           hasArrow
                           label={
                             queryStringFilters?.length
@@ -376,7 +376,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                       hasArrow
                       label="clear filters"
                       aria-label="clear filters"
-                      zIndex={10}
+                      zIndex={22}
                     >
                       <Button
                         mb="-10px"
@@ -409,7 +409,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                   hasArrow
                   label={mode === 'grid' ? 'list view' : 'grid view'}
                   aria-label="set mode"
-                  zIndex={10}
+                  zIndex={22}
                 >
                   <Button
                     cursor="pointer"

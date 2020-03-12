@@ -238,20 +238,24 @@ export const GenericListItem = ({
               )}
               <Box
                 ml={5}
-                width={
-                  isSearchItem
-                    ? '250px'
-                    : isMobile || isSearchItem
-                    ? '100px'
+                maxWidth={
+                  isSearchItem && !isMobile
+                    ? '300px'
+                    : isMobile
+                    ? '17   0px'
                     : '350px'
                 }
                 mr="15px"
-                isTruncated
               >
-                <Text fontWeight="semibold" maxWidth="100%">
+                <Text fontWeight="semibold" maxWidth="100%" isTruncated>
                   {title}{' '}
                   {subTitle && (
-                    <Text fontWeight="lighter" color="gray.500">
+                    <Text
+                      fontWeight="lighter"
+                      color="gray.500"
+                      maxWidth="100%"
+                      isTruncated
+                    >
                       {subTitle}
                     </Text>
                   )}
@@ -262,7 +266,13 @@ export const GenericListItem = ({
           <Box
             d="flex"
             height="100%"
-            width={isMobile ? '30%' : '40%'}
+            width={
+              isMobile && !!item.labels.length
+                ? '30%'
+                : isMobile && !item.labels.length
+                ? '20%'
+                : '40%'
+            }
             alignItems="center"
             justifyContent="space-between"
             flexWrap="wrap"

@@ -180,12 +180,17 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
     >
       <Flex height="100%" justifyContent="space-between" flexDirection="column">
         <Stack spacing="25px">
-          <Flex justifyContent="space-between" alignItems="center">
+          <Flex
+            pt="10px"
+            height="35px"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Flex
-              pt="10px"
               cursor="pointer"
               as={Link}
               alignItems="center"
+              height="100%"
               // @ts-ignore
               to={{
                 // @ts-ignore
@@ -198,20 +203,21 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
                 {user.email}
               </Text>
             </Flex>
-            <Button
-              cursor="pointer"
-              variant="ghost"
-              onClick={sidebarState.onToggle}
-              height="100%"
-            >
-              <Icon
-                name={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
-                aria-label={
-                  sidebarState.isOpen ? 'close sidebar' : 'open sidebar'
-                }
-                width="15px"
-              />
-            </Button>
+            {isMobile && (
+              <Button
+                cursor="pointer"
+                variant="ghost"
+                onClick={sidebarState.onToggle}
+              >
+                <Icon
+                  name={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
+                  aria-label={
+                    sidebarState.isOpen ? 'close sidebar' : 'open sidebar'
+                  }
+                  width="15px"
+                />
+              </Button>
+            )}
           </Flex>
           <Box>
             <Menu>
