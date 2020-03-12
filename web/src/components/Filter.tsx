@@ -43,7 +43,7 @@ import { AddOrUpdateSavedSearch } from './AddOrUpdateSavedSearch';
 // Dynamic set of inputs
 
 export interface NewFilterProps {
-  variables: any;
+  filters: any;
   loading: boolean;
   onDebouncedFilterChange: (filters: any[]) => void;
 }
@@ -114,6 +114,8 @@ export const FilterInput = ({
 
   // @ts-ignore
   const filterConfig = FILTER_CONFIGS[filter.name];
+
+  console.log({ filterConfig, filter });
 
   const inputRef = useRef(null);
 
@@ -199,7 +201,9 @@ export const FilterInput = ({
         <Box width="auto" {...styleProps}>
           <Labels
             canAddLabels={false}
-            selectedLabels={filter.values.map((name: string) =>
+            selectedLabels={(
+              filter.values || filter.value
+            ).map((name: string) =>
               user.labels.find(label => label.name === name),
             )}
             onSelectedLabelChange={(selectedLabels: any) => {
@@ -331,7 +335,7 @@ export const FilterInput = ({
 };
 
 export const Filter = ({
-  variables,
+  filters,
   loading,
   onDebouncedFilterChange,
 }: NewFilterProps) => {
@@ -351,7 +355,7 @@ export const Filter = ({
 
   const filterForm = useForm({
     defaultValues: {
-      [FORM_NAME]: variables.filters || [],
+      [FORM_NAME]: filters || [],
     },
   });
 
@@ -364,12 +368,12 @@ export const Filter = ({
 
   const { current: debouncedFilter } = useRef(
     _.debounce(async (values: any) => {
-      const filters = getFilterVariablesFromFormValues(
-        // @ts-ignore
-        !values[FORM_NAME] ? Object.values(values) : values[FORM_NAME],
-      );
+      // const newFilters = getFilterVariablesFromFormValues(
+      //   // @ts-ignore
+      //   fields,
+      // );
 
-      onDebouncedFilterChange(filters);
+      onDebouncedFilterChange(fields);
     }, 1000),
   );
 
@@ -380,12 +384,16 @@ export const Filter = ({
   const getName = (index: number) => `${FORM_NAME}[${index}]`;
 
   // useEffect(() => {
-  //   append({ name: randomString() });
+  //   filterForm.reset({
+  //     [FORM_NAME]: getFiltersFromQueryString(location.search),
+  //   });
   // }, []);
 
   useDeepCompareEffect(() => {
-    debouncedFilter.cancel();
-    debouncedFilter(values);
+    if (isOpen) {
+      debouncedFilter.cancel();
+      debouncedFilter(values);
+    }
   }, [values, fields.length]);
 
   useHotKey('cmd+p', onToggle, {
@@ -393,22 +401,23 @@ export const Filter = ({
   });
 
   const prevLocation = usePrevious(location);
+  const prevIsOpen = usePrevious(isOpen);
 
   useEffect(() => {
-    if (!isOpen && prevLocation && prevLocation.search !== location.search) {
+    if (!isOpen) {
       filterForm.reset({
         [FORM_NAME]: getFiltersFromQueryString(location.search),
       });
     }
   }, [location.search, isOpen]);
 
-  useEffect(() => {
-    if (isOpen) {
-      filterForm.reset({
-        [FORM_NAME]: variables?.filters || [],
-      });
-    }
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     filterForm.reset({
+  //       [FORM_NAME]: filters,
+  //     });
+  //   }
+  // }, [isOpen]);
 
   const trigger = (
     <Button
@@ -454,7 +463,7 @@ export const Filter = ({
               maxHeight: '500px',
               overflowY: 'auto',
             })}
-        zIndex={500}
+        zIndex={200}
       >
         {/* <PopoverArrow /> */}
         <PopoverBody
@@ -465,8 +474,9 @@ export const Filter = ({
             : {
                 minWidth: fields.length ? 500 : 300,
               })}
+          zIndex={200}
         >
-          <Stack spacing={1}>
+          <Stack spacing={1} zIndex={200}>
             {!fields.length && (
               <Text alignSelf="center" color="gray.500">
                 No filters applied
@@ -474,6 +484,8 @@ export const Filter = ({
             )}
             {fields.map((field: any, index: number) => {
               const name = getName(index);
+
+              console.log(field);
 
               // @ts-ignore
               const value = values[name] || values[FORM_NAME]?.[index];
@@ -488,10 +500,15 @@ export const Filter = ({
                     remove={() => remove(index)}
                     defaultValue={
                       // @ts-ignore
-                      value || {
-                        name: 'search',
-                        value: '',
-                      }
+                      field.name
+                        ? {
+                            name: field.name,
+                            value: field.value || field.values,
+                          }
+                        : {
+                            name: 'search',
+                            value: '',
+                          }
                     }
                     onChange={([value]) => ({
                       value,

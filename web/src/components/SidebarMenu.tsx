@@ -30,6 +30,7 @@ import { NoteModal } from './NoteModal';
 import { getQueryStringFromFilters } from '../util/helpers';
 import { FaEllipsisH } from 'react-icons/fa';
 import { DELETE_COLLECTION } from '../graphql/collection';
+import { useMedia } from 'react-use';
 
 export const SIDEBAR_WIDTH = 280;
 
@@ -119,6 +120,7 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
   const collectionMatch = useRouteMatch('/collection/:id');
 
   const match = useRouteMatch('*');
+  const isMobile = useMedia('(max-width: 768px)');
 
   const history = useHistory();
   const location = useLocation();
@@ -173,27 +175,43 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
       bg="#fcfeff"
       id="sidebar-container"
       zIndex={3}
-      width={`${SIDEBAR_WIDTH}px`}
-      maxWidth={`${SIDEBAR_WIDTH}px`}
+      width={isMobile ? window.innerWidth : `${SIDEBAR_WIDTH}px`}
+      maxWidth={isMobile ? window.innerWidth : `${SIDEBAR_WIDTH}px`}
     >
       <Flex height="100%" justifyContent="space-between" flexDirection="column">
         <Stack spacing="25px">
-          <Flex
-            pt="10px"
-            cursor="pointer"
-            as={Link}
-            alignItems="center"
-            // @ts-ignore
-            to={{
+          <Flex justifyContent="space-between" alignItems="center">
+            <Flex
+              pt="10px"
+              cursor="pointer"
+              as={Link}
+              alignItems="center"
               // @ts-ignore
-              pathname: `${match.url}/settings`.replace('//', '/'),
-              search: location.search,
-            }}
-          >
-            <Image src={logo} size="30px" mr="7px" />
-            <Text fontSize="sm" fontWeight="semibold" isTruncated>
-              {user.email}
-            </Text>
+              to={{
+                // @ts-ignore
+                pathname: `${match.url}/settings`.replace('//', '/'),
+                search: location.search,
+              }}
+            >
+              <Image src={logo} size="30px" mr="7px" />
+              <Text fontSize="sm" fontWeight="semibold" isTruncated>
+                {user.email}
+              </Text>
+            </Flex>
+            <Button
+              cursor="pointer"
+              variant="ghost"
+              onClick={sidebarState.onToggle}
+              height="100%"
+            >
+              <Icon
+                name={sidebarState.isOpen ? 'arrow-left' : 'arrow-right'}
+                aria-label={
+                  sidebarState.isOpen ? 'close sidebar' : 'open sidebar'
+                }
+                width="15px"
+              />
+            </Button>
           </Flex>
           <Box>
             <Menu>

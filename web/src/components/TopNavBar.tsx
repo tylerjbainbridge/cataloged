@@ -34,7 +34,7 @@ export const TopNavBar = ({
       alignItems="center"
       position="fixed"
       top={0}
-      zIndex={1}
+      zIndex={20}
       padding="20px"
       bg="rgb(255, 255, 255, 0.7)"
     >
@@ -44,7 +44,7 @@ export const TopNavBar = ({
         alignItems="center"
         width="100%"
       >
-        {isMobile || true ? (
+        {(isMobile && !sidebarState.isOpen) || !isMobile ? (
           <Button
             cursor="pointer"
             variant="ghost"

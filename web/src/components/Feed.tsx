@@ -397,7 +397,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                 </Box>
               ) : (
                 <Filter
-                  variables={variables}
+                  filters={queryStringFilters}
                   loading={networkStatus !== 6 && loading}
                   onDebouncedFilterChange={updateFilters}
                 />

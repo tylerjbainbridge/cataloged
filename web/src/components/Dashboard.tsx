@@ -67,7 +67,7 @@ export const Dashboard = () => {
         docked={sidebarState.isOpen}
         open={sidebarState.isOpen}
         // transitions={false}
-        defaultSidebarWidth={SIDEBAR_WIDTH}
+        defaultSidebarWidth={isMobile ? window.innerWidth : SIDEBAR_WIDTH}
       >
         {isViewingItem && !isViewingSettings && <FeedDrawerItemView />}
         {isViewingSettings && <Settings />}
