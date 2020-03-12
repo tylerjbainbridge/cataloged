@@ -16,7 +16,24 @@
   "build": {
     "productName": "Cataloged",
     "icon": "build/icon.icns",
+    "afterSign": "notarize.js",
+    "files": [
+      "build/**/*",
+      "main.js",
+      "preload.js",
+      "notarize.js",
+      "index.html",
+      "package.json",
+      "embedded.provisionprofile"
+    ],
     "mac": {
+      "appId": "com.app.cataloged",
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "./build/entitlements.mac.plist",
+      "entitlementsInherit": "./build/entitlements.mac.plist",
+      "provisioningProfile": "embedded.provisionprofile",
       "target": [
         "dmg"
       ]
@@ -24,6 +41,7 @@
   },
   "devDependencies": {
     "electron": "^8.1.0",
-    "electron-builder": "^22.4.0"
+    "electron-builder": "^22.4.0",
+    "electron-notarize": "^0.2.1"
   }
 }
