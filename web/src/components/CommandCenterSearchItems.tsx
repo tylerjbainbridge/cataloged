@@ -44,7 +44,7 @@ export const COMMAND_CENTER_SEARCH_ITEMS = gql`
   ${ITEM_CONNECTION_FULL_FRAGMENT}
 `;
 
-export const CommandCenterSearchItems = ({ onItemSelect }: any) => {
+export const CommandCenterSearchItems = ({ header, onItemSelect }: any) => {
   const [filters, setFilters] = useState([]);
 
   const inputRef = useRef(null);
@@ -76,11 +76,11 @@ export const CommandCenterSearchItems = ({ onItemSelect }: any) => {
       as="form"
       height="300px"
       maxHeight="300px"
-      width="550px"
+      minWidth="650px"
       rounded="lg"
     >
       <ModalHeader>
-        Search Items{' '}
+        {header || 'Search Items'}{' '}
         {loading && <Spinner ml="2px" size="sm" color="gray.200" />}
       </ModalHeader>
       <ModalCloseButton />

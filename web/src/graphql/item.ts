@@ -151,6 +151,34 @@ export const DELETE_MANY_ITEMS_MUTATION = gql`
   }
 `;
 
+export const CONNECT_ITEM_TO_ITEM_MUTATION = gql`
+  mutation connectItemToItem($itemOneId: String!, $itemTwoId: String!) {
+    connectItemToItem(itemOneId: $itemOneId, itemTwoId: $itemTwoId) {
+      id
+
+      items {
+        ...ItemToItem
+      }
+    }
+  }
+
+  ${ITEM_TO_ITEM_FRAGMENT}
+`;
+
+export const DICONNECT_ITEM_FROM_ITEM_MUTATION = gql`
+  mutation disconnectItemFromItem($itemOneId: String!, $itemTwoId: String!) {
+    disconnectItemFromItem(itemOneId: $itemOneId, itemTwoId: $itemTwoId) {
+      id
+
+      items {
+        ...ItemToItem
+      }
+    }
+  }
+
+  ${ITEM_TO_ITEM_FRAGMENT}
+`;
+
 export const BATCH_UPDATE_ITEMS_LABELS_MUTATION = gql`
   mutation batchUpdateItemLabels(
     $itemIds: [String!]!

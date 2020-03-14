@@ -46,15 +46,17 @@ export const NoteDrawer = ({
   return (
     <>
       <DrawerContent
+        key={item.id}
         d="flex"
         width={isMobile ? '100%' : '65%'}
         flexWrap="wrap"
+        zIndex={200}
         {...drawerContentProps}
       >
         {!isMobile && (
           <Box
             d="flex"
-            width={isMobile ? '100%' : 'calc(100% - 350px)'}
+            width={isMobile ? '100%' : 'calc(100% - 450px)'}
             justifyContent="center"
             height="100%"
           >
@@ -85,8 +87,8 @@ export const NoteDrawer = ({
           </Box>
         )}
         <Flex
-          width={isMobile ? '100%' : '350px'}
-          minWidth={isMobile ? '100%' : '350px'}
+          width={isMobile ? '100%' : '450px'}
+          minWidth={isMobile ? '100%' : '450px'}
           float="right"
           height="100%"
           bg="white"
@@ -115,7 +117,7 @@ export const NoteDrawer = ({
               {isMobile && (
                 <Box
                   p={5}
-                  width={isMobile ? '100%' : 'calc(100% - 350px)'}
+                  width={isMobile ? '100%' : 'calc(100% - 450px)'}
                   justifyContent="center"
                   height="100%"
                   border="1px solid black"

@@ -10,9 +10,9 @@ input BooleanFilter {
 type Collection {
   createdAt: DateTime!
   description: String
-  entries(after: String, before: String, first: Int, last: Int, orderBy: CollectionEntriesOrderByInput, skip: Int): [CollectionEntry!]!
+  entries(after: CollectionEntryWhereUniqueInput, before: CollectionEntryWhereUniqueInput, first: Int, last: Int, orderBy: CollectionEntriesOrderByInput, skip: Int): [CollectionEntry!]!
   id: String!
-  items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]!
+  items(after: ItemWhereUniqueInput, before: ItemWhereUniqueInput, first: Int, last: Int, skip: Int): [Item!]!
   name: String!
   updatedAt: DateTime!
 }
@@ -295,6 +295,7 @@ input CollectionOrderByInput {
   id: OrderByArg
   name: OrderByArg
   updatedAt: OrderByArg
+  user: OrderByArg
 }
 
 input CollectionWhereInput {
@@ -459,10 +460,13 @@ input FileOrderByInput {
   id: OrderByArg
   isFailed: OrderByArg
   isUploaded: OrderByArg
+  item: OrderByArg
   name: OrderByArg
   size: OrderByArg
   title: OrderByArg
   updatedAt: OrderByArg
+  uploadGroup: OrderByArg
+  user: OrderByArg
   width: OrderByArg
 }
 
@@ -776,15 +780,15 @@ input InviteCodeWhereUniqueInput {
 }
 
 type Item {
-  collections(after: String, before: String, first: Int, last: Int, orderBy: CollectionOrderByInput, skip: Int): [Collection!]!
+  collections(after: CollectionWhereUniqueInput, before: CollectionWhereUniqueInput, first: Int, last: Int, orderBy: CollectionOrderByInput, skip: Int): [Collection!]!
   createdAt: DateTime!
   date: DateTime!
   file: File
   googleContact: GoogleContact
   id: String!
   isFavorited: Boolean!
-  items(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int): [Item!]!
-  labels(after: String, before: String, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
+  items(after: ItemWhereUniqueInput, before: ItemWhereUniqueInput, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int): [Item!]!
+  labels(after: LabelWhereUniqueInput, before: LabelWhereUniqueInput, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   link: Link
   note: Note
   status: ItemStatus!
@@ -1100,9 +1104,14 @@ input ItemOrderByInput {
   deletedAt: OrderByArg
   id: OrderByArg
   isFavorited: OrderByArg
+  item: OrderByArg
+  link: OrderByArg
+  note: OrderByArg
+  shareLink: OrderByArg
   status: OrderByArg
   type: OrderByArg
   updatedAt: OrderByArg
+  user: OrderByArg
 }
 
 enum ItemStatus {
@@ -1154,7 +1163,7 @@ type JWT {
 type Label {
   createdAt: DateTime!
   id: String!
-  items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]!
+  items(after: ItemWhereUniqueInput, before: ItemWhereUniqueInput, first: Int, last: Int, skip: Int): [Item!]!
   name: String!
   updatedAt: DateTime!
 }
@@ -1196,6 +1205,7 @@ input LabelOrderByInput {
   id: OrderByArg
   name: OrderByArg
   updatedAt: OrderByArg
+  user: OrderByArg
 }
 
 input LabelWhereInput {
@@ -1314,6 +1324,7 @@ type Mutation {
   deleteManyItems(itemIds: [String!]!): [Item!]!
   deleteOneFile(where: FileWhereUniqueInput!): File
   deleteSavedSearch(id: String): SavedSearch!
+  disconnectItemFromItem(itemOneId: String!, itemTwoId: String!): [Item!]!
   disconnectLabelFromItem(itemId: String!, labelId: String!): Item!
   enterInviteCode(code: String!): User!
   generateSignedUrls(signedURLArgs: [SignedURLArgs!]): InProgressUpload!
@@ -1465,12 +1476,12 @@ type PageInfo {
 }
 
 type Query {
-  _collections(after: String, before: String, first: Int, last: Int, orderBy: CollectionOrderByInput, skip: Int, where: CollectionWhereInput): [Collection!]!
-  _files(after: String, before: String, first: Int, last: Int, orderBy: FileOrderByInput, skip: Int, where: FileWhereInput): [File!]!
-  _inviteCodes(after: String, before: String, first: Int, last: Int, orderBy: InviteCodeOrderByInput, skip: Int, where: InviteCodeWhereInput): [InviteCode!]!
-  _items(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
-  _uploadgroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
-  _users(after: String, before: String, first: Int, last: Int, orderBy: UserOrderByInput, skip: Int, where: UserWhereInput): [User!]!
+  _collections(after: CollectionWhereUniqueInput, before: CollectionWhereUniqueInput, first: Int, last: Int, orderBy: CollectionOrderByInput, skip: Int, where: CollectionWhereInput): [Collection!]!
+  _files(after: FileWhereUniqueInput, before: FileWhereUniqueInput, first: Int, last: Int, orderBy: FileOrderByInput, skip: Int, where: FileWhereInput): [File!]!
+  _inviteCodes(after: InviteCodeWhereUniqueInput, before: InviteCodeWhereUniqueInput, first: Int, last: Int, orderBy: InviteCodeOrderByInput, skip: Int, where: InviteCodeWhereInput): [InviteCode!]!
+  _items(after: ItemWhereUniqueInput, before: ItemWhereUniqueInput, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int, where: ItemWhereInput): [Item!]!
+  _uploadgroups(after: UploadGroupWhereUniqueInput, before: UploadGroupWhereUniqueInput, first: Int, last: Int, orderBy: UploadGroupOrderByInput, skip: Int, where: UploadGroupWhereInput): [UploadGroup!]!
+  _users(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int, orderBy: UserOrderByInput, skip: Int, where: UserWhereInput): [User!]!
   collection(id: String!): Collection!
   collections: [Collection!]!
   file(where: FileWhereUniqueInput!): File
@@ -1482,7 +1493,7 @@ type Query {
   savedSearches: [SavedSearch!]!
   test: String!
   uploadGroups(after: String, before: String, first: Int, last: Int, orderBy: UploadGroupOrderByInput, where: UploadGroupWhereInput): [UploadGroup!]!
-  users(after: String, before: String, first: Int, last: Int, skip: Int): [User!]!
+  users(after: UserWhereUniqueInput, before: UserWhereUniqueInput, first: Int, last: Int, skip: Int): [User!]!
 }
 
 type SavedSearch {
@@ -1692,7 +1703,7 @@ scalar Upload
 
 type UploadGroup {
   createdAt: DateTime!
-  files(after: String, before: String, first: Int, last: Int, skip: Int): [File!]!
+  files(after: FileWhereUniqueInput, before: FileWhereUniqueInput, first: Int, last: Int, skip: Int): [File!]!
   id: String!
   isComplete: Boolean
   updatedAt: DateTime!
@@ -1738,6 +1749,7 @@ input UploadGroupOrderByInput {
   isComplete: OrderByArg
   isFailed: OrderByArg
   updatedAt: OrderByArg
+  user: OrderByArg
 }
 
 input UploadGroupWhereInput {
@@ -1758,17 +1770,17 @@ input UploadGroupWhereUniqueInput {
 }
 
 type User {
-  collections(after: String, before: String, first: Int, last: Int, skip: Int): [Collection!]!
+  collections(after: CollectionWhereUniqueInput, before: CollectionWhereUniqueInput, first: Int, last: Int, skip: Int): [Collection!]!
   email: String!
-  files(after: String, before: String, first: Int, last: Int, skip: Int): [File!]!
+  files(after: FileWhereUniqueInput, before: FileWhereUniqueInput, first: Int, last: Int, skip: Int): [File!]!
   firstName: String
   fullName: String!
   googleAccounts: [GoogleAccount!]!
   id: String!
   inviteCode: InviteCode
   isActive: Boolean!
-  items(after: String, before: String, first: Int, last: Int, skip: Int): [Item!]!
-  labels(after: String, before: String, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
+  items(after: ItemWhereUniqueInput, before: ItemWhereUniqueInput, first: Int, last: Int, skip: Int): [Item!]!
+  labels(after: LabelWhereUniqueInput, before: LabelWhereUniqueInput, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   lastName: String
   role: String!
 }
@@ -2230,6 +2242,7 @@ input UserOrderByInput {
   email: OrderByArg
   firstName: OrderByArg
   id: OrderByArg
+  inviteCode: OrderByArg
   isActive: OrderByArg
   lastName: OrderByArg
   role: OrderByArg

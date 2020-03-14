@@ -49,6 +49,7 @@ export interface GenericListItemProps {
   selectRange?: any;
   menuNode?: JSX.Element | null;
   withMarginBottom?: boolean;
+  onlyImportant?: boolean;
 }
 
 export const GenericListItem = ({
@@ -58,6 +59,7 @@ export const GenericListItem = ({
   toggleItem,
   isInSelectMode,
   isItemSelected = false,
+  onlyImportant,
   isSearchItem = false,
   withMarginBottom = true,
   menuNode = null,
@@ -263,93 +265,95 @@ export const GenericListItem = ({
               </Box>
             </Box>
           </Box>
-          <Box
-            d="flex"
-            height="100%"
-            width={
-              isMobile && !!item.labels.length
-                ? '30%'
-                : isMobile && !item.labels.length
-                ? '20%'
-                : '40%'
-            }
-            alignItems="center"
-            justifyContent="space-between"
-            flexWrap="wrap"
-          >
-            {!isMobile && !isSearchItem ? (
-              <Box ml="10px">
-                <DisplayLabels item={item} />
-              </Box>
-            ) : (
-              <Box />
-            )}
+          {!onlyImportant && (
             <Box
               d="flex"
               height="100%"
+              width={
+                isMobile && !!item.labels.length
+                  ? '30%'
+                  : isMobile && !item.labels.length
+                  ? '20%'
+                  : '40%'
+              }
               alignItems="center"
               justifyContent="space-between"
               flexWrap="wrap"
             >
-              <Box mr="10px">
-                {!isMobile && (
-                  <Text fontSize="md" color="gray.400">
-                    {format(new Date(item.createdAt), 'MM/dd/yyyy')}
-                  </Text>
-                )}
-              </Box>
-              {!isSearchItem && (
-                <>
-                  {menuNode || (
-                    <ItemActionMenu item={item}>
-                      {menuNodes => (
-                        <>
-                          <MenuItem
-                            onClick={(e: any) => {
-                              e.stopPropagation();
-                              if (toggleItem) toggleItem(item);
-                            }}
-                          >
-                            {isItemSelected ? 'Deselect' : 'Select'}
-                          </MenuItem>
-                          <MenuItem
-                            onClick={(e: any) => {
-                              goToItem(item);
-                            }}
-                          >
-                            <FaExpandArrowsAlt
-                              size="13px"
-                              style={{ marginRight: '5px' }}
-                            />{' '}
-                            Open
-                          </MenuItem>
-                          {item.link && (
+              {!isMobile && !isSearchItem ? (
+                <Box ml="10px">
+                  <DisplayLabels item={item} />
+                </Box>
+              ) : (
+                <Box />
+              )}
+              <Box
+                d="flex"
+                height="100%"
+                alignItems="center"
+                justifyContent="space-between"
+                flexWrap="wrap"
+              >
+                <Box mr="10px">
+                  {!isMobile && (
+                    <Text fontSize="md" color="gray.400">
+                      {format(new Date(item.createdAt), 'MM/dd/yyyy')}
+                    </Text>
+                  )}
+                </Box>
+                {!isSearchItem && (
+                  <>
+                    {menuNode || (
+                      <ItemActionMenu item={item}>
+                        {menuNodes => (
+                          <>
                             <MenuItem
-                              d="flex"
-                              alignItems="center"
                               onClick={(e: any) => {
                                 e.stopPropagation();
-                                // @ts-ignore
-                                window.open(item.link?.href, '_blank');
+                                if (toggleItem) toggleItem(item);
                               }}
                             >
-                              <Icon
-                                name="external-link"
-                                fontSize="11px"
-                                mr="5px"
-                              />{' '}
-                              Visit
+                              {isItemSelected ? 'Deselect' : 'Select'}
                             </MenuItem>
-                          )}
-                          {Object.values(menuNodes)}
-                        </>
-                      )}
-                    </ItemActionMenu>
-                  )}
-                </>
-              )}
+                            <MenuItem
+                              onClick={(e: any) => {
+                                goToItem(item);
+                              }}
+                            >
+                              <FaExpandArrowsAlt
+                                size="13px"
+                                style={{ marginRight: '5px' }}
+                              />{' '}
+                              Open
+                            </MenuItem>
+                            {item.link && (
+                              <MenuItem
+                                d="flex"
+                                alignItems="center"
+                                onClick={(e: any) => {
+                                  e.stopPropagation();
+                                  // @ts-ignore
+                                  window.open(item.link?.href, '_blank');
+                                }}
+                              >
+                                <Icon
+                                  name="external-link"
+                                  fontSize="11px"
+                                  mr="5px"
+                                />{' '}
+                                Visit
+                              </MenuItem>
+                            )}
+                            {Object.values(menuNodes)}
+                          </>
+                        )}
+                      </ItemActionMenu>
+                    )}
+                  </>
+                )}
+              </Box>
             </Box>
-          </Box>
+          )}
         </PseudoBox>
       </LazyLoad>
     </Box>

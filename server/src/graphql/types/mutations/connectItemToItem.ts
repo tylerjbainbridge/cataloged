@@ -15,14 +15,21 @@ export const connectItemToItem = extendType({
         itemTwoId: stringArg({ required: true }),
       },
       resolve: async (root, args, ctx) => {
-        await prisma.item.update({
-          where: { id: args.itemOneId },
-          data: {
-            items: { connect: { id: args.itemTwoId } },
-          },
-        });
-
-        console.log([args.itemOneId, args.itemTwoId]);
+        await Promise.all(
+          [
+            [args.itemOneId, args.itemTwoId],
+            [args.itemTwoId, args.itemOneId],
+          ].map(async ([id, otherId]) => {
+            try {
+              await prisma.item.update({
+                where: { id },
+                data: {
+                  items: { connect: { id: otherId } },
+                },
+              });
+            } catch (e) {}
+          }),
+        );
 
         return await prisma.item.findMany({
           where: { id: { in: [args.itemOneId, args.itemTwoId] } },

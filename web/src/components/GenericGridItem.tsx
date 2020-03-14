@@ -343,6 +343,16 @@ export const GenericGridItem = ({
                   {subTitle}
                 </Text>
               )}
+              {!!item.items.length && (
+                <Text
+                  fontSize="sm"
+                  fontWeight="semibold"
+                  color="gray.300"
+                  isTruncated
+                >
+                  {item.items.length} related items
+                </Text>
+              )}
             </Stack>
             <Flex justifyContent="space-between">
               <DisplayLabels item={item} />

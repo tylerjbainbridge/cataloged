@@ -56,6 +56,7 @@ import {
   FaPenSquare,
   FaLayerGroup,
   FaSearch,
+  FaLink,
 } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
 import { usePrevious } from '../hooks/usePrevious';
@@ -71,6 +72,7 @@ import { CommandCenterSelectCollections } from './CommandCenterSelectCollections
 import { CommandCenterSelectPrimaryAction } from './CommandCenterSelectPrimaryAction';
 import { CommandCenterSearchItems } from './CommandCenterSearchItems';
 import { CommandCenterFindItem } from './CommandCenterFindItem';
+import { CommandCenterConnectItemToItem } from './CommandCenterConnectItemToItem';
 
 (function(Mousetrap) {
   if (!Mousetrap) {
@@ -152,6 +154,7 @@ export enum Action {
   CREATE_COLLECTION = 'CREATE_COLLECTION',
   BULK_UPDATE_STATUS_ITEMS = 'BULK_UPDATE_STATUS_ITEMS',
   BULK_UPDATE_COLLECTION_ITEMS = 'BULK_UPDATE_COLLECTION_ITEMS',
+  CONNECT_TO_ITEM = 'CONNECT_TO_ITEM',
 }
 
 export enum SecondaryAction {
@@ -159,6 +162,7 @@ export enum SecondaryAction {
   SELECT_COLLECTION = 'SELECT_COLLECTION',
   SELECT_STATUS = 'SELECT_STATUS',
   FIND_ITEM = 'FIND_ITEM',
+  CONNECT_TO_ITEM = 'CONNECT_TO_ITEM',
 }
 
 export enum Priority {
@@ -228,6 +232,14 @@ const getOptions = ({
         keybind: '/',
         secondary: SecondaryAction.FIND_ITEM,
         icon: <FaSearch />,
+      },
+      {
+        value: Action.CONNECT_TO_ITEM,
+        display: 'Connect to item',
+        disabled: relevantItems.length !== 1,
+        priority: Priority.SELECTED_ITEMS,
+        icon: <FaLink />,
+        secondary: SecondaryAction.CONNECT_TO_ITEM,
       },
       {
         value: Action.BULK_UPDATE_LABEL_ITEMS,
@@ -628,8 +640,9 @@ export const ModalSelect = ({
         as="form"
         height="300px"
         maxHeight="300px"
-        width="550px"
+        minWidth="650px"
         rounded="lg"
+        zIndex={300}
       >
         <ModalHeader>{header}</ModalHeader>
         <ModalCloseButton />
@@ -692,6 +705,7 @@ export const ModalSelect = ({
                   {filteredOptions.map((item: any, index: number) => {
                     return (
                       <Flex
+                        key={item.name + item.id + index}
                         justifyContent="space-between"
                         alignItems="center"
                         height="60px"
@@ -843,6 +857,7 @@ export const CommandCenter = () => {
       [SecondaryAction.SELECT_LABELS]: CommandCenterSelectLabels,
       [SecondaryAction.SELECT_COLLECTION]: CommandCenterSelectCollections,
       [SecondaryAction.FIND_ITEM]: CommandCenterFindItem,
+      [SecondaryAction.CONNECT_TO_ITEM]: CommandCenterConnectItemToItem,
       // @ts-ignore
     }[secondaryAction];
 
@@ -857,7 +872,7 @@ export const CommandCenter = () => {
       initialFocusRef={inputRef}
       size="xl"
     >
-      <ModalOverlay />
+      <ModalOverlay zIndex={250} />
       {isModalOpen && node}
     </Modal>
   );

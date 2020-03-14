@@ -89,6 +89,7 @@ export const FileDrawer = ({
 
   return (
     <DrawerContent
+      key={item.id}
       height="100%"
       width={width}
       bg="black"

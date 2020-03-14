@@ -257,6 +257,7 @@ export interface NexusGenInputs {
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     name?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   CollectionWhereInput: { // input type
     AND?: NexusGenInputs['CollectionWhereInput'][] | null; // [CollectionWhereInput!]
@@ -386,10 +387,13 @@ export interface NexusGenInputs {
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isFailed?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isUploaded?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    item?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     name?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     size?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     title?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    uploadGroup?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     width?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   FileWhereInput: { // input type
@@ -897,9 +901,14 @@ export interface NexusGenInputs {
     deletedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isFavorited?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    item?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    link?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    note?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    shareLink?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     status?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     type?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   ItemWhereInput: { // input type
     AND?: NexusGenInputs['ItemWhereInput'][] | null; // [ItemWhereInput!]
@@ -960,6 +969,7 @@ export interface NexusGenInputs {
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     name?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   LabelWhereInput: { // input type
     AND?: NexusGenInputs['LabelWhereInput'][] | null; // [LabelWhereInput!]
@@ -1329,6 +1339,7 @@ export interface NexusGenInputs {
     isComplete?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isFailed?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   UploadGroupWhereInput: { // input type
     AND?: NexusGenInputs['UploadGroupWhereInput'][] | null; // [UploadGroupWhereInput!]
@@ -1772,6 +1783,7 @@ export interface NexusGenInputs {
     email?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     firstName?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    inviteCode?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isActive?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     lastName?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     role?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
@@ -2227,6 +2239,7 @@ export interface NexusGenFieldTypes {
     deleteManyItems: NexusGenRootTypes['Item'][]; // [Item!]!
     deleteOneFile: NexusGenRootTypes['File'] | null; // File
     deleteSavedSearch: NexusGenRootTypes['SavedSearch']; // SavedSearch!
+    disconnectItemFromItem: NexusGenRootTypes['Item'][]; // [Item!]!
     disconnectLabelFromItem: NexusGenRootTypes['Item']; // Item!
     enterInviteCode: NexusGenRootTypes['User']; // User!
     generateSignedUrls: NexusGenRootTypes['InProgressUpload']; // InProgressUpload!
@@ -2320,16 +2333,16 @@ export interface NexusGenFieldTypes {
 export interface NexusGenArgTypes {
   Collection: {
     entries: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['CollectionEntryWhereUniqueInput'] | null; // CollectionEntryWhereUniqueInput
+      before?: NexusGenInputs['CollectionEntryWhereUniqueInput'] | null; // CollectionEntryWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['CollectionEntriesOrderByInput'] | null; // CollectionEntriesOrderByInput
       skip?: number | null; // Int
     }
     items: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
+      before?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       skip?: number | null; // Int
@@ -2337,24 +2350,24 @@ export interface NexusGenArgTypes {
   }
   Item: {
     collections: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['CollectionWhereUniqueInput'] | null; // CollectionWhereUniqueInput
+      before?: NexusGenInputs['CollectionWhereUniqueInput'] | null; // CollectionWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['CollectionOrderByInput'] | null; // CollectionOrderByInput
       skip?: number | null; // Int
     }
     items: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
+      before?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['ItemOrderByInput'] | null; // ItemOrderByInput
       skip?: number | null; // Int
     }
     labels: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['LabelWhereUniqueInput'] | null; // LabelWhereUniqueInput
+      before?: NexusGenInputs['LabelWhereUniqueInput'] | null; // LabelWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['LabelOrderByInput'] | null; // LabelOrderByInput
@@ -2363,8 +2376,8 @@ export interface NexusGenArgTypes {
   }
   Label: {
     items: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
+      before?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       skip?: number | null; // Int
@@ -2445,6 +2458,10 @@ export interface NexusGenArgTypes {
     deleteSavedSearch: { // args
       id?: string | null; // String
     }
+    disconnectItemFromItem: { // args
+      itemOneId: string; // String!
+      itemTwoId: string; // String!
+    }
     disconnectLabelFromItem: { // args
       itemId: string; // String!
       labelId: string; // String!
@@ -2523,8 +2540,8 @@ export interface NexusGenArgTypes {
   }
   Query: {
     _collections: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['CollectionWhereUniqueInput'] | null; // CollectionWhereUniqueInput
+      before?: NexusGenInputs['CollectionWhereUniqueInput'] | null; // CollectionWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['CollectionOrderByInput'] | null; // CollectionOrderByInput
@@ -2532,8 +2549,8 @@ export interface NexusGenArgTypes {
       where?: NexusGenInputs['CollectionWhereInput'] | null; // CollectionWhereInput
     }
     _files: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['FileWhereUniqueInput'] | null; // FileWhereUniqueInput
+      before?: NexusGenInputs['FileWhereUniqueInput'] | null; // FileWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['FileOrderByInput'] | null; // FileOrderByInput
@@ -2541,8 +2558,8 @@ export interface NexusGenArgTypes {
       where?: NexusGenInputs['FileWhereInput'] | null; // FileWhereInput
     }
     _inviteCodes: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['InviteCodeWhereUniqueInput'] | null; // InviteCodeWhereUniqueInput
+      before?: NexusGenInputs['InviteCodeWhereUniqueInput'] | null; // InviteCodeWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['InviteCodeOrderByInput'] | null; // InviteCodeOrderByInput
@@ -2550,8 +2567,8 @@ export interface NexusGenArgTypes {
       where?: NexusGenInputs['InviteCodeWhereInput'] | null; // InviteCodeWhereInput
     }
     _items: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
+      before?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['ItemOrderByInput'] | null; // ItemOrderByInput
@@ -2559,8 +2576,8 @@ export interface NexusGenArgTypes {
       where?: NexusGenInputs['ItemWhereInput'] | null; // ItemWhereInput
     }
     _uploadgroups: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['UploadGroupWhereUniqueInput'] | null; // UploadGroupWhereUniqueInput
+      before?: NexusGenInputs['UploadGroupWhereUniqueInput'] | null; // UploadGroupWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['UploadGroupOrderByInput'] | null; // UploadGroupOrderByInput
@@ -2568,8 +2585,8 @@ export interface NexusGenArgTypes {
       where?: NexusGenInputs['UploadGroupWhereInput'] | null; // UploadGroupWhereInput
     }
     _users: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+      before?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['UserOrderByInput'] | null; // UserOrderByInput
@@ -2613,8 +2630,8 @@ export interface NexusGenArgTypes {
       where?: NexusGenInputs['UploadGroupWhereInput'] | null; // UploadGroupWhereInput
     }
     users: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+      before?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       skip?: number | null; // Int
@@ -2622,8 +2639,8 @@ export interface NexusGenArgTypes {
   }
   UploadGroup: {
     files: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['FileWhereUniqueInput'] | null; // FileWhereUniqueInput
+      before?: NexusGenInputs['FileWhereUniqueInput'] | null; // FileWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       skip?: number | null; // Int
@@ -2631,29 +2648,29 @@ export interface NexusGenArgTypes {
   }
   User: {
     collections: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['CollectionWhereUniqueInput'] | null; // CollectionWhereUniqueInput
+      before?: NexusGenInputs['CollectionWhereUniqueInput'] | null; // CollectionWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       skip?: number | null; // Int
     }
     files: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['FileWhereUniqueInput'] | null; // FileWhereUniqueInput
+      before?: NexusGenInputs['FileWhereUniqueInput'] | null; // FileWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       skip?: number | null; // Int
     }
     items: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
+      before?: NexusGenInputs['ItemWhereUniqueInput'] | null; // ItemWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       skip?: number | null; // Int
     }
     labels: { // args
-      after?: string | null; // String
-      before?: string | null; // String
+      after?: NexusGenInputs['LabelWhereUniqueInput'] | null; // LabelWhereUniqueInput
+      before?: NexusGenInputs['LabelWhereUniqueInput'] | null; // LabelWhereUniqueInput
       first?: number | null; // Int
       last?: number | null; // Int
       orderBy?: NexusGenInputs['LabelOrderByInput'] | null; // LabelOrderByInput

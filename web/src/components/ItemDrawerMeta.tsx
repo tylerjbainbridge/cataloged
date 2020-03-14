@@ -6,10 +6,18 @@ import {
   StatLabel,
   StatNumber,
   StatHelpText,
+  Button,
+  Flex,
+  Tooltip,
 } from '@chakra-ui/core';
 import { format } from 'date-fns';
 
 import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { getGenericItemData } from '../util/itemHelpers';
+import { GenericListItem } from './GenericListItem';
+import { useOptimisticItemToItem } from '../hooks/useOptimisticItemToItem';
+import { FaTrash, FaUnlink } from 'react-icons/fa';
+import { useGoToItem } from '../hooks/useGoTo';
 
 export interface ItemDrawerMeta {
   item: ItemFull;
@@ -17,9 +25,56 @@ export interface ItemDrawerMeta {
 }
 
 export const ItemDrawerMeta = ({ item, children = null }: ItemDrawerMeta) => {
+  const { disconnectItemFromItem } = useOptimisticItemToItem();
+
+  const [goToItem] = useGoToItem();
+
   return (
     <Stack spacing="20px">
       {children}
+      {!!item.items?.length && (
+        <Stat>
+          <StatLabel>Related items ({item.items.length})</StatLabel>
+          <Box overflowY="auto" maxHeight="100%">
+            {item.items.map(relatedItem => (
+              <Flex justifyContent="space-between" alignItems="center">
+                <Box
+                  onClick={() => {
+                    // @ts-ignore
+                    goToItem(relatedItem);
+                  }}
+                >
+                  <GenericListItem
+                    // @ts-ignore
+                    item={relatedItem}
+                    isSearchItem
+                    onlyImportant
+                    withMarginBottom={false}
+                  />
+                </Box>
+
+                <Tooltip
+                  hasArrow
+                  placement="left"
+                  aria-label="Disconnect from item"
+                  label="Disconnect from item"
+                >
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      // @ts-ignore
+                      disconnectItemFromItem(item, relatedItem);
+                    }}
+                  >
+                    <FaUnlink size="15" />
+                  </Button>
+                </Tooltip>
+              </Flex>
+            ))}
+          </Box>
+        </Stat>
+      )}
       <Stat>
         <StatLabel>
           {item.type === 'googleContact' ? 'Updated' : 'Created'}

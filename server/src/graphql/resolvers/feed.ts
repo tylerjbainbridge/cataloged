@@ -36,14 +36,16 @@ export const feedResolver: FieldResolver<'Query', 'items'> = (_, args, ctx) => {
   // console.log('args', JSON.stringify(args, null, 4));
   // console.log('filter', JSON.stringify(filter, null, 4));
 
-  return findManyCursor(
-    _args =>
-      ctx.prisma.item.findMany(
-        merge({
-          ..._args,
-          ...findManyArgs,
-        }),
-      ),
-    rest,
-  );
+  return findManyCursor(async _args => {
+    const prismaArgs = merge({
+      ..._args,
+      ...findManyArgs,
+    });
+
+    return await ctx.prisma.item.findMany({
+      ...prismaArgs,
+      // Prisma changed the way "after" works.
+      after: prismaArgs.after ? { id: prismaArgs.after } : undefined,
+    });
+  }, rest);
 };

@@ -129,11 +129,30 @@ export const LinkDrawer = ({
   return (
     <>
       <DrawerContent
-        width={isMobile ? '100%' : editState.isOpen ? '500px' : '700px'}
+        key={item.id}
+        width={isMobile ? '100%' : '65%'}
         {...drawerContentProps}
       >
+        {!isMobile && (
+          <Box
+            d="flex"
+            width={isMobile ? '100%' : 'calc(100% - 450px)'}
+            justifyContent="center"
+            height="100%"
+          >
+            <Iframe
+              url={link.href}
+              width="100%"
+              height="100%"
+              id="myId"
+              // @ts-ignore
+              onLoad={(e: any) => console.log(e)}
+            />
+          </Box>
+        )}
         <Flex
-          width="100%"
+          width={isMobile ? '100%' : '450px'}
+          minWidth={isMobile ? '100%' : '450px'}
           float="right"
           height="100%"
           bg="white"
@@ -143,7 +162,7 @@ export const LinkDrawer = ({
           borderLeft="1px solid lightgray"
           justifyContent="space-between"
           flexDirection="column"
-          overflowY="scroll"
+          overflowY="auto"
         >
           <Box height="100%">
             <Stack spacing="20px" height="100%">
@@ -182,18 +201,13 @@ export const LinkDrawer = ({
                   </ItemActionMenu>
                 </Stack>
               </Flex>
-              <Stack
-                spacing={5}
-                display={!editState.isOpen ? 'none' : undefined}
-              >
+              <Stack spacing={5}>
                 {link.image && (
                   <LazyImage
                     rounded
                     src={link.image}
-                    height="200px"
+                    height="150px"
                     objectFit="cover"
-                    pt={5}
-                    pb={5}
                   />
                 )}
                 <FormControl>
@@ -265,19 +279,9 @@ export const LinkDrawer = ({
                   <Labels item={item} numDisplayLabels={10} />
                 </FormControl>
               </Stack>
-              {!editState.isOpen && (
-                <Iframe
-                  url={link.href}
-                  width="100%"
-                  height="100%"
-                  id="myId"
-                  // @ts-ignore
-                  onLoad={(e: any) => console.log(e)}
-                />
-              )}
             </Stack>
           </Box>
-          {editState.isOpen && <ItemDrawerMeta item={item} />}
+          <ItemDrawerMeta item={item} />
         </Flex>
       </DrawerContent>
     </>
