@@ -354,7 +354,7 @@ export const GenericGridItem = ({
                 </Text>
               )}
             </Stack>
-            <Flex justifyContent="space-between">
+            <Flex justifyContent="space-between" alignItems="center">
               <DisplayLabels item={item} />
               <Text fontSize="sm" color="gray.400">
                 {format(new Date(item.createdAt), 'MM/dd/yyyy')}
