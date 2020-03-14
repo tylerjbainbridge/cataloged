@@ -414,7 +414,6 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
           {children}
         </blockquote>
       );
-
     case 'heading-one':
       return (
         <Heading as="h1" size="xl" {...attributes}>
