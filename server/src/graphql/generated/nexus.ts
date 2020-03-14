@@ -2168,6 +2168,7 @@ export interface NexusGenFieldTypes {
     googleContact: NexusGenRootTypes['GoogleContact'] | null; // GoogleContact
     id: string; // String!
     isFavorited: boolean; // Boolean!
+    items: NexusGenRootTypes['Item'][]; // [Item!]!
     labels: NexusGenRootTypes['Label'][]; // [Label!]!
     link: NexusGenRootTypes['Link'] | null; // Link
     note: NexusGenRootTypes['Note'] | null; // Note
@@ -2213,6 +2214,7 @@ export interface NexusGenFieldTypes {
     addToWaitlist: NexusGenRootTypes['InterestedUser']; // InterestedUser!
     batchUpdateItemCollections: NexusGenRootTypes['Item'][]; // [Item!]!
     batchUpdateItemLabels: NexusGenRootTypes['Item'][]; // [Item!]!
+    connectItemToItem: NexusGenRootTypes['Item'][]; // [Item!]!
     connectLabelToItem: NexusGenRootTypes['Item']; // Item!
     createLabel: NexusGenRootTypes['User']; // User!
     createLink: NexusGenRootTypes['Link']; // Link!
@@ -2342,6 +2344,14 @@ export interface NexusGenArgTypes {
       orderBy?: NexusGenInputs['CollectionOrderByInput'] | null; // CollectionOrderByInput
       skip?: number | null; // Int
     }
+    items: { // args
+      after?: string | null; // String
+      before?: string | null; // String
+      first?: number | null; // Int
+      last?: number | null; // Int
+      orderBy?: NexusGenInputs['ItemOrderByInput'] | null; // ItemOrderByInput
+      skip?: number | null; // Int
+    }
     labels: { // args
       after?: string | null; // String
       before?: string | null; // String
@@ -2390,6 +2400,10 @@ export interface NexusGenArgTypes {
       itemIds: string[]; // [String!]!
       labelIdsToAdd: string[]; // [String!]!
       labelIdsToRemove: string[]; // [String!]!
+    }
+    connectItemToItem: { // args
+      itemOneId: string; // String!
+      itemTwoId: string; // String!
     }
     connectLabelToItem: { // args
       itemId: string; // String!

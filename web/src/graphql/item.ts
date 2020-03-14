@@ -5,8 +5,8 @@ import { FILE_FULL_FRAGMENT } from './file';
 import { GOOGLE_CONTACT_FULL_FRAGMENT } from './googleContact';
 import { LABEL_FULL_FRAGMENT } from './label';
 
-export const ITEM_FULL_FRAGMENT = gql`
-  fragment ItemFull on Item {
+export const ITEM_TO_ITEM_FRAGMENT = gql`
+  fragment ItemToItem on Item {
     id
     type
 
@@ -49,6 +49,57 @@ export const ITEM_FULL_FRAGMENT = gql`
   ${NOTE_FULL_FRAGMENT}
   ${FILE_FULL_FRAGMENT}
   ${GOOGLE_CONTACT_FULL_FRAGMENT}
+`;
+
+export const ITEM_FULL_FRAGMENT = gql`
+  fragment ItemFull on Item {
+    id
+    type
+
+    date
+    createdAt
+    updatedAt
+
+    isFavorited
+    status
+
+    labels {
+      ...LabelFull
+    }
+
+    collections {
+      id
+      name
+      description
+    }
+
+    link {
+      ...LinkFull
+    }
+
+    file {
+      ...FileFull
+    }
+
+    note {
+      ...NoteFull
+    }
+
+    items {
+      ...ItemToItem
+    }
+
+    googleContact {
+      ...GoogleContactFull
+    }
+  }
+
+  ${LABEL_FULL_FRAGMENT}
+  ${LINK_FULL_FRAGMENT}
+  ${NOTE_FULL_FRAGMENT}
+  ${FILE_FULL_FRAGMENT}
+  ${GOOGLE_CONTACT_FULL_FRAGMENT}
+  ${ITEM_TO_ITEM_FRAGMENT}
 `;
 
 export const ITEM_CONNECTION_FULL_FRAGMENT = gql`

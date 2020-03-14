@@ -783,6 +783,7 @@ type Item {
   googleContact: GoogleContact
   id: String!
   isFavorited: Boolean!
+  items(after: String, before: String, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int): [Item!]!
   labels(after: String, before: String, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   link: Link
   note: Note
@@ -1300,6 +1301,7 @@ type Mutation {
   addToWaitlist(email: String!): InterestedUser!
   batchUpdateItemCollections(collectionIdsToAdd: [String!]!, collectionIdsToRemove: [String!]!, itemIds: [String!]!): [Item!]!
   batchUpdateItemLabels(itemIds: [String!]!, labelIdsToAdd: [String!]!, labelIdsToRemove: [String!]!): [Item!]!
+  connectItemToItem(itemOneId: String!, itemTwoId: String!): [Item!]!
   connectLabelToItem(itemId: String!, name: String!): Item!
   createLabel(itemId: String, labelId: String, name: String!): User!
   createLink(href: String!): Link!

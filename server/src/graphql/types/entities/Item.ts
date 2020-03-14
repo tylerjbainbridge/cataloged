@@ -26,6 +26,7 @@ export const Item = objectType({
 
     t.model.labels({ ordering: true });
     t.model.collections({ ordering: true });
+    t.model.items({ ordering: true });
 
     t.model.type();
   },
