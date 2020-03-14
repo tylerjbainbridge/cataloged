@@ -144,7 +144,9 @@ export const NoteDrawer = ({
             </Stack>
           </Box>
 
-          <ItemDrawerMeta item={item} />
+          <Box maxHeight="50%">
+            <ItemDrawerMeta item={item} />
+          </Box>
         </Flex>
       </DrawerContent>
     </>

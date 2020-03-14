@@ -59,7 +59,7 @@ export class FilterQueryBuilder {
   sets = {
     // Object.keys(FilterQueryBuilder.itemSpecificFilters)
     type: new Set<string>(),
-    '-type': new Set<string>(['googleContact']),
+    '-type': new Set<string>([]),
 
     label: new Set<string>(),
     '-label': new Set<string>(),

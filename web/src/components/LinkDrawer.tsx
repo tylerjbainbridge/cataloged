@@ -281,7 +281,9 @@ export const LinkDrawer = ({
               </Stack>
             </Stack>
           </Box>
-          <ItemDrawerMeta item={item} />
+          <Box maxHeight="20%">
+            <ItemDrawerMeta item={item} />
+          </Box>
         </Flex>
       </DrawerContent>
     </>

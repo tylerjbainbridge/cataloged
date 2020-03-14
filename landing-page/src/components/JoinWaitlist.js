@@ -119,7 +119,7 @@ export const JoinWaitlist = () => {
             border="2px solid"
             borderColor="brand.pink.main"
           >
-            Request access
+            Join waitlist
           </Button>
         </Box>
       ) : (

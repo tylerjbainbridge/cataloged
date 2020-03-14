@@ -256,7 +256,9 @@ export const FileDrawer = ({
                 </Button>
               </Stack>
             </Box>
-            <ItemDrawerMeta item={item} />
+            <Box maxHeight="40%">
+              <ItemDrawerMeta item={item} />
+            </Box>
           </Flex>
         )}
       </Box>

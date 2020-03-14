@@ -157,7 +157,9 @@ export const GoogleContactDrawer = ({
               </Stack>
             </Stack>
           </Box>
-          <ItemDrawerMeta item={item} />
+          <Box maxHeight="20%">
+            <ItemDrawerMeta item={item} />
+          </Box>
         </Flex>
       </DrawerContent>
     </>
