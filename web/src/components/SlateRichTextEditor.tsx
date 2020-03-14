@@ -10,13 +10,23 @@ import {
   ReactEditor,
 } from 'slate-react';
 
+import { jsx } from 'slate-hyperscript';
+
 import { Editor, Transforms, Range, Point, createEditor } from 'slate';
 
 import { withHistory } from 'slate-history';
 
 import { Toolbar } from './SlateComponents';
 
-import { Button, Box, Heading, Text, List, Link } from '@chakra-ui/core';
+import {
+  Button,
+  Box,
+  Heading,
+  Text,
+  List,
+  Link,
+  ListItem,
+} from '@chakra-ui/core';
 import {
   FaBold,
   FaItalic,
@@ -48,10 +58,6 @@ const SHORTCUTS = {
   '>': 'block-quote',
   '#': 'heading-one',
   '##': 'heading-two',
-  '###': 'heading-three',
-  '####': 'heading-four',
-  '#####': 'heading-five',
-  '######': 'heading-six',
 };
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -89,7 +95,7 @@ const SlateRichTextEditor = ({
   // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   const editor: any = useMemo(
-    () => withShortcuts(withReact(withHistory(createEditor()))),
+    () => withHtml(withShortcuts(withReact(withHistory(createEditor())))),
     [],
   );
 
@@ -165,6 +171,116 @@ const SlateRichTextEditor = ({
       </Box>
     </Slate>
   );
+};
+
+const ELEMENT_TAGS = {
+  A: (el: any) => ({ type: 'link', url: el.getAttribute('href') }),
+  BLOCKQUOTE: () => ({ type: 'quote' }),
+  H1: () => ({ type: 'heading-one' }),
+  H2: () => ({ type: 'heading-two' }),
+  H3: () => ({ type: 'heading-three' }),
+  H4: () => ({ type: 'heading-four' }),
+  H5: () => ({ type: 'heading-five' }),
+  H6: () => ({ type: 'heading-six' }),
+  IMG: (el: any) => ({ type: 'image', url: el.getAttribute('src') }),
+  LI: () => ({ type: 'list-item' }),
+  OL: () => ({ type: 'numbered-list' }),
+  P: () => ({ type: 'paragraph' }),
+  PRE: () => ({ type: 'code' }),
+  UL: () => ({ type: 'bulleted-list' }),
+};
+
+// COMPAT: `B` is omitted here because Google Docs uses `<b>` in weird ways.
+const TEXT_TAGS = {
+  CODE: () => ({ code: true }),
+  DEL: () => ({ strikethrough: true }),
+  EM: () => ({ italic: true }),
+  I: () => ({ italic: true }),
+  S: () => ({ strikethrough: true }),
+  STRONG: () => ({ bold: true }),
+  U: () => ({ underline: true }),
+};
+
+//@ts-ignore
+export const deserialize = (el: any) => {
+  if (el.nodeType === 3) {
+    return el.textContent;
+  } else if (el.nodeType !== 1) {
+    return null;
+  } else if (el.nodeName === 'BR') {
+    return '\n';
+  }
+
+  console.log({ el });
+
+  const { nodeName } = el;
+  let parent = el;
+
+  if (
+    nodeName === 'PRE' &&
+    el.childNodes[0] &&
+    el.childNodes[0].nodeName === 'CODE'
+  ) {
+    parent = el.childNodes[0];
+  }
+
+  // @ts-ignore
+  const children = Array.from(parent.childNodes)
+    .map(deserialize)
+    .flat();
+
+  if (el.nodeName === 'BODY') {
+    return jsx('fragment', {}, children);
+  }
+
+  // @ts-ignore
+  if (ELEMENT_TAGS[nodeName]) {
+    // @ts-ignore
+    const attrs = ELEMENT_TAGS[nodeName](el);
+    return jsx('element', attrs, children);
+  }
+
+  // @ts-ignore
+  if (TEXT_TAGS[nodeName]) {
+    // @ts-ignore
+    const attrs = TEXT_TAGS[nodeName](el);
+    return children.map((child: any) => jsx('text', attrs, child));
+  }
+
+  return children;
+};
+
+const withHtml = (editor: Editor): Editor => {
+  const { insertData, isInline, isVoid } = editor;
+
+  editor.isInline = element => {
+    return element.type === 'link' ? true : isInline(element);
+  };
+
+  editor.isVoid = element => {
+    return element.type === 'image' ? true : isVoid(element);
+  };
+
+  editor.insertData = (data: any) => {
+    const html = data.getData('text/html');
+    const plain = data.getData('text/plain');
+
+    console.log({ data, plain, html });
+
+    if (html || plain) {
+      const parsed = new DOMParser().parseFromString(
+        html || plain,
+        'text/html',
+      );
+      const fragment = deserialize(parsed.body);
+      Transforms.insertFragment(editor, fragment);
+      return;
+    }
+
+    insertData(data);
+  };
+
+  return editor;
 };
 
 const withShortcuts = (editor: Editor): Editor => {
@@ -289,6 +405,8 @@ const isMarkActive = (editor: Editor, format: any) => {
 const Element = ({ attributes, children, element }: RenderElementProps) => {
   const textProps = { fontSize: '20px ' };
 
+  console.log(element.type);
+
   switch (element.type) {
     case 'block-quote':
       return (
@@ -296,12 +414,7 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
           {children}
         </blockquote>
       );
-    case 'bulleted-list':
-      return (
-        <ul {...textProps} {...attributes}>
-          {children}
-        </ul>
-      );
+
     case 'heading-one':
       return (
         <Heading as="h1" size="xl" {...attributes}>
@@ -314,17 +427,25 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
           {children}
         </Heading>
       );
-    case 'list-item':
+
+    case 'bulleted-list':
       return (
-        <li {...textProps} {...attributes}>
+        <List styleType="disc" {...textProps} {...attributes}>
           {children}
-        </li>
+        </List>
       );
     case 'numbered-list':
       return (
-        <ol {...textProps} {...attributes}>
+        <List as="ol" styleType="decimal" {...textProps} {...attributes}>
           {children}
-        </ol>
+        </List>
+      );
+
+    case 'list-item':
+      return (
+        <ListItem mb="5px" {...textProps} {...attributes}>
+          {children}
+        </ListItem>
       );
 
     // case 'link':

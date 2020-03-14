@@ -65,7 +65,7 @@ export const NoteEditor = ({
 
   watch();
 
-  console.log({ values });
+  // console.log({ values });
 
   useEffect(() => {
     register({ name: 'value' });
