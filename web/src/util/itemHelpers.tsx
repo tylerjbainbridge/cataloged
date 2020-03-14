@@ -61,7 +61,7 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
           type: item.type,
           // @ts-ignore
           title: item.note.title || 'Untitled',
-          subTitle: item.note.text.split('\n').pop(),
+          subTitle: item.note.text.split('\n')[0],
           createdAt: item.date,
           image: null,
           icon: 'chat',

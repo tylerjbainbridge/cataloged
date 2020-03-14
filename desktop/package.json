@@ -4,7 +4,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-builder ."
+    "package": "electron-packager . \"Cataloged\" --gatekeeperAssess=false --provisioning-profile=\"./prod.provisionprofile\" --osx-sign.identity=\"QEA5QCYSWF\" --asar.unpack=\"*.node\" --osxNotarize.appleId=\"tyler@tylerbainbridge.com\" --osxNotarize.appleIdPassword=\"gjog-eyhe-mldq-gufu\" --osx-sign.hardenedRuntime=true --osx-sign.entitlements=\"./build/entitlements.mac.plist\" --osx-sign.entitlements-inherit-\"./build/entitlements.mac.plist\" --icon=\"./build/icon.icns\"",
+    "dmg": "electron-installer-dmg Cataloged-mas-x64/Cataloged.app Cataloged --icon=\"./build/icon.icns\" --overwrite"
   },
   "author": {
     "name": "Tyler Bainbridge",
@@ -24,7 +25,7 @@
       "notarize.js",
       "index.html",
       "package.json",
-      "embedded.provisionprofile"
+      "prod.provisionprofile"
     ],
     "mac": {
       "appId": "com.app.cataloged",
@@ -33,7 +34,7 @@
       "gatekeeperAssess": false,
       "entitlements": "./build/entitlements.mac.plist",
       "entitlementsInherit": "./build/entitlements.mac.plist",
-      "provisioningProfile": "embedded.provisionprofile",
+      "provisioningProfile": "prod.provisionprofile",
       "target": [
         "dmg"
       ]
@@ -42,6 +43,8 @@
   "devDependencies": {
     "electron": "^8.1.0",
     "electron-builder": "^22.4.0",
-    "electron-notarize": "^0.2.1"
+    "electron-installer-dmg": "^3.0.0",
+    "electron-notarize": "^0.2.1",
+    "electron-packager": "^14.2.1"
   }
 }

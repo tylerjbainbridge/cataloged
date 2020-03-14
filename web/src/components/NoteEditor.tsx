@@ -19,7 +19,8 @@ export const serializeToPlainText = (nodes: any[] = []) => {
 
 export const EMPTY_NOTE_VALUE = [
   {
-    children: [{ text: '', marks: [] }],
+    type: 'paragraph',
+    children: [{ text: '' }],
   },
 ];
 
@@ -57,12 +58,14 @@ export const NoteEditor = ({
 
   const debouncedUpdateNote = useDebounce(
     (variables: any) => updateNote({ variables }),
-    250,
+    150,
   );
 
   const [deleteItem] = useOptimisticDeleteItem(note.item);
 
   watch();
+
+  console.log({ values });
 
   useEffect(() => {
     register({ name: 'value' });
@@ -75,12 +78,14 @@ export const NoteEditor = ({
       titleInputRef?.current?.focus();
     } else {
       // @ts-ignore
-      ReactEditor.focus(editorRef.current);
+      // ReactEditor.focus(editorRef.current);
     }
   }, []);
 
   useEffect(() => {
     if (!deepEqual(valuesRef.current, values)) {
+      debouncedUpdateNote.cancel();
+
       //@ts-ignore
       debouncedUpdateNote({
         noteId: note.id,

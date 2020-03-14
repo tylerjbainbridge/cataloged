@@ -16,7 +16,7 @@ import { withHistory } from 'slate-history';
 
 import { Toolbar } from './SlateComponents';
 
-import { Button, Box, Heading, Text, List } from '@chakra-ui/core';
+import { Button, Box, Heading, Text, List, Link } from '@chakra-ui/core';
 import {
   FaBold,
   FaItalic,
@@ -326,6 +326,14 @@ const Element = ({ attributes, children, element }: RenderElementProps) => {
           {children}
         </ol>
       );
+
+    // case 'link':
+    //   return (
+    //     <Link href={element.url} color="teal.500" isExternal {...attributes}>
+    //       {children}
+    //     </Link>
+    //   );
+
     default:
       return (
         <Text {...textProps} {...attributes}>

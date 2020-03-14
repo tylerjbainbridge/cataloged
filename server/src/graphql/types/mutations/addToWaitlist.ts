@@ -28,7 +28,7 @@ export const addToWaitlist = extendType({
         await EmailService.sendWailistConfirm({ to: args.email });
 
         await EmailService.sendEmail({
-          to: args.email,
+          to: 'tyler@tylerbainbridge.com',
           text: `New user added to waitlist (${allInterestedUsers.length})! ${interestedUser.email}`,
         });
 

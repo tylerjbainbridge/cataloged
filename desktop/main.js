@@ -58,17 +58,30 @@ app.on('ready', () => {
   );
 });
 
+const KEEP_IN_APP = [
+  'https://accounts.google.com/o/oauth2/v2/auth',
+  'https://accounts.google.com/o/oauth2/v2/auth',
+  'https://accounts.google.com/signin/oauth',
+  'https://accounts.google.com/signin/oauth/oauthchooseaccount',
+];
+
+const shouldOpenInApp = url => KEEP_IN_APP.some(part => url.includes(part));
+
 // To open links
 app.on('web-contents-created', (e, contents) => {
   contents.on('new-window', (e, url) => {
-    e.preventDefault();
-    // require('open')(url);
-    shell.openExternal(url);
+    console.log(shouldOpenInApp(url), url);
+    if (!shouldOpenInApp(url)) {
+      e.preventDefault();
+      shell.openExternal(url);
+    }
   });
   contents.on('will-navigate', (e, url) => {
     if (url !== contents.getURL()) {
-      e.preventDefault();
-      shell.openExternal(url);
+      if (!shouldOpenInApp(url)) {
+        e.preventDefault();
+        shell.openExternal(url);
+      }
     }
   });
 });

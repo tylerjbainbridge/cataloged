@@ -11,8 +11,15 @@ window.interop = {
 };
 
 document.addEventListener('click', event => {
-  if (event.target.tagName === 'A' && event.target.href.startsWith('http')) {
-    event.preventDefault();
-    shell.openExternal(event.target.href);
+  console.log(event.target.href);
+  if (
+    event.target.tagName === 'A' &&
+    event.target.href.startsWith('http') &&
+    !event.target.href.includes(
+      'https://accounts.google.com/signin/oauth/oauthchooseaccount',
+    )
+  ) {
+    // event.preventDefault();
+    // shell.openExternal(event.target.href);
   }
 });

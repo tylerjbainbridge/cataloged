@@ -181,7 +181,7 @@ export const SidebarMenu = ({ sidebarState }: { sidebarState: any }) => {
       <Flex height="100%" justifyContent="space-between" flexDirection="column">
         <Stack spacing="25px">
           <Flex
-            pt="10px"
+            pt={isMobile ? '20px' : '10px'}
             height="35px"
             justifyContent="space-between"
             alignItems="center"
