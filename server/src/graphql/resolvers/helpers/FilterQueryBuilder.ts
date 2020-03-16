@@ -18,6 +18,7 @@ export interface Filter {
   name: string;
   value?: any;
   values?: any[];
+  display?: string;
 }
 
 export interface FilterQueryBuilderArgs {
@@ -139,6 +140,11 @@ export class FilterQueryBuilder {
 
           break;
 
+        case 'relatedToItem':
+          _.set(this.query, 'items.some.id.equals', filter.value);
+
+          break;
+
         case '-is':
         case 'is': {
           // { name: 'is', value: 'favorited' },
@@ -236,14 +242,19 @@ export class FilterQueryBuilder {
       this.where.push({ AND: filter });
     });
 
-    return {
+    const finalArgs = {
       where: {
         ...this.query,
+        // @ts-ignore
         deletedAt: null,
         user: { id: this.user.id },
         AND: [{ OR: Object.values(this.typeSpecificWhere) }, ...this.where],
       },
     };
+
+    console.log(JSON.stringify(finalArgs, null, 4));
+
+    return finalArgs;
   };
 
   addToItemSpecificOr = (type: string, newFilters: any[]) => {

@@ -498,12 +498,14 @@ input FileWhereUniqueInput {
 }
 
 type Filter {
+  display: String!
   name: String!
   value: FilterValue
   values: [FilterValue!]
 }
 
 input FilterInput {
+  display: String
   name: String!
   value: FilterValue
   values: [FilterValue!]

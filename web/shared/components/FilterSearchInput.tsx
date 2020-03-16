@@ -29,18 +29,6 @@ export const Portal = ({ children }: any) => {
   return ReactDOM.createPortal(children, document.body);
 };
 
-const getFiltersFromValue = (value: Node[]) => {
-  const [{ children = [] } = {}] = value;
-
-  try {
-    return children
-      .filter(({ type }: any) => type === 'filter')
-      .map(({ filter }: any) => ({ ...filter, name: filter.name || 'search' }));
-  } catch (e) {
-    return [];
-  }
-};
-
 const initialValue = [
   {
     children: [{ text: '', marks: [] }],
@@ -51,6 +39,7 @@ export interface Filter {
   name?: string;
   value?: string;
   values?: string[];
+  display?: string;
 }
 
 export interface FilterInputState {
@@ -78,8 +67,20 @@ export const filterNames = [
 export const toFilterNode = (filter: Filter) => ({
   type: 'filter',
   filter,
-  children: [{ text: '', marks: [] }],
+  children: [{ text: '' }],
 });
+
+const getFiltersFromValue = (value: Node[]) => {
+  const [{ children = [] } = {}] = value;
+
+  try {
+    return children
+      .filter(({ type }: any) => type === 'filter')
+      .map(({ filter }: any) => ({ ...filter, name: filter.name || 'search' }));
+  } catch (e) {
+    return [];
+  }
+};
 
 const getValueFromFilter = (filters: Filter[] = []) => {
   return filters.length
@@ -92,13 +93,17 @@ const getValueFromFilter = (filters: Filter[] = []) => {
                 ...p,
                 ...(filter.values
                   ? filter.values.map(value =>
-                      toFilterNode({ name: filter.name, value }),
+                      toFilterNode({
+                        value,
+                        name: filter.name,
+                        display: filter.display,
+                      }),
                     )
                   : [toFilterNode(filter)]),
               ],
               [],
             ),
-            { text: ' ', type: 'spacer', marks: [] },
+            { text: ' ', type: 'spacer' },
           ],
         },
       ]
@@ -525,7 +530,13 @@ const Element = (props: RenderElementProps) => {
       return <FilterElement {...props} {...sharedStyles} />;
     case 'spacer':
       return (
-        <Box width="3px" {...props} {...attributes} {...sharedStyles}>
+        <Box
+          width="3px"
+          contentEditable={false}
+          {...props}
+          {...attributes}
+          {...sharedStyles}
+        >
           {children}
         </Box>
       );
@@ -561,10 +572,10 @@ const FilterElement = ({ attributes, children, element }: any) => {
       contentEditable={false}
     >
       <Text contentEditable={false}>
-        {element.filter.name && element.filter.name !== 'search'
-          ? `${element.filter.name}:`
-          : ''}
-        {element.filter.value}
+        {element.filter.display ||
+          (element.filter.name && element.filter.name !== 'search'
+            ? `${element.filter.name}:`
+            : '') + element.filter.value}
       </Text>
       <Text contentEditable={false}>{children}</Text>
     </Box>

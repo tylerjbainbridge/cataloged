@@ -12,6 +12,7 @@ export const FILTER_NAMES = [
   ...filterNames.map(({ value }: any) => value),
   'labels',
   'search',
+  'relatedToItem',
 ];
 
 export const randomString = (): string =>
@@ -45,7 +46,7 @@ export const getRealFilters = (filters: any[]) =>
 
 export const getQueryStringFromFilters = (filters: any[], search = '') => {
   const sets: { [k: string]: Set<any> } = {
-    ...FILTER_NAMES.reduce(
+    ...[...FILTER_NAMES].reduce(
       (p, c) => ({
         ...p,
         [getRealName(c)]: new Set(),
@@ -54,7 +55,15 @@ export const getQueryStringFromFilters = (filters: any[], search = '') => {
     ),
   };
 
+  const parsedFilters = search
+    ? _.omitBy(queryString.parse(search), isFilterQueryArg)
+    : {};
+
   filters.forEach(filter => {
+    if (filter.display) {
+      _.set(parsedFilters, `${filter.name}.display`, filter.display);
+    }
+
     (filter.values ? filter.values : [filter.value]).forEach(
       (value: string) => {
         const setName = getRealName(filter.name || 'search');
@@ -65,16 +74,30 @@ export const getQueryStringFromFilters = (filters: any[], search = '') => {
     );
   });
 
-  const parsedFilters = Object.entries(sets).reduce(
-    (p, [name, set]) => {
-      if (!set.size) return p;
+  Object.entries(sets).forEach(([name, set]) => {
+    if (!set.size) return;
 
-      return _.set(p, name, set.size === 1 ? [...set][0] : [...set]);
+    return _.set(
+      parsedFilters,
+      `${name}.value`,
+      set.size === 1 ? [...set][0] : [...set],
+    );
+  });
+
+  //@ts-ignore
+  const queryStringFilters = Object.entries(parsedFilters).reduce(
+    (p, [name, filter]) => {
+      ['value', 'display'].forEach(field => {
+        // @ts-ignore
+        if (filter[field]) p[`${name}.${field}`] = filter[field];
+      });
+
+      return p;
     },
-    search ? _.omitBy(queryString.parse(search), isFilterQueryArg) : {},
+    {},
   );
 
-  return queryString.stringify(parsedFilters, { arrayFormat: 'bracket' });
+  return queryString.stringify(queryStringFilters, { arrayFormat: 'bracket' });
 };
 
 export const getFilterVariablesFromFormValues = (filters: any[]) => {
@@ -90,8 +113,14 @@ export const getFiltersFromQueryString = (search: any) => {
     isFilterQueryArg,
   );
 
-  const filters = Object.entries(parsed).map(([name, value]) => {
-    const filter = { name };
+  const filters = Object.entries(
+    // @ts-ignore
+    Object.entries(parsed).reduce((p: any, [key, value]: any) => {
+      const [name, field] = key.split('.');
+      return _.set(p, `${name}.${field}`, value);
+    }, {}),
+  ).map(([name, { value, display, ...rest }]: any) => {
+    const filter = { name, display };
 
     // @ts-ignore
     if (Array.isArray(value)) filter.values = value;
@@ -100,6 +129,8 @@ export const getFiltersFromQueryString = (search: any) => {
 
     return filter;
   });
+
+  // console.log(filters);
 
   return filters;
 };

@@ -76,6 +76,8 @@ export const Filter = objectType({
   definition(t) {
     t.string('name');
 
+    t.string('display');
+
     // One of these must be supplied
     t.field('value', { type: 'FilterValue', nullable: true });
     t.list.field('values', { type: 'FilterValue', nullable: true });
@@ -86,6 +88,8 @@ export const FilterInput = inputObjectType({
   name: 'FilterInput',
   definition(t) {
     t.string('name', { required: true });
+
+    t.string('display');
 
     // One of these must be supplied
     t.field('value', { type: 'FilterValue' });

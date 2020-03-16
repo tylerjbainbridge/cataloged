@@ -422,6 +422,7 @@ export interface NexusGenInputs {
     id?: string | null; // String
   }
   FilterInput: { // input type
+    display?: string | null; // String
     name: string; // String!
     value?: any | null; // FilterValue
     values?: any[] | null; // [FilterValue!]
@@ -1835,6 +1836,7 @@ export interface NexusGenRootTypes {
   CollectionEntry: PrismaClient.CollectionEntry;
   File: PrismaClient.File;
   Filter: { // root type
+    display: string; // String!
     name: string; // String!
     value?: any | null; // FilterValue
     values?: any[] | null; // [FilterValue!]
@@ -2130,6 +2132,7 @@ export interface NexusGenFieldTypes {
     width: number | null; // Int
   }
   Filter: { // field return type
+    display: string; // String!
     name: string; // String!
     value: any | null; // FilterValue
     values: any[] | null; // [FilterValue!]

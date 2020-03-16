@@ -7,13 +7,13 @@ import { FileFull } from '../graphql/__generated__/FileFull';
 
 export interface ItemGenericData {
   type?: ItemFull['type'];
-  displayType?: String;
-  title: String;
-  subTitle?: String;
-  createdAt: String;
-  image?: String | null;
-  compressedImage?: String | null;
-  favicon?: String | null;
+  displayType?: string;
+  title: string;
+  subTitle?: string;
+  createdAt: string;
+  image?: string | null;
+  compressedImage?: string | null;
+  favicon?: string | null;
   action?: Function;
   icon: IconProps['name'] | any;
 }

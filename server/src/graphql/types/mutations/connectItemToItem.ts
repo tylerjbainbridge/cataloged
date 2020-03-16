@@ -31,6 +31,14 @@ export const connectItemToItem = extendType({
           }),
         );
 
+        // console.log(
+        //   await prisma.item.findMany({
+        //     where: {
+        //       items: { some: { id: { in: [args.itemOneId, args.itemTwoId] } } },
+        //     },
+        //   }),
+        // );
+
         return await prisma.item.findMany({
           where: { id: { in: [args.itemOneId, args.itemTwoId] } },
         });

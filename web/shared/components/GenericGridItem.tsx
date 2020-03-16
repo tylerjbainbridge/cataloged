@@ -329,13 +329,13 @@ export const GenericGridItem = ({
             roundedTop="0"
             p="8px"
           >
-            <Stack spacing="4px">
-              <Text fontSize="lg" fontWeight="semibold" isTruncated>
+            <Stack spacing="3px">
+              <Text fontSize="md" fontWeight="semibold" isTruncated>
                 {title}
               </Text>
               {subTitle && (
                 <Text
-                  fontSize="md"
+                  fontSize="sm"
                   fontWeight="semibold"
                   color="gray.400"
                   isTruncated

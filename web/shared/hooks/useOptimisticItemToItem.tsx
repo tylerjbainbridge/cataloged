@@ -31,22 +31,26 @@ export const useOptimisticItemToItem = () => {
     itemOne: ItemFull,
     itemTwo: ItemFull,
   ) => {
-    const itemOneFull = client.readFragment(getFragmentMeta(itemOne));
+    try {
+      const itemOneFull = client.readFragment(getFragmentMeta(itemOne));
 
-    const itemTwoFull = client.readFragment(getFragmentMeta(itemTwo));
+      const itemTwoFull = client.readFragment(getFragmentMeta(itemTwo));
 
-    [
-      [itemOneFull, itemTwoFull],
-      [itemTwoFull, itemOneFull],
-    ].forEach(([item, otherItem]) => {
-      client.writeFragment({
-        ...getFragmentMeta(item),
-        data: {
-          ...item,
-          items: item.items.filter((item: any) => item.id !== otherItem.id),
-        },
+      [
+        [itemOneFull, itemTwoFull],
+        [itemTwoFull, itemOneFull],
+      ].forEach(([item, otherItem]) => {
+        try {
+          client.writeFragment({
+            ...getFragmentMeta(item),
+            data: {
+              ...item,
+              items: item.items.filter((item: any) => item.id !== otherItem.id),
+            },
+          });
+        } catch (e) {}
       });
-    });
+    } catch (e) {}
 
     await _disconnectItemFromItem({
       variables: { itemOneId: itemOne.id, itemTwoId: itemTwo.id },
@@ -61,22 +65,24 @@ export const useOptimisticItemToItem = () => {
   };
 
   const connectItemToItem = async (itemOne: ItemFull, itemTwo: ItemFull) => {
-    const itemOneFull = client.readFragment(getFragmentMeta(itemOne));
+    try {
+      const itemOneFull = client.readFragment(getFragmentMeta(itemOne));
 
-    const itemTwoFull = client.readFragment(getFragmentMeta(itemTwo));
+      const itemTwoFull = client.readFragment(getFragmentMeta(itemTwo));
 
-    [
-      [itemOneFull, itemTwoFull],
-      [itemTwoFull, itemOneFull],
-    ].forEach(([item, otherItem]) => {
-      client.writeFragment({
-        ...getFragmentMeta(item),
-        data: {
-          ...item,
-          items: [...item.items, otherItem],
-        },
+      [
+        [itemOneFull, itemTwoFull],
+        [itemTwoFull, itemOneFull],
+      ].forEach(([item, otherItem]) => {
+        client.writeFragment({
+          ...getFragmentMeta(item),
+          data: {
+            ...item,
+            items: [...item.items, otherItem],
+          },
+        });
       });
-    });
+    } catch (e) {}
 
     await _connectItemToItem({
       variables: { itemOneId: itemOne.id, itemTwoId: itemTwo.id },

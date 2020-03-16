@@ -11,7 +11,7 @@ import { FeedListItem } from './FeedListItem';
 export const GRID_ITEM_INNER_PADDING = 0;
 export const GRID_ITEM_ACTUAL_WIDTH = 250;
 export const GRID_ITEM_TOP_HEIGHT = 170;
-export const GRID_ITEM_BOTTOM_HEIGHT = 120;
+export const GRID_ITEM_BOTTOM_HEIGHT = 150;
 export const GRID_ITEM_WIDTH = GRID_ITEM_ACTUAL_WIDTH + GRID_ITEM_INNER_PADDING;
 export const GRID_ITEM_HEIGHT = GRID_ITEM_TOP_HEIGHT + GRID_ITEM_BOTTOM_HEIGHT;
 

@@ -249,6 +249,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   };
 
   useHotKey('down', moveCursorToNextItem);
+  useHotKey('right', moveCursorToNextItem);
 
   const moveCursorToPrevItem = () => {
     const currentCursorIndex = items.findIndex(
@@ -264,6 +265,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
   };
 
   useHotKey('up', moveCursorToPrevItem);
+  useHotKey('left', moveCursorToPrevItem);
 
   // useHotKey(
   //   'esc',
@@ -310,8 +312,8 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                   d="flex"
                   alignItems="center"
                   height="30px"
-                  width="600px"
-                  maxWidth={isMobile ? '100%' : '600px'}
+                  width="700px"
+                  maxWidth={isMobile ? '100%' : '700px'}
                 >
                   <Box
                     d="flex"
@@ -326,14 +328,16 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
 
                   <Box
                     d="flex"
-                    width="490px"
+                    width="650px"
                     height="40px"
                     rounded="lg"
                     p="10px"
                   >
                     <FilterSearchInput
                       filters={queryStringFilters}
-                      onChange={updateFilters}
+                      onChange={(filters: any) => {
+                        updateFilters(filters);
+                      }}
                     />
                   </Box>
 

@@ -3,12 +3,14 @@
     "node": "12.0.0"
   },
   "scripts": {
-    "start": "npm run start:app",
-    "start:app": "react-scripts start",
-    "dev": "react-scripts start",
-    "build": "npm run build:app",
-    "build:app": "react-scripts build",
+    "dev": "parcel --port=3000 --cache-dir=.cache/app app/src/index.html",
+    "start:app": "parcel app/src/index.html",
+    "prebuild:app": "rm -rf app/dist",
+    "build:app": "parcel --cache-dir=.cache/app --out-dir app/dist build app/src/index.html",
     "now-build": "npm run build:app",
+    "dev:extension": "parcel --cache-dir=.cache/extension --out-dir extension/dist extension/src/manifest.json",
+    "prebuild:extension": "rm -rf extension/dist",
+    "build:extension": "parcel build --cache-dir=.cache/extension --out-dir extension/dist  extension/src/manifest.json",
     "eject:app": "react-scripts eject",
     "refresh:types": "yarn run remove:types && yarn run generate:types",
     "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"src/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=src/graphql/__generated__/apolloTypes.ts --outputFlat=src/graphql/__generated__",
@@ -96,6 +98,8 @@
     "@types/graphql": "^14.2.3",
     "@types/jest": "^25.1.3",
     "@types/yup": "^0.26.23",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-web-extension": "^1.6.1",
     "prettier": "^1.18.2",
     "react-test-renderer": "^16.12.0",
     "typescript": "^3.7.2"
