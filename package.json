@@ -3,12 +3,12 @@
     "start": "npm-run-all --parallel start:*",
     "start:app": "cd web && yarn run start",
     "build:app": "cd web && yarn run build:app",
-    "pre:build:app": "yarn run install:web",
+    "prebuild:app": "yarn run install:web",
     "build:landing-page": "cd landing-page && yarn run build",
-    "pre:build:landing-page": "yarn run install:landing-page",
+    "prebuild:landing-page": "yarn run install:landing-page",
     "start:server": "cd server && yarn run start",
     "build:server": "cd server && yarn run build",
-    "pre:build:server": "yarn run install:server",
+    "prebuild:server": "yarn run install:server",
     "dev": "npm-run-all --parallel dev:*",
     "dev:server": "pushd server && yarn run dev && popd",
     "dev:app": "pushd web && yarn run start && popd",
@@ -18,17 +18,10 @@
     "format": "npx prettier '*/**/*.{ts,tsx}' --write"
   },
   "dependencies": {
-    "apollo-server": "^2.9.0",
     "dotenv": "^8.0.0",
-    "electron": "^8.1.0",
-    "npm-run-all": "^4.1.5",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "slate-history": "^0.55.3",
-    "slate-md-editor": "^1.5.4"
+    "npm-run-all": "^4.1.5"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.4",
     "prettier": "^1.18.2",
     "typescript": "^3.7.5"
   }
