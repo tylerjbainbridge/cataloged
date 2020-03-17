@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "parcel --port=3000 --cache-dir=.cache/app app/src/index.html",
     "start:app": "parcel app/src/index.html",
-    "prebuild:app": "rm -rf app/dist",
-    "build:app": "parcel build --cache-dir=.cache/app --out-dir=app/dist app/src/index.html",
+    "prebuild:app": "rm -rf build",
+    "build:app": "parcel build --cache-dir=.cache/app --public-url=./ --out-dir=build app/src/index.html",
     "now-build": "npm run build:app",
     "dev:extension": "parcel --cache-dir=.cache/extension --out-dir=extension/dist extension/src/manifest.json",
     "prebuild:extension": "rm -rf extension/dist",
@@ -90,6 +90,7 @@
     "slate-plugins-next": "^0.57.11",
     "slate-react": "^0.57.1",
     "styled-components": "^4.3.2",
+    "webextension-polyfill": "^0.6.0",
     "yup": "^0.27.0"
   },
   "devDependencies": {

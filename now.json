@@ -6,7 +6,7 @@
     {
       "src": "web/package.json",
       "use": "@now/static-build",
-      "config": { "distDir": "app/dist" }
+      "config": { "distDir": "build" }
     },
     {
       "src": "server/src/functions/*.ts",

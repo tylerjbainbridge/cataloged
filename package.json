@@ -1,8 +1,9 @@
 {
   "scripts": {
     "start": "npm-run-all --parallel start:*",
-    "start:server": "pushd server && npm run start && popd",
     "start:app": "pushd web && npm run start && popd",
+    "build:app": "pushd web && npm run build:app && popd",
+    "start:server": "pushd server && npm run start && popd",
     "dev": "npm-run-all --parallel dev:*",
     "dev:server": "pushd server && npm run dev && popd",
     "dev:app": "pushd web && npm run start && popd",
