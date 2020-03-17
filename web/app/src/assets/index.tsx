@@ -13,6 +13,7 @@ import {
   AlertTitle,
   Button,
   Box,
+  Text,
 } from '@chakra-ui/core';
 import { BrowserRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
@@ -55,6 +56,8 @@ export const cache = new InMemoryCache({
     },
   },
 });
+
+export const IS_SITE_DOWN = true;
 
 (async () => {
   // @ts-ignore
@@ -115,7 +118,36 @@ export const cache = new InMemoryCache({
     </BrowserRouter>
   );
 
-  ReactDOM.render(appNode, document.getElementById('root'));
+  const placeholder = (
+    <ThemeProvider theme={theme}>
+      <Box
+        d="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100vw"
+        height="100vh"
+      >
+        <Stack spacing="15px">
+          <Alert status="info">
+            <AlertIcon />
+            <AlertTitle mr={2}>
+              <Text>
+                Cataloged is undergoing maintenance...check back soon.
+              </Text>
+            </AlertTitle>
+          </Alert>
+          <Button size="sm" onClick={() => window.location.replace('/')}>
+            Try again
+          </Button>
+        </Stack>
+      </Box>
+    </ThemeProvider>
+  );
+
+  ReactDOM.render(
+    IS_SITE_DOWN ? placeholder : appNode,
+    document.getElementById('root'),
+  );
 })();
 
 // If you want your app to work offline and load faster, you can change
