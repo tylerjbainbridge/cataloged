@@ -1,17 +1,18 @@
 {
   "scripts": {
     "start": "npm-run-all --parallel start:*",
-    "start:app": "pushd web && yarn run start && popd",
-    "build:app": "pushd web && yarn run build:app && popd",
+    "start:app": "cd web && yarn run start",
+    "build:app": "cd web && yarn run build:app",
     "start:server": "cd server && yarn run start",
     "build:server": "cd server && yarn run build",
     "dev": "npm-run-all --parallel dev:*",
     "dev:server": "pushd server && yarn run dev && popd",
     "dev:app": "pushd web && yarn run start && popd",
-    "install:server": "pushd server && yarn install && popd",
-    "install:web": "pushd web && yarn install && popd",
-    "format": "npx prettier '*/**/*.{ts,tsx}' --write",
-    "postinstall": "npm-run-all --parallel install:*"
+    "install:server": "cd server && yarn install",
+    "install:app": "cd web && yarn install",
+    "pre:build:app": "yarn run install:web",
+    "pre:build:server": "yarn run install:server",
+    "format": "npx prettier '*/**/*.{ts,tsx}' --write"
   },
   "dependencies": {
     "apollo-server": "^2.9.0",
