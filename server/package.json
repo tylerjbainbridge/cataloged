@@ -1,7 +1,4 @@
 {
-  "engines": {
-    "node": "12.0.0"
-  },
   "scripts": {
     "start": "node dist/server.js --target node",
     "dev": "npx nodemon --watch '*.ts{,x}' --exec 'npx ts-node -T' src/server.ts",

@@ -1,7 +1,4 @@
 {
-  "engines": {
-    "node": "12.0.0"
-  },
   "scripts": {
     "dev": "parcel --port=3000 --cache-dir=.cache/app app/src/index.html",
     "start:app": "parcel app/src/index.html",
