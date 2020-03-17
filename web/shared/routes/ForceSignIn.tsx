@@ -30,6 +30,10 @@ export const ForceSignIn = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
+
   return (
     <Box
       display="flex"
