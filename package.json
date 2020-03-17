@@ -1,12 +1,13 @@
 {
   "scripts": {
     "start": "npm-run-all --parallel start:*",
-    "start:app": "pushd web && npm run start && popd",
-    "build:app": "pushd web && npm run build:app && popd",
-    "start:server": "pushd server && npm run start && popd",
+    "start:app": "pushd web && yarn run start && popd",
+    "build:app": "pushd web && yarn run build:app && popd",
+    "start:server": "pushd server && yarn run start && popd",
+    "build:server": "pushd server && yarn run build && popd",
     "dev": "npm-run-all --parallel dev:*",
-    "dev:server": "pushd server && npm run dev && popd",
-    "dev:app": "pushd web && npm run start && popd",
+    "dev:server": "pushd server && yarn run dev && popd",
+    "dev:app": "pushd web && yarn run start && popd",
     "install:server": "pushd server && yarn install && popd",
     "install:web": "pushd web && yarn install && popd",
     "format": "npx prettier '*/**/*.{ts,tsx}' --write",
