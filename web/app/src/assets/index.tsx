@@ -57,8 +57,6 @@ export const cache = new InMemoryCache({
   },
 });
 
-export const IS_SITE_DOWN = true;
-
 (async () => {
   // @ts-ignore
   await persistCache({
@@ -145,7 +143,7 @@ export const IS_SITE_DOWN = true;
   );
 
   ReactDOM.render(
-    IS_SITE_DOWN ? placeholder : appNode,
+    process.env.SITE_STATUS === 'MAINTENANCE' ? placeholder : appNode,
     document.getElementById('root'),
   );
 })();
