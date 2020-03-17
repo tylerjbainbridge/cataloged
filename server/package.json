@@ -3,15 +3,15 @@
     "node": "12.0.0"
   },
   "scripts": {
-    "start": "npm run start:server",
-    "prestart": "npm run prisma:lift:up",
-    "dev": "npx nodemon --watch '*.ts{,x}' --exec 'npx ts-node -T' src/dev.ts",
+    "start": "node dist/server.js --target node",
+    "dev": "npx nodemon --watch '*.ts{,x}' --exec 'npx ts-node -T' src/server.ts",
     "predev": "npm run generate:imports",
-    "build": "tsc src/dev.ts",
-    "prisma:generate": "npx prisma2 generate",
-    "prisma:lift:up": "npx prisma2 lift up",
-    "prisma:lift:save": "npx prisma2 lift save",
-    "postinstall": "npx prisma2 generate",
+    "build": "parcel build src/server.ts --target node",
+    "prebuild": "yarn prisma2 generate",
+    "prisma:generate": "yarn prisma2 generate",
+    "prisma:lift:up": "yarn prisma2 lift up",
+    "prisma:lift:save": "yarn prisma2 lift save",
+    "postinstall": "yarn prisma2 generate",
     "generate:imports": "node src/generateImports.js",
     "seed": "ts-node prisma/seed.ts",
     "test": "jest"
@@ -79,6 +79,7 @@
     "@types/node": "^12.7.2",
     "@types/sharp": "^0.22.2",
     "jest": "^25.1.0",
+    "parcel-bundler": "^1.12.4",
     "prettier": "^1.18.2",
     "ts-node": "^8.3.0",
     "ts-node-dev": "1.0.0-pre.40"
