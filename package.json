@@ -5,7 +5,7 @@
     "build:app": "cd web && yarn run build:app",
     "pre:build:app": "yarn run install:web",
     "build:landing-page": "cd landing-page && yarn run build",
-    "pre:landing-page": "yarn run install:landing-page",
+    "pre:build:landing-page": "yarn run install:landing-page",
     "start:server": "cd server && yarn run start",
     "build:server": "cd server && yarn run build",
     "pre:build:server": "yarn run install:server",
