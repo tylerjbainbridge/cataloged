@@ -252,7 +252,7 @@ export class FilterQueryBuilder {
       },
     };
 
-    console.log(JSON.stringify(finalArgs, null, 4));
+    // console.log(JSON.stringify(finalArgs, null, 4));
 
     return finalArgs;
   };
