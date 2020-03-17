@@ -17,12 +17,12 @@ import {
 import { BrowserRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
 
-import * as serviceWorker from '../../shared/serviceWorker';
-import { GRAPHQL_ENDPOINT } from '../../shared/config';
-import { Router } from '../../shared/Router';
-import { Auth } from '../../shared/components/Auth';
-import { theme } from '../../shared/styles/theme';
-import { GlobalModalProvider } from '../../shared/components/GlobalModal';
+import * as serviceWorker from '../../../shared/serviceWorker';
+import { GRAPHQL_ENDPOINT } from '../../../shared/config';
+import { Router } from '../../../shared/Router';
+import { Auth } from '../../../shared/components/Auth';
+import { theme } from '../../../shared/styles/theme';
+import { GlobalModalProvider } from '../../../shared/components/GlobalModal';
 import ErrorBoundary from 'react-error-boundary';
 
 Sentry.init({
