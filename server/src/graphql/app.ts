@@ -73,6 +73,8 @@ app.get('/debug-sentry', function mainHandler(req, res) {
   throw new Error('My first Sentry error!');
 });
 
+app.get('/health-check', (req, res) => res.sendStatus(200));
+
 app.use(Sentry.Handlers.errorHandler() as express.ErrorRequestHandler);
 
 const server = new ApolloServer({
