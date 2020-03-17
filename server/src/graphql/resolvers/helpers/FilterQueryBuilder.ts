@@ -227,7 +227,7 @@ export class FilterQueryBuilder {
         }
 
         default: {
-          const operator = shouldNegate ? 'not.in' : 'in';
+          const operator = shouldNegate ? 'notIn' : 'in';
           // @ts-ignore
           filtersByField[field] = [
             // @ts-ignore
