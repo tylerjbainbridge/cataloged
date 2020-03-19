@@ -20,7 +20,12 @@ export class TokenService {
     const { id: userId }: Payload =
       typeof result === 'string' ? JSON.parse(result) : result;
 
-    const user = await prisma.user.findOne({ where: { id: userId } });
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        lastVisitedAt: new Date(),
+      },
+    });
 
     return user;
   }

@@ -1373,6 +1373,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1453,6 +1454,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1477,6 +1479,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1501,6 +1504,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1525,6 +1529,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1549,6 +1554,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1573,6 +1579,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1597,6 +1604,7 @@ export interface NexusGenInputs {
     isActive?: boolean | null; // Boolean
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1621,6 +1629,7 @@ export interface NexusGenInputs {
     isActive?: boolean | null; // Boolean
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1646,6 +1655,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
@@ -1670,6 +1680,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     role?: string | null; // String
     savedSearches?: NexusGenInputs['SavedSearchCreateManyWithoutUserInput'] | null; // SavedSearchCreateManyWithoutUserInput
@@ -1694,6 +1705,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1718,6 +1730,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1742,6 +1755,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1766,6 +1780,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemCreateManyWithoutUserInput'] | null; // ItemCreateManyWithoutUserInput
     labels?: NexusGenInputs['LabelCreateManyWithoutUserInput'] | null; // LabelCreateManyWithoutUserInput
     lastName?: string | null; // String
+    lastVisitedAt?: any | null; // DateTime
     links?: NexusGenInputs['LinkCreateManyWithoutUserInput'] | null; // LinkCreateManyWithoutUserInput
     notes?: NexusGenInputs['NoteCreateManyWithoutUserInput'] | null; // NoteCreateManyWithoutUserInput
     role?: string | null; // String
@@ -1787,6 +1802,7 @@ export interface NexusGenInputs {
     inviteCode?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isActive?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     lastName?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
+    lastVisitedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     role?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
@@ -1807,6 +1823,7 @@ export interface NexusGenInputs {
     items?: NexusGenInputs['ItemFilter'] | null; // ItemFilter
     labels?: NexusGenInputs['LabelFilter'] | null; // LabelFilter
     lastName?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    lastVisitedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     links?: NexusGenInputs['LinkFilter'] | null; // LinkFilter
     NOT?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     notes?: NexusGenInputs['NoteFilter'] | null; // NoteFilter
