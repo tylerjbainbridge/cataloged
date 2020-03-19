@@ -1,0 +1,101 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "File",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[name, title, description, extension, isUploaded, isFailed]"
+            }
+          ]
+        },
+        "directive": "index"
+      }
+    },
+    {
+      "tag": "DeleteDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "File",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[title, description]"
+            }
+          ]
+        },
+        "directive": "index"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "Item",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[type, status, isFavorited, deletedAt]"
+            }
+          ]
+        },
+        "directive": "index"
+      }
+    },
+    {
+      "tag": "DeleteDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "Item",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[type]"
+            }
+          ]
+        },
+        "directive": "index"
+      }
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "Note",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[title, text]"
+            }
+          ]
+        },
+        "directive": "index"
+      }
+    },
+    {
+      "tag": "DeleteDirective",
+      "location": {
+        "path": {
+          "tag": "Model",
+          "model": "Note",
+          "arguments": [
+            {
+              "name": "",
+              "value": "[title]"
+            }
+          ]
+        },
+        "directive": "index"
+      }
+    }
+  ]
+}
