@@ -62,7 +62,7 @@ export const FEED_QUERY = gql`
       filters: $filters
 
       orderBy: { date: desc }
-    ) @connection(key: "feed_connection") {
+    ) @connection(key: "feed_connection", filter: ["filters"]) {
       ...ItemConnectionFull
     }
   }

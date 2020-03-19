@@ -51,8 +51,7 @@ model File {
   user        User
   width       Int?
 
-  @@index([title, description])
-
+  @@index([name, title, description, extension, isUploaded, isFailed])
 }
 
 model GoogleAccount {
@@ -216,7 +215,7 @@ model Item {
   labels      Label[]
   collections Collection[]
 
-  @@index([type])
+  @@index([type, status, isFavorited, deletedAt])
 }
 
 model Label {
@@ -264,7 +263,7 @@ model Note {
   user User
   item Item?
 
-  @@index([title])
+  @@index([title, text])
 }
 
 model UploadGroup {
