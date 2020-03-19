@@ -7,6 +7,14 @@ const App = () => {
     const redirectURL = window.chrome.identity.getRedirectURL();
     const { oauth2 } = window.chrome.runtime.getManifest();
     const clientId = oauth2.client_id;
+
+    console.log({
+      client_id: clientId,
+      response_type: 'token',
+      redirect_uri: redirectURL,
+      scope: ['email'].join(' '),
+    });
+
     const authParams = new URLSearchParams({
       client_id: clientId,
       response_type: 'token',
@@ -14,6 +22,13 @@ const App = () => {
       scope: ['email'].join(' '),
     });
     const authURL = `https://accounts.google.com/o/oauth2/auth?${authParams.toString()}`;
+
+    window.chrome.identity.getAuthToken({ interactive: true }, function(token) {
+      // Use the token.
+    });
+
+    return;
+
     window.chrome.identity
       .launchWebAuthFlow({ url: authURL, interactive: true })
       .then(responseUrl => {

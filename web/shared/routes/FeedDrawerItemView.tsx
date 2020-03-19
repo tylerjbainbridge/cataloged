@@ -67,6 +67,7 @@ export const FeedDrawerItemView = () => {
     drawerContentProps: {
       border: 'none',
       boxShadow: 'rgba(0, 0, 0, 0.08) -10px 0 10px -10px',
+      zIndex: 200,
       onKeyDown: (e: any) => {
         if (e.key === 'Escape') {
           e.preventDefault();

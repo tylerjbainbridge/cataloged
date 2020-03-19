@@ -130,7 +130,8 @@ export const LinkDrawer = ({
     <>
       <DrawerContent
         key={item.id}
-        width={isMobile ? '100%' : '65%'}
+        width="100%"
+        maxWidth="1300px"
         {...drawerContentProps}
       >
         {!isMobile && (
