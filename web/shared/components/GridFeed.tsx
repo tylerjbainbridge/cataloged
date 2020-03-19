@@ -7,7 +7,7 @@ import { feed } from '../graphql/__generated__/feed';
 import { FeedContext } from './Feed';
 
 export interface GridFeedProps {
-  query: any;
+  query?: any;
   //  QueryResult<feed, Record<string, any>>;
 }
 

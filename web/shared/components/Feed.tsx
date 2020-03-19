@@ -52,6 +52,7 @@ import { CommandCenter } from './CommandCenter';
 import FilterSearchInput from './FilterSearchInput';
 import { AddOrUpdateSavedSearch } from './AddOrUpdateSavedSearch';
 import { useHotKey } from '../hooks/useHotKey';
+import { useItems } from '../hooks/useItems';
 
 export const FEED_QUERY = gql`
   query feed($first: Int, $after: String, $filters: [FilterInput!]) {
@@ -100,6 +101,8 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     localStorage.getItem('grid-mode') || 'grid',
   );
 
+  const [pageNum, setPageNum] = useState(1);
+
   const isMobile = useMedia('(max-width: 768px)');
 
   const [cursorItemId, setCursorItemId] = useState<ItemFull['id'] | null>(null);
@@ -122,29 +125,9 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     localStorage.setItem('grid-mode', mode);
   }, [mode]);
 
-  const queryStringFilters = getFiltersFromQueryString(location.search);
+  const filters = getFiltersFromQueryString(location.search);
 
-  const query = useQuery<feed>(FEED_QUERY, {
-    variables: {
-      ...INITIAL_PAGINATION_VARIABLES,
-      ...(queryStringFilters ? { filters: queryStringFilters } : {}),
-    },
-    fetchPolicy: 'cache-and-network',
-    notifyOnNetworkStatusChange: true,
-    // 5 seconds
-    // pollInterval: 5000,
-  });
-
-  const { loading, data, networkStatus, refetch, fetchMore, variables } = query;
-
-  const items = getNodesFromConnection<ItemFull>(data?.itemsConnection);
-
-  const initialLoad = loading && !data;
-
-  const filter = (filterVariables: any) =>
-    refetch({
-      ...filterVariables,
-    });
+  const { items, lastItem, isLastPage } = useItems({ pageNum });
 
   // TODO: FIX SCROLL TO LOGIC
   // useEffect(() => {
@@ -165,45 +148,10 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
     }
   }, [isViewingItem]);
 
-  const prevFilters = usePrevious(queryStringFilters);
-
-  useEffect(() => {
-    if (prevFilters && prevFilters.length !== queryStringFilters.length) {
-      // refetch(getFiltersFromQueryString(location.search));
-      refetch();
-    }
-  }, [location.search]);
-
-  const { filters } = variables;
-
-  const lastEdge = _.last(data?.itemsConnection?.edges || []);
-
-  const nextPage = () => {
-    return fetchMore({
-      variables: {
-        ...variables,
-        after: lastEdge?.cursor,
-      },
-      // @ts-ignore
-      updateQuery: (previousResult, { fetchMoreResult }) => {
-        const newEdges = fetchMoreResult?.itemsConnection?.edges;
-        const pageInfo = fetchMoreResult?.itemsConnection?.pageInfo;
-
-        return newEdges?.length
-          ? {
-              itemsConnection: {
-                __typename: previousResult.itemsConnection.__typename,
-                edges: [...previousResult.itemsConnection.edges, ...newEdges],
-                pageInfo,
-              },
-            }
-          : previousResult;
-      },
-    });
-  };
+  const prevFilters = usePrevious(filters);
 
   const isLastItem = ({ id }: ItemFull) => {
-    return lastEdge?.node?.id === id;
+    return lastItem?.id === id;
   };
 
   const openItemModal = (item: ItemFull) => setCursorItemId(item.id);
@@ -221,9 +169,11 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
         search: getQueryStringFromFilters(newFilters, window.location.search),
       });
 
-      refetch();
+      // refetch();
     }
   };
+
+  const nextPage = () => setPageNum(pageNum + 1);
 
   const cursorItem = cursorItemId
     ? items.find(({ id }) => cursorItemId === id)
@@ -292,10 +242,6 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
         isItemCursor,
         openItemModal,
         items,
-        filter,
-        initialLoad,
-        loading,
-        variables,
       }}
     >
       <UploadProgress />
@@ -323,7 +269,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                     height="30px"
                     width="20px"
                   >
-                    {loading ? <Spinner size="sm" /> : <Box />}
+                    {false ? <Spinner size="sm" /> : <Box />}
                   </Box>
 
                   <Box
@@ -334,22 +280,22 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                     p="10px"
                   >
                     <FilterSearchInput
-                      filters={queryStringFilters}
+                      filters={filters}
                       onChange={(filters: any) => {
                         updateFilters(filters);
                       }}
                     />
                   </Box>
 
-                  <AddOrUpdateSavedSearch filters={queryStringFilters}>
+                  <AddOrUpdateSavedSearch filters={filters}>
                     {({ onOpen, match }: any) =>
-                      !!queryStringFilters?.length && (
+                      !!filters?.length && (
                         <Tooltip
                           aria-label="add filter"
                           zIndex={22}
                           hasArrow
                           label={
-                            queryStringFilters?.length
+                            filters?.length
                               ? 'Update (or create) search'
                               : 'Save this search'
                           }
@@ -363,7 +309,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                             height="30px"
                             onClick={onOpen}
                             mb="-10px"
-                            // isDisabled={!queryStringFilters.length}
+                            // isDisabled={!filters.length}
                           >
                             {isViewingSearch ? (
                               <FaEdit size={15} />
@@ -375,7 +321,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                       )
                     }
                   </AddOrUpdateSavedSearch>
-                  {!!queryStringFilters?.length && (
+                  {!!filters?.length && (
                     <Tooltip
                       hasArrow
                       label="clear filters"
@@ -401,8 +347,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                 </Box>
               ) : (
                 <Filter
-                  filters={queryStringFilters}
-                  loading={networkStatus !== 6 && loading}
+                  filters={filters}
                   onDebouncedFilterChange={updateFilters}
                 />
               )
@@ -440,7 +385,7 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
               ml="20px"
             >
               <Box ref={feedContainerRef}>
-                {initialLoad && !items.length ? (
+                {false && !items.length ? (
                   <Box
                     d="flex"
                     justifyContent="center"
@@ -462,18 +407,16 @@ export const Feed = ({ sidebarState }: { sidebarState: any }) => {
                     </Text>
                   </Box>
                 ) : mode === 'grid' ? (
-                  <GridFeed query={query} />
+                  <GridFeed />
                 ) : (
-                  <ListFeed query={query} />
+                  <ListFeed />
                 )}
-                {data &&
-                  !loading &&
-                  data?.itemsConnection?.pageInfo?.hasNextPage && (
-                    <Waypoint bottomOffset={-700} onEnter={nextPage} />
-                  )}
+                {!isLastPage && (
+                  <Waypoint bottomOffset={-700} onEnter={nextPage} />
+                )}
               </Box>
 
-              {loading && items.length > FEED_PAGE_LENGTH && (
+              {items.length > FEED_PAGE_LENGTH && (
                 <Box
                   d="flex"
                   justifyContent="center"

@@ -8,7 +8,7 @@ import { ItemFull } from '../graphql/__generated__/ItemFull';
 import { FeedContext } from './Feed';
 
 export interface ListFeedProps {
-  query: any;
+  query?: any;
   // QueryResult<feed, Record<string, any>>;
 }
 
