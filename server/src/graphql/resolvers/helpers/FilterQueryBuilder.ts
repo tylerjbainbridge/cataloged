@@ -3,7 +3,7 @@ import _, { set, get } from 'lodash';
 
 export const STRING_FILTERS = {
   note: ['text'],
-  file: ['name', 'title,', 'description', 'extension'],
+  file: ['name', 'title', 'description', 'extension'],
   link: ['href', 'title', 'description'],
   googleContact: [
     'name',
