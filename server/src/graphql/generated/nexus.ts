@@ -1003,6 +1003,7 @@ export interface NexusGenInputs {
     id?: string | null; // String
     image?: string | null; // String
     isIframeDisabled?: boolean | null; // Boolean
+    logo?: string | null; // String
     notes?: string | null; // String
     title?: string | null; // String
     updatedAt?: any | null; // DateTime
@@ -1018,6 +1019,7 @@ export interface NexusGenInputs {
     image?: string | null; // String
     isIframeDisabled?: boolean | null; // Boolean
     item?: NexusGenInputs['ItemCreateOneWithoutLinkInput'] | null; // ItemCreateOneWithoutLinkInput
+    logo?: string | null; // String
     notes?: string | null; // String
     title?: string | null; // String
     updatedAt?: any | null; // DateTime
@@ -1038,6 +1040,7 @@ export interface NexusGenInputs {
     image?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
     isIframeDisabled?: NexusGenInputs['BooleanFilter'] | null; // BooleanFilter
     item?: NexusGenInputs['ItemWhereInput'] | null; // ItemWhereInput
+    logo?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
     NOT?: NexusGenInputs['LinkWhereInput'][] | null; // [LinkWhereInput!]
     notes?: NexusGenInputs['StringFilter'] | null; // StringFilter
     OR?: NexusGenInputs['LinkWhereInput'][] | null; // [LinkWhereInput!]
@@ -2239,6 +2242,7 @@ export interface NexusGenFieldTypes {
     image: string | null; // String
     isIframeDisabled: boolean; // Boolean!
     item: NexusGenRootTypes['Item'] | null; // Item
+    logo: string | null; // String
     notes: string; // String!
     title: string | null; // String
     updatedAt: any; // DateTime!

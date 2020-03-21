@@ -31,6 +31,7 @@ export interface ItemFull_link {
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;
@@ -86,6 +87,7 @@ export interface ItemFull_items_link {
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;

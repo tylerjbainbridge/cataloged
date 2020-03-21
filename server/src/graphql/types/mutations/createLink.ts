@@ -22,6 +22,7 @@ export const createLink = extendType({
           description,
           image,
           favicon,
+          logo,
           isIframeDisabled,
         } = await getMetadataFromUrl(args.href);
 
@@ -40,6 +41,7 @@ export const createLink = extendType({
             description,
             image,
             favicon,
+            logo,
             isIframeDisabled,
             user: { connect: { id: ctx.user.id } },
             item: {

@@ -31,6 +31,7 @@ export interface disconnectItemFromItem_disconnectItemFromItem_items_link {
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;

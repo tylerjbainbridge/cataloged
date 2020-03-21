@@ -12,6 +12,7 @@ export const LINK_FULL_FRAGMENT = gql`
 
     image
     favicon
+    logo
     title
     description
 

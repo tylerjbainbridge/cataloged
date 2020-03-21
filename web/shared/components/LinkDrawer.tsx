@@ -18,12 +18,21 @@ import {
   MenuItem,
   Icon,
   useDisclosure,
+  Tooltip,
+  useToast,
 } from '@chakra-ui/core';
+import copy from 'copy-to-clipboard';
 import * as yup from 'yup';
 import { useMutation } from '@apollo/client';
 import Iframe from 'react-iframe';
-import { Labels } from './Labels';
 import { useForm } from 'react-hook-form';
+// @ts-ignore
+import { TwitterTweetEmbed, TwitterTimelineEmbed } from 'react-twitter-embed';
+import YouTube from 'react-youtube';
+import InstagramEmbed from 'react-instagram-embed';
+
+import { Labels } from './Labels';
+
 import { LazyImage } from './LazyImage';
 import {
   UPDATE_LINK_MUTATION,
@@ -37,9 +46,7 @@ import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
 import { useMedia } from 'react-use';
 import { getTweetMetaFromUrl, getYoutubeId } from '../util/link';
-// @ts-ignore
-import { TwitterTweetEmbed, TwitterTimelineEmbed } from 'react-twitter-embed';
-import YouTube from 'react-youtube';
+import { FaCopy } from 'react-icons/fa';
 
 export interface ItemWithLink extends ItemFull {
   link: ItemFull_link;
@@ -78,6 +85,8 @@ export const LinkDrawer = ({
     validationSchema: CreateLinkSchema,
     mode: 'onBlur',
   });
+
+  const toast = useToast();
 
   watch();
 
@@ -132,6 +141,7 @@ export const LinkDrawer = ({
 
   let leftNode = null;
   const url = new URL(link.href);
+  const leftContainerProps: any = {};
 
   console.log(url);
 
@@ -160,34 +170,17 @@ export const LinkDrawer = ({
       drawerContentProps.maxWidth = '750px';
 
       leftNode = (
-        <Box
-          d="flex"
-          width={isMobile ? '100%' : 'calc(100% - 450px)'}
-          justifyContent="center"
-          // alignItems="center"
-          height="100%"
-        >
-          <TwitterTimelineEmbed
-            sourceType="profile"
-            screenName={meta.username}
-            options={{ height: '100%', width: '100%' }}
-          />
-        </Box>
+        <TwitterTimelineEmbed
+          sourceType="profile"
+          screenName={meta.username}
+          options={{ height: '100%', width: '100%' }}
+        />
       );
     } else if (meta.id && meta.type === 'status') {
       drawerContentProps.maxWidth = '950px';
 
       leftNode = (
-        <Box
-          d="flex"
-          width={isMobile ? '100%' : 'calc(100% - 450px)'}
-          alignItems="center"
-          justifyContent="center"
-          height="100%"
-          bg="#000"
-        >
-          <TwitterTweetEmbed tweetId={meta.id} options={{ width: '400px' }} />
-        </Box>
+        <TwitterTweetEmbed tweetId={meta.id} options={{ width: '400px' }} />
       );
     }
   } else if (url.hostname.includes('youtube.com')) {
@@ -196,19 +189,15 @@ export const LinkDrawer = ({
     drawerContentProps.maxWidth = '1300px';
 
     if (id) {
-      leftNode = (
-        <Box
-          d="flex"
-          width={isMobile ? '100%' : 'calc(100% - 450px)'}
-          alignItems="center"
-          justifyContent="center"
-          height="100%"
-          bg="#000"
-        >
-          <YouTube videoId={id} opts={{ width: '700px' }} />
-        </Box>
-      );
+      leftNode = <YouTube videoId={id} opts={{ width: '700px' }} />;
     }
+  } else if (url.hostname.includes('instagram.com')) {
+    drawerContentProps.maxWidth = '1000px';
+    leftContainerProps.bg = '#fff';
+
+    leftNode = (
+      <InstagramEmbed url={link.href} maxWidth={600} containerTagName="div" />
+    );
   }
 
   return (
@@ -221,7 +210,19 @@ export const LinkDrawer = ({
         }
         {...drawerContentProps}
       >
-        {!isMobile && leftNode}
+        {!isMobile && (
+          <Box
+            d="flex"
+            width={isMobile ? '100%' : 'calc(100% - 450px)'}
+            alignItems="center"
+            justifyContent="center"
+            height="100%"
+            bg="#000"
+            {...leftContainerProps}
+          >
+            {leftNode}
+          </Box>
+        )}
         <Flex
           width={isMobile ? '100%' : '450px'}
           minWidth={isMobile ? '100%' : '450px'}
@@ -239,6 +240,25 @@ export const LinkDrawer = ({
             <Stack spacing="20px" height="100%">
               <Flex width="100%" justifyContent="flex-end">
                 <Stack isInline>
+                  <Box>
+                    <Tooltip label="Copy URL" aria-label="copy url">
+                      <Button
+                        // width="100%"
+                        mb="20px"
+                        onClick={() => {
+                          copy(link.href);
+                          toast({
+                            title: 'Copied to clipboard',
+                            status: 'success',
+                            duration: 2000,
+                            position: 'bottom-left',
+                          });
+                        }}
+                      >
+                        <FaCopy />
+                      </Button>
+                    </Tooltip>
+                  </Box>
                   <Button
                     color="white"
                     bg="brand.purple.main"
@@ -248,6 +268,7 @@ export const LinkDrawer = ({
                   >
                     Visit site
                   </Button>
+
                   <ItemActionMenu item={item}>
                     {menuNodes => (
                       <>

@@ -39,6 +39,7 @@ export interface CommandCenterSearchItems_itemsConnection_edges_node_link {
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;
@@ -94,6 +95,7 @@ export interface CommandCenterSearchItems_itemsConnection_edges_node_items_link 
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;

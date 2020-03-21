@@ -1236,6 +1236,7 @@ type Link {
   image: String
   isIframeDisabled: Boolean!
   item: Item
+  logo: String
   notes: String!
   title: String
   updatedAt: DateTime!
@@ -1260,6 +1261,7 @@ input LinkCreateWithoutItemInput {
   id: String
   image: String
   isIframeDisabled: Boolean
+  logo: String
   notes: String
   title: String
   updatedAt: DateTime
@@ -1276,6 +1278,7 @@ input LinkCreateWithoutUserInput {
   image: String
   isIframeDisabled: Boolean
   item: ItemCreateOneWithoutLinkInput
+  logo: String
   notes: String
   title: String
   updatedAt: DateTime
@@ -1298,6 +1301,7 @@ input LinkWhereInput {
   image: NullableStringFilter
   isIframeDisabled: BooleanFilter
   item: ItemWhereInput
+  logo: NullableStringFilter
   NOT: [LinkWhereInput!]
   notes: StringFilter
   OR: [LinkWhereInput!]

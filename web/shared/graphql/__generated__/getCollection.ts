@@ -38,6 +38,7 @@ export interface getCollection_collection_entries_item_link {
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;
@@ -93,6 +94,7 @@ export interface getCollection_collection_entries_item_items_link {
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;

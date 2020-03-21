@@ -16,6 +16,7 @@ export interface updateLink_updateLink {
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;

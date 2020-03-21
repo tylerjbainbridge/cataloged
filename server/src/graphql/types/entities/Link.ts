@@ -12,6 +12,7 @@ export const Link = objectType({
 
     t.model.image();
     t.model.favicon();
+    t.model.logo();
     t.model.title();
     t.model.description();
     t.model.host();

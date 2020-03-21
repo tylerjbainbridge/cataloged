@@ -83,7 +83,7 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
                 subTitle: item.link.href,
               }),
           createdAt: item.date,
-          image: item.link.image,
+          image: item.link.image || item.link.logo || item.link.favicon,
           icon: 'external-link',
           favicon: item.link.favicon,
           action: () => window.open(item?.link?.href, '_blank'),

@@ -2,7 +2,7 @@ import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
 import Bluebird from 'bluebird';
 import { Link } from '@prisma/client';
-import { getIsIframeDisabled } from '../../../helpers/link';
+import { getIsIframeDisabled, getMetadataFromUrl } from '../../../helpers/link';
 
 export const taskFixLinks = extendType({
   type: 'Mutation',
@@ -16,10 +16,20 @@ export const taskFixLinks = extendType({
           links,
           async (link: Link) => {
             try {
+              const {
+                image,
+                favicon,
+                logo,
+                isIframeDisabled,
+              } = await getMetadataFromUrl(link.href);
+
               return await ctx.prisma.link.update({
                 where: { id: link.id },
                 data: {
-                  isIframeDisabled: await getIsIframeDisabled(link.href),
+                  image: image || link.image,
+                  favicon: favicon || link.favicon,
+                  logo: logo || link.logo,
+                  isIframeDisabled,
                 },
               });
             } catch (e) {

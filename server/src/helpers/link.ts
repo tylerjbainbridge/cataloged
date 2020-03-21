@@ -14,7 +14,19 @@ const metascraper = require('metascraper')([
 
 export const getMetadataFromUrl = async (url: string) => {
   try {
-    const { data: html, headers } = await axios.get(url);
+    const requestHeaders = {};
+
+    if (new URL(url).host.includes('amazon')) {
+      //@ts-ignore
+      requestHeaders['User-Agent'] = 'GoogleBot';
+    } else {
+      //@ts-ignore
+      requestHeaders['User-Agent'] = 'Mozilla/5.0';
+    }
+
+    const { data: html, headers } = await axios.get(url, {
+      headers: requestHeaders,
+    });
 
     const isIframeDisabled =
       headers['x-frame-options'] &&
@@ -25,6 +37,8 @@ export const getMetadataFromUrl = async (url: string) => {
       ...(await metascraper({ html, url })),
     };
   } catch (e) {
+    console.log(url, e.message);
+
     return {
       isIframeDisabled: true,
     };

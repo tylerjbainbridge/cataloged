@@ -38,6 +38,7 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;
@@ -93,6 +94,7 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   updatedAt: any;
   image: string | null;
   favicon: string | null;
+  logo: string | null;
   title: string | null;
   description: string | null;
   host: string | null;
