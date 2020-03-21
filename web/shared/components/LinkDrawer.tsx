@@ -143,8 +143,6 @@ export const LinkDrawer = ({
   const url = new URL(link.href);
   const leftContainerProps: any = {};
 
-  console.log(url);
-
   if (!link.isIframeDisabled) {
     leftNode = (
       <Box
@@ -167,6 +165,7 @@ export const LinkDrawer = ({
     const meta = getTweetMetaFromUrl(link);
 
     if (!meta.id && meta.username) {
+      drawerContentProps.alignItems = 'center';
       drawerContentProps.maxWidth = '750px';
 
       leftNode = (
@@ -177,6 +176,7 @@ export const LinkDrawer = ({
         />
       );
     } else if (meta.id && meta.type === 'status') {
+      drawerContentProps.alignItems = 'center';
       drawerContentProps.maxWidth = '950px';
 
       leftNode = (
@@ -186,13 +186,15 @@ export const LinkDrawer = ({
   } else if (url.hostname.includes('youtube.com')) {
     const id = getYoutubeId(link.href);
 
+    drawerContentProps.alignItems = 'center';
     drawerContentProps.maxWidth = '1300px';
 
     if (id) {
       leftNode = <YouTube videoId={id} opts={{ width: '700px' }} />;
     }
   } else if (url.hostname.includes('instagram.com')) {
-    drawerContentProps.maxWidth = '1000px';
+    drawerContentProps.maxWidth = '1300px';
+    drawerContentProps.alignItems = 'center';
     leftContainerProps.bg = '#fff';
 
     leftNode = (
@@ -214,7 +216,6 @@ export const LinkDrawer = ({
           <Box
             d="flex"
             width={isMobile ? '100%' : 'calc(100% - 450px)'}
-            alignItems="center"
             justifyContent="center"
             height="100%"
             bg="#000"
@@ -294,7 +295,7 @@ export const LinkDrawer = ({
                 </Stack>
               </Flex>
               <Stack spacing={5}>
-                {link.image && (
+                {link.image && !leftNode && (
                   <LazyImage
                     rounded
                     src={link.image}
