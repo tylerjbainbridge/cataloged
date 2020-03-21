@@ -17,11 +17,13 @@ export const createLink = extendType({
       resolve: async (root, args, ctx) => {
         if (!ctx.user) throw new Error('Whoops, not authorized');
 
-        const { title, description, image, favicon } = await getMetadataFromUrl(
-          args.href,
-        );
-
-        const isIframeDisabled = await getIsIframeDisabled(args.href);
+        const {
+          title,
+          description,
+          image,
+          favicon,
+          isIframeDisabled,
+        } = await getMetadataFromUrl(args.href);
 
         let host = null;
 
