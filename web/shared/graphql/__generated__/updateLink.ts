@@ -7,22 +7,6 @@
 // GraphQL mutation operation: updateLink
 // ====================================================
 
-export interface updateLink_updateLink_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface updateLink_updateLink_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: updateLink_updateLink_item_labels[];
-}
-
 export interface updateLink_updateLink {
   __typename: "Link";
   id: string;
@@ -34,7 +18,8 @@ export interface updateLink_updateLink {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: updateLink_updateLink_item | null;
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface updateLink {

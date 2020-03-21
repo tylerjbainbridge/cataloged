@@ -60,7 +60,7 @@ export const NoteDrawer = ({
             justifyContent="center"
             height="100%"
           >
-            <NoteEditor note={note} updateNote={updateNote}>
+            <NoteEditor item={item} updateNote={updateNote}>
               {({ editable, toolbar, titleInput }: any) => (
                 <>
                   <Box width="100%" position="absolute" top={0}>
@@ -123,7 +123,7 @@ export const NoteDrawer = ({
                   border="1px solid black"
                   rounded="lg"
                 >
-                  <NoteEditor note={note} updateNote={updateNote}>
+                  <NoteEditor item={item} updateNote={updateNote}>
                     {({ editable, toolbar }: any) => (
                       <Box>
                         {editable}

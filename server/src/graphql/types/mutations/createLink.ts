@@ -1,6 +1,6 @@
 import { extendType, stringArg } from 'nexus';
 import { Link } from '../entities/Link';
-import { getMetadataFromUrl } from '../../../helpers/link';
+import { getMetadataFromUrl, getIsIframeDisabled } from '../../../helpers/link';
 
 export const createLink = extendType({
   type: 'Mutation',
@@ -21,6 +21,8 @@ export const createLink = extendType({
           args.href,
         );
 
+        const isIframeDisabled = await getIsIframeDisabled(args.href);
+
         let host = null;
 
         try {
@@ -36,6 +38,7 @@ export const createLink = extendType({
             description,
             image,
             favicon,
+            isIframeDisabled,
             user: { connect: { id: ctx.user.id } },
             item: {
               create: { type: 'link', user: { connect: { id: ctx.user.id } } },

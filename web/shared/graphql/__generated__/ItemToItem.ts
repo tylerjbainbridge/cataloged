@@ -22,22 +22,6 @@ export interface ItemToItem_collections {
   description: string | null;
 }
 
-export interface ItemToItem_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemToItem_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemToItem_link_item_labels[];
-}
-
 export interface ItemToItem_link {
   __typename: "Link";
   id: string;
@@ -49,23 +33,8 @@ export interface ItemToItem_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: ItemToItem_link_item | null;
-}
-
-export interface ItemToItem_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemToItem_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemToItem_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface ItemToItem_file {
@@ -83,23 +52,6 @@ export interface ItemToItem_file {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: ItemToItem_file_item;
-}
-
-export interface ItemToItem_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemToItem_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemToItem_note_item_labels[];
 }
 
 export interface ItemToItem_note {
@@ -110,23 +62,6 @@ export interface ItemToItem_note {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: ItemToItem_note_item | null;
-}
-
-export interface ItemToItem_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemToItem_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemToItem_googleContact_item_labels[];
 }
 
 export interface ItemToItem_googleContact {
@@ -141,7 +76,6 @@ export interface ItemToItem_googleContact {
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: ItemToItem_googleContact_item;
 }
 
 export interface ItemToItem {

@@ -29,22 +29,6 @@ export interface CollectionEntryFull_item_collections {
   description: string | null;
 }
 
-export interface CollectionEntryFull_item_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface CollectionEntryFull_item_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: CollectionEntryFull_item_link_item_labels[];
-}
-
 export interface CollectionEntryFull_item_link {
   __typename: "Link";
   id: string;
@@ -56,23 +40,8 @@ export interface CollectionEntryFull_item_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: CollectionEntryFull_item_link_item | null;
-}
-
-export interface CollectionEntryFull_item_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface CollectionEntryFull_item_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: CollectionEntryFull_item_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface CollectionEntryFull_item_file {
@@ -90,23 +59,6 @@ export interface CollectionEntryFull_item_file {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: CollectionEntryFull_item_file_item;
-}
-
-export interface CollectionEntryFull_item_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface CollectionEntryFull_item_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: CollectionEntryFull_item_note_item_labels[];
 }
 
 export interface CollectionEntryFull_item_note {
@@ -117,7 +69,6 @@ export interface CollectionEntryFull_item_note {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: CollectionEntryFull_item_note_item | null;
 }
 
 export interface CollectionEntryFull_item_items_labels {
@@ -133,22 +84,6 @@ export interface CollectionEntryFull_item_items_collections {
   description: string | null;
 }
 
-export interface CollectionEntryFull_item_items_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface CollectionEntryFull_item_items_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: CollectionEntryFull_item_items_link_item_labels[];
-}
-
 export interface CollectionEntryFull_item_items_link {
   __typename: "Link";
   id: string;
@@ -160,23 +95,8 @@ export interface CollectionEntryFull_item_items_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: CollectionEntryFull_item_items_link_item | null;
-}
-
-export interface CollectionEntryFull_item_items_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface CollectionEntryFull_item_items_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: CollectionEntryFull_item_items_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface CollectionEntryFull_item_items_file {
@@ -194,23 +114,6 @@ export interface CollectionEntryFull_item_items_file {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: CollectionEntryFull_item_items_file_item;
-}
-
-export interface CollectionEntryFull_item_items_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface CollectionEntryFull_item_items_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: CollectionEntryFull_item_items_note_item_labels[];
 }
 
 export interface CollectionEntryFull_item_items_note {
@@ -221,23 +124,6 @@ export interface CollectionEntryFull_item_items_note {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: CollectionEntryFull_item_items_note_item | null;
-}
-
-export interface CollectionEntryFull_item_items_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface CollectionEntryFull_item_items_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: CollectionEntryFull_item_items_googleContact_item_labels[];
 }
 
 export interface CollectionEntryFull_item_items_googleContact {
@@ -252,7 +138,6 @@ export interface CollectionEntryFull_item_items_googleContact {
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: CollectionEntryFull_item_items_googleContact_item;
 }
 
 export interface CollectionEntryFull_item_items {
@@ -272,22 +157,6 @@ export interface CollectionEntryFull_item_items {
   googleContact: CollectionEntryFull_item_items_googleContact | null;
 }
 
-export interface CollectionEntryFull_item_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface CollectionEntryFull_item_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: CollectionEntryFull_item_googleContact_item_labels[];
-}
-
 export interface CollectionEntryFull_item_googleContact {
   __typename: "GoogleContact";
   id: string;
@@ -300,7 +169,6 @@ export interface CollectionEntryFull_item_googleContact {
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: CollectionEntryFull_item_googleContact_item;
 }
 
 export interface CollectionEntryFull_item {

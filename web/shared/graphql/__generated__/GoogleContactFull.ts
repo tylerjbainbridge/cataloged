@@ -7,22 +7,6 @@
 // GraphQL fragment: GoogleContactFull
 // ====================================================
 
-export interface GoogleContactFull_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface GoogleContactFull_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: GoogleContactFull_item_labels[];
-}
-
 export interface GoogleContactFull {
   __typename: "GoogleContact";
   id: string;
@@ -35,5 +19,4 @@ export interface GoogleContactFull {
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: GoogleContactFull_item;
 }

@@ -7,22 +7,6 @@
 // GraphQL fragment: LinkFull
 // ====================================================
 
-export interface LinkFull_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface LinkFull_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: LinkFull_item_labels[];
-}
-
 export interface LinkFull {
   __typename: "Link";
   id: string;
@@ -34,5 +18,6 @@ export interface LinkFull {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: LinkFull_item | null;
+  host: string | null;
+  isIframeDisabled: boolean;
 }

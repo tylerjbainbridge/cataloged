@@ -22,22 +22,6 @@ export interface ItemFull_collections {
   description: string | null;
 }
 
-export interface ItemFull_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemFull_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemFull_link_item_labels[];
-}
-
 export interface ItemFull_link {
   __typename: "Link";
   id: string;
@@ -49,23 +33,8 @@ export interface ItemFull_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: ItemFull_link_item | null;
-}
-
-export interface ItemFull_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemFull_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemFull_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface ItemFull_file {
@@ -83,23 +52,6 @@ export interface ItemFull_file {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: ItemFull_file_item;
-}
-
-export interface ItemFull_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemFull_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemFull_note_item_labels[];
 }
 
 export interface ItemFull_note {
@@ -110,7 +62,6 @@ export interface ItemFull_note {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: ItemFull_note_item | null;
 }
 
 export interface ItemFull_items_labels {
@@ -126,22 +77,6 @@ export interface ItemFull_items_collections {
   description: string | null;
 }
 
-export interface ItemFull_items_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemFull_items_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemFull_items_link_item_labels[];
-}
-
 export interface ItemFull_items_link {
   __typename: "Link";
   id: string;
@@ -153,23 +88,8 @@ export interface ItemFull_items_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: ItemFull_items_link_item | null;
-}
-
-export interface ItemFull_items_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemFull_items_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemFull_items_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface ItemFull_items_file {
@@ -187,23 +107,6 @@ export interface ItemFull_items_file {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: ItemFull_items_file_item;
-}
-
-export interface ItemFull_items_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemFull_items_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemFull_items_note_item_labels[];
 }
 
 export interface ItemFull_items_note {
@@ -214,23 +117,6 @@ export interface ItemFull_items_note {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: ItemFull_items_note_item | null;
-}
-
-export interface ItemFull_items_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemFull_items_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemFull_items_googleContact_item_labels[];
 }
 
 export interface ItemFull_items_googleContact {
@@ -245,7 +131,6 @@ export interface ItemFull_items_googleContact {
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: ItemFull_items_googleContact_item;
 }
 
 export interface ItemFull_items {
@@ -265,22 +150,6 @@ export interface ItemFull_items {
   googleContact: ItemFull_items_googleContact | null;
 }
 
-export interface ItemFull_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemFull_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemFull_googleContact_item_labels[];
-}
-
 export interface ItemFull_googleContact {
   __typename: "GoogleContact";
   id: string;
@@ -293,7 +162,6 @@ export interface ItemFull_googleContact {
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: ItemFull_googleContact_item;
 }
 
 export interface ItemFull {

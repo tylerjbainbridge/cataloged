@@ -1002,6 +1002,7 @@ export interface NexusGenInputs {
     href?: string | null; // String
     id?: string | null; // String
     image?: string | null; // String
+    isIframeDisabled?: boolean | null; // Boolean
     notes?: string | null; // String
     title?: string | null; // String
     updatedAt?: any | null; // DateTime
@@ -1015,6 +1016,7 @@ export interface NexusGenInputs {
     href?: string | null; // String
     id?: string | null; // String
     image?: string | null; // String
+    isIframeDisabled?: boolean | null; // Boolean
     item?: NexusGenInputs['ItemCreateOneWithoutLinkInput'] | null; // ItemCreateOneWithoutLinkInput
     notes?: string | null; // String
     title?: string | null; // String
@@ -1034,6 +1036,7 @@ export interface NexusGenInputs {
     href?: NexusGenInputs['StringFilter'] | null; // StringFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     image?: NexusGenInputs['NullableStringFilter'] | null; // NullableStringFilter
+    isIframeDisabled?: NexusGenInputs['BooleanFilter'] | null; // BooleanFilter
     item?: NexusGenInputs['ItemWhereInput'] | null; // ItemWhereInput
     NOT?: NexusGenInputs['LinkWhereInput'][] | null; // [LinkWhereInput!]
     notes?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -2230,9 +2233,11 @@ export interface NexusGenFieldTypes {
     createdAt: any; // DateTime!
     description: string | null; // String
     favicon: string | null; // String
+    host: string | null; // String
     href: string; // String!
     id: string; // String!
     image: string | null; // String
+    isIframeDisabled: boolean; // Boolean!
     item: NexusGenRootTypes['Item'] | null; // Item
     notes: string; // String!
     title: string | null; // String

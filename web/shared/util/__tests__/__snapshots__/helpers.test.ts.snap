@@ -1,59 +1,62 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getFiltersFromQueryString 1`] = `
-Object {
-  "filters": Array [
-    Object {
-      "name": "-is",
-      "value": "not started",
-    },
-    Object {
-      "name": "-label",
-      "value": "label 4",
-    },
-    Object {
-      "name": "-type",
-      "value": "file",
-    },
-    Object {
-      "name": "is",
-      "value": "favorited",
-    },
-    Object {
-      "name": "label",
-      "values": Array [
-        "label 1",
-        "label 2",
-        "label 3",
-      ],
-    },
-    Object {
-      "name": "search",
-      "values": Array [
-        "random string",
-        "test string",
-        "another string",
-      ],
-    },
-  ],
-}
+Array [
+  Object {
+    "display": undefined,
+    "name": "-is",
+    "value": "not started",
+  },
+  Object {
+    "display": undefined,
+    "name": "-label",
+    "value": "label 4",
+  },
+  Object {
+    "display": undefined,
+    "name": "-type",
+    "value": "file",
+  },
+  Object {
+    "display": undefined,
+    "name": "is",
+    "value": "favorited",
+  },
+  Object {
+    "display": undefined,
+    "name": "label",
+    "values": Array [
+      "label 1",
+      "label 2",
+      "label 3",
+    ],
+  },
+  Object {
+    "display": undefined,
+    "name": "search",
+    "values": Array [
+      "random string",
+      "test string",
+      "another string",
+    ],
+  },
+]
 `;
 
-exports[`getQueryStringFromFilters 1`] = `"-is=not%20started&-label=label%204&-type=file&is=favorited&itemId=123&label[]=label%201&label[]=label%202&label[]=label%203&search[]=random%20string&search[]=test%20string&search[]=another%20string"`;
+exports[`getQueryStringFromFilters 1`] = `"-is.value=not%20started&-label.value=label%204&-type.value=file&is.value=favorited&label.value[]=label%201&label.value[]=label%202&label.value[]=label%203&search.value[]=random%20string&search.value[]=test%20string&search.value[]=another%20string"`;
 
 exports[`getQueryStringFromFilters 2`] = `
 Object {
-  "-is": "not started",
-  "-label": "label 4",
-  "-type": "file",
-  "is": "favorited",
-  "itemId": "123",
-  "label": Array [
+  "-is.value": "not started",
+  "-label.value": "label 4",
+  "-type.value": "file",
+  "is.value": "favorited",
+  "label.value": Array [
     "label 1",
     "label 2",
     "label 3",
   ],
-  "search": Array [
+  "search.value": Array [
     "random string",
     "test string",
     "another string",

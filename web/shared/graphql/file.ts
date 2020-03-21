@@ -20,21 +20,6 @@ export const FILE_FULL_FRAGMENT = gql`
 
     createdAt
     updatedAt
-
-    item {
-      id
-      type
-
-      date
-
-      createdAt
-      updatedAt
-
-      labels {
-        id
-        name
-      }
-    }
   }
 `;
 

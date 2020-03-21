@@ -22,22 +22,6 @@ export interface disconnectItemFromItem_disconnectItemFromItem_items_collections
   description: string | null;
 }
 
-export interface disconnectItemFromItem_disconnectItemFromItem_items_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface disconnectItemFromItem_disconnectItemFromItem_items_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: disconnectItemFromItem_disconnectItemFromItem_items_link_item_labels[];
-}
-
 export interface disconnectItemFromItem_disconnectItemFromItem_items_link {
   __typename: "Link";
   id: string;
@@ -49,23 +33,8 @@ export interface disconnectItemFromItem_disconnectItemFromItem_items_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: disconnectItemFromItem_disconnectItemFromItem_items_link_item | null;
-}
-
-export interface disconnectItemFromItem_disconnectItemFromItem_items_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface disconnectItemFromItem_disconnectItemFromItem_items_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: disconnectItemFromItem_disconnectItemFromItem_items_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface disconnectItemFromItem_disconnectItemFromItem_items_file {
@@ -83,23 +52,6 @@ export interface disconnectItemFromItem_disconnectItemFromItem_items_file {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: disconnectItemFromItem_disconnectItemFromItem_items_file_item;
-}
-
-export interface disconnectItemFromItem_disconnectItemFromItem_items_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface disconnectItemFromItem_disconnectItemFromItem_items_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: disconnectItemFromItem_disconnectItemFromItem_items_note_item_labels[];
 }
 
 export interface disconnectItemFromItem_disconnectItemFromItem_items_note {
@@ -110,23 +62,6 @@ export interface disconnectItemFromItem_disconnectItemFromItem_items_note {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: disconnectItemFromItem_disconnectItemFromItem_items_note_item | null;
-}
-
-export interface disconnectItemFromItem_disconnectItemFromItem_items_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface disconnectItemFromItem_disconnectItemFromItem_items_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: disconnectItemFromItem_disconnectItemFromItem_items_googleContact_item_labels[];
 }
 
 export interface disconnectItemFromItem_disconnectItemFromItem_items_googleContact {
@@ -141,7 +76,6 @@ export interface disconnectItemFromItem_disconnectItemFromItem_items_googleConta
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: disconnectItemFromItem_disconnectItemFromItem_items_googleContact_item;
 }
 
 export interface disconnectItemFromItem_disconnectItemFromItem_items {

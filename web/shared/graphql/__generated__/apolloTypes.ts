@@ -20,6 +20,7 @@ export interface CollectionEntryPositionInput {
 
 export interface FilterInput {
   name: string;
+  display?: string | null;
   value?: any | null;
   values?: any[] | null;
 }

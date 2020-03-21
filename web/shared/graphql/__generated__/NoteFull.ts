@@ -7,22 +7,6 @@
 // GraphQL fragment: NoteFull
 // ====================================================
 
-export interface NoteFull_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface NoteFull_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: NoteFull_item_labels[];
-}
-
 export interface NoteFull {
   __typename: "Note";
   id: string;
@@ -31,5 +15,4 @@ export interface NoteFull {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: NoteFull_item | null;
 }

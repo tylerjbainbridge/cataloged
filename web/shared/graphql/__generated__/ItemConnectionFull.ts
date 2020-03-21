@@ -30,22 +30,6 @@ export interface ItemConnectionFull_edges_node_collections {
   description: string | null;
 }
 
-export interface ItemConnectionFull_edges_node_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemConnectionFull_edges_node_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemConnectionFull_edges_node_link_item_labels[];
-}
-
 export interface ItemConnectionFull_edges_node_link {
   __typename: "Link";
   id: string;
@@ -57,23 +41,8 @@ export interface ItemConnectionFull_edges_node_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: ItemConnectionFull_edges_node_link_item | null;
-}
-
-export interface ItemConnectionFull_edges_node_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemConnectionFull_edges_node_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemConnectionFull_edges_node_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface ItemConnectionFull_edges_node_file {
@@ -91,23 +60,6 @@ export interface ItemConnectionFull_edges_node_file {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: ItemConnectionFull_edges_node_file_item;
-}
-
-export interface ItemConnectionFull_edges_node_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemConnectionFull_edges_node_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemConnectionFull_edges_node_note_item_labels[];
 }
 
 export interface ItemConnectionFull_edges_node_note {
@@ -118,7 +70,6 @@ export interface ItemConnectionFull_edges_node_note {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: ItemConnectionFull_edges_node_note_item | null;
 }
 
 export interface ItemConnectionFull_edges_node_items_labels {
@@ -134,22 +85,6 @@ export interface ItemConnectionFull_edges_node_items_collections {
   description: string | null;
 }
 
-export interface ItemConnectionFull_edges_node_items_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemConnectionFull_edges_node_items_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemConnectionFull_edges_node_items_link_item_labels[];
-}
-
 export interface ItemConnectionFull_edges_node_items_link {
   __typename: "Link";
   id: string;
@@ -161,23 +96,8 @@ export interface ItemConnectionFull_edges_node_items_link {
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: ItemConnectionFull_edges_node_items_link_item | null;
-}
-
-export interface ItemConnectionFull_edges_node_items_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemConnectionFull_edges_node_items_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemConnectionFull_edges_node_items_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface ItemConnectionFull_edges_node_items_file {
@@ -195,23 +115,6 @@ export interface ItemConnectionFull_edges_node_items_file {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: ItemConnectionFull_edges_node_items_file_item;
-}
-
-export interface ItemConnectionFull_edges_node_items_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemConnectionFull_edges_node_items_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemConnectionFull_edges_node_items_note_item_labels[];
 }
 
 export interface ItemConnectionFull_edges_node_items_note {
@@ -222,23 +125,6 @@ export interface ItemConnectionFull_edges_node_items_note {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: ItemConnectionFull_edges_node_items_note_item | null;
-}
-
-export interface ItemConnectionFull_edges_node_items_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemConnectionFull_edges_node_items_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemConnectionFull_edges_node_items_googleContact_item_labels[];
 }
 
 export interface ItemConnectionFull_edges_node_items_googleContact {
@@ -253,7 +139,6 @@ export interface ItemConnectionFull_edges_node_items_googleContact {
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: ItemConnectionFull_edges_node_items_googleContact_item;
 }
 
 export interface ItemConnectionFull_edges_node_items {
@@ -273,22 +158,6 @@ export interface ItemConnectionFull_edges_node_items {
   googleContact: ItemConnectionFull_edges_node_items_googleContact | null;
 }
 
-export interface ItemConnectionFull_edges_node_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface ItemConnectionFull_edges_node_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: ItemConnectionFull_edges_node_googleContact_item_labels[];
-}
-
 export interface ItemConnectionFull_edges_node_googleContact {
   __typename: "GoogleContact";
   id: string;
@@ -301,7 +170,6 @@ export interface ItemConnectionFull_edges_node_googleContact {
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: ItemConnectionFull_edges_node_googleContact_item;
 }
 
 export interface ItemConnectionFull_edges_node {

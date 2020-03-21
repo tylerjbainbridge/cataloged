@@ -16,20 +16,5 @@ export const GOOGLE_CONTACT_FULL_FRAGMENT = gql`
 
     companyTitle
     companyName
-
-    item {
-      id
-      type
-
-      date
-
-      createdAt
-      updatedAt
-
-      labels {
-        id
-        name
-      }
-    }
   }
 `;

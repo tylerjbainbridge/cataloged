@@ -15,20 +15,8 @@ export const LINK_FULL_FRAGMENT = gql`
     title
     description
 
-    item {
-      id
-      type
-
-      date
-
-      createdAt
-      updatedAt
-
-      labels {
-        id
-        name
-      }
-    }
+    host
+    isIframeDisabled
   }
 `;
 

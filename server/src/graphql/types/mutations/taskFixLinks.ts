@@ -2,6 +2,7 @@ import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
 import Bluebird from 'bluebird';
 import { Link } from '@prisma/client';
+import { getIsIframeDisabled } from '../../../helpers/link';
 
 export const taskFixLinks = extendType({
   type: 'Mutation',
@@ -17,14 +18,16 @@ export const taskFixLinks = extendType({
             try {
               return await ctx.prisma.link.update({
                 where: { id: link.id },
-                data: { host: new URL(link.href)?.host },
+                data: {
+                  isIframeDisabled: await getIsIframeDisabled(link.href),
+                },
               });
             } catch (e) {
               console.log('failed for link', link);
               console.log(e);
             }
           },
-          { concurrency: 5 },
+          { concurrency: 10 },
         );
 
         return `Updated ${links.length} links`;

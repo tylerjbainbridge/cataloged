@@ -7,22 +7,6 @@
 // GraphQL mutation operation: createNote
 // ====================================================
 
-export interface createNote_createNote_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface createNote_createNote_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: createNote_createNote_item_labels[];
-}
-
 export interface createNote_createNote {
   __typename: "Note";
   id: string;
@@ -31,7 +15,6 @@ export interface createNote_createNote {
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: createNote_createNote_item | null;
 }
 
 export interface createNote {

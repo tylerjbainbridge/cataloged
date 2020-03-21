@@ -14,6 +14,8 @@ export const Link = objectType({
     t.model.favicon();
     t.model.title();
     t.model.description();
+    t.model.host();
+    t.model.isIframeDisabled();
 
     t.model.item();
   },

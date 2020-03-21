@@ -14,9 +14,35 @@ const metascraper = require('metascraper')([
 
 export const getMetadataFromUrl = async (url: string) => {
   try {
-    const { data: html } = await axios.get(url);
-    return await metascraper({ html, url });
+    const { data: html, headers } = await axios.get(url);
+
+    const isIframeDisabled =
+      headers['x-frame-options'] &&
+      ['SAMEORIGIN', 'DENY'].includes(headers['x-frame-options']);
+
+    return {
+      isIframeDisabled,
+      ...(await metascraper({ html, url })),
+    };
   } catch (e) {
-    return {};
+    return {
+      isIframeDisabled: true,
+    };
+  }
+};
+
+export const getIsIframeDisabled = async (url: string) => {
+  try {
+    const res = await axios.get(url);
+
+    return (
+      res.headers['x-frame-options'] &&
+      ['SAMEORIGIN', 'DENY'].includes(res.headers['x-frame-options'])
+    );
+
+    // return await metascraper({ html, url });
+  } catch (e) {
+    console.log(url, e.message);
+    return true;
   }
 };

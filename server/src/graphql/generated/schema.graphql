@@ -1230,9 +1230,11 @@ type Link {
   createdAt: DateTime!
   description: String
   favicon: String
+  host: String
   href: String!
   id: String!
   image: String
+  isIframeDisabled: Boolean!
   item: Item
   notes: String!
   title: String
@@ -1257,6 +1259,7 @@ input LinkCreateWithoutItemInput {
   href: String
   id: String
   image: String
+  isIframeDisabled: Boolean
   notes: String
   title: String
   updatedAt: DateTime
@@ -1271,6 +1274,7 @@ input LinkCreateWithoutUserInput {
   href: String
   id: String
   image: String
+  isIframeDisabled: Boolean
   item: ItemCreateOneWithoutLinkInput
   notes: String
   title: String
@@ -1292,6 +1296,7 @@ input LinkWhereInput {
   href: StringFilter
   id: StringFilter
   image: NullableStringFilter
+  isIframeDisabled: BooleanFilter
   item: ItemWhereInput
   NOT: [LinkWhereInput!]
   notes: StringFilter

@@ -29,22 +29,6 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   description: string | null;
 }
 
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_link_item_labels[];
-}
-
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_link {
   __typename: "Link";
   id: string;
@@ -56,23 +40,8 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_link_item | null;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_file {
@@ -90,23 +59,6 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_file_item;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_note_item_labels[];
 }
 
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_note {
@@ -117,7 +69,6 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_note_item | null;
 }
 
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_labels {
@@ -133,22 +84,6 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   description: string | null;
 }
 
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_link_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_link_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_link_item_labels[];
-}
-
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_link {
   __typename: "Link";
   id: string;
@@ -160,23 +95,8 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   favicon: string | null;
   title: string | null;
   description: string | null;
-  item: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_link_item | null;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_file_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_file_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_file_item_labels[];
+  host: string | null;
+  isIframeDisabled: boolean;
 }
 
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_file {
@@ -194,23 +114,6 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_file_item;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_note_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_note_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_note_item_labels[];
 }
 
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_note {
@@ -221,23 +124,6 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   title: string | null;
   createdAt: any;
   updatedAt: any;
-  item: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_note_item | null;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_googleContact_item_labels[];
 }
 
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_googleContact {
@@ -252,7 +138,6 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_googleContact_item;
 }
 
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items {
@@ -272,22 +157,6 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   googleContact: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_items_googleContact | null;
 }
 
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_googleContact_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_googleContact_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_googleContact_item_labels[];
-}
-
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_googleContact {
   __typename: "GoogleContact";
   id: string;
@@ -300,7 +169,6 @@ export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_ent
   otherPhoneNumbers: string[];
   companyTitle: string | null;
   companyName: string | null;
-  item: moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item_googleContact_item;
 }
 
 export interface moveEntryToCollectionPosition_moveEntryToCollectionPosition_entries_item {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
 import {
   Box,
@@ -36,6 +36,10 @@ import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
 import { useMedia } from 'react-use';
+import { getTweetMetaFromUrl, getYoutubeId } from '../util/link';
+// @ts-ignore
+import { TwitterTweetEmbed, TwitterTimelineEmbed } from 'react-twitter-embed';
+import YouTube from 'react-youtube';
 
 export interface ItemWithLink extends ItemFull {
   link: ItemFull_link;
@@ -126,31 +130,98 @@ export const LinkDrawer = ({
     },
   );
 
+  let leftNode = null;
+  const url = new URL(link.href);
+
+  console.log(url);
+
+  if (!link.isIframeDisabled) {
+    leftNode = (
+      <Box
+        d="flex"
+        width={isMobile ? '100%' : 'calc(100% - 450px)'}
+        justifyContent="center"
+        height="100%"
+      >
+        <Iframe
+          url={link.href}
+          width="100%"
+          height="100%"
+          id="myId"
+          // @ts-ignore
+          onLoad={(e: any) => console.log(e)}
+        />
+      </Box>
+    );
+  } else if (url.hostname.includes('twitter.com')) {
+    const meta = getTweetMetaFromUrl(link);
+
+    if (!meta.id && meta.username) {
+      drawerContentProps.maxWidth = '750px';
+
+      leftNode = (
+        <Box
+          d="flex"
+          width={isMobile ? '100%' : 'calc(100% - 450px)'}
+          justifyContent="center"
+          // alignItems="center"
+          height="100%"
+        >
+          <TwitterTimelineEmbed
+            sourceType="profile"
+            screenName={meta.username}
+            options={{ height: '100%', width: '100%' }}
+          />
+        </Box>
+      );
+    } else if (meta.id && meta.type === 'status') {
+      drawerContentProps.maxWidth = '950px';
+
+      leftNode = (
+        <Box
+          d="flex"
+          width={isMobile ? '100%' : 'calc(100% - 450px)'}
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+          bg="#000"
+        >
+          <TwitterTweetEmbed tweetId={meta.id} options={{ width: '400px' }} />
+        </Box>
+      );
+    }
+  } else if (url.hostname.includes('youtube.com')) {
+    const id = getYoutubeId(link.href);
+
+    drawerContentProps.maxWidth = '1300px';
+
+    if (id) {
+      leftNode = (
+        <Box
+          d="flex"
+          width={isMobile ? '100%' : 'calc(100% - 450px)'}
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+          bg="#000"
+        >
+          <YouTube videoId={id} opts={{ width: '700px' }} />
+        </Box>
+      );
+    }
+  }
+
   return (
     <>
       <DrawerContent
         key={item.id}
         width="100%"
-        maxWidth="1300px"
+        maxWidth={
+          leftNode ? (link.isIframeDisabled ? '1000px' : '1300px') : '450px'
+        }
         {...drawerContentProps}
       >
-        {!isMobile && (
-          <Box
-            d="flex"
-            width={isMobile ? '100%' : 'calc(100% - 450px)'}
-            justifyContent="center"
-            height="100%"
-          >
-            <Iframe
-              url={link.href}
-              width="100%"
-              height="100%"
-              id="myId"
-              // @ts-ignore
-              onLoad={(e: any) => console.log(e)}
-            />
-          </Box>
-        )}
+        {!isMobile && leftNode}
         <Flex
           width={isMobile ? '100%' : '450px'}
           minWidth={isMobile ? '100%' : '450px'}
@@ -163,7 +234,6 @@ export const LinkDrawer = ({
           borderLeft="1px solid lightgray"
           justifyContent="space-between"
           flexDirection="column"
-          overflowY="auto"
         >
           <Box height="100%">
             <Stack spacing="20px" height="100%">
@@ -223,14 +293,14 @@ export const LinkDrawer = ({
                       isDisabled={isRefreshing}
                       isLoading={isRefreshing}
                       onClick={() => refreshLinkMeta()}
-                      roundedLeft="0"
+                      // roundedLeft="0"
                     >
                       Autofill
                     </InputLeftAddon>
                     <Input
                       name="href"
                       id="href"
-                      rounded="0"
+                      roundedRight="md"
                       defaultValue={link.href}
                       ref={register}
                     />

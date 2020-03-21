@@ -35,12 +35,14 @@ export interface UpdateNoteFormValues {
 }
 
 export const NoteEditor = ({
-  note,
+  item,
   updateNote,
   editorContainerProps,
   editorInnerContainerProps,
   children,
 }: any) => {
+  const { note } = item;
+
   const { getValues, watch, setValue, register } = useForm<
     UpdateNoteFormValues
   >({

@@ -7,22 +7,6 @@
 // GraphQL mutation operation: updateFile
 // ====================================================
 
-export interface updateFile_updateFile_item_labels {
-  __typename: "Label";
-  id: string;
-  name: string;
-}
-
-export interface updateFile_updateFile_item {
-  __typename: "Item";
-  id: string;
-  type: string;
-  date: any;
-  createdAt: any;
-  updatedAt: any;
-  labels: updateFile_updateFile_item_labels[];
-}
-
 export interface updateFile_updateFile {
   __typename: "File";
   id: string;
@@ -38,7 +22,6 @@ export interface updateFile_updateFile {
   squareUrl: string;
   createdAt: any;
   updatedAt: any;
-  item: updateFile_updateFile_item;
 }
 
 export interface updateFile {
