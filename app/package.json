@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "workspaces": [
+    "cataloged-web",
+    "cataloged-shared",
+    "cataloged-mobile"
+  ]
+}

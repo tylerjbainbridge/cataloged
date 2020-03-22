@@ -1,0 +1,9 @@
+{
+  "name": "cataloged-extension",
+  "version": "1.0.0",
+  "scripts": {
+    "dev:extension": "parcel --cache-dir=.cache/extension --out-dir=extension/dist extension/src/manifest.json",
+    "prebuild:extension": "rm -rf extension/dist",
+    "build:extension": "parcel build --cache-dir=.cache/extension --out-dir=extension/dist  extension/src/manifest.json"
+  }
+}
