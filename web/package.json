@@ -2,13 +2,13 @@
   "name": "cataloged-web",
   "version": "1.0.0",
   "scripts": {
-    "dev": "parcel --port=3000 --cache-dir=.cache/web web/public/index.html",
-    "start": "parcel web/public/index.html",
+    "dev": "parcel --port=3000 public/index.html",
+    "start": "parcel public/index.html",
     "prebuild": "rm -rf build",
-    "build": "parcel build --cache-dir=.cache/web --out-dir=web/dist web/public/index.html",
+    "build": "parcel build --out-dir=dist public/index.html",
     "now-build": "npm run build",
     "refresh:types": "yarn run remove:types && yarn run generate:types",
-    "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"shared/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=shared/graphql/__generated__/apolloTypes.ts --outputFlat=shared/graphql/__generated__",
+    "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"src/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=src/graphql/__generated__/apolloTypes.ts --outputFlat=src/graphql/__generated__",
     "remove:types": "find . | grep -E \"(__generated__)\" | xargs rm -rf",
     "test": "jest"
   },

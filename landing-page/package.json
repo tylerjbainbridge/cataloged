@@ -1,9 +1,7 @@
 {
-  "name": "gatsby-starter-default",
+  "name": "cataloged-landing-page",
   "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
-  "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "version": "1.0.0",
   "dependencies": {
     "@apollo/client": "3.0.0-beta.39",
     "@chakra-ui/core": "^0.6.1",
