@@ -63,7 +63,7 @@ export const NoteEditor = ({
     150,
   );
 
-  const [deleteItem] = useOptimisticDeleteItem(note.item);
+  const [deleteItem] = useOptimisticDeleteItem(item);
 
   watch();
 
