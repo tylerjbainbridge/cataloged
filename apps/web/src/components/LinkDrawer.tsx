@@ -147,22 +147,17 @@ export const LinkDrawer = ({
   const leftContainerProps: any = {};
 
   if (!link.isIframeDisabled) {
+    leftContainerProps.bg = '#fff';
+
     leftNode = (
-      <Box
-        d="flex"
-        width={isMobile ? '100%' : 'calc(100% - 450px)'}
-        justifyContent="center"
+      <Iframe
+        url={link.href}
+        width="100%"
         height="100%"
-      >
-        <Iframe
-          url={link.href}
-          width="100%"
-          height="100%"
-          id="myId"
-          // @ts-ignore
-          onLoad={(e: any) => console.log(e)}
-        />
-      </Box>
+        id="myId"
+        // @ts-ignore
+        onLoad={(e: any) => console.log(e)}
+      />
     );
   } else if (url.hostname.includes('twitter.com')) {
     const meta = getTweetMetaFromUrl(link);
