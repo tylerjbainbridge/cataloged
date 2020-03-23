@@ -34,7 +34,7 @@ import { UPDATE_FILE_MUTATION } from 'cataloged-shared/graphql/file';
 import { useDebouncedUpdate } from 'cataloged-shared/hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
-import { isFileImage } from '../../../shared/util/itemHelpers';
+import { isFileImage } from 'cataloged-shared/util/itemHelpers';
 import { downloadFile } from 'cataloged-shared/util/helpers';
 
 export interface ItemWithFile extends ItemFull {

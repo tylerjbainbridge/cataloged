@@ -2,24 +2,24 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "server",
-      "mobile",
-      "shared",
-      "web",
-      "landing-page",
-      "extension"
+      "cataloged-server",
+      "cataloged-mobile",
+      "cataloged-shared",
+      "cataloged-web",
+      "cataloged-landing-page",
+      "cataloged-extension"
     ]
   },
   "scripts": {
     "start": "npm-run-all --parallel start:*",
-    "start:web": "cd app/web && yarn run start",
-    "start:server": "cd server && yarn run start",
-    "build:web": "cd web && yarn install && yarn run build",
-    "build:landing-page": "cd landing-page && yarn install && yarn run build",
-    "build:server": "cd server && yarn install && yarn run build",
+    "start:web": "yarn workspaces cataloged-web run start",
+    "start:server": "yarn workspaces cataloged-server run start",
+    "build:web": "yarn install && yarn workspaces cataloged-web run build",
+    "build:landing-page": "yarn install && yarn workspaces cataloged-web run build",
+    "build:server": "yarn install && yarn workspaces cataloged-server run build",
     "dev": "npm-run-all --parallel dev:*",
-    "dev:server": "pushd server && yarn run dev && popd",
-    "dev:web": "pushd app/web && yarn run dev && popd",
+    "dev:server": "yarn workspaces server run dev",
+    "dev:web": "yarn workspaces web run dev",
     "format": "npx prettier '*/**/*.{ts,tsx}' --write"
   },
   "dependencies": {
@@ -30,5 +30,6 @@
     "lerna": "^3.20.2",
     "prettier": "^1.18.2",
     "typescript": "^3.7.5"
-  }
+  },
+  "name": "cataloged"
 }

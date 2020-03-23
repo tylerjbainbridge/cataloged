@@ -27,7 +27,7 @@ import {
   GRID_ITEM_HEIGHT,
 } from './Item';
 import { SelectOnClick } from './SelectOnClick';
-import { getGenericItemData } from '../../../shared/util/itemHelpers';
+import { getGenericItemData } from 'cataloged-shared/util/itemHelpers';
 import { LazyImage } from './LazyImage';
 import { FeedContext } from './Feed';
 import { useGoToItem } from 'cataloged-shared/hooks/useGoTo';

@@ -20,7 +20,7 @@ import {
 import { DELETE_COLLECTION } from 'cataloged-shared/graphql/collection';
 import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import logo from 'cataloged-shared/images/logo.png';
-import { getQueryStringFromFilters } from 'cataloged-shared/util/helpers';
+import { getQueryStringFromFilters } from '../util/helpers';
 import gql from 'graphql-tag';
 import React, { useEffect } from 'react';
 import { Link, useHistory, useLocation, useRouteMatch } from 'react-router-dom';

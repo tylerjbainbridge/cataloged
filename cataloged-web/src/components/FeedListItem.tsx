@@ -4,7 +4,7 @@ import { FeedContext } from './Feed';
 import { SelectContext } from './SelectContainer';
 import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { useGoToItem } from 'cataloged-shared/hooks/useGoTo';
-import { getGenericItemData } from '../../../shared/util/itemHelpers';
+import { getGenericItemData } from 'cataloged-shared/util/itemHelpers';
 import { Click } from './Click';
 
 export const FeedListItem = ({ item }: { item: ItemFull }) => {

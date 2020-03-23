@@ -18,7 +18,7 @@ import { format, formatRelative } from 'date-fns';
 import { FaExpandArrowsAlt } from 'react-icons/fa';
 
 import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
-import { getGenericItemData } from '../../../shared/util/itemHelpers';
+import { getGenericItemData } from 'cataloged-shared/util/itemHelpers';
 import { SelectContext } from './SelectContainer';
 import { useOptimisticDeleteItem } from 'cataloged-shared/hooks/useOptimisticDeleteItem';
 import { useOptimisticUpdateFavoriteManyItems } from 'cataloged-shared/hooks/useOptimisticUpdateFavoriteManyItems';

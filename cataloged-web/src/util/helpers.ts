@@ -4,9 +4,66 @@ import scrollIntoView from 'scroll-into-view-if-needed';
 // @ts-ignore
 import cleanDeep from 'clean-deep';
 import queryString from 'query-string';
-import { FILTER_CONFIGS } from '../../web/src/components/Filter';
-import { filterNames } from '../../web/src/components/FilterSearchInput';
 import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+
+export const filterNames = [
+  { value: 'type', name: 'type:' },
+  { value: '-type', name: '-type:' },
+  { value: 'label', name: 'label:' },
+  { value: '-label', name: '-label:' },
+  { value: 'is', name: 'is:' },
+  { value: '-is', name: '-is:' },
+];
+
+export const FILTER_CONFIGS = {
+  // Search
+  search: {
+    type: 'text',
+    displayName: 'any',
+    defaults: {
+      value: '',
+    },
+  },
+  // Type
+  type: {
+    type: 'select',
+    displayName: 'type',
+    defaults: {
+      value: undefined,
+    },
+    options: [
+      [undefined, 'all'],
+      'file',
+      'note',
+      'link',
+      ['googleContact', 'contact'],
+    ],
+  },
+  // Status
+  is: {
+    type: 'select',
+    displayName: 'is',
+    defaults: {
+      value: 'favorited',
+    },
+    options: ['favorited', 'not started', 'in progress', 'done'],
+  },
+  // Labels
+  label: {
+    type: 'labels',
+    displayName: 'labels',
+    defaults: {
+      values: [],
+    },
+  },
+  '-label': {
+    type: 'labels',
+    displayName: 'without labels',
+    defaults: {
+      values: [],
+    },
+  },
+};
 
 export const FILTER_NAMES = [
   ...filterNames.map(({ value }: any) => value),

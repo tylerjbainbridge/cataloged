@@ -13,7 +13,7 @@ import {
 import { format } from 'date-fns';
 import _ from 'lodash';
 import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
-import { getGenericItemData } from '../../../shared/util/itemHelpers';
+import { getGenericItemData } from 'cataloged-shared/util/itemHelpers';
 import { GenericListItem } from './GenericListItem';
 import { useOptimisticItemToItem } from 'cataloged-shared/hooks/useOptimisticItemToItem';
 import { FaTrash, FaUnlink } from 'react-icons/fa';
