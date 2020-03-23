@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Dashboard } from '../components/Dashboard';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { EnterInviteCode } from '../components/EnterInviteCode';
 
 export const Main = () => {

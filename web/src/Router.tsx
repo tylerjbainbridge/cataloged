@@ -1,12 +1,12 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
 
 import { Main } from './routes/Main';
 import { Playground } from './routes/Playground';
 import { GoogleCallback } from './routes/GoogleCallback';
 import { ForceSignIn } from './routes/ForceSignIn';
 
-import { useAuth } from './hooks/useAuth';
 import { GRAPHQL_ENDPOINT } from './config';
 import { Collection, CollectionPage } from './routes/CollectionPage';
 

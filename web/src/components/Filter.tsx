@@ -29,15 +29,17 @@ import {
   randomString,
   getQueryStringFromFilters,
   getFiltersFromQueryString,
-} from '../util/helpers';
+} from 'cataloged-shared/util/helpers';
 import { useDeepCompareEffect, useMedia } from 'react-use';
-import { useHotKey } from '../hooks/useHotKey';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
+import { FILTER_CONFIGS } from 'cataloged-shared/util/helpers';
+
 import { Labels } from './Labels';
 import { useGlobalModal } from './GlobalModal';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { FaFilter, FaSave } from 'react-icons/fa';
 import { useLocation, useHistory } from 'react-router-dom';
-import { usePrevious } from '../hooks/usePrevious';
+import { usePrevious } from 'cataloged-shared/hooks/usePrevious';
 import { AddOrUpdateSavedSearch } from './AddOrUpdateSavedSearch';
 
 // Dynamic set of inputs
@@ -51,56 +53,6 @@ export interface NewFilterProps {
 export const FORM_NAME = 'filters';
 
 // export const FILTERS = ['where.type', 'search'];
-
-export const FILTER_CONFIGS = {
-  // Search
-  search: {
-    type: 'text',
-    displayName: 'any',
-    defaults: {
-      value: '',
-    },
-  },
-  // Type
-  type: {
-    type: 'select',
-    displayName: 'type',
-    defaults: {
-      value: undefined,
-    },
-    options: [
-      [undefined, 'all'],
-      'file',
-      'note',
-      'link',
-      ['googleContact', 'contact'],
-    ],
-  },
-  // Status
-  is: {
-    type: 'select',
-    displayName: 'is',
-    defaults: {
-      value: 'favorited',
-    },
-    options: ['favorited', 'not started', 'in progress', 'done'],
-  },
-  // Labels
-  label: {
-    type: 'labels',
-    displayName: 'labels',
-    defaults: {
-      values: [],
-    },
-  },
-  '-label': {
-    type: 'labels',
-    displayName: 'without labels',
-    defaults: {
-      values: [],
-    },
-  },
-};
 
 export const FilterInput = ({
   uniqueId,

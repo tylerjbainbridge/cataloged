@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { Select, SelectProps } from '@chakra-ui/core';
-import { ItemStatus } from '../graphql/__generated__/apolloTypes';
-import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
+import { ItemStatus } from 'cataloged-shared/graphql/__generated__/apolloTypes';
+import { useOptimisticUpdateStatusManyItems } from 'cataloged-shared/hooks/useOptimisticUpdateStatusManyItems';
 
 export interface ItemStatusInputProps extends SelectProps {
   item: ItemFull;

@@ -14,7 +14,10 @@ import {
 import { Labels } from './Labels';
 import { LazyImage } from './LazyImage';
 import { Disclosure } from './GlobalModal';
-import { ItemFull, ItemFull_file } from '../graphql/__generated__/ItemFull';
+import {
+  ItemFull,
+  ItemFull_file,
+} from 'cataloged-shared/graphql/__generated__/ItemFull';
 
 export interface ItemWithFile extends ItemFull {
   file: ItemFull_file;

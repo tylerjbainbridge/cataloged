@@ -3,9 +3,9 @@ import { DndProvider } from 'react-dnd';
 import { Box } from '@chakra-ui/core';
 
 import { gql } from 'apollo-boost';
-import { ITEM_FULL_FRAGMENT } from '../graphql/item';
+import { ITEM_FULL_FRAGMENT } from 'cataloged-shared/graphql/item';
 import { useQuery } from '@apollo/client';
-import { COLLECTION_FULL_FRAGMENT } from '../graphql/collection';
+import { COLLECTION_FULL_FRAGMENT } from 'cataloged-shared/graphql/collection';
 
 export const CollectonPlayground = ({ items }: any) => {
   return (

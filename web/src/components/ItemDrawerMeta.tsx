@@ -12,14 +12,14 @@ import {
 } from '@chakra-ui/core';
 import { format } from 'date-fns';
 import _ from 'lodash';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { getGenericItemData } from '../util/itemHelpers';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { getGenericItemData } from '../../../shared/util/itemHelpers';
 import { GenericListItem } from './GenericListItem';
-import { useOptimisticItemToItem } from '../hooks/useOptimisticItemToItem';
+import { useOptimisticItemToItem } from 'cataloged-shared/hooks/useOptimisticItemToItem';
 import { FaTrash, FaUnlink } from 'react-icons/fa';
-import { useGoToItem } from '../hooks/useGoTo';
+import { useGoToItem } from 'cataloged-shared/hooks/useGoTo';
 import { Link, useLocation } from 'react-router-dom';
-import { getQueryStringFromFilters } from '../util/helpers';
+import { getQueryStringFromFilters } from 'cataloged-shared/util/helpers';
 
 export interface ItemDrawerMeta {
   item: ItemFull;

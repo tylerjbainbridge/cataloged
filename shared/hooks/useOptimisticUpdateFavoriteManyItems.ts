@@ -1,25 +1,24 @@
 import { useMutation } from '@apollo/client';
-
-import { UPDATE_STATUS_MANY_ITEMS_MUTATION } from '../graphql/item';
-import { FEED_QUERY } from '../components/Feed';
 import { useToast } from '@chakra-ui/core';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { ItemConnectionFull_edges } from '../graphql/__generated__/ItemConnectionFull';
+import { UPDATE_FAVORITE_MANY_ITEMS_MUTATION } from 'cataloged-shared/graphql/item';
+import { ItemConnectionFull_edges } from 'cataloged-shared/graphql/__generated__/ItemConnectionFull';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { FEED_QUERY } from '../queries/feed';
 
-/**
- * IMPORTANT- pass status from the time of mutation func
- */
-export const useOptimisticUpdateStatusManyItems = (
+
+export const useOptimisticUpdateFavoriteManyItems = (
   items: ItemFull[],
-  status: string | null,
+  isFavorited: boolean,
   options = {},
 ) => {
   const toast = useToast();
 
+  // const isFavorited = !items.every(({ isFavorited }: ItemFull) => isFavorited);
+
   const itemIds = items.map(({ id }) => id);
 
-  return useMutation(UPDATE_STATUS_MANY_ITEMS_MUTATION, {
-    variables: { itemIds, status },
+  return useMutation(UPDATE_FAVORITE_MANY_ITEMS_MUTATION, {
+    variables: { itemIds, isFavorited },
     ...options,
     onCompleted: (...args) => {
       toast({
@@ -34,7 +33,7 @@ export const useOptimisticUpdateStatusManyItems = (
     },
     optimisticResponse: {
       __typename: 'Mutation',
-      updateStatusManyItems: [],
+      updateFavoriteManyItems: [],
     },
     update: async (cache: any) => {
       const data = cache.readQuery({
@@ -44,10 +43,7 @@ export const useOptimisticUpdateStatusManyItems = (
       const newEdges = data.itemsConnection.edges.map(
         (i: ItemConnectionFull_edges) => {
           if (itemIds.includes(i.node.id)) {
-            return {
-              ...i,
-              node: { ...i.node, status },
-            };
+            return { ...i, node: { ...i.node, isFavorited } };
           }
 
           return i;

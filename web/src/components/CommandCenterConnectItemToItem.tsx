@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { CommandCenterSearchItems } from './CommandCenterSearchItems';
-import { useGoToItem } from '../hooks/useGoTo';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { useOptimisticItemToItem } from '../hooks/useOptimisticItemToItem';
+import { useGoToItem } from 'cataloged-shared/hooks/useGoTo';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { useOptimisticItemToItem } from 'cataloged-shared/hooks/useOptimisticItemToItem';
 import { useRelevantItems } from './CommandCenter';
 
 export const CommandCenterConnectItemToItem = ({ modalState }: any) => {

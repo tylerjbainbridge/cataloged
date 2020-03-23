@@ -5,7 +5,7 @@ import { Box, Tag, Flex, Stack, Text, Spinner } from '@chakra-ui/core';
 import { FaCheck } from 'react-icons/fa';
 
 import { ModalSelect, useRelevantItems } from './CommandCenter';
-import { getKeybindAsArray } from '../util/helpers';
+import { getKeybindAsArray } from 'cataloged-shared/util/helpers';
 
 export const CommandCenterSelectPrimaryAction = ({
   activeOptions,

@@ -3,11 +3,11 @@ import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import { Location, History } from 'history';
 import queryString from 'query-string';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { Redirect, useLocation, useHistory } from 'react-router';
 import base64url from 'base64url';
 
-import { googleAuth } from '../graphql/__generated__/googleAuth';
+import { googleAuth } from 'cataloged-shared/graphql/__generated__/googleAuth';
 import {
   Spinner,
   Box,
@@ -19,7 +19,7 @@ import {
   Button,
   Stack,
 } from '@chakra-ui/core';
-import { usePrevious } from '../hooks/usePrevious';
+import { usePrevious } from 'cataloged-shared/hooks/usePrevious';
 
 const GOOGLE_AUTH_MUTATION = gql`
   mutation googleAuth($code: String!) {

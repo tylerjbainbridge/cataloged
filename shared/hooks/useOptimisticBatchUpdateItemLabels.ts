@@ -3,10 +3,10 @@ import { useMutation, useApolloClient, gql } from '@apollo/client';
 import {
   BATCH_UPDATE_ITEMS_LABELS_MUTATION,
   ITEM_FULL_FRAGMENT,
-} from '../graphql/item';
+} from 'cataloged-shared/graphql/item';
 import { useToast } from '@chakra-ui/core';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { LABEL_FULL_FRAGMENT } from '../graphql/label';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { LABEL_FULL_FRAGMENT } from 'cataloged-shared/graphql/label';
 
 const ITEM_WITH_LABELS_FRAGMENT = gql`
   fragment ItemWithLabels on Item {

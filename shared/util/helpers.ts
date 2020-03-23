@@ -4,9 +4,66 @@ import scrollIntoView from 'scroll-into-view-if-needed';
 // @ts-ignore
 import cleanDeep from 'clean-deep';
 import queryString from 'query-string';
-import { FILTER_CONFIGS } from '../../web/src/components/Filter';
-import { filterNames } from '../../web/src/components/FilterSearchInput';
 import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+
+export const filterNames = [
+  { value: 'type', name: 'type:' },
+  { value: '-type', name: '-type:' },
+  { value: 'label', name: 'label:' },
+  { value: '-label', name: '-label:' },
+  { value: 'is', name: 'is:' },
+  { value: '-is', name: '-is:' },
+];
+
+export const FILTER_CONFIGS = {
+  // Search
+  search: {
+    type: 'text',
+    displayName: 'any',
+    defaults: {
+      value: '',
+    },
+  },
+  // Type
+  type: {
+    type: 'select',
+    displayName: 'type',
+    defaults: {
+      value: undefined,
+    },
+    options: [
+      [undefined, 'all'],
+      'file',
+      'note',
+      'link',
+      ['googleContact', 'contact'],
+    ],
+  },
+  // Status
+  is: {
+    type: 'select',
+    displayName: 'is',
+    defaults: {
+      value: 'favorited',
+    },
+    options: ['favorited', 'not started', 'in progress', 'done'],
+  },
+  // Labels
+  label: {
+    type: 'labels',
+    displayName: 'labels',
+    defaults: {
+      values: [],
+    },
+  },
+  '-label': {
+    type: 'labels',
+    displayName: 'without labels',
+    defaults: {
+      values: [],
+    },
+  },
+};
 
 export const FILTER_NAMES = [
   ...filterNames.map(({ value }: any) => value),
@@ -133,4 +190,86 @@ export const getFiltersFromQueryString = (search: any) => {
   // console.log(filters);
 
   return filters;
+};
+
+export const getNodesFromConnection = <T>(connection: any) => {
+  const nodes: T[] = (connection?.edges || []).map(({ node }: any) => node);
+
+  return nodes;
+};
+
+export const confirmMutation = ([mutateFunc, ...rest]: any, message: any) => [
+  (...args: any) => {
+    const res = window.confirm(message || 'Are you sure');
+
+    if (res) {
+      return mutateFunc(...args);
+    }
+  },
+  ...(rest as any),
+];
+
+export const scrollToItemIfOutOfView = (id: ItemFull['id']) => {
+  const node = document.getElementById(`item-${id}`);
+
+  if (node)
+    scrollIntoView(node, {
+      behavior: 'smooth',
+      scrollMode: 'if-needed',
+      block: 'center',
+      inline: 'center',
+    });
+};
+
+export const scrollToNodeIfOutOfView = (node: any) => {
+  if (node)
+    scrollIntoView(node, {
+      behavior: 'smooth',
+      scrollMode: 'if-needed',
+      block: 'nearest',
+      inline: 'center',
+    });
+};
+
+export const getKeybindAsArray = (keybind: string) => {
+  const mappings = {
+    mod: '⌘',
+  };
+
+  if (keybind.includes('+')) {
+    return (
+      keybind
+        .split('+')
+        .map(str => str.trim())
+        // @ts-ignore
+        .map(str => mappings[str] || str)
+    );
+  }
+
+  return (
+    keybind
+      .split(' ')
+      .map(str => str.trim())
+      // @ts-ignore
+      .map(str => mappings[str] || str)
+      .join(' then ')
+      .split(' ')
+  );
+};
+
+export const downloadFile = (url: string, fileName: string, type: string) => {
+  // Create an invisible A element
+  const a = document.createElement('a');
+  a.style.display = 'none';
+  document.body.appendChild(a);
+
+  a.href = url;
+
+  a.target = '_blank';
+  a.download = fileName;
+
+  a.click();
+
+  window.URL.revokeObjectURL(a.href);
+  document.body.removeChild(a);
 };

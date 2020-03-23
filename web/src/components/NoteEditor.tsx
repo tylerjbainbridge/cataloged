@@ -6,9 +6,9 @@ import _ from 'lodash';
 import removeMarkdown from 'remove-markdown';
 
 import { useForm } from 'react-hook-form';
-import { useOptimisticDeleteItem } from '../hooks/useOptimisticDeleteItem';
+import { useOptimisticDeleteItem } from 'cataloged-shared/hooks/useOptimisticDeleteItem';
 
-import { useDebounce } from '../hooks/useDebounce';
+import { useDebounce } from 'cataloged-shared/hooks/useDebounce';
 import SlateRichTextEditor from './SlateRichTextEditor';
 import { Input } from '@chakra-ui/core';
 import { ReactEditor } from 'slate-react';

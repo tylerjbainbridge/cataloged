@@ -31,16 +31,19 @@ import { useForm } from 'react-hook-form';
 import Downshift, { useSelect } from 'downshift';
 
 import { useGlobalModal, ModalName } from './GlobalModal';
-import { useHotKey } from '../hooks/useHotKey';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
 import { FeedContext } from './Feed';
 import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
 import { SelectContext } from './SelectContainer';
-import { useOptimisticDeleteManyItems } from '../hooks/useOptimisticDeleteManyItems';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
-import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
-import { useGoToItem, useReturnFromItem } from '../hooks/useGoTo';
-import { scrollToNodeIfOutOfView, getKeybindAsArray } from '../util/helpers';
+import { useOptimisticDeleteManyItems } from 'cataloged-shared/hooks/useOptimisticDeleteManyItems';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { useOptimisticUpdateFavoriteManyItems } from 'cataloged-shared/hooks/useOptimisticUpdateFavoriteManyItems';
+import { useOptimisticUpdateStatusManyItems } from 'cataloged-shared/hooks/useOptimisticUpdateStatusManyItems';
+import { useGoToItem, useReturnFromItem } from 'cataloged-shared/hooks/useGoTo';
+import {
+  scrollToNodeIfOutOfView,
+  getKeybindAsArray,
+} from 'cataloged-shared/util/helpers';
 import {
   FaCogs,
   FaList,
@@ -58,15 +61,15 @@ import {
   FaSearch,
   FaLink,
 } from 'react-icons/fa';
-import { useAuth } from '../hooks/useAuth';
-import { usePrevious } from '../hooks/usePrevious';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
+import { usePrevious } from 'cataloged-shared/hooks/usePrevious';
 
-import { CREATE_NOTE_MUTATION } from '../graphql/note';
+import { CREATE_NOTE_MUTATION } from 'cataloged-shared/graphql/note';
 import { EMPTY_NOTE_VALUE, serializeToPlainText } from './NoteEditor';
 import { SidebarContext } from './Dashboard';
-import { useGetItem } from '../hooks/useGetItem';
+import { useGetItem } from 'cataloged-shared/hooks/useGetItem';
 import cuid from 'cuid';
-import { ADD_COLLECTION } from '../graphql/collection';
+import { ADD_COLLECTION } from 'cataloged-shared/graphql/collection';
 import { CommandCenterSelectLabels } from './CommandCenterSelectLabels';
 import { CommandCenterSelectCollections } from './CommandCenterSelectCollections';
 import { CommandCenterSelectPrimaryAction } from './CommandCenterSelectPrimaryAction';

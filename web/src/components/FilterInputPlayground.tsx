@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Box, Code } from '@chakra-ui/core';
 
 import FilterSearchInput from './FilterSearchInput';
-import { getQueryStringFromFilters } from '../util/helpers';
+import { getQueryStringFromFilters } from 'cataloged-shared/util/helpers';
 
 export const FilterInputPlayground = () => {
   const [filters, setFilters] = useState([]);

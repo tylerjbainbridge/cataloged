@@ -8,8 +8,8 @@ import { useQuery } from '@apollo/client';
 import { FilterInputPlayground } from '../components/FilterInputPlayground';
 import { FEED_QUERY } from '../components/Feed';
 import { CollectonPlayground } from '../components/CollectionPlayground';
-import { getNodesFromConnection } from '../util/helpers';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { getNodesFromConnection } from 'cataloged-shared/util/helpers';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 
 const GET_MOST_RECENT_ITEM = gql`
   query mostRecentItem($type: String) {

@@ -13,14 +13,14 @@ import {
 import { useMedia } from 'react-use';
 
 import { SelectContext } from './SelectContainer';
-import { useHotKey } from '../hooks/useHotKey';
-import { useOptimisticDeleteManyItems } from '../hooks/useOptimisticDeleteManyItems';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
+import { useOptimisticDeleteManyItems } from 'cataloged-shared/hooks/useOptimisticDeleteManyItems';
 import { Labels } from './Labels';
-import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchUpdateItemLabels';
-import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { useOptimisticUpdateStatusManyItems } from '../hooks/useOptimisticUpdateStatusManyItems';
-import { getKeybindAsArray } from '../util/helpers';
+import { useOptimisticBatchUpdateItemLabels } from 'cataloged-shared/hooks/useOptimisticBatchUpdateItemLabels';
+import { useOptimisticUpdateFavoriteManyItems } from 'cataloged-shared/hooks/useOptimisticUpdateFavoriteManyItems';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { useOptimisticUpdateStatusManyItems } from 'cataloged-shared/hooks/useOptimisticUpdateStatusManyItems';
+import { getKeybindAsArray } from 'cataloged-shared/util/helpers';
 import { FeedContext } from './Feed';
 
 export const FeedBottomToolbar = ({ width }: any) => {

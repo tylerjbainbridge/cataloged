@@ -18,12 +18,12 @@ import {
 } from '@chakra-ui/core';
 import { useMutation, useApolloClient } from '@apollo/client';
 import gql from 'graphql-tag';
-import { usePaste } from '../hooks/usePaste';
-import { randomString } from '../util/helpers';
-import { SpecialFile } from '../util/aws';
+import { usePaste } from 'cataloged-shared/hooks/usePaste';
+import { randomString } from 'cataloged-shared/util/helpers';
+import { SpecialFile } from 'cataloged-shared/util/aws';
 import { useGlobalModal, ModalName } from './GlobalModal';
-import { useHotKey } from '../hooks/useHotKey';
-import { processFiles_processFiles } from '../graphql/__generated__/processFiles';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
+import { processFiles_processFiles } from 'cataloged-shared/graphql/__generated__/processFiles';
 
 const UPLOAD_FILE_MUTATION = gql`
   mutation processFiles($uploadGroupId: String) {

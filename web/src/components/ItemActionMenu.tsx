@@ -9,11 +9,11 @@ import {
   Icon,
   MenuDivider,
 } from '@chakra-ui/core';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { FaEllipsisH } from 'react-icons/fa';
-import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
-import { useOptimisticDeleteManyItems } from '../hooks/useOptimisticDeleteManyItems';
-import { useReturnFromItem } from '../hooks/useGoTo';
+import { useOptimisticUpdateFavoriteManyItems } from 'cataloged-shared/hooks/useOptimisticUpdateFavoriteManyItems';
+import { useOptimisticDeleteManyItems } from 'cataloged-shared/hooks/useOptimisticDeleteManyItems';
+import { useReturnFromItem } from 'cataloged-shared/hooks/useGoTo';
 import { ItemStatusInput } from './ItemStatusInput';
 
 export interface ItemActionMenuProps {

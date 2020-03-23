@@ -29,7 +29,7 @@ import {
 
 import color from 'color';
 
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { theme } from '../styles/theme';
 
 export const ITEM_LABEL_RESPONSE_FRAGMENT = gql`

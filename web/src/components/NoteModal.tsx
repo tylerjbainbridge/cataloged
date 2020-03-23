@@ -1,12 +1,12 @@
 import { useMutation } from '@apollo/client';
 
-import { CREATE_NOTE_MUTATION } from '../graphql/note';
+import { CREATE_NOTE_MUTATION } from 'cataloged-shared/graphql/note';
 
 import { EMPTY_NOTE_VALUE, serializeToPlainText } from './NoteEditor';
-import { useHotKey } from '../hooks/useHotKey';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { Disclosure } from './GlobalModal';
-import { useGoToItem } from '../hooks/useGoTo';
+import { useGoToItem } from 'cataloged-shared/hooks/useGoTo';
 
 export const NoteModal = ({
   children,

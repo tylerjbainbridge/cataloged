@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { GenericListItem } from './GenericListItem';
 import { FeedContext } from './Feed';
 import { SelectContext } from './SelectContainer';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { useGoToItem } from '../hooks/useGoTo';
-import { getGenericItemData } from '../util/itemHelpers';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { useGoToItem } from 'cataloged-shared/hooks/useGoTo';
+import { getGenericItemData } from '../../../shared/util/itemHelpers';
 import { Click } from './Click';
 
 export const FeedListItem = ({ item }: { item: ItemFull }) => {

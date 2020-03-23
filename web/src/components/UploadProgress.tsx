@@ -3,7 +3,7 @@ import { useQuery, useApolloClient } from '@apollo/client';
 import gql from 'graphql-tag';
 import _ from 'lodash';
 import { Box, Icon, Text } from '@chakra-ui/core';
-import { usePrevious } from '../hooks/usePrevious';
+import { usePrevious } from 'cataloged-shared/hooks/usePrevious';
 
 const GET_UPLOAD_GROUPS = gql`
   query getUploadGroups {

@@ -6,7 +6,7 @@ import { FaCheck } from 'react-icons/fa';
 
 import { ModalSelect, useRelevantItems } from './CommandCenter';
 import { CREATE_LABEL_MUTATION } from './Labels';
-import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchUpdateItemLabels';
+import { useOptimisticBatchUpdateItemLabels } from 'cataloged-shared/hooks/useOptimisticBatchUpdateItemLabels';
 
 export const CommandCenterSelectLabels = ({ user }: any) => {
   const relevantItems = useRelevantItems();

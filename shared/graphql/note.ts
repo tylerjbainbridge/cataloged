@@ -17,6 +17,10 @@ export const CREATE_NOTE_MUTATION = gql`
   mutation createNote($raw: String!, $text: String!) {
     createNote(raw: $raw, text: $text) {
       ...NoteFull
+
+      item {
+        id
+      }
     }
   }
 

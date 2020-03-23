@@ -32,9 +32,12 @@ import { LazyImage } from './LazyImage';
 import {
   UPDATE_LINK_MUTATION,
   REFRESH_LINK_META_MUTATION,
-} from '../graphql/link';
-import { useDebounce } from '../hooks/useDebounce';
-import { ItemFull, ItemFull_link } from '../graphql/__generated__/ItemFull';
+} from 'cataloged-shared/graphql/link';
+import { useDebounce } from 'cataloged-shared/hooks/useDebounce';
+import {
+  ItemFull,
+  ItemFull_link,
+} from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { Disclosure } from './GlobalModal';
 
 export interface ItemWithLink extends ItemFull {

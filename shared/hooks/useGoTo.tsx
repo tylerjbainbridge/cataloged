@@ -1,7 +1,7 @@
 import { useLocation, useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import qs from 'query-string';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 
 export const useGoToPath = () => {
   const location = useLocation();

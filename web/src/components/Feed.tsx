@@ -21,6 +21,8 @@ import {
   FaEdit,
   FaTimesCircle,
 } from 'react-icons/fa';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
+import { useMedia } from 'react-use';
 
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 
@@ -28,7 +30,7 @@ import { SelectContainer } from './SelectContainer';
 
 import { UploadProgress } from './UploadProgress';
 
-import { ITEM_CONNECTION_FULL_FRAGMENT } from '../graphql/item';
+import { ITEM_CONNECTION_FULL_FRAGMENT } from 'cataloged-shared/graphql/item';
 
 import { GridFeed } from './GridFeed';
 import { FeedBottomToolbar } from './FeedBottomToolbar';
@@ -37,38 +39,23 @@ import {
   getFiltersFromQueryString,
   getQueryStringFromFilters,
   scrollToItemIfOutOfView,
-} from '../util/helpers';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { feed, feedVariables } from '../graphql/__generated__/feed';
+} from 'cataloged-shared/util/helpers';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { FEED_QUERY } from 'cataloged-shared/queries/feed';
+import {
+  feed,
+  feedVariables,
+} from 'cataloged-shared/graphql/__generated__/feed';
 import { FeedModals } from './FeedModals';
 
 import { ListFeed } from './ListFeed';
 import { Filter } from './Filter';
-import { useMedia } from 'react-use';
-import { usePrevious } from '../hooks/usePrevious';
+import { usePrevious } from 'cataloged-shared/hooks/usePrevious';
 import { TopNavBar } from './TopNavBar';
 import { FeedDrawerItemView } from '../routes/FeedDrawerItemView';
 import { CommandCenter } from './CommandCenter';
 import FilterSearchInput from './FilterSearchInput';
 import { AddOrUpdateSavedSearch } from './AddOrUpdateSavedSearch';
-import { useHotKey } from '../hooks/useHotKey';
-
-export const FEED_QUERY = gql`
-  query feed($first: Int, $after: String, $filters: [FilterInput!]) {
-    itemsConnection(
-      first: $first
-      after: $after
-
-      filters: $filters
-
-      orderBy: { date: desc }
-    ) @connection(key: "feed_connection", filter: ["filters"]) {
-      ...ItemConnectionFull
-    }
-  }
-
-  ${ITEM_CONNECTION_FULL_FRAGMENT}
-`;
 
 export const FEED_PAGE_LENGTH = 30;
 

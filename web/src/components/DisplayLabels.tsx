@@ -29,10 +29,10 @@ import {
 
 import color from 'color';
 
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { theme } from '../styles/theme';
 import { FaTimesCircle, FaRegTimesCircle, FaTimes } from 'react-icons/fa';
-import { useOptimisticBatchUpdateItemLabels } from '../hooks/useOptimisticBatchUpdateItemLabels';
+import { useOptimisticBatchUpdateItemLabels } from 'cataloged-shared/hooks/useOptimisticBatchUpdateItemLabels';
 
 import { DISCONNECT_LABEL_FROM_ITEM_MUTATION } from './Labels';
 

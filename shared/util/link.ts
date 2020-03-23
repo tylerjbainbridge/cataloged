@@ -1,4 +1,4 @@
-import { ItemFull_link } from '../graphql/__generated__/ItemFull';
+import { ItemFull_link } from 'cataloged-shared/graphql/__generated__/ItemFull';
 
 export const getYoutubeId = (url: string) => {
   const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;

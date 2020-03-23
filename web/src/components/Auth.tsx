@@ -1,58 +1,9 @@
-import React, { useState, useEffect, SetStateAction, Dispatch } from 'react';
-import { useQuery, useApolloClient } from '@apollo/client';
-import gql from 'graphql-tag';
-import ErrorBoundary from 'react-error-boundary';
-import { getAuthUser_me } from '../graphql/__generated__/getAuthUser';
-import { googleAuth_googleAuth } from '../graphql/__generated__/googleAuth';
-import { Stack, Alert, AlertIcon, AlertTitle, Button } from '@chakra-ui/core';
-import { usePrevious } from '../hooks/usePrevious';
+import { useApolloClient, useQuery } from '@apollo/client';
+import { googleAuth_googleAuth } from 'cataloged-shared/graphql/__generated__/googleAuth';
+import { AuthContext } from 'cataloged-shared/hooks/useAuth';
+import { GET_AUTH_USER } from 'cataloged-shared/queries/user';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-
-const GET_AUTH_USER = gql`
-  query getAuthUser {
-    me {
-      id
-      fullName
-      email
-
-      isActive
-
-      role
-
-      googleAccounts {
-        id
-        email
-      }
-
-      inviteCode {
-        code
-      }
-
-      labels {
-        id
-        name
-      }
-
-      collections {
-        id
-        name
-        description
-      }
-    }
-  }
-`;
-
-type ContextProps = {
-  user: getAuthUser_me;
-  token: googleAuth_googleAuth['token'] | null;
-  signIn: any;
-  signOut: Function;
-  refetchUser: () => Promise<any>;
-};
-
-export const AuthContext = React.createContext<ContextProps>(
-  {} as ContextProps,
-);
 
 export const Auth = ({ children }: { children: JSX.Element }) => {
   const client = useApolloClient();

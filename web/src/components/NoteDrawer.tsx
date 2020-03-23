@@ -13,11 +13,14 @@ import {
   Divider,
 } from '@chakra-ui/core';
 
-import { UPDATE_NOTE_MUTATION } from '../graphql/note';
+import { UPDATE_NOTE_MUTATION } from 'cataloged-shared/graphql/note';
 
 import { NoteEditor } from './NoteEditor';
 import { Labels } from './Labels';
-import { ItemFull, ItemFull_note } from '../graphql/__generated__/ItemFull';
+import {
+  ItemFull,
+  ItemFull_note,
+} from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { ItemDrawerProps } from '../routes/FeedDrawerItemView';
 import { ItemActionMenu } from './ItemActionMenu';
 import { ItemDrawerMeta } from './ItemDrawerMeta';

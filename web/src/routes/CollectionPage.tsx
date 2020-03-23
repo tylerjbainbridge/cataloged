@@ -23,12 +23,12 @@ import {
   GenericListItem,
   LIST_ITEM_HEIGHT,
 } from '../components/GenericListItem';
-import { useOptimisticCollection } from '../hooks/useOptimisticCollection';
-import { COLLECTION_FULL_FRAGMENT } from '../graphql/collection';
+import { useOptimisticCollection } from 'cataloged-shared/hooks/useOptimisticCollection';
+import { COLLECTION_FULL_FRAGMENT } from 'cataloged-shared/graphql/collection';
 import { FaPlusCircle, FaTrash, FaEllipsisH } from 'react-icons/fa';
 import { TopNavBar } from '../components/TopNavBar';
 import { CommandCenter } from '../components/CommandCenter';
-import { useGoToItem } from '../hooks/useGoTo';
+import { useGoToItem } from 'cataloged-shared/hooks/useGoTo';
 import { Click } from '../components/Click';
 
 export enum ItemTypes {

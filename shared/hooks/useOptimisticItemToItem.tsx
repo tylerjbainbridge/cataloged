@@ -6,9 +6,9 @@ import {
   DICONNECT_ITEM_FROM_ITEM_MUTATION,
   ITEM_TO_ITEM_FRAGMENT,
   ITEM_FULL_FRAGMENT,
-} from '../graphql/item';
+} from 'cataloged-shared/graphql/item';
 
-import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { useToast } from '@chakra-ui/core';
 
 export const useOptimisticItemToItem = () => {

@@ -1,36 +1,32 @@
-import React, { useEffect } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 import {
   Box,
-  Image,
-  Stack,
-  Flex,
-  Text,
+  BoxProps,
   Button,
+  Divider,
+  Flex,
+  Icon,
+  IconButton,
+  Image,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
+  MenuList,
   Spinner,
-  Divider,
-  BoxProps,
-  IconButton,
+  Stack,
+  Text,
   Tooltip,
-  Icon,
 } from '@chakra-ui/core';
-import { Link, useLocation, useRouteMatch, useHistory } from 'react-router-dom';
-import { useQuery, useMutation, useApolloClient } from '@apollo/client';
+import { DELETE_COLLECTION } from 'cataloged-shared/graphql/collection';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
+import logo from 'cataloged-shared/images/logo.png';
+import { getQueryStringFromFilters } from 'cataloged-shared/util/helpers';
 import gql from 'graphql-tag';
-// @ts-ignore
-import resolveUrl from 'resolve-url';
-
-import logo from '../images/logo.png';
-import { useAuth } from '../hooks/useAuth';
-import { useGlobalModal, ModalName } from './GlobalModal';
-import { NoteModal } from './NoteModal';
-import { getQueryStringFromFilters } from '../util/helpers';
-import { FaEllipsisH } from 'react-icons/fa';
-import { DELETE_COLLECTION } from '../graphql/collection';
+import React, { useEffect } from 'react';
+import { Link, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { useMedia } from 'react-use';
+import { ModalName, useGlobalModal } from './GlobalModal';
+import { NoteModal } from './NoteModal';
 
 export const SIDEBAR_WIDTH = 280;
 

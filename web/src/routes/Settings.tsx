@@ -17,13 +17,13 @@ import {
 } from '@chakra-ui/core';
 import qs from 'query-string';
 import { useLocation, useHistory, useRouteMatch } from 'react-router-dom';
-import { usePrevious } from '../hooks/usePrevious';
-import { useRemoveFromQueryString } from '../hooks/useGoTo';
-import { useAuth } from '../hooks/useAuth';
+import { usePrevious } from 'cataloged-shared/hooks/usePrevious';
+import { useRemoveFromQueryString } from 'cataloged-shared/hooks/useGoTo';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { useMedia } from 'react-use';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
 import { gql } from 'apollo-boost';
-import { downloadFile } from '../util/helpers';
+import { downloadFile } from 'cataloged-shared/util/helpers';
 
 export interface ItemDrawerProps {
   toggleFullScreen: () => any;

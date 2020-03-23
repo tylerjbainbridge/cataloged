@@ -1,12 +1,15 @@
 {
   "private": true,
-  "workspaces": [
-    "web",
-    "shared",
-    "mobile",
-    "landing-page",
-    "extension"
-  ],
+  "workspaces": {
+    "packages": [
+      "server",
+      "mobile",
+      "shared",
+      "web",
+      "landing-page",
+      "extension"
+    ]
+  },
   "scripts": {
     "start": "npm-run-all --parallel start:*",
     "start:web": "cd app/web && yarn run start",

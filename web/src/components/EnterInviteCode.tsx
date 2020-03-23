@@ -13,7 +13,7 @@ import { useMutation } from '@apollo/client';
 import { useForm } from 'react-hook-form';
 import { gql } from 'apollo-boost';
 import { SignOut } from './SignOut';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
 
 const ENTER_INVITE_CODE = gql`
   mutation enterInviteCode($code: String!) {

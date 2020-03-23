@@ -16,11 +16,11 @@ import {
 import { FaCheck } from 'react-icons/fa';
 
 import { ModalSelect, useKeyDown } from './CommandCenter';
-import { ITEM_CONNECTION_FULL_FRAGMENT } from '../graphql/item';
-import { getNodesFromConnection } from '../util/helpers';
+import { ITEM_CONNECTION_FULL_FRAGMENT } from 'cataloged-shared/graphql/item';
+import { getNodesFromConnection } from 'cataloged-shared/util/helpers';
 import Downshift from 'downshift';
 import FilterSearchInput from './FilterSearchInput';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { GenericListItem, LIST_ITEM_HEIGHT } from './GenericListItem';
 
 export const COMMAND_CENTER_SEARCH_ITEMS = gql`

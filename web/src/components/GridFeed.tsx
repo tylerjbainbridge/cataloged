@@ -3,7 +3,7 @@ import { SimpleGrid, Flex, Box } from '@chakra-ui/core';
 import { QueryResult } from '@apollo/client';
 
 import { GRID_ITEM_WIDTH, Item } from './Item';
-import { feed } from '../graphql/__generated__/feed';
+import { feed } from 'cataloged-shared/graphql/__generated__/feed';
 import { FeedContext } from './Feed';
 
 export interface GridFeedProps {

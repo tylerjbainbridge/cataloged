@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import * as yup from 'yup';
-import { usePaste } from '../hooks/usePaste';
+import { usePaste } from 'cataloged-shared/hooks/usePaste';
 
 import {
   Modal,
@@ -26,8 +26,8 @@ import {
   FormHelperText,
 } from '@chakra-ui/core';
 import { useGlobalModal, ModalName } from './GlobalModal';
-import { useHotKey } from '../hooks/useHotKey';
-import { useGoToItem } from '../hooks/useGoTo';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
+import { useGoToItem } from 'cataloged-shared/hooks/useGoTo';
 
 const CreateLinkSchema = yup.object().shape({
   href: yup

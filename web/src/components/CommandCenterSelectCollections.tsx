@@ -3,11 +3,11 @@ import _ from 'lodash';
 import { useMutation } from '@apollo/client';
 
 import { ModalSelect, useRelevantItems } from './CommandCenter';
-import { ADD_COLLECTION } from '../graphql/collection';
+import { ADD_COLLECTION } from 'cataloged-shared/graphql/collection';
 import cuid from 'cuid';
 import { Box, Tag, Text, Spinner } from '@chakra-ui/core';
 import { FaCheck } from 'react-icons/fa';
-import { useOptimisticBatchUpdateItemCollections } from '../hooks/useOptimisticBatchUpdateItemCollections';
+import { useOptimisticBatchUpdateItemCollections } from 'cataloged-shared/hooks/useOptimisticBatchUpdateItemCollections';
 
 export const CommandCenterSelectCollections = ({ user }: any) => {
   const relevantItems = useRelevantItems();

@@ -2,8 +2,8 @@ import React from 'react';
 import { FaUser, FaFile } from 'react-icons/fa';
 import { IconProps } from '@chakra-ui/core';
 
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { FileFull } from '../graphql/__generated__/FileFull';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { FileFull } from 'cataloged-shared/graphql/__generated__/FileFull';
 
 export interface ItemGenericData {
   type?: ItemFull['type'];

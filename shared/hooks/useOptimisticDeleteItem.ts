@@ -1,10 +1,8 @@
 import { useMutation } from '@apollo/client';
-
-import { DELETE_ITEM_MUTATION } from '../graphql/item';
-import { FEED_QUERY } from '../components/Feed';
 import { useToast } from '@chakra-ui/core';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { ItemConnectionFull_edges } from '../graphql/__generated__/ItemConnectionFull';
+import { DELETE_ITEM_MUTATION } from 'cataloged-shared/graphql/item';
+import { ItemConnectionFull_edges } from 'cataloged-shared/graphql/__generated__/ItemConnectionFull';
+import { FEED_QUERY } from '../queries/feed';
 import { confirmMutation } from '../util/helpers';
 
 export const useOptimisticDeleteItem = (item: any, options = {}) => {

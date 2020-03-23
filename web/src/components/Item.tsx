@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import _ from 'lodash';
 
 import { Box, Stack } from '@chakra-ui/core';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { FeedContext } from './Feed';
 import { GenericListItem } from './GenericListItem';
 import { GenericGridItem } from './GenericGridItem';

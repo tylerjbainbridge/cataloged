@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/core';
 
 import { GET_GOOGLE_URL } from './SignIn';
-import { getGoogleUrl } from '../graphql/__generated__/getGoogleUrl';
+import { getGoogleUrl } from 'cataloged-shared/graphql/__generated__/getGoogleUrl';
 
 export const ForceSignIn = () => {
   const client = useApolloClient();

@@ -1,6 +1,6 @@
 import React, { useRef, MouseEvent, useCallback } from 'react';
 import { debounce } from 'lodash';
-import { useHotKey } from '../hooks/useHotKey';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
 
 export interface ClickProps {
   children: (args: {

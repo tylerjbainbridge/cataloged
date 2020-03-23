@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 
 import { Box, Button } from '@chakra-ui/core';
-import { getGoogleUrl } from '../graphql/__generated__/getGoogleUrl';
+import { getGoogleUrl } from 'cataloged-shared/graphql/__generated__/getGoogleUrl';
 
 export const GET_GOOGLE_URL = gql`
   query getGoogleUrl(

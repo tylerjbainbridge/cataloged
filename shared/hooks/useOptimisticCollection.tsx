@@ -12,10 +12,10 @@ import {
   UPDATE_BLOCK_CONTENT,
   COLLECTION_BLOCK_FRAGMENT,
   UPDATE_COLLECTION,
-} from '../graphql/collection';
-import { CollectionFull } from '../graphql/__generated__/CollectionFull';
-import { CollectionEntryFull } from '../graphql/__generated__/CollectionEntryFull';
-import { CollectionBlockFull } from '../graphql/__generated__/CollectionBlockFull';
+} from 'cataloged-shared/graphql/collection';
+import { CollectionFull } from 'cataloged-shared/graphql/__generated__/CollectionFull';
+import { CollectionEntryFull } from 'cataloged-shared/graphql/__generated__/CollectionEntryFull';
+import { CollectionBlockFull } from 'cataloged-shared/graphql/__generated__/CollectionBlockFull';
 import { useDebounce } from './useDebounce';
 
 const BLOCK_WITH_CONTENT = gql`

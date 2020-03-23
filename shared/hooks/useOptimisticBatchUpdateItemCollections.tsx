@@ -1,10 +1,10 @@
 import { useMutation, useApolloClient, gql } from '@apollo/client';
 
-import { BATCH_UPDATE_ITEMS_COLLECTIONS_MUTATION } from '../graphql/item';
+import { BATCH_UPDATE_ITEMS_COLLECTIONS_MUTATION } from 'cataloged-shared/graphql/item';
 import { useToast } from '@chakra-ui/core';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { CollectionEntryFull } from '../graphql/__generated__/CollectionEntryFull';
-import { COLLECTION_FULL_FRAGMENT } from '../graphql/collection';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { CollectionEntryFull } from 'cataloged-shared/graphql/__generated__/CollectionEntryFull';
+import { COLLECTION_FULL_FRAGMENT } from 'cataloged-shared/graphql/collection';
 
 const ITEM_WITH_COLLECTIONS_FRAGMENT = gql`
   fragment ItemWithCollections on Item {

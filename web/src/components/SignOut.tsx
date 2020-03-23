@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { Button } from '@chakra-ui/core';
 
 export const SignOut = () => {

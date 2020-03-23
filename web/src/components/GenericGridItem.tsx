@@ -15,10 +15,10 @@ import {
 
 import { Click } from './Click';
 import { SelectContext } from './SelectContainer';
-import { useHotKey } from '../hooks/useHotKey';
-import { useOptimisticDeleteItem } from '../hooks/useOptimisticDeleteItem';
-import { ItemFull } from '../graphql/__generated__/ItemFull';
-import { useOptimisticUpdateFavoriteManyItems } from '../hooks/useOptimisticUpdateFavoriteManyItems';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
+import { useOptimisticDeleteItem } from 'cataloged-shared/hooks/useOptimisticDeleteItem';
+import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { useOptimisticUpdateFavoriteManyItems } from 'cataloged-shared/hooks/useOptimisticUpdateFavoriteManyItems';
 import {
   GRID_ITEM_ACTUAL_WIDTH,
   GRID_ITEM_INNER_PADDING,
@@ -27,10 +27,10 @@ import {
   GRID_ITEM_HEIGHT,
 } from './Item';
 import { SelectOnClick } from './SelectOnClick';
-import { getGenericItemData } from '../util/itemHelpers';
+import { getGenericItemData } from '../../../shared/util/itemHelpers';
 import { LazyImage } from './LazyImage';
 import { FeedContext } from './Feed';
-import { useGoToItem } from '../hooks/useGoTo';
+import { useGoToItem } from 'cataloged-shared/hooks/useGoTo';
 import { useMedia } from 'react-use';
 import { DisplayLabels } from './DisplayLabels';
 

@@ -14,11 +14,11 @@ import {
 import qs from 'query-string';
 import { useLocation, useHistory } from 'react-router-dom';
 import { FileDrawer } from '../components/FileDrawer';
-import { useGetItem } from '../hooks/useGetItem';
-import { usePrevious } from '../hooks/usePrevious';
+import { useGetItem } from 'cataloged-shared/hooks/useGetItem';
+import { usePrevious } from 'cataloged-shared/hooks/usePrevious';
 import { NoteDrawer } from '../components/NoteDrawer';
 import { LinkDrawer } from '../components/LinkDrawer';
-import { useReturnFromItem } from '../hooks/useGoTo';
+import { useReturnFromItem } from 'cataloged-shared/hooks/useGoTo';
 import { GoogleContactDrawer } from '../components/GoogleContactDrawer';
 
 export interface ItemDrawerProps {

@@ -37,15 +37,18 @@ import { LazyImage } from './LazyImage';
 import {
   UPDATE_LINK_MUTATION,
   REFRESH_LINK_META_MUTATION,
-} from '../graphql/link';
+} from 'cataloged-shared/graphql/link';
 import { ItemDrawerProps } from '../routes/FeedDrawerItemView';
 import { ItemActionMenu } from './ItemActionMenu';
-import { ItemFull_link, ItemFull } from '../graphql/__generated__/ItemFull';
-import { useDebouncedUpdate } from '../hooks/useDebouncedUpdate';
+import {
+  ItemFull_link,
+  ItemFull,
+} from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { useDebouncedUpdate } from 'cataloged-shared/hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
 import { useMedia } from 'react-use';
-import { getTweetMetaFromUrl, getYoutubeId } from '../util/link';
+import { getTweetMetaFromUrl, getYoutubeId } from 'cataloged-shared/util/link';
 import { FaCopy } from 'react-icons/fa';
 
 export interface ItemWithLink extends ItemFull {

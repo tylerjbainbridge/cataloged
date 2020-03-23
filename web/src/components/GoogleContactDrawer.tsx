@@ -20,7 +20,7 @@ import { ItemActionMenu } from './ItemActionMenu';
 import {
   ItemFull_googleContact,
   ItemFull,
-} from '../graphql/__generated__/ItemFull';
+} from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
 import { useMedia } from 'react-use';

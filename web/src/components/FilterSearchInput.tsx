@@ -20,10 +20,11 @@ import {
 } from 'slate-react';
 import Downshift from 'downshift';
 import { Text, Box, Button } from '@chakra-ui/core';
-import { useAuth } from '../hooks/useAuth';
-import { usePrevious } from '../hooks/usePrevious';
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
+import { usePrevious } from 'cataloged-shared/hooks/usePrevious';
 import { useLocation } from 'react-router-dom';
-import { useHotKey } from '../hooks/useHotKey';
+import { useHotKey } from 'cataloged-shared/hooks/useHotKey';
+import { filterNames } from 'cataloged-shared/util/helpers';
 
 export const Portal = ({ children }: any) => {
   return ReactDOM.createPortal(children, document.body);
@@ -54,15 +55,6 @@ const initialSearchState = {
     value: '',
   },
 };
-
-export const filterNames = [
-  { value: 'type', name: 'type:' },
-  { value: '-type', name: '-type:' },
-  { value: 'label', name: 'label:' },
-  { value: '-label', name: '-label:' },
-  { value: 'is', name: 'is:' },
-  { value: '-is', name: '-is:' },
-];
 
 export const toFilterNode = (filter: Filter) => ({
   type: 'filter',
