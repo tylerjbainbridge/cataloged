@@ -37,18 +37,18 @@ import { LazyImage } from './LazyImage';
 import {
   UPDATE_LINK_MUTATION,
   REFRESH_LINK_META_MUTATION,
-} from 'cataloged-shared/graphql/link';
+} from '../../../shared/graphql/link';
 import { ItemDrawerProps } from '../routes/FeedDrawerItemView';
 import { ItemActionMenu } from './ItemActionMenu';
 import {
   ItemFull_link,
   ItemFull,
-} from 'cataloged-shared/graphql/__generated__/ItemFull';
-import { useDebouncedUpdate } from 'cataloged-shared/hooks/useDebouncedUpdate';
+} from '../../../shared/graphql/__generated__/ItemFull';
+import { useDebouncedUpdate } from '../../../shared/hooks/useDebouncedUpdate';
 import { ItemDrawerMeta } from './ItemDrawerMeta';
 import { ItemStatusInput } from './ItemStatusInput';
 import { useMedia } from 'react-use';
-import { getTweetMetaFromUrl, getYoutubeId } from 'cataloged-shared/util/link';
+import { getTweetMetaFromUrl, getYoutubeId } from '../../../shared/util/link';
 import { FaCopy } from 'react-icons/fa';
 
 export interface ItemWithLink extends ItemFull {
@@ -189,16 +189,17 @@ export const LinkDrawer = ({
   } else if (url.hostname.includes('youtube.com')) {
     const id = getYoutubeId(link.href);
 
-    drawerContentProps.alignItems = 'center';
-    drawerContentProps.maxWidth = '1300px';
-
     if (id) {
+      drawerContentProps.alignItems = 'center';
+      drawerContentProps.justifyContent = 'center';
+      drawerContentProps.maxWidth = '1300px';
       leftNode = <YouTube videoId={id} opts={{ width: '700px' }} />;
     }
   } else if (url.hostname.includes('instagram.com')) {
     drawerContentProps.maxWidth = '1300px';
     drawerContentProps.alignItems = 'center';
     leftContainerProps.bg = '#fff';
+    leftContainerProps.pt = '100px';
 
     leftNode = (
       <InstagramEmbed url={link.href} maxWidth={600} containerTagName="div" />
@@ -218,6 +219,7 @@ export const LinkDrawer = ({
         {!isMobile && (
           <Box
             d="flex"
+            alignSelf="flex-start"
             width={isMobile ? '100%' : 'calc(100% - 450px)'}
             justifyContent="center"
             height="100%"
