@@ -1,4 +1,4 @@
-source ../.env;
+source ../../.env;
 
 echo "Saving migrations";
 prisma2 migrate save --experimental

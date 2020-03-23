@@ -1,25 +1,21 @@
 {
   "private": true,
-  "workspaces": {
+  "workspace": {
     "packages": [
-      "cataloged-server",
-      "cataloged-mobile",
-      "cataloged-shared",
-      "cataloged-web",
-      "cataloged-landing-page",
-      "cataloged-extension"
+      "apps/*",
+      "packages/*"
     ]
   },
   "scripts": {
     "start": "npm-run-all --parallel start:*",
-    "start:web": "yarn workspaces cataloged-web run start",
-    "start:server": "yarn workspaces cataloged-server run start",
-    "build:web": "yarn install && yarn workspaces cataloged-web run build",
-    "build:landing-page": "yarn install && yarn workspaces cataloged-web run build",
-    "build:server": "yarn install && yarn workspaces cataloged-server run build",
+    "start:web": "yarn workspace cataloged-web run start",
+    "start:server": "yarn workspace cataloged-server run start",
+    "build:web": "yarn install && yarn workspace cataloged-web run build",
+    "build:landing-page": "yarn install && yarn workspace cataloged-web run build",
+    "build:server": "yarn install && yarn workspace cataloged-server run build",
     "dev": "npm-run-all --parallel dev:*",
-    "dev:server": "yarn workspaces server run dev",
-    "dev:web": "yarn workspaces web run dev",
+    "dev:server": "yarn workspace server run dev",
+    "dev:web": "yarn workspace web run dev",
     "format": "npx prettier '*/**/*.{ts,tsx}' --write"
   },
   "dependencies": {

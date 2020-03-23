@@ -1,4 +1,4 @@
-source ../.env.production.local;
+source ../../.env;
 
 echo "Running prisma generate ($POSTGRESQL_URL)";
 
