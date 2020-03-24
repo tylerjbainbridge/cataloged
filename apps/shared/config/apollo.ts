@@ -30,7 +30,7 @@ export const cache = new InMemoryCache({
   },
 });
 
-export const createClient = async ({ storage }: { storage: any }) => {
+export const createApolloClient = async ({ storage }: { storage: any }) => {
   // @ts-ignore
   await persistCache({
     //@ts-ignore

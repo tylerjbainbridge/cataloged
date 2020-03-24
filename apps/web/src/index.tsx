@@ -19,7 +19,7 @@ import { BrowserRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
 
 import * as serviceWorker from './serviceWorker';
-import { createClient } from 'cataloged-shared/config/apollo';
+import { createApolloClient } from 'cataloged-shared/config/apollo';
 import { Router } from './Router';
 import { Auth } from './components/Auth';
 import { theme } from './styles/theme';
@@ -36,7 +36,7 @@ if (window.interop) window.interop.setBadgeCount(9001);
 
 (async () => {
   // @ts-ignore
-  const client = await createClient({ storage: window.localStorage });
+  const client = await createApolloClient({ storage: window.localStorage });
 
   const appNode = (
     <BrowserRouter>

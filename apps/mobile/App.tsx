@@ -10,7 +10,6 @@
 
 import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
-
 import { GoogleSignIn } from './src/components/GoogleSignIn';
 import { Box } from './src/components/UI';
 
