@@ -19,10 +19,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "resolutions": {
-    "**/react": "^16.13.1"
-  },
-  "alias": {
-    "react": "./node_modules/react"
+    "**/react": "^16.13.1",
+    "**/react-dom": "^16.13.1"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.39",
