@@ -11,6 +11,7 @@ export const SignOut = () => {
       onClick={() => {
         window.localStorage.removeItem('cataloged-cache');
         if (auth.signOut) auth.signOut();
+        window.location.replace('/');
       }}
     >
       Sign out

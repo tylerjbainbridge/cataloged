@@ -6,6 +6,8 @@ import {
   statusCodes,
 } from '@react-native-community/google-signin';
 
+import { useAuth } from 'cataloged-shared/hooks/useAuth';
+
 GoogleSignin.configure({
   scopes: [
     'https://www.googleapis.com/auth/plus.me',
@@ -45,6 +47,32 @@ const signOut = async () => {
 };
 
 export const GoogleSignIn = () => {
+  const { signIn, user } = useAuth();
+
+  // const [googleAuth, { error, loading }] = useMutation<googleAuth>(
+  //   GOOGLE_AUTH_MUTATION,
+  //   {
+  //     variables: { code: values.code, isAuthMethod: !!state?.isAuthMethod },
+  //     onCompleted: async (data) => {
+  //       if (data?.googleAuth?.token) {
+  //         await signIn(data.googleAuth.token);
+  //         // window.location.replace('/');
+  //       } else {
+  //         const newState: any = {};
+
+  //         if (state?.googleAccountId)
+  //           newState.googleAccountId = state?.googleAccountId;
+
+  //         if (state?.syncContent) newState.syncContent = state?.syncContent;
+
+  //         const query = queryString.stringify(newState);
+
+  //         history.push(`${state?.origin || '/'}${query ? `?${query}` : ''}`);
+  //       }
+  //     },
+  //   },
+  // );
+
   useEffect(() => {
     (async () => {
       // const user = await signIn();

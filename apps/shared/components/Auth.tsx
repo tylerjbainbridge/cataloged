@@ -3,41 +3,55 @@ import { googleAuth_googleAuth } from 'cataloged-shared/graphql/__generated__/go
 import { AuthContext } from 'cataloged-shared/hooks/useAuth';
 import { GET_AUTH_USER } from 'cataloged-shared/queries/user';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
-export const Auth = ({ children }: { children: JSX.Element }) => {
+const WEB_TOKEN_CONFIG = {
+  set: (token: string) => localStorage.setItem('token', token),
+  get: () => localStorage.getItem('token'),
+  remove: () => localStorage.removeItem('token'),
+};
+
+export const Auth = ({
+  children,
+  tokenConfig = WEB_TOKEN_CONFIG,
+}: {
+  children: JSX.Element;
+  tokenConfig?: {
+    set: any;
+    get: any;
+    remove: any;
+  };
+}) => {
   const client = useApolloClient();
-  const history = useHistory();
 
   const [token, setToken] = useState<googleAuth_googleAuth['token'] | null>(
-    localStorage.getItem('token'),
+    tokenConfig.get(),
   );
 
-  const { data, loading, refetch } = useQuery(GET_AUTH_USER, {
+  const { data, refetch } = useQuery(GET_AUTH_USER, {
     fetchPolicy: 'cache-and-network',
     variables: { token },
   });
 
-  const signOut = () => {
+  const signOut = async () => {
     client.resetStore();
-    localStorage.removeItem('token');
+    await tokenConfig.remove();
     setToken(null);
-    window.location.replace('/');
   };
 
   const signIn = async (newToken: any) => {
-    localStorage.setItem('token', newToken);
+    await tokenConfig.set(newToken);
     setToken(newToken);
     // await refetch();
-    // window.location.replace('/');
   };
 
   useEffect(() => {
-    if (token) {
-      localStorage.setItem('token', token);
-    } else {
-      localStorage.removeItem('token');
-    }
+    (async () => {
+      if (token) {
+        await tokenConfig.set(token);
+      } else {
+        await tokenConfig.remove();
+      }
+    })();
   }, [token]);
 
   return (

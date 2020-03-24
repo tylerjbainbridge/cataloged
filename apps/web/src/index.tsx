@@ -1,30 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-import { createUploadLink } from 'apollo-upload-client';
-import { setContext } from '@apollo/link-context';
-import { persistCache } from 'apollo-cache-persist';
+import { ApolloProvider } from '@apollo/client';
 import {
-  ThemeProvider,
-  CSSReset,
-  Stack,
   Alert,
   AlertIcon,
   AlertTitle,
-  Button,
   Box,
+  Button,
+  CSSReset,
+  Stack,
   Text,
+  ThemeProvider,
 } from '@chakra-ui/core';
-import { BrowserRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
-
-import * as serviceWorker from './serviceWorker';
+import { Auth } from 'cataloged-shared/components/Auth';
 import { createApolloClient } from 'cataloged-shared/config/apollo';
-import { Router } from './Router';
-import { Auth } from './components/Auth';
-import { theme } from './styles/theme';
-import { GlobalModalProvider } from './components/GlobalModal';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import ErrorBoundary from 'react-error-boundary';
+import { BrowserRouter } from 'react-router-dom';
+import { GlobalModalProvider } from './components/GlobalModal';
+import { Router } from './Router';
+import * as serviceWorker from './serviceWorker';
+import { theme } from './styles/theme';
 
 Sentry.init({
   dsn: 'https://3cbc91c3ee1e456db2c87d85b24f197c@sentry.io/1553570',
