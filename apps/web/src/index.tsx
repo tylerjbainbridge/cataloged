@@ -96,10 +96,7 @@ export const cache = new InMemoryCache({
                         <AlertIcon />
                         <AlertTitle mr={2}>Something went wrong!</AlertTitle>
                       </Alert>
-                      <Button
-                        size="sm"
-                        onClick={() => window.location.replace('/')}
-                      >
+                      <Button size="sm" onClick={window.location.reload}>
                         Try again
                       </Button>
                     </Stack>
@@ -134,7 +131,7 @@ export const cache = new InMemoryCache({
               </Text>
             </AlertTitle>
           </Alert>
-          <Button size="sm" onClick={() => window.location.replace('/')}>
+          <Button size="sm" onClick={window.location.reload}>
             Try again
           </Button>
         </Stack>
