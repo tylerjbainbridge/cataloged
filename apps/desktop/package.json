@@ -1,7 +1,13 @@
 {
   "name": "cataloged-desktop",
+  "private": true,
   "version": "1.0.0",
   "main": "main.js",
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "start": "electron .",
     "package": "electron-packager . \"Cataloged\" --gatekeeperAssess=false --provisioning-profile=\"./prod.provisionprofile\" --osx-sign.identity=\"QEA5QCYSWF\" --asar.unpack=\"*.node\" --osxNotarize.appleId=\"tyler@tylerbainbridge.com\" --osxNotarize.appleIdPassword=\"gjog-eyhe-mldq-gufu\" --osx-sign.hardenedRuntime=true --osx-sign.entitlements=\"./build/entitlements.mac.plist\" --osx-sign.entitlements-inherit-\"./build/entitlements.mac.plist\" --icon=\"./build/icon.icns\"",

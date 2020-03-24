@@ -1,6 +1,12 @@
 {
   "name": "cataloged-extension",
+  "private": true,
   "version": "1.0.0",
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "dev:extension": "parcel --cache-dir=.cache/extension --out-dir=extension/dist extension/src/manifest.json",
     "prebuild:extension": "rm -rf extension/dist",

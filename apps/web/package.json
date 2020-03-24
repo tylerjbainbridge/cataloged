@@ -1,6 +1,12 @@
 {
   "name": "cataloged-web",
+  "private": true,
   "version": "1.0.0",
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "dev": "parcel --port=3000 public/index.html",
     "start": "parcel public/index.html",
@@ -11,6 +17,14 @@
     "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"src/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=src/graphql/__generated__/apolloTypes.ts --outputFlat=src/graphql/__generated__",
     "remove:types": "find . | grep -E \"(__generated__)\" | xargs rm -rf",
     "test": "jest"
+  },
+  "resolutions": {
+    "**/react": "^16.13.1",
+    "**/react-dom": "^16.13.1"
+  },
+  "alias": {
+    "react": "./node_modules/react",
+    "react-dom": "./node_modules/react-dom"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.39",
@@ -60,10 +74,10 @@
     "mousetrap": "^1.6.5",
     "prismjs": "^1.17.1",
     "query-string": "^6.9.0",
-    "react": "^16.12.0",
+    "react": "^16.13.1",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
-    "react-dom": "^16.12.0",
+    "react-dom": "^16.13.1",
     "react-dropzone": "^10.1.7",
     "react-error-boundary": "^1.2.5",
     "react-focus-lock": "^2.2.1",

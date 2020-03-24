@@ -2,6 +2,15 @@
   "name": "cataloged-landing-page",
   "private": true,
   "version": "1.0.0",
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
+  "resolutions": {
+    "**/react": "^16.13.1",
+    "**/react-dom": "^16.13.1"
+  },
   "dependencies": {
     "@apollo/client": "3.0.0-beta.39",
     "@chakra-ui/core": "^0.6.1",
@@ -23,8 +32,8 @@
     "graphql": "^14.6.0",
     "isomorphic-fetch": "^2.2.1",
     "prop-types": "^15.7.2",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-helmet": "^5.2.1",
     "react-hook-form": "^5.0.1",
     "react-typography": "^0.16.19",

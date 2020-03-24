@@ -18,6 +18,12 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
+  "resolutions": {
+    "**/react": "^16.13.1"
+  },
+  "alias": {
+    "react": "./node_modules/react"
+  },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.39",
     "@apollo/link-context": "2.0.0-beta.3",
@@ -32,7 +38,7 @@
     "@react-native-community/google-signin": "^4.0.0",
     "cataloged-shared": "1.0.0",
     "npm-run-all": "^4.1.5",
-    "react": "16.9.0",
+    "react": "^16.13.1",
     "react-native": "0.61.5",
     "react-native-dotenv": "^0.2.0"
   },
