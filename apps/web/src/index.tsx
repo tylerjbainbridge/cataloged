@@ -19,7 +19,7 @@ import { BrowserRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
 
 import * as serviceWorker from './serviceWorker';
-import { GRAPHQL_ENDPOINT } from './config';
+import { createClient } from 'cataloged-shared/config/apollo';
 import { Router } from './Router';
 import { Auth } from './components/Auth';
 import { theme } from './styles/theme';
@@ -34,47 +34,9 @@ Sentry.init({
 // @ts-ignore
 if (window.interop) window.interop.setBadgeCount(9001);
 
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
-
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `JWT ${token}` : '',
-    },
-  };
-});
-
-export const cache = new InMemoryCache({
-  // dataIdFromObject: o => o.id,
-  // @ts-ignore
-  cacheRedirects: {
-    Query: {
-      // @ts-ignore
-      book: (_, args, { getCacheKey }) =>
-        getCacheKey({ __typename: 'Item', id: args.id }),
-    },
-  },
-});
-
 (async () => {
   // @ts-ignore
-  await persistCache({
-    //@ts-ignore
-    cache,
-    key: 'cataloged-cache',
-    // @ts-ignore
-    storage: window.localStorage,
-  });
-
-  // @ts-ignore
-  const link = authLink.concat(createUploadLink({ uri: GRAPHQL_ENDPOINT }));
-
-  const client = new ApolloClient({
-    //@ts-ignore
-    link,
-    cache,
-  });
+  const client = await createClient({ storage: window.localStorage });
 
   const appNode = (
     <BrowserRouter>

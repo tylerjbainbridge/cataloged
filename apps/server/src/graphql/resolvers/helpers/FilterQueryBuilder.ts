@@ -2,7 +2,7 @@ import { User, Subset, FindManyItemArgs } from '@prisma/client';
 import _, { set, get } from 'lodash';
 
 export const STRING_FILTERS = {
-  note: ['text'],
+  note: ['title', 'text'],
   file: ['name', 'title', 'description', 'extension'],
   link: ['href', 'title', 'description'],
   googleContact: [
