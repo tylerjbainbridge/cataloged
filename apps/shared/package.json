@@ -2,11 +2,6 @@
   "name": "cataloged-shared",
   "private": true,
   "version": "1.0.0",
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
-  },
   "scripts": {
     "refresh:types": "yarn run remove:types && yarn run generate:types",
     "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"src/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=graphql/__generated__/apolloTypes.ts --outputFlat=graphql/__generated__",
@@ -16,23 +11,27 @@
     "**/react": "^16.13.1",
     "**/react-dom": "^16.13.1"
   },
-  "alias": {
-    "react": "./node_modules/react",
-    "react-dom": "./node_modules/react-dom"
-  },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.39",
     "@apollo/link-context": "2.0.0-beta.3",
+    "@chakra-ui/core": "^0.7.0",
+    "@emotion/core": "10.x",
+    "@emotion/styled": "10.x",
+    "@types/lodash": "^4.14.137",
+    "@types/react": "^16.8.23",
     "apollo-boost": "^0.4.3",
     "apollo-cache-persist": "^0.1.1",
     "apollo-upload-client": "^11.0.0",
-    "@types/lodash": "^4.14.137",
-    "@types/react": "^16.8.23",
     "clean-deep": "^3.3.0",
+    "cuid": "^2.1.8",
+    "emotion-theming": "10.x",
     "lodash": "^4.17.15",
+    "mousetrap": "^1.6.5",
     "query-string": "^6.11.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^0.0.0-235a6c4af",
+    "react-dom": "^0.0.0-235a6c4af",
+    "react-icons": "^3.9.0",
+    "react-router-dom": "^5.1.2",
     "scroll-into-view-if-needed": "^2.2.24"
   },
   "devDependencies": {

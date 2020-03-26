@@ -5,6 +5,10 @@
       "apps/*"
     ]
   },
+  "resolutions": {
+    "**/react": "^16.13.1",
+    "**/react-dom": "^16.13.1"
+  },
   "scripts": {
     "start": "npm-run-all --parallel start:*",
     "start:web": "yarn workspace cataloged-web run start",
@@ -16,13 +20,20 @@
     "dev:server": "yarn workspace cataloged-server run dev",
     "dev:web": "yarn workspace cataloged-web run dev",
     "dev:mobile": "yarn workspace cataloged-mobile run dev",
-    "format": "npx prettier '*/**/*.{ts,tsx}' --write"
+    "format": "npx prettier '*/**/*.{ts,tsx}' --write",
+    "clean": "rm -rf ./packages/*/node_modules",
+    "clean-locks": "rm -rf ./packages/*/yarn.lock",
+    "bootstrap": "lerna bootstrap",
+    "reset": "yarn clean && yarn clean-locks && yarn bootstrap"
   },
   "dependencies": {
     "dotenv": "^8.0.0",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "react-dnd": "^10.0.2",
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
+    "lerna": "^3.20.2",
     "prettier": "^1.18.2",
     "typescript": "^3.7.5"
   },

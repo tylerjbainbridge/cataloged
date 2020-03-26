@@ -19,10 +19,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "resolutions": {
-    "**/react": "^16.13.1"
-  },
-  "alias": {
-    "cataloged-shared": "../shared"
+    "**/react": "^16.13.1",
+    "**/react-dom": "^16.13.1"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.39",
@@ -36,8 +34,8 @@
     "apollo-boost": "^0.4.3",
     "apollo-cache-persist": "^0.1.1",
     "apollo-upload-client": "^11.0.0",
-    "cataloged-shared": "*",
     "npm-run-all": "^4.1.5",
+    "cataloged-shared": "1.0.0",
     "react": "^16.13.1",
     "react-native": "0.61.5",
     "react-native-dotenv": "^0.2.0",
