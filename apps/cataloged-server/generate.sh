@@ -1,4 +1,6 @@
-if [ -f ../../.env ]; then
+FILE=../../.env
+
+if test -f "$FILE"; then
   source ../../.env;
 fi
 

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import { Location, History } from 'history';
-import queryString from '../../node_modules/query-string';
+import queryString from 'query-string';
 import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { Redirect, useLocation, useHistory } from 'react-router';
 import base64url from 'base64url';
