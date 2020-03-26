@@ -3,11 +3,11 @@
   "workspaces": {
     "packages": [
       "apps/*"
+    ],
+    "nohoist": [
+      "react",
+      "react-dom"
     ]
-  },
-  "resolutions": {
-    "**/react": "^16.13.1",
-    "**/react-dom": "^16.13.1"
   },
   "scripts": {
     "start": "npm-run-all --parallel start:*",
@@ -28,9 +28,7 @@
   },
   "dependencies": {
     "dotenv": "^8.0.0",
-    "npm-run-all": "^4.1.5",
-    "react-dnd": "^10.0.2",
-    "react-dom": "^16.13.1"
+    "npm-run-all": "^4.1.5"
   },
   "devDependencies": {
     "lerna": "^3.20.2",
