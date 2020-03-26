@@ -2,6 +2,11 @@
   "name": "cataloged-web",
   "private": true,
   "version": "1.0.0",
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "dev": "parcel --port=3000 public/index.html",
     "start": "parcel public/index.html",
@@ -14,7 +19,7 @@
     "test": "jest"
   },
   "alias": {
-    "cataloged-shared": "../shared"
+    "cataloged-shared": "../cataloged-shared"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.39",
@@ -46,6 +51,7 @@
     "axios": "^0.19.2",
     "base64url": "^3.0.1",
     "body-scroll-lock": "^2.6.4",
+    "cataloged-shared": "1.0.0",
     "clean-deep": "^3.2.0",
     "color": "^3.1.2",
     "copy-to-clipboard": "^3.3.1",

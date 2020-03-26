@@ -2,14 +2,15 @@
   "name": "cataloged-shared",
   "private": true,
   "version": "1.0.0",
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "refresh:types": "yarn run remove:types && yarn run generate:types",
     "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"src/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=graphql/__generated__/apolloTypes.ts --outputFlat=graphql/__generated__",
     "remove:types": "find . | grep -E \"(__generated__)\" | xargs rm -rf"
-  },
-  "resolutions": {
-    "**/react": "^16.13.1",
-    "**/react-dom": "^16.13.1"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.39",

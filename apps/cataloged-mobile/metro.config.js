@@ -13,9 +13,7 @@ module.exports = {
    */
   resolver: {
     extraNodeModules: new Proxy(
-      {
-        react: path.resolve(__dirname, '../node_modules/react'),
-      },
+      {},
       {
         get: (target, name) => path.join(process.cwd(), `node_modules/${name}`),
       },
@@ -26,8 +24,5 @@ module.exports = {
    * in the monorepo
    */
   projectRoot: path.resolve(__dirname),
-  watchFolders: [
-    path.resolve(__dirname, '../shared'),
-    path.resolve(__dirname, '../../node_modules'),
-  ],
+  watchFolders: [path.resolve(__dirname, '../cataloged-shared')],
 };

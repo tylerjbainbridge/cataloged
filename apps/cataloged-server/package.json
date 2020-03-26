@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "yarn nodemon --watch '*.ts{,x}' --exec 'yarn ts-node -T' src/server.ts",
+    "dev": "npx nodemon --watch '*.ts{,x}' --exec 'npx ts-node -T' src/server.ts",
     "predev": "npm run generate:imports",
     "build": "npx parcel build src/server.ts --target node",
     "prebuild": "npx prisma2 generate",
