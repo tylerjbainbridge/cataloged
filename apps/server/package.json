@@ -29,6 +29,7 @@
     "agent-base": "^5.0.0"
   },
   "dependencies": {
+    "@babel/compat-data": "^7.8.0",
     "@babel/preset-env": "^7.8.4",
     "@prisma/client": "2.0.0-preview024",
     "@sendgrid/mail": "^6.5.4",
