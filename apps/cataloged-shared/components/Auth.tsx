@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from '@apollo/client';
-import { googleAuth_googleAuth } from 'cataloged-shared/graphql/__generated__/googleAuth';
-import { AuthContext } from 'cataloged-shared/hooks/useAuth';
-import { GET_AUTH_USER } from 'cataloged-shared/queries/user';
+import { googleAuth_googleAuth } from '../graphql/__generated__/googleAuth';
+import { AuthContext } from '../hooks/useAuth';
+import { GET_AUTH_USER } from '../queries/user';
 import React, { useEffect, useState } from 'react';
 
 const WEB_TOKEN_CONFIG = {

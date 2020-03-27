@@ -2,11 +2,6 @@
   "name": "cataloged-web",
   "private": true,
   "version": "1.0.0",
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
-  },
   "scripts": {
     "dev": "parcel --port=3000 public/index.html",
     "start": "parcel public/index.html",
@@ -82,7 +77,8 @@
     "react-iframe": "^1.8.0",
     "react-instagram-embed": "^1.5.0",
     "react-lazy-load": "^3.0.13",
-    "react-router-dom": "^6.0.0-alpha.2",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
     "react-sidebar": "^3.0.2",
     "react-tiny-popover": "^4.0.0",

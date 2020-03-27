@@ -5,8 +5,7 @@
       "apps/*"
     ],
     "nohoist": [
-      "react",
-      "react-dom"
+      "**"
     ]
   },
   "scripts": {
