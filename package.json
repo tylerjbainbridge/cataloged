@@ -14,9 +14,8 @@
     "dev:mobile": "npx lerna exec --scope cataloged-mobile npm run dev",
     "format": "npx prettier '*/**/*.{ts,tsx}' --write",
     "clean": "rm -rf ./packages/*/node_modules",
-    "clean-locks": "rm -rf ./packages/*/yarn.lock",
-    "bootstrap": "lerna bootstrap",
-    "reset": "yarn clean && yarn clean-locks && yarn bootstrap"
+    "bootstrap": "npx lerna bootstrap",
+    "reset": "npx lerna clean && npx lerna bootstrap"
   },
   "dependencies": {
     "dotenv": "^8.0.0",
