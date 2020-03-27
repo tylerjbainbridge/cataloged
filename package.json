@@ -1,24 +1,17 @@
 {
   "private": true,
-  "workspaces": {
-    "packages": [
-      "apps/*"
-    ],
-    "nohoist": [
-      "**"
-    ]
-  },
   "scripts": {
     "start": "npm-run-all --parallel start:*",
-    "start:web": "yarn workspace cataloged-web run start",
-    "start:server": "yarn workspace cataloged-server run start",
-    "build:web": "yarn workspace cataloged-web run build",
-    "build:landing-page": "yarn workspace cataloged-web run build",
-    "build:server": "yarn workspace cataloged-server run build",
+    "start:web": "npx lerna exec --scope cataloged-web npm run start",
+    "start:server": "npx lerna exec --scope cataloged-server npm run start",
+    "build:web": "npx lerna exec --scope cataloged-web npm run build",
+    "build:landing-page": "npx lerna exec --scope cataloged-web npm run build",
+    "build:server": "npx lerna exec --scope cataloged-server npm run build",
+    "pre:build:*": "npx lerna bootstrap",
     "dev": "npm-run-all --parallel dev:*",
-    "dev:server": "yarn workspace cataloged-server run dev",
-    "dev:web": "yarn workspace cataloged-web run dev",
-    "dev:mobile": "yarn workspace cataloged-mobile run dev",
+    "dev:server": "npx lerna exec --scope cataloged-server npm run dev",
+    "dev:web": "npx lerna exec --scope cataloged-web npm run dev",
+    "dev:mobile": "npx lerna exec --scope cataloged-mobile npm run dev",
     "format": "npx prettier '*/**/*.{ts,tsx}' --write",
     "clean": "rm -rf ./packages/*/node_modules",
     "clean-locks": "rm -rf ./packages/*/yarn.lock",
