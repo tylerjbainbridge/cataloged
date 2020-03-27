@@ -1,12 +1,9 @@
 FILE=../../.env
 
 if test -f "$FILE"; then
+  echo "found env file";
   source ../../.env;
 fi
 
-if [[ -z "${POSTGRESQL_URL}" ]]; then
-  echo "Running prisma generate ($POSTGRESQL_URL)";
-  prisma2 generate
-else
-  echo "Env variable POSTGRESQL_URL not found";
-fi
+npx prisma2 generate
+
