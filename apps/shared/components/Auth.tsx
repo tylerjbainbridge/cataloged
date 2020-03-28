@@ -1,13 +1,13 @@
+import React, { useEffect, useState } from 'react';
 import { useApolloClient, useQuery } from '@apollo/client';
 import { googleAuth_googleAuth } from '../graphql/__generated__/googleAuth';
 import { AuthContext } from '../hooks/useAuth';
 import { GET_AUTH_USER } from '../queries/user';
-import React, { useEffect, useState } from 'react';
 
 const WEB_TOKEN_CONFIG = {
-  set: (token: string) => localStorage.setItem('token', token),
-  get: () => localStorage.getItem('token'),
-  remove: () => localStorage.removeItem('token'),
+  set: (token: string) => global?.window?.localStorage.setItem('token', token),
+  get: () => global?.window?.localStorage.getItem('token'),
+  remove: () => global?.window?.localStorage.removeItem('token'),
 };
 
 export const Auth = ({
@@ -24,8 +24,14 @@ export const Auth = ({
   const client = useApolloClient();
 
   const [token, setToken] = useState<googleAuth_googleAuth['token'] | null>(
-    tokenConfig.get(),
+    null,
   );
+
+  useEffect(() => {
+    (async () => {
+      setToken(await tokenConfig.get());
+    })();
+  }, []);
 
   const { data, refetch } = useQuery(GET_AUTH_USER, {
     fetchPolicy: 'cache-and-network',

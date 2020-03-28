@@ -20,14 +20,7 @@ import {
   Stack,
 } from '@chakra-ui/core';
 import { usePrevious } from 'cataloged-shared/hooks/usePrevious';
-
-const GOOGLE_AUTH_MUTATION = gql`
-  mutation googleAuth($code: String!) {
-    googleAuth(code: $code) {
-      token
-    }
-  }
-`;
+import { GOOGLE_AUTH_MUTATION } from 'cataloged-shared/queries/google';
 
 export interface State {
   origin?: string;

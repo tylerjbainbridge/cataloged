@@ -24,5 +24,5 @@ module.exports = {
    * in the monorepo
    */
   projectRoot: path.resolve(__dirname),
-  watchFolders: [path.resolve(__dirname, '../cataloged-shared')],
+  watchFolders: [path.resolve(__dirname, '../shared')],
 };

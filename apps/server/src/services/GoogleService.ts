@@ -14,11 +14,7 @@ export class GoogleService {
   plus: plus_v1.Plus;
 
   constructor(host: string) {
-    this.auth = new google.auth.OAuth2(
-      GOOGLE_CLIENT_ID,
-      GOOGLE_CLIENT_SECRET,
-      `${host}/google/redirect`,
-    );
+    this.auth = new google.auth.OAuth2(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
 
     this.plus = google.plus({ version: 'v1', auth: this.auth });
   }
@@ -37,6 +33,20 @@ export class GoogleService {
       ...(loginHint ? { loginHint } : {}),
     });
   };
+
+  // getAccountFromIdToken = async (idToken: string) => {
+  //   const ticket = await this.auth.verifyIdToken({
+  //     idToken: idToken,
+  //     audience: [
+  //       GOOGLE_CLIENT_ID,
+  //       '1072260199222-jkrcqtg1friq898g61sgvp4ugp1ddc5o.apps.googleusercontent.com',
+  //     ], // Specify the CLIENT_ID of the app that accesses the backend
+  //     // Or, if multiple clients access the backend:
+  //     //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+  //   });
+
+  //   const payload = ticket.getPayload();
+  // };
 
   getAccountFromCode = async (code: string) => {
     const { tokens } = await this.auth.getToken(code);

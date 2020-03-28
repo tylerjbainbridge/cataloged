@@ -8,17 +8,6 @@ export const GRAPHQL_ENDPOINT =
     ? 'http://localhost:5000'
     : 'https://api.cataloged.co/';
 
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
-
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `JWT ${token}` : '',
-    },
-  };
-});
-
 export const cache = new InMemoryCache({
   // @ts-ignore
   cacheRedirects: {
@@ -30,7 +19,24 @@ export const cache = new InMemoryCache({
   },
 });
 
-export const createApolloClient = async ({ storage }: { storage: any }) => {
+export const createApolloClient = async ({
+  storage,
+  getToken = () => localStorage.getItem('token'),
+}: {
+  storage: any;
+  getToken: any;
+}) => {
+  const authLink = setContext(async (_, { headers }) => {
+    const token = await getToken();
+
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `JWT ${token}` : '',
+      },
+    };
+  });
+
   // @ts-ignore
   await persistCache({
     //@ts-ignore

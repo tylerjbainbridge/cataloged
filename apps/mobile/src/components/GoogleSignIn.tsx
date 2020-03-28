@@ -7,22 +7,33 @@ import {
 } from '@react-native-community/google-signin';
 
 import { useAuth } from 'cataloged-shared/hooks/useAuth';
+import { GOOGLE_AUTH_MUTATION } from 'cataloged-shared/queries/google';
+import { useMutation } from '@apollo/client';
+import { googleAuth } from 'cataloged-shared/graphql/__generated__/googleAuth';
 
 GoogleSignin.configure({
   scopes: [
     'https://www.googleapis.com/auth/plus.me',
     'https://www.googleapis.com/auth/userinfo.email',
   ],
+  webClientId:
+    '1072260199222-usls378j10q7km3r58qd7p4ujp87bqf5.apps.googleusercontent.com',
   iosClientId:
     '1072260199222-jkrcqtg1friq898g61sgvp4ugp1ddc5o.apps.googleusercontent.com',
+  offlineAccess: true,
 });
 
 // Somewhere in your code
-const signIn = async () => {
+const attemptGoogleSignIn = async () => {
   try {
     await GoogleSignin.hasPlayServices();
-    return await GoogleSignin.signIn();
+
+    const { serverAuthCode } = await GoogleSignin.signIn();
+
+    return { code: serverAuthCode };
   } catch (error) {
+    return {};
+
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       // user cancelled the login flow
     } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -49,29 +60,18 @@ const signOut = async () => {
 export const GoogleSignIn = () => {
   const { signIn, user } = useAuth();
 
-  // const [googleAuth, { error, loading }] = useMutation<googleAuth>(
-  //   GOOGLE_AUTH_MUTATION,
-  //   {
-  //     variables: { code: values.code, isAuthMethod: !!state?.isAuthMethod },
-  //     onCompleted: async (data) => {
-  //       if (data?.googleAuth?.token) {
-  //         await signIn(data.googleAuth.token);
-  //         // window.location.replace('/');
-  //       } else {
-  //         const newState: any = {};
-
-  //         if (state?.googleAccountId)
-  //           newState.googleAccountId = state?.googleAccountId;
-
-  //         if (state?.syncContent) newState.syncContent = state?.syncContent;
-
-  //         const query = queryString.stringify(newState);
-
-  //         history.push(`${state?.origin || '/'}${query ? `?${query}` : ''}`);
-  //       }
-  //     },
-  //   },
-  // );
+  const [googleAuth, { error, loading }] = useMutation<googleAuth>(
+    GOOGLE_AUTH_MUTATION,
+    {
+      onCompleted: async (data) => {
+        if (data?.googleAuth?.token) {
+          console.log({ data });
+          await signIn(data.googleAuth.token);
+          // window.location.replace('/');
+        }
+      },
+    },
+  );
 
   useEffect(() => {
     (async () => {
@@ -80,12 +80,24 @@ export const GoogleSignIn = () => {
     })();
   }, []);
 
+  const googleCallback = async () => {
+    const { code } = await attemptGoogleSignIn();
+    try {
+      console.log('got the code, making request');
+      await googleAuth({ variables: { code, isAuthMethod: true } });
+      console.log('done');
+    } catch (e) {
+      console.log('uh oh');
+      console.log(e);
+    }
+  };
+
   return (
     <GoogleSigninButton
       style={{ width: 192, height: 48 }}
       size={GoogleSigninButton.Size.Wide}
       color={GoogleSigninButton.Color.Dark}
-      onPress={signIn}
+      onPress={googleCallback}
     />
   );
 };

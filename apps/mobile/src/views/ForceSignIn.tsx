@@ -1,19 +1,10 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
-import { GoogleSignIn } from './src/components/GoogleSignIn';
-import { Box } from './src/components/UI';
 
-export const App = () => {
+import { GoogleSignIn } from '../components/GoogleSignIn';
+import { Box } from '../components/UI';
+
+export const ForceSignIn = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
