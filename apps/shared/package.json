@@ -9,10 +9,13 @@
   },
   "scripts": {
     "refresh:types": "yarn run remove:types && yarn run generate:types",
-    "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"src/**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=graphql/__generated__/apolloTypes.ts --outputFlat=graphql/__generated__",
+    "generate:types": "npx apollo codegen:generate --target=typescript --includes=\"**/*.ts{,x}\" --endpoint=http://localhost:5000 --globalTypesFile=graphql/__generated__/apolloTypes.ts --outputFlat=graphql/__generated__",
     "remove:types": "find . | grep -E \"(__generated__)\" | xargs rm -rf"
   },
   "devDependencies": {
     "apollo-codegen": "^0.20.2"
+  },
+  "dependencies": {
+    "react-icons": "^3.9.0"
   }
 }

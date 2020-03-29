@@ -13,8 +13,10 @@ const WEB_TOKEN_CONFIG = {
 export const Auth = ({
   children,
   tokenConfig = WEB_TOKEN_CONFIG,
+  persistor,
 }: {
   children: JSX.Element;
+  persistor: any;
   tokenConfig?: {
     set: any;
     get: any;
@@ -23,48 +25,41 @@ export const Auth = ({
 }) => {
   const client = useApolloClient();
 
-  const [token, setToken] = useState<googleAuth_googleAuth['token'] | null>(
-    null,
-  );
-
   useEffect(() => {
     (async () => {
-      setToken(await tokenConfig.get());
+      console.log('current token', await tokenConfig.get());
     })();
   }, []);
 
   const { data, refetch } = useQuery(GET_AUTH_USER, {
     fetchPolicy: 'cache-and-network',
-    variables: { token },
   });
 
   const signOut = async () => {
-    client.resetStore();
-    await tokenConfig.remove();
-    setToken(null);
+    try {
+      await persistor.pause(); // Pause automatic persistence.
+      await persistor.purge(); // Delete everything in the storage provider.
+
+      await client.clearStore();
+
+      await tokenConfig.remove();
+
+      await persistor.resume();
+    } catch (e) {
+      console.log('something went wrong');
+      console.log(e);
+    }
   };
 
   const signIn = async (newToken: any) => {
     await tokenConfig.set(newToken);
-    setToken(newToken);
-    // await refetch();
+    refetch();
   };
-
-  useEffect(() => {
-    (async () => {
-      if (token) {
-        await tokenConfig.set(token);
-      } else {
-        await tokenConfig.remove();
-      }
-    })();
-  }, [token]);
 
   return (
     <AuthContext.Provider
       value={{
         user: data ? data.me : null,
-        token,
         signIn,
         refetchUser: refetch,
         signOut,

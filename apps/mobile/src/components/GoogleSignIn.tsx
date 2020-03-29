@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-
+import { useMutation } from '@apollo/client';
 import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-community/google-signin';
-
+import { googleAuth } from 'cataloged-shared/graphql/__generated__/googleAuth';
 import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { GOOGLE_AUTH_MUTATION } from 'cataloged-shared/queries/google';
-import { useMutation } from '@apollo/client';
-import { googleAuth } from 'cataloged-shared/graphql/__generated__/googleAuth';
+import React, { useEffect } from 'react';
+import { Navigation } from 'react-native-navigation';
+import { ROUTES } from '../routes';
 
 GoogleSignin.configure({
   scopes: [
@@ -48,7 +48,7 @@ const attemptGoogleSignIn = async () => {
   }
 };
 
-const signOut = async () => {
+export const signOut = async () => {
   try {
     await GoogleSignin.revokeAccess();
     await GoogleSignin.signOut();
@@ -82,14 +82,15 @@ export const GoogleSignIn = () => {
 
   const googleCallback = async () => {
     const { code } = await attemptGoogleSignIn();
-    try {
-      console.log('got the code, making request');
-      await googleAuth({ variables: { code, isAuthMethod: true } });
-      console.log('done');
-    } catch (e) {
-      console.log('uh oh');
-      console.log(e);
-    }
+    await googleAuth({ variables: { code, isAuthMethod: true } });
+
+    Navigation.setRoot({
+      root: {
+        component: {
+          name: ROUTES.START,
+        },
+      },
+    });
   };
 
   return (

@@ -32,12 +32,14 @@ if (window.interop) window.interop.setBadgeCount(9001);
 
 (async () => {
   // @ts-ignore
-  const client = await createApolloClient({ storage: window.localStorage });
+  const { client, persistor } = await createApolloClient({
+    storage: window.localStorage,
+  });
 
   const appNode = (
     <BrowserRouter>
       <ApolloProvider client={client}>
-        <Auth>
+        <Auth persistor={persistor}>
           <GlobalModalProvider>
             <ThemeProvider theme={theme}>
               <ErrorBoundary

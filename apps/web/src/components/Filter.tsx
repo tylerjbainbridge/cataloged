@@ -523,7 +523,7 @@ export const Filter = ({
                   type="button"
                   alignSelf="flex-end"
                   ref={addButtonRef}
-                  onClick={() => append({ name: randomString() })}
+                  onClick={() => append({ name: 'search', value: '' })}
                 >
                   Add <FaFilter style={{ marginLeft: '5px' }} />
                 </Button>

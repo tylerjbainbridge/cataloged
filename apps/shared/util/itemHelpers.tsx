@@ -1,6 +1,5 @@
 import React from 'react';
 import { FaUser, FaFile } from 'react-icons/fa';
-import { IconProps } from '@chakra-ui/core';
 
 import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
 import { FileFull } from 'cataloged-shared/graphql/__generated__/FileFull';
@@ -15,7 +14,7 @@ export interface ItemGenericData {
   compressedImage?: string | null;
   favicon?: string | null;
   action?: Function;
-  icon: IconProps['name'] | any;
+  icon: any;
 }
 
 export const isFileImage = (file: FileFull) =>
@@ -30,7 +29,7 @@ export const getFileData = (file: FileFull) => {
     return {
       image: null,
       compressedImage: null,
-      icon: getFileIcon(file),
+      icon: typeof document != 'undefined' ? getFileIcon(file) : null,
     };
   }
 
@@ -105,7 +104,7 @@ export const getGenericItemData = (item: ItemFull): ItemGenericData => {
           title: item.googleContact.name || 'unknown',
           createdAt: item.date,
           image: item.googleContact.photoUrl,
-          icon: <FaUser />,
+          icon: typeof document != 'undefined' ? <FaUser /> : null,
         };
       }
 

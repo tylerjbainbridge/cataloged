@@ -15,7 +15,7 @@ export const AppStart = () => {
         },
       },
     });
-  }, []);
+  }, [user]);
 
   return <></>;
 };

@@ -31,9 +31,7 @@ export const CommandCenterSelectLabels = ({ user }: any) => {
         variables: { name: search },
       });
 
-      const label = data.createLabel.labels.find(
-        (l: any) => l.name === item.name,
-      );
+      const label = data.createLabel.labels.find((l: any) => l.name === search);
 
       batchUpdateLabels({
         labelIdsToAdd: [label.id],

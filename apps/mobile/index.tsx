@@ -18,14 +18,14 @@ import { routes, ROUTES } from './src/routes';
   };
 
   // @ts-ignore
-  const client = await createApolloClient({
+  const { client, persistor } = await createApolloClient({
     storage: AsyncStorage,
     getToken: tokenConfig.get,
   });
 
   const wrapComponent = (Component: any) => () => (
     <ApolloProvider client={client}>
-      <Auth tokenConfig={tokenConfig}>
+      <Auth tokenConfig={tokenConfig} persistor={persistor}>
         <Component />
       </Auth>
     </ApolloProvider>

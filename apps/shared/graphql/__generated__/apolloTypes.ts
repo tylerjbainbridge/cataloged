@@ -34,12 +34,6 @@ export interface NewCollectionEntryInput {
   itemId?: string | null;
 }
 
-export interface SignedURLArgs {
-  name: string;
-  type: string;
-  size: number;
-}
-
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
