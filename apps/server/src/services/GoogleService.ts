@@ -14,7 +14,11 @@ export class GoogleService {
   plus: plus_v1.Plus;
 
   constructor(host: string) {
-    this.auth = new google.auth.OAuth2(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET);
+    this.auth = new google.auth.OAuth2(
+      GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET,
+      `${host}/google/redirect`,
+    );
 
     this.plus = google.plus({ version: 'v1', auth: this.auth });
   }

@@ -230,6 +230,7 @@ export const Settings = () => {
                 onClick={() => {
                   window.localStorage.removeItem('cataloged-cache');
                   signOut();
+                  window.location.reload();
                 }}
               >
                 Sign out
