@@ -1,0 +1,16 @@
+0 silly argv {
+0 silly argv   _: [ 'exec' ],
+0 silly argv   scope: 'cataloged-web',
+0 silly argv   args: [ 'run', 'dev' ],
+0 silly argv   lernaVersion: '3.20.2',
+0 silly argv   '$0': 'node_modules/.bin/lerna',
+0 silly argv   cmd: 'npm'
+0 silly argv }
+1 notice cli v3.20.2
+2 verbose rootPath /Users/tylerbainbridge/Documents/projects/cataloged
+3 notice filter including "cataloged-web"
+4 info filter [ 'cataloged-web' ]
+5 info Executing command in 1 package: "npm run dev"
+6 error Error: Command failed: npm run dev
+6 error     at makeError (/Users/tylerbainbridge/Documents/projects/cataloged/node_modules/execa/index.js:174:9)
+6 error     at /Users/tylerbainbridge/Documents/projects/cataloged/node_modules/execa/index.js:278:16

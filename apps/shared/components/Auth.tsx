@@ -27,7 +27,7 @@ export const Auth = ({
 
   useEffect(() => {
     (async () => {
-      console.log('current token', await tokenConfig.get());
+      // console.log('current token', await tokenConfig.get());
     })();
   }, []);
 

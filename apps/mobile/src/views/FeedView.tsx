@@ -4,12 +4,13 @@ import { FEED_QUERY } from 'cataloged-shared/queries/feed';
 import _ from 'lodash';
 import React from 'react';
 import { SafeAreaView, StatusBar, FlatList } from 'react-native';
-import { Box, Text } from '../components/UI';
+import { Box, Text, BoxButton } from '../components/UI';
 import { SignOut } from '../components/SignOut';
 import { GridItem } from '../components/GridItem';
 import { ItemFull } from 'cataloged-shared/graphql/__generated__/ItemFull';
+import { goToItem } from '../utils/navigation';
 
-export const Feed = () => {
+export const FeedView = ({ componentId }: any) => {
   const { user } = useAuth();
 
   const INITIAL_PAGINATION_VARIABLES = {
@@ -75,21 +76,37 @@ export const Feed = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <Box width="100%" height="100%" display="flex">
-        <Box height={50} width="100%">
-          {/* <Text>Cataloged</Text> */}
-        </Box>
+      <Box
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+        }}
+      >
+        {/* <Box height={50} width="100%"></Box> */}
         <FlatList
           data={items}
+          style={{ marginTop: 20 }}
           renderItem={({ item }: { item: ItemFull }) => (
-            <Box
-              display="flex"
-              flexDirection="row"
-              justifyContent="center"
-              marginBottom={20}
+            <BoxButton
+              style={{
+                width: '100%',
+              }}
+              onPress={() => {
+                goToItem(componentId, item.id);
+              }}
             >
-              <GridItem item={item} />
-            </Box>
+              <Box
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: 20,
+                  width: '100%',
+                }}
+              >
+                <GridItem item={item} />
+              </Box>
+            </BoxButton>
           )}
         ></FlatList>
       </Box>

@@ -4,7 +4,7 @@ import { SafeAreaView, StatusBar } from 'react-native';
 import { GoogleSignIn } from '../components/GoogleSignIn';
 import { Box } from '../components/UI';
 
-export const ForceSignIn = () => {
+export const ForceSignInView = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />

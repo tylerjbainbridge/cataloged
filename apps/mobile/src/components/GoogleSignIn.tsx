@@ -8,8 +8,7 @@ import { googleAuth } from 'cataloged-shared/graphql/__generated__/googleAuth';
 import { useAuth } from 'cataloged-shared/hooks/useAuth';
 import { GOOGLE_AUTH_MUTATION } from 'cataloged-shared/queries/google';
 import React, { useEffect } from 'react';
-import { Navigation } from 'react-native-navigation';
-import { ROUTES } from '../routes';
+import { ROUTES } from '../Router';
 
 GoogleSignin.configure({
   scopes: [
@@ -65,7 +64,6 @@ export const GoogleSignIn = () => {
     {
       onCompleted: async (data) => {
         if (data?.googleAuth?.token) {
-          console.log({ data });
           await signIn(data.googleAuth.token);
           // window.location.replace('/');
         }
@@ -82,15 +80,8 @@ export const GoogleSignIn = () => {
 
   const googleCallback = async () => {
     const { code } = await attemptGoogleSignIn();
-    await googleAuth({ variables: { code, isAuthMethod: true } });
 
-    Navigation.setRoot({
-      root: {
-        component: {
-          name: ROUTES.START,
-        },
-      },
-    });
+    await googleAuth({ variables: { code, isAuthMethod: true } });
   };
 
   return (

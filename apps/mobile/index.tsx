@@ -1,52 +1,54 @@
-import React from 'react';
+import { ApolloProvider } from '@apollo/client';
 /**
  * @format
  */
 import AsyncStorage from '@react-native-community/async-storage';
-import { ApolloProvider } from '@apollo/client';
-import { Navigation } from 'react-native-navigation';
-import { createApolloClient } from 'cataloged-shared/config/apollo';
-import { Auth } from 'cataloged-shared/components/Auth';
-import { routes, ROUTES } from './src/routes';
 // import { name as appName } from './app.json';
+import { NavigationContainer } from '@react-navigation/native';
+import { Auth } from 'cataloged-shared/components/Auth';
+import { createApolloClient } from 'cataloged-shared/config/apollo';
+import React, { useEffect, useState } from 'react';
+import { AppRegistry } from 'react-native';
+import 'react-native-gesture-handler';
+import { Router } from './src/Router';
 
-(async () => {
-  const tokenConfig = {
-    set: async (token: string) => await AsyncStorage.setItem('token', token),
-    get: async () => await AsyncStorage.getItem('token'),
-    remove: async () => await AsyncStorage.removeItem('token'),
-  };
+export default function App() {
+  const [config, setConfig] = useState<null | {
+    client: any;
+    persistor: any;
+    tokenConfig: any;
+  }>(null);
 
-  // @ts-ignore
-  const { client, persistor } = await createApolloClient({
-    storage: AsyncStorage,
-    getToken: tokenConfig.get,
-  });
+  useEffect(() => {
+    (async () => {
+      const tokenConfig = {
+        set: async (token: string) =>
+          await AsyncStorage.setItem('token', token),
+        get: async () => await AsyncStorage.getItem('token'),
+        remove: async () => await AsyncStorage.removeItem('token'),
+      };
 
-  const wrapComponent = (Component: any) => () => (
-    <ApolloProvider client={client}>
-      <Auth tokenConfig={tokenConfig} persistor={persistor}>
-        <Component />
-      </Auth>
-    </ApolloProvider>
+      // @ts-ignore
+      const config = await createApolloClient({
+        storage: AsyncStorage,
+        getToken: tokenConfig.get,
+      });
+
+      setConfig({ ...config, tokenConfig });
+    })();
+  }, []);
+
+  return (
+    config && (
+      <NavigationContainer>
+        <ApolloProvider client={config.client}>
+          <Auth tokenConfig={config.tokenConfig} persistor={config.persistor}>
+            <Router />
+          </Auth>
+        </ApolloProvider>
+      </NavigationContainer>
+    )
   );
+}
 
-  Navigation.events().registerAppLaunchedListener(() => {
-    // Each time the event is received we should call Navigation.setRoot
-
-    routes.forEach((route) => {
-      Navigation.registerComponent(route.name, () =>
-        // @ts-ignore
-        wrapComponent(route.component),
-      );
-    });
-
-    Navigation.setRoot({
-      root: {
-        component: {
-          name: ROUTES.START,
-        },
-      },
-    });
-  });
-})();
+AppRegistry.registerComponent('Cataloged', () => App);
