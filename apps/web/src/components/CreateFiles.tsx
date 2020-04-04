@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   Modal,
@@ -15,6 +15,8 @@ import {
   Image,
   Tooltip,
   useToast,
+  Progress,
+  Stack,
 } from '@chakra-ui/core';
 import { useMutation, useApolloClient } from '@apollo/client';
 import gql from 'graphql-tag';
@@ -51,6 +53,8 @@ export const CreateFiles = () => {
     [key: string]: SpecialFile;
   }>({});
 
+  const [completedCount, setCompletedCount] = useState(0);
+
   const [isUploading, setIsUploading] = useState(false);
 
   const { isModalOpen, openModal, toggleModal, closeModal } = useGlobalModal(
@@ -83,11 +87,13 @@ export const CreateFiles = () => {
 
   const [generateSignedUrls] = useMutation(GENERATE_SIGNED_URLS);
 
+  const { current: fileFinished } = useRef(() => {
+    setCompletedCount(completedCount => completedCount + 1);
+  });
+
   useEffect(() => {
     (async () => {
       if (isUploading) {
-        console.log({ fileVals });
-
         try {
           const signedURLArgs = fileVals.map(({ type, name, size }) => ({
             name,
@@ -118,6 +124,8 @@ export const CreateFiles = () => {
                 },
               });
 
+              fileFinished();
+
               return { originalFilename: file.name };
             }),
           );
@@ -125,10 +133,12 @@ export const CreateFiles = () => {
           setIsUploading(false);
           closeModal();
           setFiles({});
+          setCompletedCount(0);
 
           await processFiles({ variables: { uploadGroupId: uploadGroup.id } });
         } catch (e) {
           setIsUploading(false);
+          // setCompletedCount(0);
         }
       }
     })();
@@ -265,19 +275,40 @@ export const CreateFiles = () => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button
-              isLoading={isWorking}
-              isDisabled={!fileCount}
-              onClick={async () => {
-                setIsUploading(true);
-              }}
-              color={!fileCount ? 'yellow' : 'green'}
+            <Stack
+              d="flex"
+              justifyContent={isUploading ? 'space-between' : 'flex-end'}
+              alignItems="center"
+              width="100%"
+              isInline
+              spacing={5}
             >
-              <Box alignItems="center">
-                <Icon name="add" />{' '}
-                {!fileCount ? 'Waiting for files...' : 'Add'}
-              </Box>
-            </Button>
+              {isUploading && (
+                <Progress
+                  hasStripe
+                  isAnimated
+                  width="70%"
+                  height="100%"
+                  color="green"
+                  rounded="lg"
+                  value={(completedCount / fileVals.length) * 100 || 5}
+                />
+              )}
+              <Button
+                isLoading={isWorking}
+                isDisabled={!fileCount}
+                onClick={async () => {
+                  setIsUploading(true);
+                }}
+                color={!fileCount ? 'yellow' : 'green'}
+                width="30%"
+              >
+                <Box alignItems="center">
+                  <Icon name="add" />{' '}
+                  {!fileCount ? 'Waiting for files...' : 'Add'}
+                </Box>
+              </Button>
+            </Stack>
           </ModalFooter>
         </ModalContent>
       </Modal>

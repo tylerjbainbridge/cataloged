@@ -5,5 +5,5 @@ process.on('unhandledRejection', async (...args) => {
 });
 
 app.listen({ port: 5000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:5000`),
+  console.log(`🚀 Primary API ready at http://localhost:5000`),
 );

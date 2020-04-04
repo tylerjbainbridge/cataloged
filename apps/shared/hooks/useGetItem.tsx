@@ -9,8 +9,6 @@ export const useGetItem = (itemId: ItemFull['id']) => {
 
   let cachedItem = null;
 
-  console.log({ itemId });
-
   try {
     cachedItem = client.readFragment({
       id: `Item:${itemId}`,

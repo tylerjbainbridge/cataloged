@@ -1,0 +1,3 @@
+[submodule "repos/Cataloged-Redis"]
+	path = repos/Cataloged-Redis
+	url = https://github.com/tylerjbainbridge/Cataloged-Redis

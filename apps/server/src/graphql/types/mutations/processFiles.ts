@@ -4,6 +4,7 @@ import { extendType, inputObjectType, stringArg } from 'nexus';
 import { AWSService, s3 } from '../../../services/AWSService';
 import { getS3Key, KEY_TYPES } from '../../../helpers/files';
 import { File } from '@prisma/client';
+import { ProcessFile } from '../../../queues/ProcessFile';
 
 const MAX_CONCURRENCY = 5;
 
@@ -38,52 +39,8 @@ export const processFiles = extendType({
         const keyFiles = await Bluebird.map(
           upload.files,
           async (file: File) => {
-            try {
-              if (file.contentType.split('/').shift() !== 'image') {
-                return await ctx.prisma.file.update({
-                  where: { id: file.id },
-                  data: { hasStartedUploading: true, isUploaded: true },
-                });
-              }
-
-              await ctx.prisma.file.update({
-                where: { id: file.id },
-                data: { hasStartedUploading: true },
-              });
-
-              const stream = s3
-                .getObject({
-                  Key: getS3Key(ctx.user, file, KEY_TYPES.original),
-                  Bucket: process.env.AWS_S3_BUCKET,
-                })
-                .createReadStream();
-
-              await AWSService.uploadImage(stream, ctx.user, file);
-
-              await ctx.prisma.file.update({
-                where: { id: file.id },
-                data: {
-                  isUploaded: true,
-                },
-              });
-
-              return file;
-            } catch (e) {
-              console.log(e);
-
-              if (file) {
-                await ctx.prisma.file.update({
-                  where: { id: file.id },
-                  data: {
-                    isFailed: true,
-                  },
-                });
-              }
-
-              return null;
-            }
+            await ProcessFile.add({ file, user: ctx.user });
           },
-          { concurrency: MAX_CONCURRENCY },
         );
 
         await ctx.prisma.uploadGroup.update({
