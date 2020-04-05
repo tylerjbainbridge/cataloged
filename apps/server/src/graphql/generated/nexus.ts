@@ -257,7 +257,6 @@ export interface NexusGenInputs {
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     name?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   CollectionWhereInput: { // input type
     AND?: NexusGenInputs['CollectionWhereInput'][] | null; // [CollectionWhereInput!]
@@ -387,13 +386,10 @@ export interface NexusGenInputs {
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isFailed?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isUploaded?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    item?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     name?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     size?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     title?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    uploadGroup?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     width?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   FileWhereInput: { // input type
@@ -902,14 +898,9 @@ export interface NexusGenInputs {
     deletedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isFavorited?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    item?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    link?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    note?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    shareLink?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     status?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     type?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   ItemWhereInput: { // input type
     AND?: NexusGenInputs['ItemWhereInput'][] | null; // [ItemWhereInput!]
@@ -970,7 +961,6 @@ export interface NexusGenInputs {
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     name?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   LabelWhereInput: { // input type
     AND?: NexusGenInputs['LabelWhereInput'][] | null; // [LabelWhereInput!]
@@ -1346,7 +1336,6 @@ export interface NexusGenInputs {
     isComplete?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isFailed?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     updatedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    user?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
   }
   UploadGroupWhereInput: { // input type
     AND?: NexusGenInputs['UploadGroupWhereInput'][] | null; // [UploadGroupWhereInput!]
@@ -1805,7 +1794,6 @@ export interface NexusGenInputs {
     email?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     firstName?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     id?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
-    inviteCode?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     isActive?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     lastName?: NexusGenEnums['OrderByArg'] | null; // OrderByArg
     lastVisitedAt?: NexusGenEnums['OrderByArg'] | null; // OrderByArg

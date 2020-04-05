@@ -295,7 +295,6 @@ input CollectionOrderByInput {
   id: OrderByArg
   name: OrderByArg
   updatedAt: OrderByArg
-  user: OrderByArg
 }
 
 input CollectionWhereInput {
@@ -460,13 +459,10 @@ input FileOrderByInput {
   id: OrderByArg
   isFailed: OrderByArg
   isUploaded: OrderByArg
-  item: OrderByArg
   name: OrderByArg
   size: OrderByArg
   title: OrderByArg
   updatedAt: OrderByArg
-  uploadGroup: OrderByArg
-  user: OrderByArg
   width: OrderByArg
 }
 
@@ -1106,14 +1102,9 @@ input ItemOrderByInput {
   deletedAt: OrderByArg
   id: OrderByArg
   isFavorited: OrderByArg
-  item: OrderByArg
-  link: OrderByArg
-  note: OrderByArg
-  shareLink: OrderByArg
   status: OrderByArg
   type: OrderByArg
   updatedAt: OrderByArg
-  user: OrderByArg
 }
 
 enum ItemStatus {
@@ -1207,7 +1198,6 @@ input LabelOrderByInput {
   id: OrderByArg
   name: OrderByArg
   updatedAt: OrderByArg
-  user: OrderByArg
 }
 
 input LabelWhereInput {
@@ -1760,7 +1750,6 @@ input UploadGroupOrderByInput {
   isComplete: OrderByArg
   isFailed: OrderByArg
   updatedAt: OrderByArg
-  user: OrderByArg
 }
 
 input UploadGroupWhereInput {
@@ -2268,7 +2257,6 @@ input UserOrderByInput {
   email: OrderByArg
   firstName: OrderByArg
   id: OrderByArg
-  inviteCode: OrderByArg
   isActive: OrderByArg
   lastName: OrderByArg
   lastVisitedAt: OrderByArg

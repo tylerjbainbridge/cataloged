@@ -15,7 +15,7 @@
     "dev": "npm-run-all --parallel dev:*",
     "dev:server": "npx lerna exec --scope cataloged-server npm run dev",
     "dev:web": "npx lerna exec --scope cataloged-web npm run dev",
-    "dev:redis": "cd docker/cataloged-redis && docker-compose up",
+    "dev:redis": "cd docker/cataloged-redis && docker-compose up && cd ../../",
     "dev-:mobile": "npx lerna exec --scope cataloged-mobile npm run dev",
     "format": "npx prettier '*/**/*.{ts,tsx}' --write",
     "clean": "rm -rf ./packages/*/node_modules",
