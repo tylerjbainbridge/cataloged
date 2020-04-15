@@ -1,4 +1,4 @@
-import knexConnect = require('knex');
+import knexConnect from 'knex';
 
 export const knex = knexConnect({
   client: 'pg',

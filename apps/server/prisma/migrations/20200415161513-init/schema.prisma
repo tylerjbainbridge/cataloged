@@ -4,13 +4,13 @@ generator prisma {
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRESQL_URL")
+  url = "***"
 }
 
 model InviteCode {
   id        String   @default(cuid()) @id
   code      String
-  users     User[]
+  users     User[]   @relation(references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -62,7 +62,7 @@ model GoogleAccount {
   metadata       String?
   userId         String?
   user           User?           @relation(fields: [userId], references: [id])
-  googleContacts GoogleContact[]
+  googleContacts GoogleContact[] @relation(references: [id])
 }
 
 model GoogleContact {
@@ -95,7 +95,7 @@ model SavedSearch {
   version   Int
   userId    String?
   user      User?               @relation(fields: [userId], references: [id])
-  filters   SavedSearchFilter[]
+  filters   SavedSearchFilter[] @relation(references: [id])
 }
 
 model SavedSearchFilter {
@@ -119,7 +119,7 @@ model Collection {
   name        String
   description String?
   entries     CollectionEntry[]
-  items       Item[]
+  items       Item[]            @relation(references: [id])
   userId      String?
   user        User?             @relation(fields: [userId], references: [id])
 }
@@ -233,7 +233,7 @@ model UploadGroup {
   isFailed   Boolean?
   userId     String?
   user       User?    @relation(fields: [userId], references: [id])
-  files      File[]
+  files      File[]   @relation(references: [id])
 }
 
 model User {
@@ -244,19 +244,19 @@ model User {
   email              String              @default("") @unique
   firstName          String?
   lastName           String?
-  files              File[]
-  googleAccounts     GoogleAccount[]
-  googleContacts     GoogleContact[]
-  savedSearches      SavedSearch[]
-  savedSearchFilters SavedSearchFilter[]
-  collections        Collection[]
-  collectionBlocks   CollectionBlock[]
-  collectionEntries  CollectionEntry[]
-  items              Item[]
-  labels             Label[]
-  links              Link[]
-  notes              Note[]
-  uploadGroups       UploadGroup[]
+  files              File[]              @relation(references: [id])
+  googleAccounts     GoogleAccount[]     @relation(references: [id])
+  googleContacts     GoogleContact[]     @relation(references: [id])
+  savedSearches      SavedSearch[]       @relation(references: [id])
+  savedSearchFilters SavedSearchFilter[] @relation(references: [id])
+  collections        Collection[]        @relation(references: [id])
+  collectionBlocks   CollectionBlock[]   @relation(references: [id])
+  collectionEntries  CollectionEntry[]   @relation(references: [id])
+  items              Item[]              @relation(references: [id])
+  labels             Label[]             @relation(references: [id])
+  links              Link[]              @relation(references: [id])
+  notes              Note[]              @relation(references: [id])
+  uploadGroups       UploadGroup[]       @relation(references: [id])
   role               String              @default("")
   isActive           Boolean             @default(false)
   inviteCodeId       String?
