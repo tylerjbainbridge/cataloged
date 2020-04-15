@@ -8,6 +8,8 @@
     ]
   },
   "scripts": {
+    "start": "npm-run-all --parallel start:*",
+    "build": "npm-run-all --parallel build:*",
     "start:api": "node dist/api-server-entry.js",
     "build:api": "npx parcel build src/api-server-entry.ts --target node",
     "prebuild:api": "npx prisma2 generate",
