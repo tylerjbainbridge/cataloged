@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+console.log(`connected to prisma (${process.env.POSTGRESQL_URL})`);
+
 import { knex } from './data/knex';
 
 const relations = [

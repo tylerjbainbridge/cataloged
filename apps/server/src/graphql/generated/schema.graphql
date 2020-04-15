@@ -2,16 +2,6 @@
 ### Do not make changes to this file directly
 
 
-input _CollectionToItem_AB_uniqueCompoundUniqueInput {
-  A: String!
-  B: String!
-}
-
-input _ItemToLabel_AB_uniqueCompoundUniqueInput {
-  A: String!
-  B: String!
-}
-
 input BooleanFilter {
   equals: Boolean
   not: Boolean
@@ -20,16 +10,15 @@ input BooleanFilter {
 type Collection {
   createdAt: DateTime!
   description: String
+  entries(after: CollectionEntryWhereUniqueInput, before: CollectionEntryWhereUniqueInput, first: Int, last: Int, orderBy: CollectionEntriesOrderByInput, skip: Int): [CollectionEntry!]!
   id: String!
+  items(after: ItemWhereUniqueInput, before: ItemWhereUniqueInput, first: Int, last: Int, skip: Int): [Item!]!
   name: String!
   updatedAt: DateTime!
 }
 
 type CollectionBlock {
-<<<<<<< HEAD
-=======
   collection: Collection
->>>>>>> prisma-beta
   content: String!
   createdAt: DateTime!
   id: String!
@@ -37,11 +26,6 @@ type CollectionBlock {
   updatedAt: DateTime!
 }
 
-<<<<<<< HEAD
-input CollectionCreateOneWithoutCollectionToItemInput {
-  connect: CollectionWhereUniqueInput
-  create: CollectionCreateWithoutCollectionToItemInput
-=======
 input CollectionBlockCreateManyWithoutCollectionInput {
   connect: [CollectionBlockWhereUniqueInput!]
   create: [CollectionBlockCreateWithoutCollectionInput!]
@@ -126,20 +110,13 @@ input CollectionCreateManyWithoutUserInput {
 input CollectionCreateOneWithoutCollectionBlockInput {
   connect: CollectionWhereUniqueInput
   create: CollectionCreateWithoutCollectionBlockInput
->>>>>>> prisma-beta
 }
 
-input CollectionCreateOneWithoutShareLinkInput {
+input CollectionCreateOneWithoutEntriesInput {
   connect: CollectionWhereUniqueInput
-  create: CollectionCreateWithoutShareLinkInput
+  create: CollectionCreateWithoutEntriesInput
 }
 
-<<<<<<< HEAD
-input CollectionCreateWithoutCollectionToItemInput {
-  createdAt: DateTime
-  description: String
-  id: String!
-=======
 input CollectionCreateWithoutCollectionBlockInput {
   createdAt: DateTime
   description: String
@@ -168,45 +145,36 @@ input CollectionCreateWithoutItemsInput {
   description: String
   entries: CollectionEntryCreateManyWithoutCollectionInput
   id: String
->>>>>>> prisma-beta
   name: String!
-  ShareLink: ShareLinkCreateManyWithoutCollectionInput
   updatedAt: DateTime
-  user: Int
+  user: UserCreateOneWithoutCollectionsInput
 }
 
-<<<<<<< HEAD
-input CollectionCreateWithoutShareLinkInput {
-  CollectionToItem: CollectionToItemCreateManyWithoutCollectionInput
-=======
 input CollectionCreateWithoutUserInput {
   collectionBlock: CollectionBlockCreateManyWithoutCollectionInput
->>>>>>> prisma-beta
   createdAt: DateTime
   description: String
-  id: String!
+  entries: CollectionEntryCreateManyWithoutCollectionInput
+  id: String
+  items: ItemCreateManyWithoutCollectionsInput
   name: String!
   updatedAt: DateTime
-  user: Int
+}
+
+input CollectionEntriesOrderByInput {
+  position: OrderByArg
 }
 
 type CollectionEntry {
-<<<<<<< HEAD
-=======
   block: CollectionBlock
   collection: Collection
->>>>>>> prisma-beta
   createdAt: DateTime!
   id: String!
-  item: Int
+  item: Item
   position: Int
   updatedAt: DateTime!
 }
 
-<<<<<<< HEAD
-input CollectionEntryPositionInput {
-  id: String
-=======
 input CollectionEntryCreateManyWithoutBlockInput {
   connect: [CollectionEntryWhereUniqueInput!]
   create: [CollectionEntryCreateWithoutBlockInput!]
@@ -231,7 +199,7 @@ input CollectionEntryCreateWithoutBlockInput {
   collection: CollectionCreateOneWithoutEntriesInput
   createdAt: DateTime
   id: String
-  item: ItemCreateOneWithoutCollectionEntryInput
+  item: ItemCreateOneWithoutCollectionEntriesInput
   position: Int
   updatedAt: DateTime
   user: UserCreateOneWithoutCollectionEntriesInput
@@ -241,25 +209,12 @@ input CollectionEntryCreateWithoutCollectionInput {
   block: CollectionBlockCreateOneWithoutCollectionEntryInput
   createdAt: DateTime
   id: String
-  item: ItemCreateOneWithoutCollectionEntryInput
->>>>>>> prisma-beta
+  item: ItemCreateOneWithoutCollectionEntriesInput
   position: Int
+  updatedAt: DateTime
+  user: UserCreateOneWithoutCollectionEntriesInput
 }
 
-<<<<<<< HEAD
-input CollectionOrderByInput {
-  createdAt: OrderByArg
-  description: OrderByArg
-  id: OrderByArg
-  name: OrderByArg
-  updatedAt: OrderByArg
-  user: OrderByArg
-}
-
-input CollectionToItemCreateManyWithoutCollectionInput {
-  connect: [CollectionToItemWhereUniqueInput!]
-  create: [CollectionToItemCreateWithoutCollectionInput!]
-=======
 input CollectionEntryCreateWithoutItemInput {
   block: CollectionBlockCreateOneWithoutCollectionEntryInput
   collection: CollectionCreateOneWithoutEntriesInput
@@ -275,25 +230,22 @@ input CollectionEntryCreateWithoutUserInput {
   collection: CollectionCreateOneWithoutEntriesInput
   createdAt: DateTime
   id: String
-  item: ItemCreateOneWithoutCollectionEntryInput
+  item: ItemCreateOneWithoutCollectionEntriesInput
   position: Int
   updatedAt: DateTime
->>>>>>> prisma-beta
 }
 
-input CollectionToItemCreateManyWithoutItemInput {
-  connect: [CollectionToItemWhereUniqueInput!]
-  create: [CollectionToItemCreateWithoutItemInput!]
+input CollectionEntryFilter {
+  every: CollectionEntryWhereInput
+  none: CollectionEntryWhereInput
+  some: CollectionEntryWhereInput
 }
 
-input CollectionToItemCreateWithoutCollectionInput {
-  Item: ItemCreateOneWithoutCollectionToItemInput!
+input CollectionEntryPositionInput {
+  id: String
+  position: Int
 }
 
-<<<<<<< HEAD
-input CollectionToItemCreateWithoutItemInput {
-  Collection: CollectionCreateOneWithoutCollectionToItemInput!
-=======
 input CollectionEntryWhereInput {
   AND: [CollectionEntryWhereInput!]
   block: CollectionBlockWhereInput
@@ -310,29 +262,18 @@ input CollectionEntryWhereInput {
   updatedAt: DateTimeFilter
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
 }
 
-input CollectionToItemFilter {
-  every: CollectionToItemWhereInput
-  none: CollectionToItemWhereInput
-  some: CollectionToItemWhereInput
+input CollectionEntryWhereUniqueInput {
+  id: String
 }
 
-input CollectionToItemWhereInput {
-  A: StringFilter
-  AND: [CollectionToItemWhereInput!]
-  B: StringFilter
-  Collection: CollectionWhereInput
-  Item: ItemWhereInput
-  NOT: [CollectionToItemWhereInput!]
-  OR: [CollectionToItemWhereInput!]
+input CollectionFilter {
+  every: CollectionWhereInput
+  none: CollectionWhereInput
+  some: CollectionWhereInput
 }
 
-<<<<<<< HEAD
-input CollectionToItemWhereUniqueInput {
-  _CollectionToItem_AB_unique: _CollectionToItem_AB_uniqueCompoundUniqueInput
-=======
 input CollectionOrderByInput {
   createdAt: OrderByArg
   description: OrderByArg
@@ -341,31 +282,22 @@ input CollectionOrderByInput {
   updatedAt: OrderByArg
   user: OrderByArg
   userId: OrderByArg
->>>>>>> prisma-beta
 }
 
 input CollectionWhereInput {
   AND: [CollectionWhereInput!]
-<<<<<<< HEAD
-  CollectionToItem: CollectionToItemFilter
-=======
   collectionBlock: CollectionBlockFilter
->>>>>>> prisma-beta
   createdAt: DateTimeFilter
   description: NullableStringFilter
+  entries: CollectionEntryFilter
   id: StringFilter
+  items: ItemFilter
   name: StringFilter
   NOT: [CollectionWhereInput!]
   OR: [CollectionWhereInput!]
-<<<<<<< HEAD
-  ShareLink: ShareLinkFilter
-  updatedAt: DateTimeFilter
-  user: NullableIntFilter
-=======
   updatedAt: DateTimeFilter
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
 }
 
 input CollectionWhereUniqueInput {
@@ -394,11 +326,7 @@ type File {
   height: Int
   id: String!
   isUploaded: Boolean
-<<<<<<< HEAD
-  item: String!
-=======
   item: Item
->>>>>>> prisma-beta
   name: String!
   originalName: String!
   originalUrl: String!
@@ -406,11 +334,7 @@ type File {
   squareUrl: String!
   title: String!
   updatedAt: DateTime!
-<<<<<<< HEAD
-  uploadGroup: String!
-=======
   uploadGroup: UploadGroup
->>>>>>> prisma-beta
   width: Int
 }
 
@@ -421,31 +345,17 @@ input FileCreateInput {
   extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: String!
+  id: String
   isFailed: Boolean
   isUploaded: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutFileInput!
-=======
   item: ItemCreateOneWithoutFileInput
->>>>>>> prisma-beta
   name: String
   size: Int
   title: String
   updatedAt: DateTime
-<<<<<<< HEAD
-  UploadGroup: UploadGroupCreateOneWithoutFileInput!
-  User: UserCreateOneWithoutFileInput!
-=======
   uploadGroup: UploadGroupCreateOneWithoutFilesInput
   user: UserCreateOneWithoutFilesInput
->>>>>>> prisma-beta
   width: Int
-}
-
-input FileCreateManyWithoutItemInput {
-  connect: [FileWhereUniqueInput!]
-  create: [FileCreateWithoutItemInput!]
 }
 
 input FileCreateManyWithoutUploadGroupInput {
@@ -458,6 +368,11 @@ input FileCreateManyWithoutUserInput {
   create: [FileCreateWithoutUserInput!]
 }
 
+input FileCreateOneWithoutItemInput {
+  connect: FileWhereUniqueInput
+  create: FileCreateWithoutItemInput
+}
+
 input FileCreateWithoutItemInput {
   contentType: String
   createdAt: DateTime
@@ -465,20 +380,15 @@ input FileCreateWithoutItemInput {
   extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: String!
+  id: String
   isFailed: Boolean
   isUploaded: Boolean
   name: String
   size: Int
   title: String
   updatedAt: DateTime
-<<<<<<< HEAD
-  UploadGroup: UploadGroupCreateOneWithoutFileInput!
-  User: UserCreateOneWithoutFileInput!
-=======
   uploadGroup: UploadGroupCreateOneWithoutFilesInput
   user: UserCreateOneWithoutFilesInput
->>>>>>> prisma-beta
   width: Int
 }
 
@@ -489,23 +399,15 @@ input FileCreateWithoutUploadGroupInput {
   extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: String!
+  id: String
   isFailed: Boolean
   isUploaded: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutFileInput!
-=======
   item: ItemCreateOneWithoutFileInput
->>>>>>> prisma-beta
   name: String
   size: Int
   title: String
   updatedAt: DateTime
-<<<<<<< HEAD
-  User: UserCreateOneWithoutFileInput!
-=======
   user: UserCreateOneWithoutFilesInput
->>>>>>> prisma-beta
   width: Int
 }
 
@@ -516,23 +418,15 @@ input FileCreateWithoutUserInput {
   extension: String
   hasStartedUploading: Boolean
   height: Int
-  id: String!
+  id: String
   isFailed: Boolean
   isUploaded: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutFileInput!
-=======
   item: ItemCreateOneWithoutFileInput
->>>>>>> prisma-beta
   name: String
   size: Int
   title: String
   updatedAt: DateTime
-<<<<<<< HEAD
-  UploadGroup: UploadGroupCreateOneWithoutFileInput!
-=======
   uploadGroup: UploadGroupCreateOneWithoutFilesInput
->>>>>>> prisma-beta
   width: Int
 }
 
@@ -552,25 +446,14 @@ input FileOrderByInput {
   id: OrderByArg
   isFailed: OrderByArg
   isUploaded: OrderByArg
-<<<<<<< HEAD
-  item: OrderByArg
-  Item: OrderByArg
-=======
->>>>>>> prisma-beta
   name: OrderByArg
   size: OrderByArg
   title: OrderByArg
   updatedAt: OrderByArg
   uploadGroup: OrderByArg
-<<<<<<< HEAD
-  UploadGroup: OrderByArg
-  user: OrderByArg
-  User: OrderByArg
-=======
   uploadGroupId: OrderByArg
   user: OrderByArg
   userId: OrderByArg
->>>>>>> prisma-beta
   width: OrderByArg
 }
 
@@ -585,25 +468,17 @@ input FileWhereInput {
   id: StringFilter
   isFailed: NullableBooleanFilter
   isUploaded: NullableBooleanFilter
-  item: StringFilter
-  Item: ItemWhereInput
+  item: ItemWhereInput
   name: StringFilter
   NOT: [FileWhereInput!]
   OR: [FileWhereInput!]
   size: NullableIntFilter
   title: StringFilter
   updatedAt: DateTimeFilter
-<<<<<<< HEAD
-  uploadGroup: StringFilter
-  UploadGroup: UploadGroupWhereInput
-  user: StringFilter
-  User: UserWhereInput
-=======
   uploadGroup: UploadGroupWhereInput
   uploadGroupId: NullableStringFilter
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
   width: NullableIntFilter
 }
 
@@ -640,30 +515,26 @@ input GoogleAccountCreateManyWithoutUserInput {
   create: [GoogleAccountCreateWithoutUserInput!]
 }
 
-input GoogleAccountCreateOneWithoutGoogleContactInput {
+input GoogleAccountCreateOneWithoutGoogleContactsInput {
   connect: GoogleAccountWhereUniqueInput
-  create: GoogleAccountCreateWithoutGoogleContactInput
+  create: GoogleAccountCreateWithoutGoogleContactsInput
 }
 
-input GoogleAccountCreateWithoutGoogleContactInput {
+input GoogleAccountCreateWithoutGoogleContactsInput {
   accessToken: String
   accountId: String
   createdAt: DateTime
   email: String
-  expiresAt: DateTime
+  expiresAt: DateTime!
   firstName: String
-  id: String!
+  id: String
   isAuthMethod: Boolean
   lastName: String
   metadata: String
   picture: String
   refreshToken: String
   updatedAt: DateTime
-<<<<<<< HEAD
-  User: UserCreateOneWithoutGoogleAccountInput!
-=======
   user: UserCreateOneWithoutGoogleAccountsInput
->>>>>>> prisma-beta
 }
 
 input GoogleAccountCreateWithoutUserInput {
@@ -671,10 +542,10 @@ input GoogleAccountCreateWithoutUserInput {
   accountId: String
   createdAt: DateTime
   email: String
-  expiresAt: DateTime
+  expiresAt: DateTime!
   firstName: String
-  GoogleContact: GoogleContactCreateManyWithoutGoogleAccountInput
-  id: String!
+  googleContacts: GoogleContactCreateManyWithoutGoogleAccountInput
+  id: String
   isAuthMethod: Boolean
   lastName: String
   metadata: String
@@ -697,7 +568,7 @@ input GoogleAccountWhereInput {
   email: NullableStringFilter
   expiresAt: DateTimeFilter
   firstName: NullableStringFilter
-  GoogleContact: GoogleContactFilter
+  googleContacts: GoogleContactFilter
   id: StringFilter
   isAuthMethod: NullableBooleanFilter
   lastName: NullableStringFilter
@@ -707,13 +578,8 @@ input GoogleAccountWhereInput {
   picture: NullableStringFilter
   refreshToken: NullableStringFilter
   updatedAt: DateTimeFilter
-<<<<<<< HEAD
-  user: StringFilter
-  User: UserWhereInput
-=======
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
 }
 
 input GoogleAccountWhereUniqueInput {
@@ -726,13 +592,9 @@ type GoogleContact {
   companyTitle: String
   createdAt: DateTime!
   email: String
-<<<<<<< HEAD
-  googleAccount: String!
-=======
   googleAccount: GoogleAccount
->>>>>>> prisma-beta
   id: String!
-  item: String!
+  item: Item!
   name: String
   otherEmails: [String!]!
   otherPhoneNumbers: [String!]!
@@ -747,14 +609,14 @@ input GoogleContactCreateManyWithoutGoogleAccountInput {
   create: [GoogleContactCreateWithoutGoogleAccountInput!]
 }
 
-input GoogleContactCreateManyWithoutItemInput {
-  connect: [GoogleContactWhereUniqueInput!]
-  create: [GoogleContactCreateWithoutItemInput!]
-}
-
 input GoogleContactCreateManyWithoutUserInput {
   connect: [GoogleContactWhereUniqueInput!]
   create: [GoogleContactCreateWithoutUserInput!]
+}
+
+input GoogleContactCreateOneWithoutItemInput {
+  connect: GoogleContactWhereUniqueInput
+  create: GoogleContactCreateWithoutItemInput
 }
 
 input GoogleContactCreateotherEmailsInput {
@@ -770,20 +632,16 @@ input GoogleContactCreateWithoutGoogleAccountInput {
   companyTitle: String
   createdAt: DateTime
   email: String
-  id: String!
-  Item: ItemCreateOneWithoutGoogleContactInput!
+  id: String
+  item: ItemCreateOneWithoutGoogleContactInput!
   name: String
   otherEmails: GoogleContactCreateotherEmailsInput
   otherPhoneNumbers: GoogleContactCreateotherPhoneNumbersInput
   phoneNumber: String
   photoUrl: String
-  resourceName: String
+  resourceName: String!
   updatedAt: DateTime
-<<<<<<< HEAD
-  User: UserCreateOneWithoutGoogleContactInput!
-=======
   user: UserCreateOneWithoutGoogleContactsInput
->>>>>>> prisma-beta
 }
 
 input GoogleContactCreateWithoutItemInput {
@@ -791,25 +649,16 @@ input GoogleContactCreateWithoutItemInput {
   companyTitle: String
   createdAt: DateTime
   email: String
-<<<<<<< HEAD
-  GoogleAccount: GoogleAccountCreateOneWithoutGoogleContactInput!
-  id: String!
-=======
   googleAccount: GoogleAccountCreateOneWithoutGoogleContactsInput
   id: String
->>>>>>> prisma-beta
   name: String
   otherEmails: GoogleContactCreateotherEmailsInput
   otherPhoneNumbers: GoogleContactCreateotherPhoneNumbersInput
   phoneNumber: String
   photoUrl: String
-  resourceName: String
+  resourceName: String!
   updatedAt: DateTime
-<<<<<<< HEAD
-  User: UserCreateOneWithoutGoogleContactInput!
-=======
   user: UserCreateOneWithoutGoogleContactsInput
->>>>>>> prisma-beta
 }
 
 input GoogleContactCreateWithoutUserInput {
@@ -817,21 +666,15 @@ input GoogleContactCreateWithoutUserInput {
   companyTitle: String
   createdAt: DateTime
   email: String
-<<<<<<< HEAD
-  GoogleAccount: GoogleAccountCreateOneWithoutGoogleContactInput!
-  id: String!
-  Item: ItemCreateOneWithoutGoogleContactInput!
-=======
   googleAccount: GoogleAccountCreateOneWithoutGoogleContactsInput
   id: String
   item: ItemCreateOneWithoutGoogleContactInput!
->>>>>>> prisma-beta
   name: String
   otherEmails: GoogleContactCreateotherEmailsInput
   otherPhoneNumbers: GoogleContactCreateotherPhoneNumbersInput
   phoneNumber: String
   photoUrl: String
-  resourceName: String
+  resourceName: String!
   updatedAt: DateTime
 }
 
@@ -847,16 +690,10 @@ input GoogleContactWhereInput {
   companyTitle: NullableStringFilter
   createdAt: DateTimeFilter
   email: NullableStringFilter
-<<<<<<< HEAD
-  googleAccount: StringFilter
-  GoogleAccount: GoogleAccountWhereInput
-=======
   googleAccount: GoogleAccountWhereInput
   googleAccountId: NullableStringFilter
->>>>>>> prisma-beta
   id: StringFilter
-  item: StringFilter
-  Item: ItemWhereInput
+  item: ItemWhereInput
   name: NullableStringFilter
   NOT: [GoogleContactWhereInput!]
   OR: [GoogleContactWhereInput!]
@@ -864,13 +701,8 @@ input GoogleContactWhereInput {
   photoUrl: NullableStringFilter
   resourceName: StringFilter
   updatedAt: DateTimeFilter
-<<<<<<< HEAD
-  user: StringFilter
-  User: UserWhereInput
-=======
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
 }
 
 input GoogleContactWhereUniqueInput {
@@ -907,15 +739,15 @@ type InviteCode {
   updatedAt: DateTime!
 }
 
-input InviteCodeCreateOneWithoutUserInput {
+input InviteCodeCreateOneWithoutUsersInput {
   connect: InviteCodeWhereUniqueInput
-  create: InviteCodeCreateWithoutUserInput
+  create: InviteCodeCreateWithoutUsersInput
 }
 
-input InviteCodeCreateWithoutUserInput {
-  code: String
+input InviteCodeCreateWithoutUsersInput {
+  code: String!
   createdAt: DateTime
-  id: String!
+  id: String
   updatedAt: DateTime
 }
 
@@ -934,7 +766,7 @@ input InviteCodeWhereInput {
   NOT: [InviteCodeWhereInput!]
   OR: [InviteCodeWhereInput!]
   updatedAt: DateTimeFilter
-  User: UserFilter
+  users: UserFilter
 }
 
 input InviteCodeWhereUniqueInput {
@@ -942,12 +774,17 @@ input InviteCodeWhereUniqueInput {
 }
 
 type Item {
+  collections(after: CollectionWhereUniqueInput, before: CollectionWhereUniqueInput, first: Int, last: Int, orderBy: CollectionOrderByInput, skip: Int): [Collection!]!
   createdAt: DateTime!
   date: DateTime!
+  file: File
+  googleContact: GoogleContact
   id: String!
   isFavorited: Boolean!
-  link: String
-  note: String
+  items(after: ItemWhereUniqueInput, before: ItemWhereUniqueInput, first: Int, last: Int, orderBy: ItemOrderByInput, skip: Int): [Item!]!
+  labels(after: LabelWhereUniqueInput, before: LabelWhereUniqueInput, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
+  link: Link
+  note: Note
   status: ItemStatus!
   type: String!
   updatedAt: DateTime!
@@ -958,25 +795,19 @@ type ItemConnection {
   pageInfo: PageInfo!
 }
 
-input ItemCreateManyWithoutItemInput {
+input ItemCreateManyWithoutCollectionsInput {
   connect: [ItemWhereUniqueInput!]
-  create: [ItemCreateWithoutItemInput!]
+  create: [ItemCreateWithoutCollectionsInput!]
 }
 
-<<<<<<< HEAD
-input ItemCreateManyWithoutLinkInput {
-  connect: [ItemWhereUniqueInput!]
-  create: [ItemCreateWithoutLinkInput!]
-=======
 input ItemCreateManyWithoutItemsInput {
   connect: [ItemWhereUniqueInput!]
   create: [ItemCreateWithoutItemsInput!]
->>>>>>> prisma-beta
 }
 
-input ItemCreateManyWithoutNoteInput {
+input ItemCreateManyWithoutLabelsInput {
   connect: [ItemWhereUniqueInput!]
-  create: [ItemCreateWithoutNoteInput!]
+  create: [ItemCreateWithoutLabelsInput!]
 }
 
 input ItemCreateManyWithoutOwnedByInput {
@@ -989,15 +820,9 @@ input ItemCreateManyWithoutUserInput {
   create: [ItemCreateWithoutUserInput!]
 }
 
-<<<<<<< HEAD
-input ItemCreateOneWithoutCollectionToItemInput {
+input ItemCreateOneWithoutCollectionEntriesInput {
   connect: ItemWhereUniqueInput
-  create: ItemCreateWithoutCollectionToItemInput
-=======
-input ItemCreateOneWithoutCollectionEntryInput {
-  connect: ItemWhereUniqueInput
-  create: ItemCreateWithoutCollectionEntryInput
->>>>>>> prisma-beta
+  create: ItemCreateWithoutCollectionEntriesInput
 }
 
 input ItemCreateOneWithoutFileInput {
@@ -1010,37 +835,17 @@ input ItemCreateOneWithoutGoogleContactInput {
   create: ItemCreateWithoutGoogleContactInput
 }
 
-<<<<<<< HEAD
-input ItemCreateOneWithoutItemToLabelInput {
-=======
 input ItemCreateOneWithoutLinkInput {
->>>>>>> prisma-beta
   connect: ItemWhereUniqueInput
-  create: ItemCreateWithoutItemToLabelInput
+  create: ItemCreateWithoutLinkInput
 }
 
-input ItemCreateOneWithoutOther_ItemInput {
+input ItemCreateOneWithoutNoteInput {
   connect: ItemWhereUniqueInput
-  create: ItemCreateWithoutOther_ItemInput
+  create: ItemCreateWithoutNoteInput
 }
 
-<<<<<<< HEAD
-input ItemCreateWithoutCollectionToItemInput {
-  createdAt: DateTime
-  date: DateTime
-  deletedAt: DateTime
-  File: FileCreateManyWithoutItemInput
-  GoogleContact: GoogleContactCreateManyWithoutItemInput
-  id: String!
-  isFavorited: Boolean
-  Item: ItemCreateOneWithoutOther_ItemInput
-  ItemToLabel: ItemToLabelCreateManyWithoutItemInput
-  Link: LinkCreateOneWithoutItemInput
-  Note: NoteCreateOneWithoutItemInput
-  other_Item: ItemCreateManyWithoutItemInput
-  ShareLink: ShareLinkCreateOneWithoutItemInput
-=======
-input ItemCreateWithoutCollectionEntryInput {
+input ItemCreateWithoutCollectionEntriesInput {
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1061,7 +866,7 @@ input ItemCreateWithoutCollectionEntryInput {
 }
 
 input ItemCreateWithoutCollectionsInput {
-  collectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
@@ -1074,292 +879,167 @@ input ItemCreateWithoutCollectionsInput {
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
   ownedBy: ItemCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   status: String
   type: String
   updatedAt: DateTime
-  User: UserCreateOneWithoutItemInput
+  user: UserCreateOneWithoutItemsInput
 }
 
 input ItemCreateWithoutFileInput {
-<<<<<<< HEAD
-  CollectionToItem: CollectionToItemCreateManyWithoutItemInput
-=======
-  collectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
-  GoogleContact: GoogleContactCreateManyWithoutItemInput
-  id: String!
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
   isFavorited: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutOther_ItemInput
-  ItemToLabel: ItemToLabelCreateManyWithoutItemInput
-  Link: LinkCreateOneWithoutItemInput
-  Note: NoteCreateOneWithoutItemInput
-  other_Item: ItemCreateManyWithoutItemInput
-  ShareLink: ShareLinkCreateOneWithoutItemInput
-=======
   items: ItemCreateManyWithoutOwnedByInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
   ownedBy: ItemCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   status: String
   type: String
   updatedAt: DateTime
-  User: UserCreateOneWithoutItemInput
+  user: UserCreateOneWithoutItemsInput
 }
 
 input ItemCreateWithoutGoogleContactInput {
-<<<<<<< HEAD
-  CollectionToItem: CollectionToItemCreateManyWithoutItemInput
-=======
-  collectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
-  File: FileCreateManyWithoutItemInput
-  id: String!
+  file: FileCreateOneWithoutItemInput
+  id: String
   isFavorited: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutOther_ItemInput
-  ItemToLabel: ItemToLabelCreateManyWithoutItemInput
-  Link: LinkCreateOneWithoutItemInput
-  Note: NoteCreateOneWithoutItemInput
-  other_Item: ItemCreateManyWithoutItemInput
-  ShareLink: ShareLinkCreateOneWithoutItemInput
-  status: String
-  type: String
-  updatedAt: DateTime
-  User: UserCreateOneWithoutItemInput
-}
-
-input ItemCreateWithoutItemInput {
-  CollectionToItem: CollectionToItemCreateManyWithoutItemInput
-  createdAt: DateTime
-  date: DateTime
-  deletedAt: DateTime
-  File: FileCreateManyWithoutItemInput
-  GoogleContact: GoogleContactCreateManyWithoutItemInput
-  id: String!
-  isFavorited: Boolean
-  ItemToLabel: ItemToLabelCreateManyWithoutItemInput
-  Link: LinkCreateOneWithoutItemInput
-  Note: NoteCreateOneWithoutItemInput
-  other_Item: ItemCreateManyWithoutItemInput
-  ShareLink: ShareLinkCreateOneWithoutItemInput
-=======
   items: ItemCreateManyWithoutOwnedByInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
   ownedBy: ItemCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   status: String
   type: String
   updatedAt: DateTime
-  User: UserCreateOneWithoutItemInput
+  user: UserCreateOneWithoutItemsInput
 }
 
-<<<<<<< HEAD
-input ItemCreateWithoutItemToLabelInput {
-  CollectionToItem: CollectionToItemCreateManyWithoutItemInput
-=======
 input ItemCreateWithoutItemsInput {
-  collectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
-  File: FileCreateManyWithoutItemInput
-  GoogleContact: GoogleContactCreateManyWithoutItemInput
-  id: String!
+  file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
   isFavorited: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutOther_ItemInput
-  Link: LinkCreateOneWithoutItemInput
-  Note: NoteCreateOneWithoutItemInput
-  other_Item: ItemCreateManyWithoutItemInput
-  ShareLink: ShareLinkCreateOneWithoutItemInput
-=======
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
   ownedBy: ItemCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   status: String
   type: String
   updatedAt: DateTime
-  User: UserCreateOneWithoutItemInput
+  user: UserCreateOneWithoutItemsInput
 }
 
-<<<<<<< HEAD
-input ItemCreateWithoutLinkInput {
-  CollectionToItem: CollectionToItemCreateManyWithoutItemInput
-=======
 input ItemCreateWithoutLabelsInput {
-  collectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
-  File: FileCreateManyWithoutItemInput
-  GoogleContact: GoogleContactCreateManyWithoutItemInput
-  id: String!
+  file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
   isFavorited: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutOther_ItemInput
-  ItemToLabel: ItemToLabelCreateManyWithoutItemInput
-  Note: NoteCreateOneWithoutItemInput
-  other_Item: ItemCreateManyWithoutItemInput
-  ShareLink: ShareLinkCreateOneWithoutItemInput
-=======
   items: ItemCreateManyWithoutOwnedByInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
   ownedBy: ItemCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   status: String
   type: String
   updatedAt: DateTime
-  User: UserCreateOneWithoutItemInput
+  user: UserCreateOneWithoutItemsInput
 }
 
-<<<<<<< HEAD
-input ItemCreateWithoutNoteInput {
-  CollectionToItem: CollectionToItemCreateManyWithoutItemInput
-=======
 input ItemCreateWithoutLinkInput {
-  collectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
-  File: FileCreateManyWithoutItemInput
-  GoogleContact: GoogleContactCreateManyWithoutItemInput
-  id: String!
+  file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
   isFavorited: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutOther_ItemInput
-  ItemToLabel: ItemToLabelCreateManyWithoutItemInput
-  Link: LinkCreateOneWithoutItemInput
-  other_Item: ItemCreateManyWithoutItemInput
-  ShareLink: ShareLinkCreateOneWithoutItemInput
-=======
   items: ItemCreateManyWithoutOwnedByInput
   labels: LabelCreateManyWithoutItemsInput
   note: NoteCreateOneWithoutItemInput
   ownedBy: ItemCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   status: String
   type: String
   updatedAt: DateTime
-  User: UserCreateOneWithoutItemInput
+  user: UserCreateOneWithoutItemsInput
 }
 
-<<<<<<< HEAD
-input ItemCreateWithoutOther_ItemInput {
-  CollectionToItem: CollectionToItemCreateManyWithoutItemInput
-=======
 input ItemCreateWithoutNoteInput {
-  collectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
-  File: FileCreateManyWithoutItemInput
-  GoogleContact: GoogleContactCreateManyWithoutItemInput
-  id: String!
+  file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
   isFavorited: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutOther_ItemInput
-  ItemToLabel: ItemToLabelCreateManyWithoutItemInput
-  Link: LinkCreateOneWithoutItemInput
-  Note: NoteCreateOneWithoutItemInput
-  ShareLink: ShareLinkCreateOneWithoutItemInput
-=======
   items: ItemCreateManyWithoutOwnedByInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   ownedBy: ItemCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   status: String
   type: String
   updatedAt: DateTime
-  User: UserCreateOneWithoutItemInput
+  user: UserCreateOneWithoutItemsInput
 }
 
-<<<<<<< HEAD
-input ItemCreateWithoutShareLinkInput {
-  CollectionToItem: CollectionToItemCreateManyWithoutItemInput
-=======
 input ItemCreateWithoutOwnedByInput {
-  collectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
-  File: FileCreateManyWithoutItemInput
-  GoogleContact: GoogleContactCreateManyWithoutItemInput
-  id: String!
+  file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
   isFavorited: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutOther_ItemInput
-  ItemToLabel: ItemToLabelCreateManyWithoutItemInput
-  Link: LinkCreateOneWithoutItemInput
-  Note: NoteCreateOneWithoutItemInput
-  other_Item: ItemCreateManyWithoutItemInput
-=======
   items: ItemCreateManyWithoutOwnedByInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
->>>>>>> prisma-beta
   status: String
   type: String
   updatedAt: DateTime
-  User: UserCreateOneWithoutItemInput
+  user: UserCreateOneWithoutItemsInput
 }
 
 input ItemCreateWithoutUserInput {
-<<<<<<< HEAD
-  CollectionToItem: CollectionToItemCreateManyWithoutItemInput
-=======
-  collectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
-  File: FileCreateManyWithoutItemInput
-  GoogleContact: GoogleContactCreateManyWithoutItemInput
-  id: String!
+  file: FileCreateOneWithoutItemInput
+  googleContact: GoogleContactCreateOneWithoutItemInput
+  id: String
   isFavorited: Boolean
-<<<<<<< HEAD
-  Item: ItemCreateOneWithoutOther_ItemInput
-  ItemToLabel: ItemToLabelCreateManyWithoutItemInput
-  Link: LinkCreateOneWithoutItemInput
-  Note: NoteCreateOneWithoutItemInput
-  other_Item: ItemCreateManyWithoutItemInput
-  ShareLink: ShareLinkCreateOneWithoutItemInput
-=======
   items: ItemCreateManyWithoutOwnedByInput
   labels: LabelCreateManyWithoutItemsInput
   link: LinkCreateOneWithoutItemInput
   note: NoteCreateOneWithoutItemInput
   ownedBy: ItemCreateManyWithoutItemsInput
->>>>>>> prisma-beta
   status: String
   type: String
   updatedAt: DateTime
@@ -1386,74 +1066,21 @@ input ItemOrderByInput {
   googleContactId: OrderByArg
   id: OrderByArg
   isFavorited: OrderByArg
-<<<<<<< HEAD
-  item: OrderByArg
-  Item: OrderByArg
-  link: OrderByArg
-  Link: OrderByArg
-  note: OrderByArg
-  Note: OrderByArg
-  shareLink: OrderByArg
-  ShareLink: OrderByArg
-=======
   link: OrderByArg
   linkId: OrderByArg
   note: OrderByArg
   noteId: OrderByArg
->>>>>>> prisma-beta
   status: OrderByArg
   type: OrderByArg
   updatedAt: OrderByArg
   user: OrderByArg
-<<<<<<< HEAD
-  User: OrderByArg
-=======
   userId: OrderByArg
->>>>>>> prisma-beta
 }
 
 enum ItemStatus {
   DONE
   IN_PROGRESS
   NOT_STARTED
-}
-
-input ItemToLabelCreateManyWithoutItemInput {
-  connect: [ItemToLabelWhereUniqueInput!]
-  create: [ItemToLabelCreateWithoutItemInput!]
-}
-
-input ItemToLabelCreateManyWithoutLabelInput {
-  connect: [ItemToLabelWhereUniqueInput!]
-  create: [ItemToLabelCreateWithoutLabelInput!]
-}
-
-input ItemToLabelCreateWithoutItemInput {
-  Label: LabelCreateOneWithoutItemToLabelInput!
-}
-
-input ItemToLabelCreateWithoutLabelInput {
-  Item: ItemCreateOneWithoutItemToLabelInput!
-}
-
-input ItemToLabelFilter {
-  every: ItemToLabelWhereInput
-  none: ItemToLabelWhereInput
-  some: ItemToLabelWhereInput
-}
-
-input ItemToLabelWhereInput {
-  A: StringFilter
-  AND: [ItemToLabelWhereInput!]
-  B: StringFilter
-  Item: ItemWhereInput
-  Label: LabelWhereInput
-  NOT: [ItemToLabelWhereInput!]
-  OR: [ItemToLabelWhereInput!]
-}
-
-input ItemToLabelWhereUniqueInput {
-  _ItemToLabel_AB_unique: _ItemToLabel_AB_uniqueCompoundUniqueInput
 }
 
 enum ItemType {
@@ -1465,34 +1092,7 @@ enum ItemType {
 
 input ItemWhereInput {
   AND: [ItemWhereInput!]
-<<<<<<< HEAD
-  CollectionToItem: CollectionToItemFilter
-  createdAt: DateTimeFilter
-  date: DateTimeFilter
-  deletedAt: NullableDateTimeFilter
-  File: FileFilter
-  GoogleContact: GoogleContactFilter
-  id: StringFilter
-  isFavorited: BooleanFilter
-  item: NullableStringFilter
-  Item: ItemWhereInput
-  ItemToLabel: ItemToLabelFilter
-  link: NullableStringFilter
-  Link: LinkWhereInput
-  NOT: [ItemWhereInput!]
-  note: NullableStringFilter
-  Note: NoteWhereInput
-  OR: [ItemWhereInput!]
-  other_Item: ItemFilter
-  shareLink: NullableStringFilter
-  ShareLink: ShareLinkWhereInput
-  status: NullableStringFilter
-  type: StringFilter
-  updatedAt: DateTimeFilter
-  user: NullableStringFilter
-  User: UserWhereInput
-=======
-  collectionEntry: CollectionEntryFilter
+  collectionEntries: CollectionEntryFilter
   collections: CollectionFilter
   createdAt: DateTimeFilter
   date: DateTimeFilter
@@ -1517,7 +1117,6 @@ input ItemWhereInput {
   updatedAt: DateTimeFilter
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
 }
 
 input ItemWhereUniqueInput {
@@ -1531,8 +1130,14 @@ type JWT {
 type Label {
   createdAt: DateTime!
   id: String!
+  items(after: ItemWhereUniqueInput, before: ItemWhereUniqueInput, first: Int, last: Int, skip: Int): [Item!]!
   name: String!
   updatedAt: DateTime!
+}
+
+input LabelCreateManyWithoutItemsInput {
+  connect: [LabelWhereUniqueInput!]
+  create: [LabelCreateWithoutItemsInput!]
 }
 
 input LabelCreateManyWithoutUserInput {
@@ -1540,27 +1145,18 @@ input LabelCreateManyWithoutUserInput {
   create: [LabelCreateWithoutUserInput!]
 }
 
-input LabelCreateOneWithoutItemToLabelInput {
-  connect: LabelWhereUniqueInput
-  create: LabelCreateWithoutItemToLabelInput
-}
-
-input LabelCreateWithoutItemToLabelInput {
+input LabelCreateWithoutItemsInput {
   createdAt: DateTime
-  id: String!
+  id: String
   name: String
   updatedAt: DateTime
-<<<<<<< HEAD
-  User: UserCreateOneWithoutLabelInput!
-=======
   user: UserCreateOneWithoutLabelsInput
->>>>>>> prisma-beta
 }
 
 input LabelCreateWithoutUserInput {
   createdAt: DateTime
-  id: String!
-  ItemToLabel: ItemToLabelCreateManyWithoutLabelInput
+  id: String
+  items: ItemCreateManyWithoutLabelsInput
   name: String
   updatedAt: DateTime
 }
@@ -1571,8 +1167,6 @@ input LabelFilter {
   some: LabelWhereInput
 }
 
-<<<<<<< HEAD
-=======
 input LabelOrderByInput {
   createdAt: OrderByArg
   id: OrderByArg
@@ -1582,23 +1176,17 @@ input LabelOrderByInput {
   userId: OrderByArg
 }
 
->>>>>>> prisma-beta
 input LabelWhereInput {
   AND: [LabelWhereInput!]
   createdAt: DateTimeFilter
   id: StringFilter
-  ItemToLabel: ItemToLabelFilter
+  items: ItemFilter
   name: StringFilter
   NOT: [LabelWhereInput!]
   OR: [LabelWhereInput!]
   updatedAt: DateTimeFilter
-<<<<<<< HEAD
-  user: StringFilter
-  User: UserWhereInput
-=======
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
 }
 
 input LabelWhereUniqueInput {
@@ -1613,6 +1201,9 @@ type Link {
   href: String!
   id: String!
   image: String
+  isIframeDisabled: Boolean!
+  item: Item
+  logo: String
   notes: String!
   title: String
   updatedAt: DateTime!
@@ -1634,16 +1225,14 @@ input LinkCreateWithoutItemInput {
   favicon: String
   host: String
   href: String
-  id: String!
+  id: String
   image: String
+  isIframeDisabled: Boolean
+  logo: String
   notes: String
   title: String
   updatedAt: DateTime
-<<<<<<< HEAD
-  User: UserCreateOneWithoutLinkInput!
-=======
   user: UserCreateOneWithoutLinksInput
->>>>>>> prisma-beta
 }
 
 input LinkCreateWithoutUserInput {
@@ -1652,9 +1241,11 @@ input LinkCreateWithoutUserInput {
   favicon: String
   host: String
   href: String
-  id: String!
+  id: String
   image: String
-  Item: ItemCreateManyWithoutLinkInput
+  isIframeDisabled: Boolean
+  item: ItemCreateOneWithoutLinkInput
+  logo: String
   notes: String
   title: String
   updatedAt: DateTime
@@ -1675,19 +1266,16 @@ input LinkWhereInput {
   href: StringFilter
   id: StringFilter
   image: NullableStringFilter
-  Item: ItemFilter
+  isIframeDisabled: BooleanFilter
+  item: ItemWhereInput
+  logo: NullableStringFilter
   NOT: [LinkWhereInput!]
   notes: StringFilter
   OR: [LinkWhereInput!]
   title: NullableStringFilter
   updatedAt: DateTimeFilter
-<<<<<<< HEAD
-  user: StringFilter
-  User: UserWhereInput
-=======
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
 }
 
 input LinkWhereUniqueInput {
@@ -1752,6 +1340,7 @@ input NewCollectionEntryInput {
 type Note {
   createdAt: DateTime!
   id: String!
+  item: Item
   raw: String!
   text: String!
   title: String
@@ -1770,22 +1359,18 @@ input NoteCreateOneWithoutItemInput {
 
 input NoteCreateWithoutItemInput {
   createdAt: DateTime
-  id: String!
+  id: String
   raw: String
   text: String
   title: String
   updatedAt: DateTime
-<<<<<<< HEAD
-  User: UserCreateOneWithoutNoteInput!
-=======
   user: UserCreateOneWithoutNotesInput
->>>>>>> prisma-beta
 }
 
 input NoteCreateWithoutUserInput {
   createdAt: DateTime
-  id: String!
-  Item: ItemCreateManyWithoutNoteInput
+  id: String
+  item: ItemCreateOneWithoutNoteInput
   raw: String
   text: String
   title: String
@@ -1802,20 +1387,15 @@ input NoteWhereInput {
   AND: [NoteWhereInput!]
   createdAt: DateTimeFilter
   id: StringFilter
-  Item: ItemFilter
+  item: ItemWhereInput
   NOT: [NoteWhereInput!]
   OR: [NoteWhereInput!]
   raw: StringFilter
   text: StringFilter
   title: NullableStringFilter
   updatedAt: DateTimeFilter
-<<<<<<< HEAD
-  user: StringFilter
-  User: UserWhereInput
-=======
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
 }
 
 input NoteWhereUniqueInput {
@@ -1910,27 +1490,27 @@ input SavedSearchCreateManyWithoutUserInput {
   create: [SavedSearchCreateWithoutUserInput!]
 }
 
-input SavedSearchCreateOneWithoutSavedSearchFilterInput {
+input SavedSearchCreateOneWithoutFiltersInput {
   connect: SavedSearchWhereUniqueInput
-  create: SavedSearchCreateWithoutSavedSearchFilterInput
+  create: SavedSearchCreateWithoutFiltersInput
 }
 
-input SavedSearchCreateWithoutSavedSearchFilterInput {
+input SavedSearchCreateWithoutFiltersInput {
   createdAt: DateTime
-  id: String!
-  name: String
+  id: String
+  name: String!
   updatedAt: DateTime
-  User: UserCreateOneWithoutSavedSearchInput
-  version: Int
+  user: UserCreateOneWithoutSavedSearchesInput
+  version: Int!
 }
 
 input SavedSearchCreateWithoutUserInput {
   createdAt: DateTime
-  id: String!
-  name: String
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutSavedSearchInput
+  filters: SavedSearchFilterCreateManyWithoutSavedSearchInput
+  id: String
+  name: String!
   updatedAt: DateTime
-  version: Int
+  version: Int!
 }
 
 input SavedSearchFilter {
@@ -1951,21 +1531,21 @@ input SavedSearchFilterCreateManyWithoutUserInput {
 
 input SavedSearchFilterCreateWithoutSavedSearchInput {
   createdAt: DateTime
-  id: String!
-  name: String
+  id: String
+  name: String!
   operator: String
   updatedAt: DateTime
-  User: UserCreateOneWithoutSavedSearchFilterInput
+  user: UserCreateOneWithoutSavedSearchFiltersInput
   value: String
   values: String
 }
 
 input SavedSearchFilterCreateWithoutUserInput {
   createdAt: DateTime
-  id: String!
-  name: String
+  id: String
+  name: String!
   operator: String
-  SavedSearch: SavedSearchCreateOneWithoutSavedSearchFilterInput
+  savedSearch: SavedSearchCreateOneWithoutFiltersInput
   updatedAt: DateTime
   value: String
   values: String
@@ -1985,19 +1565,11 @@ input SavedSearchFilterWhereInput {
   NOT: [SavedSearchFilterWhereInput!]
   operator: NullableStringFilter
   OR: [SavedSearchFilterWhereInput!]
-<<<<<<< HEAD
-  savedSearch: NullableStringFilter
-  SavedSearch: SavedSearchWhereInput
-  updatedAt: DateTimeFilter
-  user: NullableStringFilter
-  User: UserWhereInput
-=======
   savedSearch: SavedSearchWhereInput
   savedSearchId: NullableStringFilter
   updatedAt: DateTimeFilter
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
   value: NullableStringFilter
   values: NullableStringFilter
 }
@@ -2009,19 +1581,14 @@ input SavedSearchFilterWhereUniqueInput {
 input SavedSearchWhereInput {
   AND: [SavedSearchWhereInput!]
   createdAt: DateTimeFilter
+  filters: SavedSearchFilterFilter
   id: StringFilter
   name: StringFilter
   NOT: [SavedSearchWhereInput!]
   OR: [SavedSearchWhereInput!]
-  SavedSearchFilter: SavedSearchFilterFilter
   updatedAt: DateTimeFilter
-<<<<<<< HEAD
-  user: NullableStringFilter
-  User: UserWhereInput
-=======
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
   version: IntFilter
 }
 
@@ -2029,76 +1596,6 @@ input SavedSearchWhereUniqueInput {
   id: String
 }
 
-<<<<<<< HEAD
-input ShareLinkCreateManyWithoutCollectionInput {
-  connect: [ShareLinkWhereUniqueInput!]
-  create: [ShareLinkCreateWithoutCollectionInput!]
-}
-
-input ShareLinkCreateManyWithoutUserInput {
-  connect: [ShareLinkWhereUniqueInput!]
-  create: [ShareLinkCreateWithoutUserInput!]
-}
-
-input ShareLinkCreateOneWithoutItemInput {
-  connect: ShareLinkWhereUniqueInput
-  create: ShareLinkCreateWithoutItemInput
-}
-
-input ShareLinkCreateWithoutCollectionInput {
-  createdAt: DateTime
-  id: String!
-  isEnabled: Boolean
-  Item: ItemCreateManyWithoutShareLinkInput
-  updatedAt: DateTime
-  User: UserCreateOneWithoutShareLinkInput!
-}
-
-input ShareLinkCreateWithoutItemInput {
-  Collection: CollectionCreateOneWithoutShareLinkInput
-  createdAt: DateTime
-  id: String!
-  isEnabled: Boolean
-  updatedAt: DateTime
-  User: UserCreateOneWithoutShareLinkInput!
-}
-
-input ShareLinkCreateWithoutUserInput {
-  Collection: CollectionCreateOneWithoutShareLinkInput
-  createdAt: DateTime
-  id: String!
-  isEnabled: Boolean
-  Item: ItemCreateManyWithoutShareLinkInput
-  updatedAt: DateTime
-}
-
-input ShareLinkFilter {
-  every: ShareLinkWhereInput
-  none: ShareLinkWhereInput
-  some: ShareLinkWhereInput
-}
-
-input ShareLinkWhereInput {
-  AND: [ShareLinkWhereInput!]
-  collection: NullableStringFilter
-  Collection: CollectionWhereInput
-  createdAt: DateTimeFilter
-  id: StringFilter
-  isEnabled: BooleanFilter
-  Item: ItemFilter
-  NOT: [ShareLinkWhereInput!]
-  OR: [ShareLinkWhereInput!]
-  updatedAt: DateTimeFilter
-  user: StringFilter
-  User: UserWhereInput
-}
-
-input ShareLinkWhereUniqueInput {
-  id: String
-}
-
-=======
->>>>>>> prisma-beta
 input SignedURLArgs {
   name: String!
   size: Int!
@@ -2124,6 +1621,7 @@ scalar Upload
 
 type UploadGroup {
   createdAt: DateTime!
+  files(after: FileWhereUniqueInput, before: FileWhereUniqueInput, first: Int, last: Int, skip: Int): [File!]!
   id: String!
   isComplete: Boolean
   updatedAt: DateTime!
@@ -2134,28 +1632,24 @@ input UploadGroupCreateManyWithoutUserInput {
   create: [UploadGroupCreateWithoutUserInput!]
 }
 
-input UploadGroupCreateOneWithoutFileInput {
+input UploadGroupCreateOneWithoutFilesInput {
   connect: UploadGroupWhereUniqueInput
-  create: UploadGroupCreateWithoutFileInput
+  create: UploadGroupCreateWithoutFilesInput
 }
 
-input UploadGroupCreateWithoutFileInput {
+input UploadGroupCreateWithoutFilesInput {
   createdAt: DateTime
-  id: String!
+  id: String
   isComplete: Boolean
   isFailed: Boolean
   updatedAt: DateTime
-<<<<<<< HEAD
-  User: UserCreateOneWithoutUploadGroupInput!
-=======
   user: UserCreateOneWithoutUploadGroupsInput
->>>>>>> prisma-beta
 }
 
 input UploadGroupCreateWithoutUserInput {
   createdAt: DateTime
-  File: FileCreateManyWithoutUploadGroupInput
-  id: String!
+  files: FileCreateManyWithoutUploadGroupInput
+  id: String
   isComplete: Boolean
   isFailed: Boolean
   updatedAt: DateTime
@@ -2174,30 +1668,21 @@ input UploadGroupOrderByInput {
   isFailed: OrderByArg
   updatedAt: OrderByArg
   user: OrderByArg
-<<<<<<< HEAD
-  User: OrderByArg
-=======
   userId: OrderByArg
->>>>>>> prisma-beta
 }
 
 input UploadGroupWhereInput {
   AND: [UploadGroupWhereInput!]
   createdAt: DateTimeFilter
-  File: FileFilter
+  files: FileFilter
   id: StringFilter
   isComplete: NullableBooleanFilter
   isFailed: NullableBooleanFilter
   NOT: [UploadGroupWhereInput!]
   OR: [UploadGroupWhereInput!]
   updatedAt: DateTimeFilter
-<<<<<<< HEAD
-  user: StringFilter
-  User: UserWhereInput
-=======
   user: UserWhereInput
   userId: NullableStringFilter
->>>>>>> prisma-beta
 }
 
 input UploadGroupWhereUniqueInput {
@@ -2205,102 +1690,102 @@ input UploadGroupWhereUniqueInput {
 }
 
 type User {
+  collections(after: CollectionWhereUniqueInput, before: CollectionWhereUniqueInput, first: Int, last: Int, skip: Int): [Collection!]!
   email: String!
+  files(after: FileWhereUniqueInput, before: FileWhereUniqueInput, first: Int, last: Int, skip: Int): [File!]!
   firstName: String
   fullName: String!
+  googleAccounts: [GoogleAccount!]!
   id: String!
-  inviteCode: String
+  inviteCode: InviteCode
   isActive: Boolean!
+  items(after: ItemWhereUniqueInput, before: ItemWhereUniqueInput, first: Int, last: Int, skip: Int): [Item!]!
+  labels(after: LabelWhereUniqueInput, before: LabelWhereUniqueInput, first: Int, last: Int, orderBy: LabelOrderByInput, skip: Int): [Label!]!
   lastName: String
   role: String!
 }
 
 input UserCreateInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateOneWithoutFileInput {
+input UserCreateOneWithoutCollectionBlocksInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutFileInput
+  create: UserCreateWithoutCollectionBlocksInput
 }
 
-input UserCreateOneWithoutGoogleAccountInput {
+input UserCreateOneWithoutCollectionEntriesInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutGoogleAccountInput
+  create: UserCreateWithoutCollectionEntriesInput
 }
 
-input UserCreateOneWithoutGoogleContactInput {
+input UserCreateOneWithoutCollectionsInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutGoogleContactInput
+  create: UserCreateWithoutCollectionsInput
 }
 
-input UserCreateOneWithoutItemInput {
+input UserCreateOneWithoutFilesInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutItemInput
+  create: UserCreateWithoutFilesInput
 }
 
-input UserCreateOneWithoutLabelInput {
+input UserCreateOneWithoutGoogleAccountsInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutLabelInput
+  create: UserCreateWithoutGoogleAccountsInput
 }
 
-input UserCreateOneWithoutLinkInput {
+input UserCreateOneWithoutGoogleContactsInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutLinkInput
+  create: UserCreateWithoutGoogleContactsInput
 }
 
-input UserCreateOneWithoutNoteInput {
+input UserCreateOneWithoutItemsInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutNoteInput
+  create: UserCreateWithoutItemsInput
 }
 
-input UserCreateOneWithoutSavedSearchFilterInput {
+input UserCreateOneWithoutLabelsInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutSavedSearchFilterInput
+  create: UserCreateWithoutLabelsInput
 }
 
-input UserCreateOneWithoutSavedSearchInput {
+input UserCreateOneWithoutLinksInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutSavedSearchInput
+  create: UserCreateWithoutLinksInput
 }
 
-input UserCreateOneWithoutShareLinkInput {
+input UserCreateOneWithoutNotesInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutShareLinkInput
+  create: UserCreateWithoutNotesInput
 }
 
-input UserCreateOneWithoutUploadGroupInput {
+input UserCreateOneWithoutSavedSearchesInput {
   connect: UserWhereUniqueInput
-  create: UserCreateWithoutUploadGroupInput
+  create: UserCreateWithoutSavedSearchesInput
 }
 
-<<<<<<< HEAD
-input UserCreateWithoutFileInput {
-=======
 input UserCreateOneWithoutSavedSearchFiltersInput {
   connect: UserWhereUniqueInput
   create: UserCreateWithoutSavedSearchFiltersInput
@@ -2339,16 +1824,10 @@ input UserCreateWithoutCollectionBlocksInput {
 input UserCreateWithoutCollectionEntriesInput {
   collectionBlocks: CollectionBlockCreateManyWithoutUserInput
   collections: CollectionCreateManyWithoutUserInput
->>>>>>> prisma-beta
   createdAt: DateTime
   email: String
+  files: FileCreateManyWithoutUserInput
   firstName: String
-<<<<<<< HEAD
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
-=======
   googleAccounts: GoogleAccountCreateManyWithoutUserInput
   googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
@@ -2403,286 +1882,242 @@ input UserCreateWithoutFilesInput {
   googleContacts: GoogleContactCreateManyWithoutUserInput
   id: String
   inviteCode: InviteCodeCreateOneWithoutUsersInput
->>>>>>> prisma-beta
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutGoogleAccountInput {
+input UserCreateWithoutGoogleAccountsInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutGoogleContactInput {
+input UserCreateWithoutGoogleContactsInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutItemInput {
+input UserCreateWithoutItemsInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Label: LabelCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutLabelInput {
+input UserCreateWithoutLabelsInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutLinkInput {
+input UserCreateWithoutLinksInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutNoteInput {
+input UserCreateWithoutNotesInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutSavedSearchFilterInput {
+input UserCreateWithoutSavedSearchesInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutSavedSearchInput {
+input UserCreateWithoutSavedSearchFiltersInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-  updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
-}
-
-input UserCreateWithoutShareLinkInput {
-  createdAt: DateTime
-  email: String
-  File: FileCreateManyWithoutUserInput
-  firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
-  isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
-  lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
-  role: String
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
-  UploadGroup: UploadGroupCreateManyWithoutUserInput
+  uploadGroups: UploadGroupCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutUploadGroupInput {
+input UserCreateWithoutUploadGroupsInput {
+  collectionBlocks: CollectionBlockCreateManyWithoutUserInput
+  collectionEntries: CollectionEntryCreateManyWithoutUserInput
+  collections: CollectionCreateManyWithoutUserInput
   createdAt: DateTime
   email: String
-  File: FileCreateManyWithoutUserInput
+  files: FileCreateManyWithoutUserInput
   firstName: String
-  GoogleAccount: GoogleAccountCreateManyWithoutUserInput
-  GoogleContact: GoogleContactCreateManyWithoutUserInput
-  id: String!
-  InviteCode: InviteCodeCreateOneWithoutUserInput
+  googleAccounts: GoogleAccountCreateManyWithoutUserInput
+  googleContacts: GoogleContactCreateManyWithoutUserInput
+  id: String
+  inviteCode: InviteCodeCreateOneWithoutUsersInput
   isActive: Boolean
-  Item: ItemCreateManyWithoutUserInput
-  Label: LabelCreateManyWithoutUserInput
+  items: ItemCreateManyWithoutUserInput
+  labels: LabelCreateManyWithoutUserInput
   lastName: String
-  Link: LinkCreateManyWithoutUserInput
-  Note: NoteCreateManyWithoutUserInput
+  lastVisitedAt: DateTime
+  links: LinkCreateManyWithoutUserInput
+  notes: NoteCreateManyWithoutUserInput
   role: String
-<<<<<<< HEAD
-  SavedSearch: SavedSearchCreateManyWithoutUserInput
-  SavedSearchFilter: SavedSearchFilterCreateManyWithoutUserInput
-  ShareLink: ShareLinkCreateManyWithoutUserInput
-=======
   savedSearches: SavedSearchCreateManyWithoutUserInput
   savedSearchFilters: SavedSearchFilterCreateManyWithoutUserInput
->>>>>>> prisma-beta
   updatedAt: DateTime
 }
 
@@ -2698,52 +2133,42 @@ input UserOrderByInput {
   firstName: OrderByArg
   id: OrderByArg
   inviteCode: OrderByArg
-<<<<<<< HEAD
-  InviteCode: OrderByArg
-=======
   inviteCodeId: OrderByArg
->>>>>>> prisma-beta
   isActive: OrderByArg
   lastName: OrderByArg
+  lastVisitedAt: OrderByArg
   role: OrderByArg
   updatedAt: OrderByArg
 }
 
 input UserWhereInput {
   AND: [UserWhereInput!]
+  collectionBlocks: CollectionBlockFilter
+  collectionEntries: CollectionEntryFilter
+  collections: CollectionFilter
   createdAt: DateTimeFilter
   email: StringFilter
-  File: FileFilter
+  files: FileFilter
   firstName: NullableStringFilter
-  GoogleAccount: GoogleAccountFilter
-  GoogleContact: GoogleContactFilter
+  googleAccounts: GoogleAccountFilter
+  googleContacts: GoogleContactFilter
   id: StringFilter
-<<<<<<< HEAD
-  inviteCode: NullableStringFilter
-  InviteCode: InviteCodeWhereInput
-=======
   inviteCode: InviteCodeWhereInput
   inviteCodeId: NullableStringFilter
->>>>>>> prisma-beta
   isActive: BooleanFilter
-  Item: ItemFilter
-  Label: LabelFilter
+  items: ItemFilter
+  labels: LabelFilter
   lastName: NullableStringFilter
-  Link: LinkFilter
+  lastVisitedAt: DateTimeFilter
+  links: LinkFilter
   NOT: [UserWhereInput!]
-  Note: NoteFilter
+  notes: NoteFilter
   OR: [UserWhereInput!]
   role: StringFilter
-<<<<<<< HEAD
-  SavedSearch: SavedSearchFilter
-  SavedSearchFilter: SavedSearchFilterFilter
-  ShareLink: ShareLinkFilter
-=======
   savedSearches: SavedSearchFilter
   savedSearchFilters: SavedSearchFilterFilter
->>>>>>> prisma-beta
   updatedAt: DateTimeFilter
-  UploadGroup: UploadGroupFilter
+  uploadGroups: UploadGroupFilter
 }
 
 input UserWhereUniqueInput {
