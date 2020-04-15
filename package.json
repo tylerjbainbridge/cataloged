@@ -3,11 +3,11 @@
   "scripts": {
     "start": "npm-run-all --parallel start:*",
     "start:web": "npx lerna exec --scope cataloged-web npm run start",
-    "start:server": "npx lerna exec --scope cataloged-server npm run start:api",
+    "start:server": "npx lerna exec --scope cataloged-server npm run start",
     "start:worker": "npx lerna exec --scope cataloged-server npm run start:worker",
     "build:web": "npx lerna exec --scope cataloged-web npm run build",
     "build:landing-page": "npx lerna exec --scope cataloged-web npm run build",
-    "build:server": "npx lerna exec --scope cataloged-server npm run build:api",
+    "build:server": "npx lerna exec --scope cataloged-server npm run build",
     "build:worker": "npx lerna exec --scope cataloged-server npm run build:worker",
     "prebuild:web": "npx lerna bootstrap",
     "prebuild:server": "npx lerna bootstrap",
