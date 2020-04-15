@@ -1,8 +1,10 @@
 source ../../.env;
 
+export DEBUG="*"
+
 echo "Saving migrations";
-prisma2 migrate save --experimental
+npx prisma2 migrate save --experimental
 echo "Running migrations ($POSTGRESQL_URL)";
-prisma2 migrate up --experimental
-echo "Generating types ($POSTGRESQL_URL)";
-prisma2 generate
+npx prisma2 migrate up --experimental
+# echo "Generating types ($POSTGRESQL_URL)";
+# npx prisma generate
