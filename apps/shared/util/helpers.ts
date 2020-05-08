@@ -31,13 +31,7 @@ export const FILTER_CONFIGS = {
     defaults: {
       value: undefined,
     },
-    options: [
-      [undefined, 'all'],
-      'file',
-      'note',
-      'link',
-      ['googleContact', 'contact'],
-    ],
+    options: [[undefined, 'all'], 'file', 'note', 'link', 'contact'],
   },
   // Status
   is: {
@@ -83,6 +77,7 @@ export const randomString = (): string =>
 const isFilterQueryArg = (...args: any[]) =>
   FILTER_NAMES.find(name => {
     const [value, key] = args;
+
     return key.includes(name);
   });
 
@@ -102,15 +97,13 @@ export const getRealFilters = (filters: any[]) =>
   }));
 
 export const getQueryStringFromFilters = (filters: any[], search = '') => {
-  const sets: { [k: string]: Set<any> } = {
-    ...[...FILTER_NAMES].reduce(
-      (p, c) => ({
-        ...p,
-        [getRealName(c)]: new Set(),
-      }),
-      {},
-    ),
-  };
+  const sets: { [k: string]: Set<any> } = FILTER_NAMES.reduce(
+    (p, c) => ({
+      ...p,
+      [getRealName(c)]: new Set(),
+    }),
+    {},
+  );
 
   const parsedFilters = search
     ? _.omitBy(queryString.parse(search), isFilterQueryArg)
@@ -121,14 +114,17 @@ export const getQueryStringFromFilters = (filters: any[], search = '') => {
       _.set(parsedFilters, `${filter.name}.display`, filter.display);
     }
 
-    (filter.values ? filter.values : [filter.value]).forEach(
-      (value: string) => {
-        const setName = getRealName(filter.name || 'search');
-        // @ts-ignore
+    (filter.values?.length
+      ? filter.values
+      : Array.isArray(filter.value)
+      ? filter.value
+      : [filter.value]
+    ).forEach((value: string) => {
+      const setName = getRealName(filter.name || 'search');
+      // @ts-ignore
 
-        if (sets[setName]) sets[setName].add(value);
-      },
-    );
+      if (sets[setName]) sets[setName].add(value);
+    });
   });
 
   Object.entries(sets).forEach(([name, set]) => {

@@ -67,8 +67,6 @@ export const FilterInput = ({
   // @ts-ignore
   const filterConfig = FILTER_CONFIGS[filter.name];
 
-  console.log({ filterConfig, filter });
-
   const inputRef = useRef(null);
 
   const updateFilter = (updatedFilter: any) =>
@@ -149,15 +147,17 @@ export const FilterInput = ({
     }
 
     case 'labels': {
+      const v = filter.values?.length ? filter.values : filter.value || [];
+
+      const selectedLabels = (Array.isArray(v) ? v : [v]).map((name: string) =>
+        user.labels.find(label => label.name === name),
+      );
+
       valueNode = (
         <Box width="auto" {...styleProps}>
           <Labels
             canAddLabels={false}
-            selectedLabels={(
-              filter.values || filter.value
-            ).map((name: string) =>
-              user.labels.find(label => label.name === name),
-            )}
+            selectedLabels={selectedLabels}
             onSelectedLabelChange={(selectedLabels: any) => {
               updateFilter({
                 values: selectedLabels.map(({ name }: any) => name),
@@ -226,12 +226,10 @@ export const FilterInput = ({
         onChange={(e: any) => {
           const name = e.target.value;
 
-          // @ts-ignore
-          const newFieldConfig = FILTER_CONFIGS[name];
-
           return _onChange({
             name,
-            ...newFieldConfig.defaults,
+            // @ts-ignore
+            ...FILTER_CONFIGS[name].defaults,
           });
         }}
       >
@@ -325,7 +323,7 @@ export const Filter = ({
       //   fields,
       // );
 
-      onDebouncedFilterChange(fields);
+      onDebouncedFilterChange(values);
     }, 1000),
   );
 
@@ -344,7 +342,7 @@ export const Filter = ({
   useDeepCompareEffect(() => {
     if (isOpen) {
       debouncedFilter.cancel();
-      debouncedFilter(values);
+      debouncedFilter(Object.values(values));
     }
   }, [values, fields.length]);
 
@@ -357,6 +355,7 @@ export const Filter = ({
 
   useEffect(() => {
     if (!isOpen) {
+      console.log('resetting', getFiltersFromQueryString(location.search));
       filterForm.reset({
         [FORM_NAME]: getFiltersFromQueryString(location.search),
       });
@@ -437,8 +436,6 @@ export const Filter = ({
             {fields.map((field: any, index: number) => {
               const name = getName(index);
 
-              console.log(field);
-
               // @ts-ignore
               const value = values[name] || values[FORM_NAME]?.[index];
 
@@ -447,6 +444,7 @@ export const Filter = ({
                   <Controller
                     control={filterForm.control}
                     name={name}
+                    value={value}
                     uniqueId={field.name}
                     as={<FilterInput />}
                     remove={() => remove(index)}
@@ -462,9 +460,7 @@ export const Filter = ({
                             value: '',
                           }
                     }
-                    onChange={([value]) => ({
-                      value,
-                    })}
+                    onChange={([value]) => value}
                   />
                 </Box>
               );
