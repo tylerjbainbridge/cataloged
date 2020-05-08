@@ -25,7 +25,7 @@ import morgan from 'morgan';
 import { default as express } from 'express';
 
 import { prisma } from './data/photon';
-import { SyncGoogleDrive } from './queues/SyncGoogleDrive';
+import './queues';
 
 const app = express();
 
@@ -34,9 +34,8 @@ app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
 app.use(morgan('tiny'));
 
 app.get('/health-check', (req, res) => res.sendStatus(200));
-app.get('/test-queue', (req, res) => {
-  SyncGoogleDrive.add({ test: 'hello-world' });
 
+app.get('/test-queue', (req, res) => {
   return res.sendStatus(200);
 });
 

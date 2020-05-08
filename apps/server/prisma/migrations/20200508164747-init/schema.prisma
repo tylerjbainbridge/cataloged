@@ -10,7 +10,7 @@ datasource db {
 model InviteCode {
   id        String   @default(cuid()) @id
   code      String
-  users     User[]   @relation(references: [id])
+  users     User[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -62,7 +62,7 @@ model GoogleAccount {
   metadata       String?
   userId         String?
   user           User?           @relation(fields: [userId], references: [id])
-  googleContacts GoogleContact[] @relation(references: [id])
+  googleContacts GoogleContact[]
 }
 
 model GoogleContact {
@@ -95,7 +95,7 @@ model SavedSearch {
   version   Int
   userId    String?
   user      User?               @relation(fields: [userId], references: [id])
-  filters   SavedSearchFilter[] @relation(references: [id])
+  filters   SavedSearchFilter[]
 }
 
 model SavedSearchFilter {
@@ -113,27 +113,29 @@ model SavedSearchFilter {
 }
 
 model Collection {
-  id          String            @default(cuid()) @id
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  name        String
-  description String?
-  entries     CollectionEntry[]
-  items       Item[]            @relation(references: [id])
-  userId      String?
-  user        User?             @relation(fields: [userId], references: [id])
+  id              String            @default(cuid()) @id
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  name            String
+  description     String?
+  entries         CollectionEntry[]
+  items           Item[]
+  userId          String?
+  user            User?             @relation(fields: [userId], references: [id])
+  CollectionBlock CollectionBlock[]
 }
 
 model CollectionBlock {
-  id           String      @default(cuid()) @id
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  type         String
-  content      String
-  collectionId String?
-  collection   Collection? @relation(fields: [collectionId], references: [id])
-  userId       String?
-  user         User?       @relation(fields: [userId], references: [id])
+  id              String            @default(cuid()) @id
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  type            String
+  content         String
+  collectionId    String?
+  collection      Collection?       @relation(fields: [collectionId], references: [id])
+  userId          String?
+  user            User?             @relation(fields: [userId], references: [id])
+  CollectionEntry CollectionEntry[]
 }
 
 model CollectionEntry {
@@ -153,28 +155,29 @@ model CollectionEntry {
 
 // itemId          String?
 model Item {
-  id              String         @default(cuid()) @id
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  id              String            @default(cuid()) @id
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
   deletedAt       DateTime?
-  isFavorited     Boolean        @default(false)
-  status          String?        @default("NOT_STARTED")
-  type            String         @default("")
-  date            DateTime       @default(now())
+  isFavorited     Boolean           @default(false)
+  status          String?           @default("NOT_STARTED")
+  type            String            @default("")
+  date            DateTime          @default(now())
   linkId          String?
-  link            Link?          @relation(fields: [linkId], references: [id])
+  link            Link?             @relation(fields: [linkId], references: [id])
   noteId          String?
-  note            Note?          @relation(fields: [noteId], references: [id])
+  note            Note?             @relation(fields: [noteId], references: [id])
   fileId          String?
-  file            File?          @relation(fields: [fileId], references: [id])
+  file            File?             @relation(fields: [fileId], references: [id])
   googleContactId String?
-  googleContact   GoogleContact? @relation(fields: [googleContactId], references: [id])
+  googleContact   GoogleContact?    @relation(fields: [googleContactId], references: [id])
   userId          String?
-  user            User?          @relation(fields: [userId], references: [id])
-  labels          Label[]        @relation(references: [id])
-  collections     Collection[]   @relation(references: [id])
-  ownedBy         Item[]         @relation("ItemToItem", references: [id])
-  items           Item[]         @relation("ItemToItem", references: [id])
+  user            User?             @relation(fields: [userId], references: [id])
+  labels          Label[]           @relation(references: [id])
+  collections     Collection[]      @relation(references: [id])
+  ownedBy         Item[]            @relation("ItemToItem", references: [id])
+  items           Item[]            @relation("ItemToItem", references: [id])
+  CollectionEntry CollectionEntry[]
 
   @@index([type, status, isFavorited, deletedAt])
 }
@@ -233,7 +236,7 @@ model UploadGroup {
   isFailed   Boolean?
   userId     String?
   user       User?    @relation(fields: [userId], references: [id])
-  files      File[]   @relation(references: [id])
+  files      File[]
 }
 
 model User {
@@ -244,19 +247,19 @@ model User {
   email              String              @default("") @unique
   firstName          String?
   lastName           String?
-  files              File[]              @relation(references: [id])
-  googleAccounts     GoogleAccount[]     @relation(references: [id])
-  googleContacts     GoogleContact[]     @relation(references: [id])
-  savedSearches      SavedSearch[]       @relation(references: [id])
-  savedSearchFilters SavedSearchFilter[] @relation(references: [id])
-  collections        Collection[]        @relation(references: [id])
-  collectionBlocks   CollectionBlock[]   @relation(references: [id])
-  collectionEntries  CollectionEntry[]   @relation(references: [id])
-  items              Item[]              @relation(references: [id])
-  labels             Label[]             @relation(references: [id])
-  links              Link[]              @relation(references: [id])
-  notes              Note[]              @relation(references: [id])
-  uploadGroups       UploadGroup[]       @relation(references: [id])
+  files              File[]
+  googleAccounts     GoogleAccount[]
+  googleContacts     GoogleContact[]
+  savedSearches      SavedSearch[]
+  savedSearchFilters SavedSearchFilter[]
+  collections        Collection[]
+  collectionBlocks   CollectionBlock[]
+  collectionEntries  CollectionEntry[]
+  items              Item[]
+  labels             Label[]
+  links              Link[]
+  notes              Note[]
+  uploadGroups       UploadGroup[]
   role               String              @default("")
   isActive           Boolean             @default(false)
   inviteCodeId       String?

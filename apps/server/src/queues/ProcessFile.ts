@@ -10,7 +10,7 @@ export interface ProcessFileJobData {}
 
 const ProcessFile = new WorkerQueue('ProcessFile');
 
-ProcessFile.process(async job => {
+ProcessFile.process(5, async job => {
   const file: File = job.data.file;
   const user: User = job.data.user;
 

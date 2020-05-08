@@ -6,9 +6,11 @@ export class WorkerQueue extends Queue {
       ...opts,
       redis: process.env.REDIS_URL,
     });
+
+    this.addListeners();
   }
 
-  init() {
+  addListeners() {
     this.on('completed', job => {
       console.log(`${this.name}: Job with id ${job.id} has been completed`);
     });

@@ -113,27 +113,29 @@ model SavedSearchFilter {
 }
 
 model Collection {
-  id          String            @default(cuid()) @id
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  name        String
-  description String?
-  entries     CollectionEntry[]
-  items       Item[]
-  userId      String?
-  user        User?             @relation(fields: [userId], references: [id])
+  id              String            @default(cuid()) @id
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  name            String
+  description     String?
+  entries         CollectionEntry[]
+  items           Item[]
+  userId          String?
+  user            User?             @relation(fields: [userId], references: [id])
+  CollectionBlock CollectionBlock[]
 }
 
 model CollectionBlock {
-  id           String      @default(cuid()) @id
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  type         String
-  content      String
-  collectionId String?
-  collection   Collection? @relation(fields: [collectionId], references: [id])
-  userId       String?
-  user         User?       @relation(fields: [userId], references: [id])
+  id              String            @default(cuid()) @id
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  type            String
+  content         String
+  collectionId    String?
+  collection      Collection?       @relation(fields: [collectionId], references: [id])
+  userId          String?
+  user            User?             @relation(fields: [userId], references: [id])
+  CollectionEntry CollectionEntry[]
 }
 
 model CollectionEntry {
@@ -153,29 +155,29 @@ model CollectionEntry {
 
 // itemId          String?
 model Item {
-  id                String            @default(cuid()) @id
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  deletedAt         DateTime?
-  isFavorited       Boolean           @default(false)
-  status            String?           @default("NOT_STARTED")
-  type              String            @default("")
-  date              DateTime          @default(now())
-  linkId            String?
-  link              Link?             @relation(fields: [linkId], references: [id])
-  noteId            String?
-  note              Note?             @relation(fields: [noteId], references: [id])
-  fileId            String?
-  file              File?             @relation(fields: [fileId], references: [id])
-  googleContactId   String?
-  googleContact     GoogleContact?    @relation(fields: [googleContactId], references: [id])
-  userId            String?
-  user              User?             @relation(fields: [userId], references: [id])
-  labels            Label[]           @relation(references: [id])
-  collectionEntries CollectionEntry[] @relation(references: [id])
-  collections       Collection[]      @relation(references: [id])
-  ownedBy           Item[]            @relation("ItemToItem", references: [id])
-  items             Item[]            @relation("ItemToItem", references: [id])
+  id              String            @default(cuid()) @id
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  isFavorited     Boolean           @default(false)
+  status          String?           @default("NOT_STARTED")
+  type            String            @default("")
+  date            DateTime          @default(now())
+  linkId          String?
+  link            Link?             @relation(fields: [linkId], references: [id])
+  noteId          String?
+  note            Note?             @relation(fields: [noteId], references: [id])
+  fileId          String?
+  file            File?             @relation(fields: [fileId], references: [id])
+  googleContactId String?
+  googleContact   GoogleContact?    @relation(fields: [googleContactId], references: [id])
+  userId          String?
+  user            User?             @relation(fields: [userId], references: [id])
+  labels          Label[]           @relation(references: [id])
+  collections     Collection[]      @relation(references: [id])
+  ownedBy         Item[]            @relation("ItemToItem", references: [id])
+  items           Item[]            @relation("ItemToItem", references: [id])
+  CollectionEntry CollectionEntry[]
 
   @@index([type, status, isFavorited, deletedAt])
 }
