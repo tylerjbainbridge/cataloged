@@ -52,7 +52,7 @@ input CollectionBlockCreateWithoutCollectionEntryInput {
 }
 
 input CollectionBlockCreateWithoutCollectionInput {
-  collectionEntry: CollectionEntryCreateManyWithoutBlockInput
+  CollectionEntry: CollectionEntryCreateManyWithoutBlockInput
   content: String!
   createdAt: DateTime
   id: String
@@ -63,7 +63,7 @@ input CollectionBlockCreateWithoutCollectionInput {
 
 input CollectionBlockCreateWithoutUserInput {
   collection: CollectionCreateOneWithoutCollectionBlockInput
-  collectionEntry: CollectionEntryCreateManyWithoutBlockInput
+  CollectionEntry: CollectionEntryCreateManyWithoutBlockInput
   content: String!
   createdAt: DateTime
   id: String
@@ -80,7 +80,7 @@ input CollectionBlockFilter {
 input CollectionBlockWhereInput {
   AND: [CollectionBlockWhereInput!]
   collection: CollectionWhereInput
-  collectionEntry: CollectionEntryFilter
+  CollectionEntry: CollectionEntryFilter
   collectionId: NullableStringFilter
   content: StringFilter
   createdAt: DateTimeFilter
@@ -129,7 +129,7 @@ input CollectionCreateWithoutCollectionBlockInput {
 }
 
 input CollectionCreateWithoutEntriesInput {
-  collectionBlock: CollectionBlockCreateManyWithoutCollectionInput
+  CollectionBlock: CollectionBlockCreateManyWithoutCollectionInput
   createdAt: DateTime
   description: String
   id: String
@@ -140,7 +140,7 @@ input CollectionCreateWithoutEntriesInput {
 }
 
 input CollectionCreateWithoutItemsInput {
-  collectionBlock: CollectionBlockCreateManyWithoutCollectionInput
+  CollectionBlock: CollectionBlockCreateManyWithoutCollectionInput
   createdAt: DateTime
   description: String
   entries: CollectionEntryCreateManyWithoutCollectionInput
@@ -151,7 +151,7 @@ input CollectionCreateWithoutItemsInput {
 }
 
 input CollectionCreateWithoutUserInput {
-  collectionBlock: CollectionBlockCreateManyWithoutCollectionInput
+  CollectionBlock: CollectionBlockCreateManyWithoutCollectionInput
   createdAt: DateTime
   description: String
   entries: CollectionEntryCreateManyWithoutCollectionInput
@@ -199,7 +199,7 @@ input CollectionEntryCreateWithoutBlockInput {
   collection: CollectionCreateOneWithoutEntriesInput
   createdAt: DateTime
   id: String
-  item: ItemCreateOneWithoutCollectionEntriesInput
+  item: ItemCreateOneWithoutCollectionEntryInput
   position: Int
   updatedAt: DateTime
   user: UserCreateOneWithoutCollectionEntriesInput
@@ -209,7 +209,7 @@ input CollectionEntryCreateWithoutCollectionInput {
   block: CollectionBlockCreateOneWithoutCollectionEntryInput
   createdAt: DateTime
   id: String
-  item: ItemCreateOneWithoutCollectionEntriesInput
+  item: ItemCreateOneWithoutCollectionEntryInput
   position: Int
   updatedAt: DateTime
   user: UserCreateOneWithoutCollectionEntriesInput
@@ -230,7 +230,7 @@ input CollectionEntryCreateWithoutUserInput {
   collection: CollectionCreateOneWithoutEntriesInput
   createdAt: DateTime
   id: String
-  item: ItemCreateOneWithoutCollectionEntriesInput
+  item: ItemCreateOneWithoutCollectionEntryInput
   position: Int
   updatedAt: DateTime
 }
@@ -280,13 +280,12 @@ input CollectionOrderByInput {
   id: OrderByArg
   name: OrderByArg
   updatedAt: OrderByArg
-  user: OrderByArg
   userId: OrderByArg
 }
 
 input CollectionWhereInput {
   AND: [CollectionWhereInput!]
-  collectionBlock: CollectionBlockFilter
+  CollectionBlock: CollectionBlockFilter
   createdAt: DateTimeFilter
   description: NullableStringFilter
   entries: CollectionEntryFilter
@@ -450,9 +449,7 @@ input FileOrderByInput {
   size: OrderByArg
   title: OrderByArg
   updatedAt: OrderByArg
-  uploadGroup: OrderByArg
   uploadGroupId: OrderByArg
-  user: OrderByArg
   userId: OrderByArg
   width: OrderByArg
 }
@@ -820,9 +817,9 @@ input ItemCreateManyWithoutUserInput {
   create: [ItemCreateWithoutUserInput!]
 }
 
-input ItemCreateOneWithoutCollectionEntriesInput {
+input ItemCreateOneWithoutCollectionEntryInput {
   connect: ItemWhereUniqueInput
-  create: ItemCreateWithoutCollectionEntriesInput
+  create: ItemCreateWithoutCollectionEntryInput
 }
 
 input ItemCreateOneWithoutFileInput {
@@ -845,7 +842,7 @@ input ItemCreateOneWithoutNoteInput {
   create: ItemCreateWithoutNoteInput
 }
 
-input ItemCreateWithoutCollectionEntriesInput {
+input ItemCreateWithoutCollectionEntryInput {
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -866,7 +863,7 @@ input ItemCreateWithoutCollectionEntriesInput {
 }
 
 input ItemCreateWithoutCollectionsInput {
-  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
@@ -886,7 +883,7 @@ input ItemCreateWithoutCollectionsInput {
 }
 
 input ItemCreateWithoutFileInput {
-  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -906,7 +903,7 @@ input ItemCreateWithoutFileInput {
 }
 
 input ItemCreateWithoutGoogleContactInput {
-  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -926,7 +923,7 @@ input ItemCreateWithoutGoogleContactInput {
 }
 
 input ItemCreateWithoutItemsInput {
-  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -946,7 +943,7 @@ input ItemCreateWithoutItemsInput {
 }
 
 input ItemCreateWithoutLabelsInput {
-  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -966,7 +963,7 @@ input ItemCreateWithoutLabelsInput {
 }
 
 input ItemCreateWithoutLinkInput {
-  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -986,7 +983,7 @@ input ItemCreateWithoutLinkInput {
 }
 
 input ItemCreateWithoutNoteInput {
-  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1006,7 +1003,7 @@ input ItemCreateWithoutNoteInput {
 }
 
 input ItemCreateWithoutOwnedByInput {
-  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1026,7 +1023,7 @@ input ItemCreateWithoutOwnedByInput {
 }
 
 input ItemCreateWithoutUserInput {
-  collectionEntries: CollectionEntryCreateManyWithoutItemInput
+  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1060,20 +1057,15 @@ input ItemOrderByInput {
   createdAt: OrderByArg
   date: OrderByArg
   deletedAt: OrderByArg
-  file: OrderByArg
   fileId: OrderByArg
-  googleContact: OrderByArg
   googleContactId: OrderByArg
   id: OrderByArg
   isFavorited: OrderByArg
-  link: OrderByArg
   linkId: OrderByArg
-  note: OrderByArg
   noteId: OrderByArg
   status: OrderByArg
   type: OrderByArg
   updatedAt: OrderByArg
-  user: OrderByArg
   userId: OrderByArg
 }
 
@@ -1092,7 +1084,7 @@ enum ItemType {
 
 input ItemWhereInput {
   AND: [ItemWhereInput!]
-  collectionEntries: CollectionEntryFilter
+  CollectionEntry: CollectionEntryFilter
   collections: CollectionFilter
   createdAt: DateTimeFilter
   date: DateTimeFilter
@@ -1172,7 +1164,6 @@ input LabelOrderByInput {
   id: OrderByArg
   name: OrderByArg
   updatedAt: OrderByArg
-  user: OrderByArg
   userId: OrderByArg
 }
 
@@ -1191,6 +1182,7 @@ input LabelWhereInput {
 
 input LabelWhereUniqueInput {
   id: String
+  name: String
 }
 
 type Link {
@@ -1667,7 +1659,6 @@ input UploadGroupOrderByInput {
   isComplete: OrderByArg
   isFailed: OrderByArg
   updatedAt: OrderByArg
-  user: OrderByArg
   userId: OrderByArg
 }
 
@@ -2132,7 +2123,6 @@ input UserOrderByInput {
   email: OrderByArg
   firstName: OrderByArg
   id: OrderByArg
-  inviteCode: OrderByArg
   inviteCodeId: OrderByArg
   isActive: OrderByArg
   lastName: OrderByArg
