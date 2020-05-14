@@ -10,25 +10,29 @@ export class WorkerQueue extends Queue {
     this.addListeners();
   }
 
+  log(str: string, ...args: any[]) {
+    console.log(`${this.name}: ${str}`, ...args);
+  }
+
   addListeners() {
     this.on('completed', job => {
-      console.log(`${this.name}: Job with id ${job.id} has been completed`);
+      this.log(`Job with id ${job.id} has been completed`);
     });
 
     this.on('error', error => {
-      console.log(`${this.name}: error`, error);
+      this.log(`error`, error);
     });
 
     this.on('waiting', jobId => {
-      console.log(`${this.name}: Job:${jobId} - waiting `);
+      this.log(`Job:${jobId} - waiting `);
     });
 
     this.on('active', job => {
-      console.log(`${this.name}: Job:${job.id} - active `);
+      this.log(`Job:${job.id} - active `);
     });
 
     this.on('stalled', job => {
-      console.log(`${this.name}: Job:${job.id} - stalled `);
+      this.log(`Job:${job.id} - stalled `);
     });
 
     this.on('completed', (job, result) => {
@@ -37,7 +41,7 @@ export class WorkerQueue extends Queue {
 
     this.on('failed', (job, err) => {
       // A job failed with reason `err`!
-      console.log(`${this.name}: Job:${job.id} - failed `, err);
+      this.log(`Job:${job.id} - failed `, err);
     });
   }
 }

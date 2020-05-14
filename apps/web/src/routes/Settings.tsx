@@ -32,17 +32,21 @@ export interface ItemDrawerProps {
 }
 
 export const GET_GOOGLE_URLS = gql`
-  query getGoogleContactsURL(
-    $scopes: [String!]
-    $googleAccountId: String
-    $syncContent: String
-  ) {
+  query getGoogleContactsURL($googleAccountId: String) {
     googleContactsURL: googleURL(
       origin: "/settings"
       isAuthMethod: false
-      scopes: $scopes
+      syncContent: "contacts"
+      scopes: ["https://www.googleapis.com/auth/contacts.readonly"]
       googleAccountId: $googleAccountId
-      syncContent: $syncContent
+    )
+
+    googleDriveURL: googleURL(
+      origin: "/settings"
+      isAuthMethod: false
+      googleAccountId: $googleAccountId
+      syncContent: "drive"
+      scopes: ["https://www.googleapis.com/auth/drive.readonly"]
     )
   }
 `;
@@ -53,7 +57,13 @@ export const SYNC_GOOGLE_CONTACTS = gql`
   }
 `;
 
-export const ConnectButton = ({
+export const SYNC_GOOGLE_DRIVE = gql`
+  mutation syncGoogleDrive($googleAccountId: String!) {
+    syncGoogleDrive(googleAccountId: $googleAccountId)
+  }
+`;
+
+export const ConnectButtons = ({
   scopes,
   googleAccountId,
   syncContent,
@@ -65,6 +75,7 @@ export const ConnectButton = ({
   const toast = useToast();
 
   const getUrl = useQuery(GET_GOOGLE_URLS, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       scopes,
       syncContent,
@@ -72,15 +83,29 @@ export const ConnectButton = ({
     },
   });
 
-  const [syncGoogleContacts, mutationState] = useMutation(
+  const [syncGoogleDrive, googleDriveState] = useMutation(SYNC_GOOGLE_DRIVE, {
+    variables: {
+      googleAccountId,
+    },
+    onCompleted: data => {
+      removeFromQueryString(['syncContent', 'googleAccountId']);
+
+      toast({
+        title: 'Sync started...this may take a while.',
+        status: 'success',
+        duration: 2000,
+        position: 'bottom-left',
+      });
+    },
+  });
+
+  const [syncGoogleContacts, googleContactState] = useMutation(
     SYNC_GOOGLE_CONTACTS,
     {
       variables: {
         googleAccountId,
       },
       onCompleted: data => {
-        console.log('done syncing');
-
         removeFromQueryString(['syncContent', 'googleAccountId']);
 
         toast({
@@ -96,33 +121,57 @@ export const ConnectButton = ({
   useEffect(() => {
     const parsed = qs.parse(location.search);
 
-    if (
-      parsed?.syncContent === 'contacts' &&
-      parsed?.googleAccountId === googleAccountId
-    ) {
-      // syncGoogleContacts();
+    if (parsed?.googleAccountId === googleAccountId) {
+      switch (parsed?.syncContent) {
+        case 'contacts':
+          syncGoogleContacts();
+          break;
+        case 'drive':
+          syncGoogleDrive();
+          break;
+      }
     }
   }, []);
 
   return (
-    <Button
-      cursor="pointer"
-      variant="outline"
-      bg="brand.pink.light"
-      color="brand.pink.main"
-      _hover={{ bg: '#e8e4ed', borderColor: 'brand.pink.main' }}
-      border="2px solid"
-      borderColor="brand.pink.main"
-      size="md"
-      maxWidth="50%"
-      isLoading={getUrl.loading || mutationState.loading}
-      isDisabled={!getUrl.data?.googleContactsURL}
-      onClick={() => {
-        window.location.replace(getUrl.data?.googleContactsURL);
-      }}
-    >
-      Add Google Contacts
-    </Button>
+    <Stack>
+      <Button
+        cursor="pointer"
+        variant="outline"
+        bg="brand.pink.light"
+        color="brand.pink.main"
+        _hover={{ bg: '#e8e4ed', borderColor: 'brand.pink.main' }}
+        border="2px solid"
+        borderColor="brand.pink.main"
+        size="md"
+        maxWidth="50%"
+        isLoading={getUrl.loading || googleContactState.loading}
+        isDisabled={!getUrl.data?.googleContactsURL}
+        onClick={() => {
+          window.location.replace(getUrl.data?.googleContactsURL);
+        }}
+      >
+        Add Google Contacts
+      </Button>
+      <Button
+        cursor="pointer"
+        variant="outline"
+        bg="brand.pink.light"
+        color="brand.pink.main"
+        _hover={{ bg: '#e8e4ed', borderColor: 'brand.pink.main' }}
+        border="2px solid"
+        borderColor="brand.pink.main"
+        size="md"
+        maxWidth="50%"
+        isLoading={getUrl.loading || googleDriveState.loading}
+        isDisabled={!getUrl.data?.googleDriveURL}
+        onClick={() => {
+          window.location.replace(getUrl.data?.googleDriveURL);
+        }}
+      >
+        Add Google Drive
+      </Button>
+    </Stack>
   );
 };
 
@@ -188,12 +237,8 @@ export const Settings = () => {
               {user.googleAccounts.map((googleAccount: any) => (
                 <Stack>
                   <Text>{googleAccount.email}</Text>
-                  <ConnectButton
+                  <ConnectButtons
                     key={googleAccount.id}
-                    syncContent="contacts"
-                    scopes={[
-                      'https://www.googleapis.com/auth/contacts.readonly',
-                    ]}
                     googleAccountId={googleAccount.id}
                   />
                 </Stack>

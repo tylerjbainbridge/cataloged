@@ -63,10 +63,7 @@ export const GoogleCallback = ({
     {
       variables: { code: values.code, isAuthMethod: !!state?.isAuthMethod },
       onCompleted: async data => {
-        if (data?.googleAuth?.token) {
-          await signIn(data.googleAuth.token);
-          // window.location.replace('/');
-        } else {
+        if (state?.syncContent) {
           const newState: any = {};
 
           if (state?.googleAccountId)
@@ -77,13 +74,16 @@ export const GoogleCallback = ({
           const query = queryString.stringify(newState);
 
           history.push(`${state?.origin || '/'}${query ? `?${query}` : ''}`);
+        } else if (data?.googleAuth?.token) {
+          await signIn(data.googleAuth.token);
+          // window.location.replace('/');
         }
       },
     },
   );
 
   useEffect(() => {
-    googleAuth().catch(() => {});
+    googleAuth().catch(e => console.error(e));
   }, []);
 
   const prevUser = usePrevious(user);

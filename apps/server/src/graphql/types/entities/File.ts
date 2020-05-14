@@ -30,17 +30,33 @@ export const File = objectType({
     t.model.item();
 
     t.string('originalUrl', {
-      resolve: (file, args, ctx) =>
-        getCloudFrontURL(ctx.user, file, KEY_TYPES.original),
+      resolve: (file, args, ctx) => {
+        if (!file.googleAccountId) {
+          return getCloudFrontURL(ctx.user, file, KEY_TYPES.original);
+        }
+
+        return JSON.parse(file.metadata)?.fullImageLink;
+      },
     });
 
     t.string('fullUrl', {
-      resolve: (file, args, ctx) => getCloudFrontURL(ctx.user, file),
+      resolve: (file, args, ctx) => {
+        if (!file.googleAccountId) {
+          return getCloudFrontURL(ctx.user, file);
+        }
+
+        return JSON.parse(file.metadata)?.fullImageLink;
+      },
     });
 
     t.string('squareUrl', {
-      resolve: (file, args, ctx) =>
-        getCloudFrontURL(ctx.user, file, KEY_TYPES.square),
+      resolve: (file, args, ctx) => {
+        if (!file.googleAccountId) {
+          return getCloudFrontURL(ctx.user, file, KEY_TYPES.square);
+        }
+
+        return `https://drive.google.com/thumbnail?authuser=0&sz=w320&id=${file.externalId}`;
+      },
     });
   },
 });

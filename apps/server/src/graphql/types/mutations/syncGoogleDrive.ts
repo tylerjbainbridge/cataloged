@@ -3,6 +3,7 @@ import { extendType, stringArg, booleanArg } from 'nexus';
 import { JWT } from '../entities/JWT';
 import { TokenService } from '../../../services/TokenService';
 import { User } from '@prisma/client';
+import { SyncGoogleDrive } from '../../../queues/SyncGoogleDrive';
 
 export const syncGoogleDrive = extendType({
   type: 'Mutation',
@@ -17,11 +18,9 @@ export const syncGoogleDrive = extendType({
           where: { id: args.googleAccountId },
         });
 
-        console.log(googleAccount);
+        SyncGoogleDrive.add({ googleAccount, user: ctx.user });
 
-        await ctx.google.getGoogleDriveFiles(googleAccount);
-
-        return '';
+        return 'Started...';
       },
     });
   },

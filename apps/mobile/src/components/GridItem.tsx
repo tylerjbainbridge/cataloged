@@ -46,6 +46,8 @@ export const GridItem = ({ item }: GridItemProps) => {
     subTitle,
   } = getGenericItemData(item);
 
+  // console.log(createdAt);
+
   return (
     <Box
       height={GRID_ITEM_HEIGHT}

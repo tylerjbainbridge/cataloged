@@ -340,14 +340,18 @@ type File {
 input FileCreateInput {
   contentType: String
   createdAt: DateTime
+  date: DateTime
   description: String
   extension: String
+  externalId: String
+  googleAccount: GoogleAccountCreateOneWithoutGoogleDriveFilesInput
   hasStartedUploading: Boolean
   height: Int
   id: String
   isFailed: Boolean
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput
+  metadata: Json!
   name: String
   size: Int
   title: String
@@ -355,6 +359,11 @@ input FileCreateInput {
   uploadGroup: UploadGroupCreateOneWithoutFilesInput
   user: UserCreateOneWithoutFilesInput
   width: Int
+}
+
+input FileCreateManyWithoutGoogleAccountInput {
+  connect: [FileWhereUniqueInput!]
+  create: [FileCreateWithoutGoogleAccountInput!]
 }
 
 input FileCreateManyWithoutUploadGroupInput {
@@ -372,16 +381,43 @@ input FileCreateOneWithoutItemInput {
   create: FileCreateWithoutItemInput
 }
 
-input FileCreateWithoutItemInput {
+input FileCreateWithoutGoogleAccountInput {
   contentType: String
   createdAt: DateTime
+  date: DateTime
   description: String
   extension: String
+  externalId: String
   hasStartedUploading: Boolean
   height: Int
   id: String
   isFailed: Boolean
   isUploaded: Boolean
+  item: ItemCreateOneWithoutFileInput
+  metadata: Json!
+  name: String
+  size: Int
+  title: String
+  updatedAt: DateTime
+  uploadGroup: UploadGroupCreateOneWithoutFilesInput
+  user: UserCreateOneWithoutFilesInput
+  width: Int
+}
+
+input FileCreateWithoutItemInput {
+  contentType: String
+  createdAt: DateTime
+  date: DateTime
+  description: String
+  extension: String
+  externalId: String
+  googleAccount: GoogleAccountCreateOneWithoutGoogleDriveFilesInput
+  hasStartedUploading: Boolean
+  height: Int
+  id: String
+  isFailed: Boolean
+  isUploaded: Boolean
+  metadata: Json!
   name: String
   size: Int
   title: String
@@ -394,14 +430,18 @@ input FileCreateWithoutItemInput {
 input FileCreateWithoutUploadGroupInput {
   contentType: String
   createdAt: DateTime
+  date: DateTime
   description: String
   extension: String
+  externalId: String
+  googleAccount: GoogleAccountCreateOneWithoutGoogleDriveFilesInput
   hasStartedUploading: Boolean
   height: Int
   id: String
   isFailed: Boolean
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput
+  metadata: Json!
   name: String
   size: Int
   title: String
@@ -413,14 +453,18 @@ input FileCreateWithoutUploadGroupInput {
 input FileCreateWithoutUserInput {
   contentType: String
   createdAt: DateTime
+  date: DateTime
   description: String
   extension: String
+  externalId: String
+  googleAccount: GoogleAccountCreateOneWithoutGoogleDriveFilesInput
   hasStartedUploading: Boolean
   height: Int
   id: String
   isFailed: Boolean
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput
+  metadata: Json!
   name: String
   size: Int
   title: String
@@ -438,13 +482,17 @@ input FileFilter {
 input FileOrderByInput {
   contentType: OrderByArg
   createdAt: OrderByArg
+  date: OrderByArg
   description: OrderByArg
   extension: OrderByArg
+  externalId: OrderByArg
+  googleAccountId: OrderByArg
   hasStartedUploading: OrderByArg
   height: OrderByArg
   id: OrderByArg
   isFailed: OrderByArg
   isUploaded: OrderByArg
+  metadata: OrderByArg
   name: OrderByArg
   size: OrderByArg
   title: OrderByArg
@@ -458,14 +506,19 @@ input FileWhereInput {
   AND: [FileWhereInput!]
   contentType: NullableStringFilter
   createdAt: DateTimeFilter
+  date: DateTimeFilter
   description: StringFilter
   extension: StringFilter
+  externalId: NullableStringFilter
+  googleAccount: GoogleAccountWhereInput
+  googleAccountId: NullableStringFilter
   hasStartedUploading: NullableBooleanFilter
   height: NullableIntFilter
   id: StringFilter
   isFailed: NullableBooleanFilter
   isUploaded: NullableBooleanFilter
   item: ItemWhereInput
+  metadata: JsonFilter
   name: StringFilter
   NOT: [FileWhereInput!]
   OR: [FileWhereInput!]
@@ -517,6 +570,11 @@ input GoogleAccountCreateOneWithoutGoogleContactsInput {
   create: GoogleAccountCreateWithoutGoogleContactsInput
 }
 
+input GoogleAccountCreateOneWithoutGoogleDriveFilesInput {
+  connect: GoogleAccountWhereUniqueInput
+  create: GoogleAccountCreateWithoutGoogleDriveFilesInput
+}
+
 input GoogleAccountCreateWithoutGoogleContactsInput {
   accessToken: String
   accountId: String
@@ -524,6 +582,25 @@ input GoogleAccountCreateWithoutGoogleContactsInput {
   email: String
   expiresAt: DateTime!
   firstName: String
+  googleDriveFiles: FileCreateManyWithoutGoogleAccountInput
+  id: String
+  isAuthMethod: Boolean
+  lastName: String
+  metadata: String
+  picture: String
+  refreshToken: String
+  updatedAt: DateTime
+  user: UserCreateOneWithoutGoogleAccountsInput
+}
+
+input GoogleAccountCreateWithoutGoogleDriveFilesInput {
+  accessToken: String
+  accountId: String
+  createdAt: DateTime
+  email: String
+  expiresAt: DateTime!
+  firstName: String
+  googleContacts: GoogleContactCreateManyWithoutGoogleAccountInput
   id: String
   isAuthMethod: Boolean
   lastName: String
@@ -542,6 +619,7 @@ input GoogleAccountCreateWithoutUserInput {
   expiresAt: DateTime!
   firstName: String
   googleContacts: GoogleContactCreateManyWithoutGoogleAccountInput
+  googleDriveFiles: FileCreateManyWithoutGoogleAccountInput
   id: String
   isAuthMethod: Boolean
   lastName: String
@@ -566,6 +644,7 @@ input GoogleAccountWhereInput {
   expiresAt: DateTimeFilter
   firstName: NullableStringFilter
   googleContacts: GoogleContactFilter
+  googleDriveFiles: FileFilter
   id: StringFilter
   isAuthMethod: NullableBooleanFilter
   lastName: NullableStringFilter
@@ -1115,6 +1194,12 @@ input ItemWhereUniqueInput {
   id: String
 }
 
+scalar Json
+
+input JsonFilter {
+  test: String
+}
+
 type JWT {
   token: String!
 }
@@ -1307,7 +1392,6 @@ type Mutation {
   syncGoogleContacts(googleAccountId: String!): Int!
   syncGoogleDrive(googleAccountId: String!): String!
   taskAddFileMeta: String!
-  taskFixItemDates: String!
   taskFixLinks: String!
   testSendEmail: String!
   updateBlockContent(blockId: String!, collectionId: String!, content: String): CollectionBlock!
@@ -1419,6 +1503,10 @@ input NullableIntFilter {
   lte: Int
   not: Int
   notIn: [Int!]
+}
+
+input NullableJsonFilter {
+  test: String
 }
 
 input NullableStringFilter {

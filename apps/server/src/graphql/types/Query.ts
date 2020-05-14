@@ -53,6 +53,8 @@ export const Query = objectType({
 
         if (syncContent) state.syncContent = syncContent;
 
+        console.log({ state });
+
         // @ts-ignore
         return ctx.google.getUrl({ state, additionalScopes: scopes });
       },

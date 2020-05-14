@@ -1,0 +1,79 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "CreateField",
+      "model": "File",
+      "field": "externalId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "File",
+      "field": "googleAccountId",
+      "type": "String",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "File",
+      "field": "googleAccount",
+      "type": "GoogleAccount",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateDirective",
+      "location": {
+        "path": {
+          "tag": "Field",
+          "model": "File",
+          "field": "googleAccount"
+        },
+        "directive": "relation"
+      }
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "File",
+          "field": "googleAccount"
+        },
+        "directive": "relation"
+      },
+      "argument": "fields",
+      "value": "[googleAccountId]"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "File",
+          "field": "googleAccount"
+        },
+        "directive": "relation"
+      },
+      "argument": "references",
+      "value": "[id]"
+    },
+    {
+      "tag": "CreateField",
+      "model": "File",
+      "field": "metadata",
+      "type": "Json",
+      "arity": "Required"
+    },
+    {
+      "tag": "CreateField",
+      "model": "GoogleAccount",
+      "field": "googleDriveFiles",
+      "type": "File",
+      "arity": "List"
+    }
+  ]
+}

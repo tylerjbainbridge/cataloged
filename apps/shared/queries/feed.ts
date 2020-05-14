@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+
 import { ITEM_CONNECTION_FULL_FRAGMENT } from '../graphql/item';
 
 export const FEED_QUERY = gql`

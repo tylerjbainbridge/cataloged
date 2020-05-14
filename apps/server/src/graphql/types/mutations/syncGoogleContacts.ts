@@ -25,6 +25,8 @@ export const syncGoogleContacts = extendType({
 
         const connections = await googleContactsService.importGoogleContacts();
 
+        console.log('connections', connections.length);
+
         return connections.length;
       },
     });

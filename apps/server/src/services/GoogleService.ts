@@ -12,16 +12,37 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
 export class GoogleService {
   auth: OAuth2Client;
   plus: plus_v1.Plus;
+  host: string;
 
-  constructor(host: string) {
+  static google = google;
+
+  constructor(host?: string) {
+    this.host =
+      host ||
+      (process.env.NODE_ENV === 'development'
+        ? 'http://localhost:3000'
+        : 'https://app.cataloged.co');
+
     this.auth = new google.auth.OAuth2(
       GOOGLE_CLIENT_ID,
       GOOGLE_CLIENT_SECRET,
-      `${host}/google/redirect`,
+      `${this.host}/google/redirect`,
     );
 
     this.plus = google.plus({ version: 'v1', auth: this.auth });
   }
+
+  setTokensAndRefresh = async ({
+    refreshToken,
+    accessToken,
+  }: GoogleAccount) => {
+    this.auth.setCredentials({
+      refresh_token: refreshToken,
+      access_token: accessToken,
+    });
+
+    await this.auth.refreshAccessToken();
+  };
 
   getUrl = ({ additionalScopes, loginHint, state }: any = {}) => {
     return this.auth.generateAuthUrl({
@@ -71,6 +92,8 @@ export class GoogleService {
     };
   };
 
+  getDrive = () => google.drive({ version: 'v3', auth: this.auth });
+
   getGoogleDriveFiles = async (googleAccount: GoogleAccount) => {
     const { refreshToken, accessToken, expiresAt } = googleAccount;
 
@@ -94,7 +117,8 @@ export class GoogleService {
       const { data } = await drive.files.list({
         pageSize: 1000,
         pageToken: nextPageToken,
-        fields: 'nextPageToken, files(id, name)',
+        fields:
+          'nextPageToken, files(id, name, mimeType, webContentLink, webViewLink, hasThumbnail, thumbnailLink)',
       });
 
       console.log(`Fetched page: ${page}`);

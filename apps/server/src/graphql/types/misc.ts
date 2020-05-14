@@ -97,6 +97,20 @@ export const FilterInput = inputObjectType({
   },
 });
 
+export const NullableJsonFilter = inputObjectType({
+  name: 'NullableJsonFilter',
+  definition(t) {
+    t.string('test');
+  },
+});
+
+export const JsonFilter = inputObjectType({
+  name: 'JsonFilter',
+  definition(t) {
+    t.string('test');
+  },
+});
+
 export const NewCollectionEntryInput = inputObjectType({
   name: 'NewCollectionEntryInput',
   definition(t) {

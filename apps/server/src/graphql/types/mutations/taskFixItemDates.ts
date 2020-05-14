@@ -1,27 +1,27 @@
 import { extendType, stringArg } from 'nexus';
 import _ from 'lodash';
 import Bluebird from 'bluebird';
-import { Item } from '@prisma/client';
+import { File } from '@prisma/client';
 
-export const taskFixItemDates = extendType({
+export const taskFixFileDates = extendType({
   type: 'Mutation',
   definition(t) {
-    t.field('taskFixItemDates', {
+    t.field('taskFixFileDates', {
       type: 'String',
       resolve: async (root, args, ctx) => {
-        const items = await ctx.prisma.item.findMany();
+        const files = await ctx.prisma.file.findMany();
 
         await Bluebird.map(
-          items,
-          async (item: Item) =>
-            await ctx.prisma.item.update({
-              where: { id: item.id },
-              data: { date: item.createdAt },
+          files,
+          async (file: File) =>
+            await ctx.prisma.file.update({
+              where: { id: file.id },
+              data: { date: file.createdAt },
             }),
-          { concurrency: 5 },
+          { concurrency: 50 },
         );
 
-        return `Updated ${items.length} items`;
+        return `Updated ${files.length} files`;
       },
     });
   },

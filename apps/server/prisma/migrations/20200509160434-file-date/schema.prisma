@@ -23,46 +23,52 @@ model InterestedUser {
 }
 
 model File {
-  id                  String       @default(cuid()) @id
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
-  extension           String       @default("")
+  id                  String         @default(cuid()) @id
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  date                DateTime       @default(now())
+  extension           String         @default("")
   hasStartedUploading Boolean?
   height              Int?
   isFailed            Boolean?
   isUploaded          Boolean?
   item                Item?
-  name                String       @default("")
+  name                String         @default("")
   size                Int?
   contentType         String?
-  title               String       @default("")
-  description         String       @default("")
+  title               String         @default("")
+  description         String         @default("")
   uploadGroupId       String?
-  uploadGroup         UploadGroup? @relation(fields: [uploadGroupId], references: [id])
+  uploadGroup         UploadGroup?   @relation(fields: [uploadGroupId], references: [id])
   userId              String?
-  user                User?        @relation(fields: [userId], references: [id])
+  user                User?          @relation(fields: [userId], references: [id])
   width               Int?
+  externalId          String?
+  googleAccountId     String?
+  googleAccount       GoogleAccount? @relation(fields: [googleAccountId], references: [id])
+  metadata            Json
 
   @@index([name, title, description, extension, isUploaded, isFailed])
 }
 
 model GoogleAccount {
-  id             String          @default(cuid()) @id
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  accountId      String?         @unique
-  email          String?
-  firstName      String?
-  lastName       String?
-  picture        String?
-  refreshToken   String?
-  accessToken    String?
-  expiresAt      DateTime
-  isAuthMethod   Boolean?
-  metadata       String?
-  userId         String?
-  user           User?           @relation(fields: [userId], references: [id])
-  googleContacts GoogleContact[]
+  id               String          @default(cuid()) @id
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  accountId        String?         @unique
+  email            String?
+  firstName        String?
+  lastName         String?
+  picture          String?
+  refreshToken     String?
+  accessToken      String?
+  expiresAt        DateTime
+  isAuthMethod     Boolean?
+  metadata         String?
+  userId           String?
+  user             User?           @relation(fields: [userId], references: [id])
+  googleContacts   GoogleContact[]
+  googleDriveFiles File[]
 }
 
 model GoogleContact {
