@@ -46,7 +46,7 @@ model File {
   externalId          String?
   googleAccountId     String?
   googleAccount       GoogleAccount? @relation(fields: [googleAccountId], references: [id])
-  metadata            Json
+  metadata            String?
 
   @@index([name, title, description, extension, isUploaded, isFailed])
 }
@@ -64,7 +64,7 @@ model GoogleAccount {
   accessToken        String?
   expiresAt          DateTime
   isAuthMethod       Boolean?
-  metadata           Json?
+  metadata           String?
   userId             String?
   user               User?               @relation(fields: [userId], references: [id])
   googleContacts     GoogleContact[]

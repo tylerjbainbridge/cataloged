@@ -46,29 +46,40 @@ model File {
   externalId          String?
   googleAccountId     String?
   googleAccount       GoogleAccount? @relation(fields: [googleAccountId], references: [id])
-  metadata            Json
+  metadata            String?
 
   @@index([name, title, description, extension, isUploaded, isFailed])
 }
 
 model GoogleAccount {
-  id               String          @default(cuid()) @id
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  accountId        String?         @unique
-  email            String?
-  firstName        String?
-  lastName         String?
-  picture          String?
-  refreshToken     String?
-  accessToken      String?
-  expiresAt        DateTime
-  isAuthMethod     Boolean?
-  metadata         String?
-  userId           String?
-  user             User?           @relation(fields: [userId], references: [id])
-  googleContacts   GoogleContact[]
-  googleDriveFiles File[]
+  id                 String              @default(cuid()) @id
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  accountId          String?             @unique
+  email              String?
+  firstName          String?
+  lastName           String?
+  picture            String?
+  refreshToken       String?
+  accessToken        String?
+  expiresAt          DateTime
+  isAuthMethod       Boolean?
+  metadata           String?
+  userId             String?
+  user               User?               @relation(fields: [userId], references: [id])
+  googleContacts     GoogleContact[]
+  googleDriveFiles   File[]
+  googleDriveWebhook GoogleDriveWebhook?
+}
+
+model GoogleDriveWebhook {
+  id              String        @default(cuid()) @id
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  address         String
+  expiresAt       DateTime
+  googleAccountId String
+  googleAccount   GoogleAccount @relation(fields: [googleAccountId], references: [id])
 }
 
 model GoogleContact {

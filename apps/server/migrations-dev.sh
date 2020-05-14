@@ -1,6 +1,6 @@
 source ../../.env;
 
-export DEBUG="*"
+# export DEBUG="*"
 
 echo "Saving migrations";
 npx prisma migrate save --experimental
