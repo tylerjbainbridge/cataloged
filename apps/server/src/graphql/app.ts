@@ -72,17 +72,17 @@ app.use(morgan('tiny'));
 
 var whitelist = ['https://cataloged.co/', 'https://app.cataloged.co/'];
 
-app.use(
-  cors({
-    origin: function(origin, callback) {
-      if (whitelist.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-  }),
-);
+const CORS_CONFIG = {
+  origin: function(origin, callback) {
+    if (whitelist.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
+app.use(cors());
 
 app.get('/debug-sentry', function mainHandler(req, res) {
   throw new Error('My first Sentry error!');
