@@ -22,7 +22,6 @@ require('dotenv').config();
 
 import morgan from 'morgan';
 import cors from 'cors';
-
 import { ApolloServer } from 'apollo-server-express';
 import { default as express } from 'express';
 import * as Nexus from 'nexus';
@@ -66,23 +65,11 @@ const schema = Nexus.makeSchema({
 
 const app = express();
 
+app.use(cors());
+
 app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
 
 app.use(morgan('tiny'));
-
-var whitelist = ['https://cataloged.co/', 'https://app.cataloged.co/'];
-
-const CORS_CONFIG = {
-  origin: function(origin, callback) {
-    if (whitelist.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
-
-app.use(cors());
 
 app.get('/debug-sentry', function mainHandler(req, res) {
   throw new Error('My first Sentry error!');
