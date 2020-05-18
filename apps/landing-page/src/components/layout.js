@@ -4,6 +4,7 @@ import { window } from 'browser-monads';
 
 import { ThemeProvider, CSSReset, theme as t } from '@chakra-ui/core';
 import { createGlobalStyle } from 'styled-components';
+import ApolloClient from 'apollo-boost';
 
 import favicon from '../images/favicon.png';
 
@@ -18,6 +19,15 @@ export const GlobalStyles = createGlobalStyle`
 const system = `-apple-system, system-ui, BlinkMacSystemFont, 
 'Segoe UI', Roboto, 'Helvetica Neue', 
 Ubuntu, Arial, sans-serif;`;
+
+export const GRAPHQL_ENDPOINT =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000'
+    : 'https://api.cataloged.co/';
+
+export const client = new ApolloClient({
+  uri: GRAPHQL_ENDPOINT,
+});
 
 export const useMedia = query => {
   const mediaMatch = window.matchMedia(query);
