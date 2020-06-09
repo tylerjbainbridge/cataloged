@@ -67,6 +67,8 @@ const app = express();
 
 app.use(cors());
 
+app.options('*', cors());
+
 app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
 
 app.use(morgan('tiny'));
