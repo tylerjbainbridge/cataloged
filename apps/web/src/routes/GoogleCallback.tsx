@@ -111,7 +111,7 @@ export const GoogleCallback = ({
             <AlertIcon />
             <AlertTitle mr={2}>Authentication failed!</AlertTitle>
           </Alert>
-          <Button size="sm" onClick={window.location.reload}>
+          <Button size="sm" onClick={() => window.location.reload()}>
             Try again
           </Button>
         </Stack>
