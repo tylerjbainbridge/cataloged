@@ -56,10 +56,7 @@ if (window.interop) window.interop.setBadgeCount(9001);
                         <AlertIcon />
                         <AlertTitle mr={2}>Something went wrong!</AlertTitle>
                       </Alert>
-                      <Button
-                        size="sm"
-                        onClick={() => window.location.reload()}
-                      >
+                      <Button size="sm" onClick={window.location.reload}>
                         Try again
                       </Button>
                     </Stack>
@@ -94,7 +91,7 @@ if (window.interop) window.interop.setBadgeCount(9001);
               </Text>
             </AlertTitle>
           </Alert>
-          <Button size="sm" onClick={() => window.location.reload()}>
+          <Button size="sm" onClick={window.location.reload}>
             Try again
           </Button>
         </Stack>
