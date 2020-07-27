@@ -199,7 +199,7 @@ input CollectionEntryCreateWithoutBlockInput {
   collection: CollectionCreateOneWithoutEntriesInput
   createdAt: DateTime
   id: String
-  item: ItemCreateOneWithoutCollectionEntryInput
+  item: ItemCreateOneWithoutCollectionEntriesInput
   position: Int
   updatedAt: DateTime
   user: UserCreateOneWithoutCollectionEntriesInput
@@ -209,7 +209,7 @@ input CollectionEntryCreateWithoutCollectionInput {
   block: CollectionBlockCreateOneWithoutCollectionEntryInput
   createdAt: DateTime
   id: String
-  item: ItemCreateOneWithoutCollectionEntryInput
+  item: ItemCreateOneWithoutCollectionEntriesInput
   position: Int
   updatedAt: DateTime
   user: UserCreateOneWithoutCollectionEntriesInput
@@ -230,7 +230,7 @@ input CollectionEntryCreateWithoutUserInput {
   collection: CollectionCreateOneWithoutEntriesInput
   createdAt: DateTime
   id: String
-  item: ItemCreateOneWithoutCollectionEntryInput
+  item: ItemCreateOneWithoutCollectionEntriesInput
   position: Int
   updatedAt: DateTime
 }
@@ -351,7 +351,7 @@ input FileCreateInput {
   isFailed: Boolean
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput
-  metadata: Json!
+  metadata: String
   name: String
   size: Int
   title: String
@@ -394,7 +394,7 @@ input FileCreateWithoutGoogleAccountInput {
   isFailed: Boolean
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput
-  metadata: Json!
+  metadata: String
   name: String
   size: Int
   title: String
@@ -417,7 +417,7 @@ input FileCreateWithoutItemInput {
   id: String
   isFailed: Boolean
   isUploaded: Boolean
-  metadata: Json!
+  metadata: String
   name: String
   size: Int
   title: String
@@ -441,7 +441,7 @@ input FileCreateWithoutUploadGroupInput {
   isFailed: Boolean
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput
-  metadata: Json!
+  metadata: String
   name: String
   size: Int
   title: String
@@ -464,7 +464,7 @@ input FileCreateWithoutUserInput {
   isFailed: Boolean
   isUploaded: Boolean
   item: ItemCreateOneWithoutFileInput
-  metadata: Json!
+  metadata: String
   name: String
   size: Int
   title: String
@@ -518,7 +518,7 @@ input FileWhereInput {
   isFailed: NullableBooleanFilter
   isUploaded: NullableBooleanFilter
   item: ItemWhereInput
-  metadata: JsonFilter
+  metadata: NullableStringFilter
   name: StringFilter
   NOT: [FileWhereInput!]
   OR: [FileWhereInput!]
@@ -583,6 +583,7 @@ input GoogleAccountCreateWithoutGoogleContactsInput {
   expiresAt: DateTime!
   firstName: String
   googleDriveFiles: FileCreateManyWithoutGoogleAccountInput
+  googleDriveWebhook: GoogleDriveWebhookCreateOneWithoutGoogleAccountInput
   id: String
   isAuthMethod: Boolean
   lastName: String
@@ -601,6 +602,7 @@ input GoogleAccountCreateWithoutGoogleDriveFilesInput {
   expiresAt: DateTime!
   firstName: String
   googleContacts: GoogleContactCreateManyWithoutGoogleAccountInput
+  googleDriveWebhook: GoogleDriveWebhookCreateOneWithoutGoogleAccountInput
   id: String
   isAuthMethod: Boolean
   lastName: String
@@ -620,6 +622,7 @@ input GoogleAccountCreateWithoutUserInput {
   firstName: String
   googleContacts: GoogleContactCreateManyWithoutGoogleAccountInput
   googleDriveFiles: FileCreateManyWithoutGoogleAccountInput
+  googleDriveWebhook: GoogleDriveWebhookCreateOneWithoutGoogleAccountInput
   id: String
   isAuthMethod: Boolean
   lastName: String
@@ -645,6 +648,7 @@ input GoogleAccountWhereInput {
   firstName: NullableStringFilter
   googleContacts: GoogleContactFilter
   googleDriveFiles: FileFilter
+  googleDriveWebhook: GoogleDriveWebhookWhereInput
   id: StringFilter
   isAuthMethod: NullableBooleanFilter
   lastName: NullableStringFilter
@@ -785,6 +789,36 @@ input GoogleContactWhereUniqueInput {
   id: String
 }
 
+input GoogleDriveWebhookCreateOneWithoutGoogleAccountInput {
+  connect: GoogleDriveWebhookWhereUniqueInput
+  create: GoogleDriveWebhookCreateWithoutGoogleAccountInput
+}
+
+input GoogleDriveWebhookCreateWithoutGoogleAccountInput {
+  address: String!
+  createdAt: DateTime
+  expiresAt: DateTime!
+  id: String
+  updatedAt: DateTime
+}
+
+input GoogleDriveWebhookWhereInput {
+  address: StringFilter
+  AND: [GoogleDriveWebhookWhereInput!]
+  createdAt: DateTimeFilter
+  expiresAt: DateTimeFilter
+  googleAccount: GoogleAccountWhereInput
+  googleAccountId: StringFilter
+  id: StringFilter
+  NOT: [GoogleDriveWebhookWhereInput!]
+  OR: [GoogleDriveWebhookWhereInput!]
+  updatedAt: DateTimeFilter
+}
+
+input GoogleDriveWebhookWhereUniqueInput {
+  id: String
+}
+
 type InProgressUpload {
   signedUrls: [String!]!
   uploadGroup: UploadGroup
@@ -896,9 +930,9 @@ input ItemCreateManyWithoutUserInput {
   create: [ItemCreateWithoutUserInput!]
 }
 
-input ItemCreateOneWithoutCollectionEntryInput {
+input ItemCreateOneWithoutCollectionEntriesInput {
   connect: ItemWhereUniqueInput
-  create: ItemCreateWithoutCollectionEntryInput
+  create: ItemCreateWithoutCollectionEntriesInput
 }
 
 input ItemCreateOneWithoutFileInput {
@@ -921,7 +955,7 @@ input ItemCreateOneWithoutNoteInput {
   create: ItemCreateWithoutNoteInput
 }
 
-input ItemCreateWithoutCollectionEntryInput {
+input ItemCreateWithoutCollectionEntriesInput {
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -942,7 +976,7 @@ input ItemCreateWithoutCollectionEntryInput {
 }
 
 input ItemCreateWithoutCollectionsInput {
-  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   createdAt: DateTime
   date: DateTime
   deletedAt: DateTime
@@ -962,7 +996,7 @@ input ItemCreateWithoutCollectionsInput {
 }
 
 input ItemCreateWithoutFileInput {
-  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -982,7 +1016,7 @@ input ItemCreateWithoutFileInput {
 }
 
 input ItemCreateWithoutGoogleContactInput {
-  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1002,7 +1036,7 @@ input ItemCreateWithoutGoogleContactInput {
 }
 
 input ItemCreateWithoutItemsInput {
-  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1022,7 +1056,7 @@ input ItemCreateWithoutItemsInput {
 }
 
 input ItemCreateWithoutLabelsInput {
-  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1042,7 +1076,7 @@ input ItemCreateWithoutLabelsInput {
 }
 
 input ItemCreateWithoutLinkInput {
-  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1062,7 +1096,7 @@ input ItemCreateWithoutLinkInput {
 }
 
 input ItemCreateWithoutNoteInput {
-  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1082,7 +1116,7 @@ input ItemCreateWithoutNoteInput {
 }
 
 input ItemCreateWithoutOwnedByInput {
-  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1102,7 +1136,7 @@ input ItemCreateWithoutOwnedByInput {
 }
 
 input ItemCreateWithoutUserInput {
-  CollectionEntry: CollectionEntryCreateManyWithoutItemInput
+  collectionEntries: CollectionEntryCreateManyWithoutItemInput
   collections: CollectionCreateManyWithoutItemsInput
   createdAt: DateTime
   date: DateTime
@@ -1163,7 +1197,7 @@ enum ItemType {
 
 input ItemWhereInput {
   AND: [ItemWhereInput!]
-  CollectionEntry: CollectionEntryFilter
+  collectionEntries: CollectionEntryFilter
   collections: CollectionFilter
   createdAt: DateTimeFilter
   date: DateTimeFilter
@@ -1193,8 +1227,6 @@ input ItemWhereInput {
 input ItemWhereUniqueInput {
   id: String
 }
-
-scalar Json
 
 input JsonFilter {
   test: String
